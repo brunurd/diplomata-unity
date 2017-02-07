@@ -15,43 +15,50 @@ namespace Diplomata {
         private GUIStyle bgStyle;
         public static List<List<Node>> colunms;
         public static int headerSize = 32;
-        public static string[] languages;
-        public int languageIndex;
+        public static List<string> languages;
+        public static string[] languagesArray;
+        public static int languageIndex;
 
         static public void Init(Character character) {
             MessageManager.character = character;
+            Manager.UpdatePreferences();
+            SetLanguages();
+            ResetColunms();
             MessageManager window = (MessageManager)GetWindow(typeof(MessageManager), false, "Messages", true);
             window.Show();
-            //SetLanguages();
-            ResetColunms();
         }
 
         [MenuItem("Diplomata/Message(s) Manager")]
         static public void Init() {
+            Manager.UpdatePreferences();
+            SetLanguages();
             MessageManager window = (MessageManager)GetWindow(typeof(MessageManager), false, "Messages", true);
             window.Show();
-            //SetLanguages();
-            ResetColunms();
         }
 
         public static void SetLanguages() {
-            string[] subLanguages = Manager.preferences.subLanguages;
-            string[] dubLanguges = Manager.preferences.dubLanguages;
+            languages = new List<string>();
 
-            for (int i = 0; i < subLanguages.Length; i++) {
-                languages[i] = subLanguages[i];
+            for (int i = 0; i < Manager.preferences.subLanguages.Length; i++) {
+                languages.Add(Manager.preferences.subLanguages[i]);
             }
 
-            for (int i = 0; i < dubLanguges.Length; i++) {
+            for (int i = 0; i < Manager.preferences.dubLanguages.Length; i++) {
                 bool hasEqual = false;
-                for (int j = 0; j < languages.Length; j++) {
-                    if (dubLanguges[i] == languages[j]) {
+                for (int j = 0; j < languages.Count; j++) {
+                    if (Manager.preferences.dubLanguages[i] == languages[j]) {
                         hasEqual = true;
                     }
                 }
                 if (!hasEqual) {
-                    languages[languages.Length] = dubLanguges[i];
+                    languages.Add(Manager.preferences.dubLanguages[i]);
                 }
+            }
+
+            languagesArray = new string[languages.Count];
+
+            for (int i = 0; i < languages.Count; i++) {
+                languagesArray[i] = languages[i];
             }
         }
 
@@ -70,7 +77,13 @@ namespace Diplomata {
             }
 
             foreach (Message msg in character.messages) {
-                //colunms[msg.colunm].Add(new Node(msg.colunm, msg.row, msg.emitter, msg.title, msg, character));
+                string title = "";
+                foreach (DictLang t in msg.title) {
+                    if (t.key == languagesArray[languageIndex]) {
+                        title = t.value;
+                    }
+                }
+                colunms[msg.colunm].Add(new Node(msg.colunm, msg.row, msg.emitter, title, msg, character));
             }
 
             if (colunms.Count > 1) {
@@ -100,15 +113,28 @@ namespace Diplomata {
         public void DrawHeader() {
             GUI.Label(new Rect(10, 10, 100, headerSize), "Character: ");
             character = EditorGUI.ObjectField(new Rect(100, 10, 200, 16), character, typeof(Character), true) as Character;
-            GUI.Label(new Rect(310, 10, 100, headerSize), "Language: ");
-            //EditorGUI.Popup(new Rect(100, 10, 200, 16), languageIndex, languages);
+            GUI.Label(new Rect(330, 10, 70, headerSize), "Language: ");
+            languageIndex = EditorGUI.Popup(new Rect(400, 10, 60, 16), languageIndex, MessageManager.languagesArray);
         }
 
         public void OnGUI() {
+            Character characterTemp = character;
+            int indexTemp = languageIndex;
             EditorGUILayout.BeginScrollView(new Vector2(0,0));
             DrawBG();
             DrawHeader();
-            if (character != null) {/*
+
+            if (languageIndex != indexTemp) {
+                Manager.UpdatePreferences();
+                SetLanguages();
+                ResetColunms();
+            }
+
+            if (character != characterTemp) {
+                ResetColunms();
+            }
+
+            if (character != null) {
                 for (int i = 0; i < colunms.Count; i++) {
                     for (int j = 0; j < colunms[i].Count; j++) {
                         if (colunms[i][j] != null) {
@@ -120,8 +146,7 @@ namespace Diplomata {
                             }
                         }
                     }
-                }*/
-
+                }
             }
             EditorGUILayout.EndScrollView();
         }
