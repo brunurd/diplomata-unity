@@ -118,7 +118,8 @@ namespace Diplomata {
         }
 
         public void OnGUI() {
-            Character characterTemp = character;
+            Character characterTemp = new Character();
+            characterTemp = character;
             int indexTemp = languageIndex;
             EditorGUILayout.BeginScrollView(new Vector2(0,0));
             DrawBG();
@@ -133,6 +134,8 @@ namespace Diplomata {
             if (character != characterTemp) {
                 ResetColunms();
             }
+
+            Destroy(characterTemp);
 
             if (character != null) {
                 for (int i = 0; i < colunms.Count; i++) {
