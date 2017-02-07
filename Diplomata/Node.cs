@@ -19,17 +19,23 @@ namespace Diplomata {
         public string emitter;
         public string title;
         public Message message;
+        public bool isAdd;
+        public Character character;
 
-        public Node(int col, int row) {
+        public Node(int col, int row, Character character) {
             SetPosition(col, row);
+            this.character = character;
+            isAdd = true;
         }
 
-        public Node(int col, int row, string emitter, string title, Message message) {
+        public Node(int col, int row, string emitter, string title, Message message, Character character) {
             SetPosition(col, row);
             this.emitter = emitter;
             this.title = title;
             this.message = message;
             style = new GUIStyle();
+            isAdd = false;
+            this.character = character;
 
             if (emitter == "Player") {
                 headerColor = new Color(0.3333f, 0.0823f, 0.7411f);
