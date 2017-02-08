@@ -14,13 +14,13 @@ namespace Diplomata {
         public int row;
         private int x;
         private int y;
-        private GUIStyle style;
         private Color headerColor;
         public string emitter;
         public string title;
         public Message message;
         public bool isAdd;
         public Character character;
+        public int colunmLimit;
 
         public Node(int col, int row, Character character) {
             SetPosition(col, row);
@@ -33,7 +33,6 @@ namespace Diplomata {
             this.emitter = emitter;
             this.title = title;
             this.message = message;
-            style = new GUIStyle();
             isAdd = false;
             this.character = character;
 
@@ -47,24 +46,61 @@ namespace Diplomata {
         }
 
         public void SetPosition(int col, int row) {
+            colunm = col;
+            this.row = row;
             x = (padding + ((col * 2) * padding) + (col * width));
             y = (MessageManager.headerSize + (row + 1) * padding) + (row * height);
         }
 
         public void Draw() {
             EditorGUI.DrawRect(new Rect(x, y, width, 25), headerColor);
-            style.normal.textColor = Color.white;
-            GUI.Label(new Rect(x + 5, y + 5, width - 10, 15), emitter, style);
+            MessageManager.style.normal.textColor = Color.white;
+            GUI.Label(new Rect(x + 5, y + 5, width - 10, 15), emitter, MessageManager.style);
+            GUI.Label(new Rect(x + width - 20, y + 5, 20, 15), ""+row, MessageManager.style);
             EditorGUI.DrawRect(new Rect(x, y + 25, width, 100), bodyColor);
             GUI.Label(new Rect(x + 5, y + 40, width - 10, 25), title);
-            GUI.Button(new Rect((x + width) - 110, y + 75, 50, 20), "Up");
-            GUI.Button(new Rect((x + width) - 55, y + 75, 50, 20), "Down");
-            GUI.Button(new Rect(x + 5, (y + height) - 25, 20, 20), "X");
-            GUI.Button(new Rect(x + 30, (y + height) - 25, width - 35, 20), "Edit");
+
+            /*
+            if (GUI.Button(new Rect((x + width) - 110, y + 75, 50, 20), "Up")) {
+                if (row > 0) {
+                    row -= 1;
+                    message.row = row;
+                }
+                MessageManager.ResetColunms();
+            }
+
+            if (GUI.Button(new Rect((x + width) - 55, y + 75, 50, 20), "Down")) {
+                if (row < colunmLimit) {
+                    row += 1;
+                    message.row = row;
+                }
+                MessageManager.ResetColunms();
+            }
+
+            if (GUI.Button(new Rect(x + 5, (y + height) - 25, 20, 20), "X")) {
+                character.messages.Remove(this.message);
+                MessageManager.ResetColunms();
+            }
+            */
+
+            if (GUI.Button(new Rect(x + 30, (y + height) - 25, width - 35, 20), "Edit")) {
+                MessageManager.close = true;
+                MessageEditor.Init(this.message);
+            }
         }
 
         public void DrawAdd() {
-            GUI.Button(new Rect(x, y, width, 40), "Add Message");
+            if (GUI.Button(new Rect(x, y, width, 40), "Add Message")) {
+                AddNode();
+            }
+        }
+
+        public void AddNode() {
+            MessageManager.close = true;
+            character.messages.Add(new Message(character, colunm, row));
+            this.message = character.messages[character.messages.Count - 1];
+            MessageEditor.Init(this.message);
+            MessageManager.ResetColunms();
         }
     }
 

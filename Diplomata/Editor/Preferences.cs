@@ -12,6 +12,7 @@ namespace DiplomataEditor {
     public class Preferences : EditorWindow {
 
         public static Diplomata.Preferences preferences;
+        public static Texture logo;
         public static string resPath = "Assets/Diplomata/Resources/";
         public static List<string> attributes = new List<string>();
         public static List<string> subLanguages = new List<string>();
@@ -34,10 +35,12 @@ namespace DiplomataEditor {
 
         public void OnGUI() {
 
-            int padding = 15;
+            int margin = 15;
 
-            GUILayout.Space(padding);
+            GUILayout.Space(margin);
+            GUILayout.Label(Diplomata.Manager.logo, GUILayout.Width(Screen.width - 30), GUILayout.Height(30));
 
+            GUILayout.Space(margin);
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical(GUILayout.Width(Screen.width / 3 - 5));
             GUILayout.Label("Attributes: ");
@@ -85,17 +88,17 @@ namespace DiplomataEditor {
             }
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-            GUILayout.Space(padding);
 
+            GUILayout.Space(margin);
             if (GUILayout.Button("Save Preferences", GUILayout.Height(50))) {
                 SetPrefsStrings();
                 Diplomata.Manager.UpdatePreferences();
             }
-            GUILayout.Space(padding);
-
+            GUILayout.Space(margin);
             GUILayout.Label("Diplomata Resources path: ");
             resPath = GUILayout.TextField(resPath);
-            GUILayout.Space(padding);
+
+            GUILayout.Space(margin);
         }
 
         public string[] ListToStringArray(List<string> list) {

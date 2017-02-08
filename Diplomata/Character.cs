@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Diplomata {
 
     [Serializable]
-    public struct DictAttr {
+    public class DictAttr {
         public string key;
         public byte value;
 
@@ -49,16 +49,16 @@ namespace Diplomata {
         public override void OnInspectorGUI() {
             serializedObject.Update();
 
-            int padding = 15;
-
-            GUILayout.Space(padding);
+            int margin = 15;
+            
+            GUILayout.Space(margin);
             GUILayout.Label("Description: ");
             description.stringValue = GUILayout.TextArea(description.stringValue, GUILayout.Height(50));
 
-            GUILayout.Space(padding);
+            GUILayout.Space(margin);
             startOnPlay.boolValue = GUILayout.Toggle(startOnPlay.boolValue, "Start on play");
-            GUILayout.Space(padding);
 
+            GUILayout.Space(margin);
             GUILayout.Label("Character attributes: ");
             for (int i = 0; i < attributes.arraySize; i++) {
                 SerializedProperty key = attributes.GetArrayElementAtIndex(i).FindPropertyRelative("key");
@@ -69,7 +69,7 @@ namespace Diplomata {
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.Space(padding);
+            GUILayout.Space(margin);
             if (GUILayout.Button("Edit messages", GUILayout.Height(40))) {
                 if (character != null) {
                     MessageManager.Init(character);
@@ -78,7 +78,8 @@ namespace Diplomata {
                     MessageManager.Init();
                 }
             }
-            GUILayout.Space(padding);
+
+            GUILayout.Space(margin);
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -152,6 +153,17 @@ namespace Diplomata {
             talking = true;
             currentMessage = new Message();
             currentChoices = new List<Message>();
+
+            foreach (Message msg in messages) {
+                if (msg.colunm == 0) {
+                    foreach (DictLang title in msg.title) {
+                        if (title.key == Options.language) {
+                            startNext.Add(title.value);
+                        }
+                    }
+                }
+            }
+
             Next(startNext);
         }
 
@@ -171,9 +183,9 @@ namespace Diplomata {
                         }
                         else {
                             foreach (DictLang title in msg.title) {
-                                //if (title.key == Options.language) {
+                                if (title.key == Options.language) {
                                     next.Add(msg);
-                                //}
+                                }
                             }
                         }
                     }
@@ -210,9 +222,9 @@ namespace Diplomata {
 
             if (talking) {
                 foreach (DictLang content in currentMessage.content) {
-                    //if (content.key == Options.language) {
+                    if (content.key == Options.language) {
                         newContent += content.value;
-                    //}
+                    }
                 }
             }
 
@@ -229,9 +241,9 @@ namespace Diplomata {
 
             foreach (Message msg in currentChoices) {
                 foreach (DictLang title in msg.title) {
-                    //if (title.key == Options.language) {
+                    if (title.key == Options.language) {
                         returnChoices.Add(title.value);
-                    //}
+                    }
                 }
             }
 
@@ -241,11 +253,11 @@ namespace Diplomata {
         public void ChooseMessage(string title) {
             foreach (Message msg in currentChoices) {
                 foreach (DictLang titleTemp in msg.title) {
-                    //if (titleTemp.key == Options.language && titleTemp.value == title) {
+                    if (titleTemp.key == Options.language && titleTemp.value == title) {
                         currentMessage = msg;
                         SetInfluence();
                         break;
-                    //}
+                    }
                 }
             }
         }

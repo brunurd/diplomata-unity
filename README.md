@@ -1,4 +1,4 @@
-![Diplomata logo](https://raw.githubusercontent.com/lavaleak/diplomata-php-editor/master/img/DIPLOMATA-logo.png)  
+![Diplomata logo](https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/Resources/DIPLOMATA-logo.png)  
 
 
 ---
@@ -7,7 +7,7 @@
 #**Diplomata**
 
 
-A fully featured solution to dialogue based games made with Unity.  
+A Unity fully-featured solution to dialogue based games using fuzzy logic.  
 Create, edit, translate, set audio files and print screenplay of your game dialogue, all inside Unity Editor.  
 
 

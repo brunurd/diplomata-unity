@@ -1,11 +1,124 @@
 ﻿using UnityEngine.Events;
 using System.Collections.Generic;
 using System;
+using UnityEditor;
+using UnityEngine;
 
 namespace Diplomata {
 
+#if (UNITY_EDITOR)
+    
+    public class MessageEditor : EditorWindow {
+
+        public static Message message;
+        public static int resetTimer;
+        public static bool emitterPlayer;
+        public static bool emitterCharacter;
+        public static SerializedObject characterObject;
+        public static SerializedProperty messageObject;
+        public static SerializedProperty conditions;
+        public static SerializedProperty callback;
+        
+        public static void Init(Message message) {
+            MessageEditor.message = message;
+
+            if (message.emitter == "Player") {
+                emitterPlayer = true;
+                emitterCharacter = false;
+            }
+            else {
+                emitterPlayer = false;
+                emitterCharacter = true;
+            }
+
+            GetEventsField();
+
+            MessageEditor window = (MessageEditor)GetWindow(typeof(MessageEditor), false, "Edit Message", true);
+            window.Show();
+        }
+
+        public void OnGUI() {
+
+            int margin = 15;
+            characterObject.Update();
+
+            GUILayout.Space(margin);
+            GUILayout.Label("SPEECH" + message.colunm + " - Message " + message.row);
+
+            GUILayout.Space(margin);
+            EditorGUILayout.PropertyField(conditions,true);
+            
+            GUILayout.Space(margin);
+            GUILayout.Label("Emitter:");
+            GUILayout.BeginHorizontal(GUILayout.Width(200));
+
+            if (emitterPlayer = GUILayout.Toggle(emitterPlayer, "Player")) {
+                emitterCharacter = false;
+            }
+
+            if (emitterCharacter = GUILayout.Toggle(emitterCharacter, message.character.name)) {
+                emitterPlayer = false;
+            }
+
+            GUILayout.EndHorizontal();
+            
+            if (emitterPlayer) {
+                message.emitter = "Player";
+                emitterCharacter = false;
+            }
+
+            if (emitterCharacter) {
+                message.emitter = message.character.name;
+                emitterPlayer = false;
+            }
+
+            GUILayout.Space(margin);
+            GUILayout.Label("Title in '" + MessageManager.languagesArray[MessageManager.languageIndex] + "':");
+            message.title[MessageManager.languageIndex].value = GUILayout.TextField(message.title[MessageManager.languageIndex].value);
+
+            GUILayout.Space(margin);
+            GUILayout.Label("Content in '" + MessageManager.languagesArray[MessageManager.languageIndex] + "':");
+            message.content[MessageManager.languageIndex].value = GUILayout.TextArea(message.content[MessageManager.languageIndex].value, GUILayout.Height(50));
+            
+            if (message.emitter == "Player") {
+                GUILayout.Space(margin);
+                foreach (DictAttr attr in message.attributes) {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(attr.key);
+                    attr.value = (byte)EditorGUILayout.Slider(attr.value, 0, 100);
+                    GUILayout.EndHorizontal();
+                }
+            }
+            
+            GUILayout.Space(margin);
+            EditorGUILayout.PropertyField(callback, true);
+
+            foreach (string str in message.next) {
+                GUILayout.Label(str);
+            }
+
+            GUILayout.Space(margin);
+            if (GUI.Button(new Rect(Screen.width - 110, Screen.height - 60, 100, 30), "Save changes")) {
+                MessageManager.Init(message.character);
+                this.Close();
+            }
+
+            characterObject.ApplyModifiedProperties();
+        }
+
+        public static void GetEventsField() {
+            characterObject = new SerializedObject(message.character);
+            messageObject = characterObject.FindProperty("messages");
+            conditions = messageObject.GetArrayElementAtIndex(message.character.messages.IndexOf(message)).FindPropertyRelative("conditions");
+            callback = messageObject.GetArrayElementAtIndex(message.character.messages.IndexOf(message)).FindPropertyRelative("callback");
+        }
+
+    }
+
+#endif
+
     [Serializable]
-    public struct DictLang {
+    public class DictLang {
         public string key;
         public string value;
 
@@ -16,35 +129,56 @@ namespace Diplomata {
     }
 
     [Serializable]
-    public struct Message {
-        public static int countId;
-        public int id;
-        public string emitter;
+    public class Message {
         public int colunm;
         public int row;
+        public string emitter;
         public string mainLanguage;
         public List<DictLang> title;
         public List<DictLang> content;
         public List<DictAttr> attributes;
-        public List<string> next;
         public UnityEvent conditions;
         public UnityEvent callback;
         public Character character;
+        public List<string> next;
 
         public Message(Character charct, int c, int r) {
-            id = countId;
-            countId += 1;
             colunm = c;
             row = r;
-            emitter = "";
-            mainLanguage = "";
-            attributes = new List<DictAttr>();
-            title = new List<DictLang>();
-            content = new List<DictLang>();
-            next = new List<string>();
+            emitter = charct.name;
+            mainLanguage = Manager.preferences.subLanguages[0];
+            character = charct;
             conditions = new UnityEvent();
             callback = new UnityEvent();
-            character = charct;
+
+            attributes = new List<DictAttr>();
+            foreach (string str in Manager.preferences.attributes) {
+                attributes.Add(new DictAttr(str, 50));
+            }
+
+            title = new List<DictLang>();
+            foreach (string str in Manager.preferences.subLanguages) {
+                title.Add(new DictLang(str, ""));
+            }
+
+            content = new List<DictLang>();
+            foreach (string str in Manager.preferences.subLanguages) {
+                content.Add(new DictLang(str, ""));
+            }
+
+            SetNext();
+        }
+
+        public Message() {
+        }
+
+        public void SetNext() {
+            next = new List<string>();
+            foreach (Message msg in character.messages) {
+                if (msg.colunm == colunm + 1) {
+                    next.Add(msg.title[0].value);
+                }
+            }
         }
     }
 
