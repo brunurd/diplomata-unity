@@ -26,7 +26,7 @@ namespace Diplomata {
     [CanEditMultipleObjects]
     [Serializable]
     public class CharacterEditor : Editor {
-        
+
         public static Character character;
         SerializedProperty attributes;
         SerializedProperty description;
@@ -50,7 +50,7 @@ namespace Diplomata {
             serializedObject.Update();
 
             int margin = 15;
-            
+
             GUILayout.Space(margin);
             GUILayout.Label("Description: ");
             description.stringValue = GUILayout.TextArea(description.stringValue, GUILayout.Height(50));
@@ -59,7 +59,7 @@ namespace Diplomata {
             startOnPlay.boolValue = GUILayout.Toggle(startOnPlay.boolValue, "Start on play");
 
             GUILayout.Space(margin);
-            GUILayout.Label("Character attributes: ");
+            GUILayout.Label("Character attributes (influenceable by): ");
             for (int i = 0; i < attributes.arraySize; i++) {
                 SerializedProperty key = attributes.GetArrayElementAtIndex(i).FindPropertyRelative("key");
                 SerializedProperty value = attributes.GetArrayElementAtIndex(i).FindPropertyRelative("value");
@@ -69,13 +69,11 @@ namespace Diplomata {
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.Space(margin);
-            if (GUILayout.Button("Edit messages", GUILayout.Height(40))) {
-                if (character != null) {
+            if (character != null) {
+                GUILayout.Space(margin);
+
+                if (GUILayout.Button("Edit messages", GUILayout.Height(40))) {
                     MessageManager.Init(character);
-                }
-                else {
-                    MessageManager.Init();
                 }
             }
 
@@ -101,10 +99,11 @@ namespace Diplomata {
         public bool talking;
         public bool isTalking;
         public bool waitingPlayer;
+        public bool isListening;
         private Message currentMessage;
         private List<Message> currentChoices = new List<Message>();
         private Events events;
-    
+
         public void Awake() {
             InstantiateManager();
             SetAttributes();
@@ -125,6 +124,7 @@ namespace Diplomata {
             talking = false;
             isTalking = false;
             waitingPlayer = false;
+            isListening = false;
 
             if (startOnPlay) {
                 StartTalk();
@@ -153,6 +153,7 @@ namespace Diplomata {
             talking = true;
             currentMessage = new Message();
             currentChoices = new List<Message>();
+            startNext = new List<string>();
 
             foreach (Message msg in messages) {
                 if (msg.colunm == 0) {
@@ -173,6 +174,7 @@ namespace Diplomata {
             string emitter = null;
             isTalking = false;
             waitingPlayer = false;
+            isListening = false;
 
             foreach (Message msg in messages) {
                 if (talking) {
@@ -184,7 +186,9 @@ namespace Diplomata {
                         else {
                             foreach (DictLang title in msg.title) {
                                 if (title.key == Options.language) {
-                                    next.Add(msg);
+                                    if (title.value == str) {
+                                        next.Add(msg);
+                                    }
                                 }
                             }
                         }
@@ -218,7 +222,7 @@ namespace Diplomata {
         }
 
         public string ShowMessageContent() {
-            string newContent = currentMessage.emitter + ": ";
+            string newContent = currentMessage.emitter + ":\n";
 
             if (talking) {
                 foreach (DictLang content in currentMessage.content) {
@@ -254,6 +258,8 @@ namespace Diplomata {
             foreach (Message msg in currentChoices) {
                 foreach (DictLang titleTemp in msg.title) {
                     if (titleTemp.key == Options.language && titleTemp.value == title) {
+                        waitingPlayer = false;
+                        isListening = true;
                         currentMessage = msg;
                         SetInfluence();
                         break;
@@ -273,11 +279,15 @@ namespace Diplomata {
 
             foreach (DictAttr attrMsg in currentMessage.attributes) {
                 foreach (DictAttr attrChar in attributes) {
-                    if (attrMsg.value < attrChar.value) {
-                        min.Add(attrMsg.value);
-                    }
-                    else {
-                        min.Add(attrChar.value);
+                    if (attrMsg.key == attrChar.key) {
+                        if (attrMsg.value < attrChar.value) {
+                            min.Add(attrMsg.value);
+                            break;
+                        }
+                        if (attrMsg.value >= attrChar.value) {
+                            min.Add(attrChar.value);
+                            break;
+                        }
                     }
                 }
             }
@@ -291,6 +301,6 @@ namespace Diplomata {
             int tempInfluence = (max + influence) / 2;
             influence = (byte)tempInfluence;
         }
-        
+
     }
 }

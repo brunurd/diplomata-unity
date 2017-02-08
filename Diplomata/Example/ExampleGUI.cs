@@ -13,7 +13,7 @@ namespace Diplomata {
             // Talking routine
             if (character.talking) {
 
-                // Character talk turn
+                // Character is talking
                 if (character.isTalking) {
                     GUILayout.Label( character.ShowMessageContent() );
                     
@@ -22,8 +22,16 @@ namespace Diplomata {
                     }
                 }
 
+                // Player is talking
+                if (character.isListening) {
+                    GUILayout.Label(character.ShowMessageContent());
 
-                // Player talk turn
+                    if (GUILayout.Button("Next")) {
+                        character.NextMessage();
+                    }
+                }
+
+                // Choice menu
                 if (character.waitingPlayer) {
                     choices = character.MessageChoices();
 
@@ -31,15 +39,9 @@ namespace Diplomata {
                     foreach (string choice in choices) {
                         if (GUILayout.Button(choice)) {
                             character.ChooseMessage(choice);
-                            GUILayout.Label( character.ShowMessageContent() );
-                            character.NextMessage();
-
-                            // Reset choices buttons
-                            choices = new List<string>();
                         }
                     }
                 }
-
             }
 
             else {

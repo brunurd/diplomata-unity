@@ -34,6 +34,7 @@ namespace Diplomata {
             GetEventsField();
 
             MessageEditor window = (MessageEditor)GetWindow(typeof(MessageEditor), false, "Edit Message", true);
+            window.minSize = new Vector2(340,595);
             window.Show();
         }
 
@@ -43,7 +44,7 @@ namespace Diplomata {
             characterObject.Update();
 
             GUILayout.Space(margin);
-            GUILayout.Label("SPEECH" + message.colunm + " - Message " + message.row);
+            GUILayout.Label("SPEECH " + message.colunm + " - Message " + message.row);
 
             GUILayout.Space(margin);
             EditorGUILayout.PropertyField(conditions,true);
@@ -92,11 +93,7 @@ namespace Diplomata {
             
             GUILayout.Space(margin);
             EditorGUILayout.PropertyField(callback, true);
-
-            foreach (string str in message.next) {
-                GUILayout.Label(str);
-            }
-
+            
             GUILayout.Space(margin);
             if (GUI.Button(new Rect(Screen.width - 110, Screen.height - 60, 100, 30), "Save changes")) {
                 MessageManager.Init(message.character);
@@ -133,7 +130,6 @@ namespace Diplomata {
         public int colunm;
         public int row;
         public string emitter;
-        public string mainLanguage;
         public List<DictLang> title;
         public List<DictLang> content;
         public List<DictAttr> attributes;
@@ -146,7 +142,6 @@ namespace Diplomata {
             colunm = c;
             row = r;
             emitter = charct.name;
-            mainLanguage = Manager.preferences.subLanguages[0];
             character = charct;
             conditions = new UnityEvent();
             callback = new UnityEvent();
@@ -176,7 +171,11 @@ namespace Diplomata {
             next = new List<string>();
             foreach (Message msg in character.messages) {
                 if (msg.colunm == colunm + 1) {
-                    next.Add(msg.title[0].value);
+                    foreach (DictLang titleTemp in msg.title) {
+                        if (titleTemp.key == Options.language) {
+                            next.Add(titleTemp.value);
+                        }
+                    }
                 }
             }
         }

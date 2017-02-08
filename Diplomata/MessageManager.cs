@@ -30,6 +30,7 @@ namespace Diplomata {
             SetLanguages();
             ResetColunms();
             MessageManager window = (MessageManager)GetWindow(typeof(MessageManager), false, "Messages", true);
+            window.minSize = new Vector2(730, 550);
             window.Show();
         }
 
@@ -92,10 +93,15 @@ namespace Diplomata {
                 colunms[msg.colunm].Add(new Node(msg.colunm, msg.row, msg.emitter, title, msg, character));
             }
 
+
             foreach (Message msg in character.messages) {
                 msg.SetNext();
+
+                if (colunms.Count == msg.colunm + 1) {
+                    msg.next.Add("__END");
+                }
             }
-            
+
             // Last add node in every colunm
             for (int i = 0; i <= colunmsMax; i++) {
                 colunms[i].Add(new Node(i,colunms[i].Count,character));

@@ -34,14 +34,13 @@ namespace Diplomata {
             }
 
             UpdatePreferences();
-
-            Options.language = preferences.subLanguages[0];
         }
 
         static public void UpdatePreferences() {
             logo = (Texture)Resources.Load("DIPLOMATA-logo");
             TextAsset json = (TextAsset)Resources.Load("preferences");
             preferences = JsonUtility.FromJson<Preferences>(json.text);
+            Options.language = preferences.subLanguages[0];
         }
     }
 }
