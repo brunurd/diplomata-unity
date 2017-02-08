@@ -17,7 +17,7 @@ Create, edit, translate, set audio files and print screenplay of your game dialo
 ##**Links**
 
 
-Progress of project in: [Diplomata - Trello Board](https://trello.com/b/Hp08JbV3/diplomata-roadmap)  
+Progress of project: [Diplomata - Trello Board](https://trello.com/b/Hp08JbV3/diplomata-roadmap)  
 Documentation: [Github Wiki](https://github.com/lavaleak/diplomata/wiki)  
 Source code: [Github](https://github.com/lavaleak/diplomata)  
 Website: [diplomta.io](http://diplomata.io)  
