@@ -1,4 +1,4 @@
-![Diplomata logo](https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/Resources/DIPLOMATA-logo.png)  
+![Diplomata logo](https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/Editor/Resources/DIPLOMATA-logo.png)  
 
 
 ---
