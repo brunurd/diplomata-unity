@@ -30,15 +30,13 @@ namespace DiplomataEditor {
             GetPrefsStrings();
 
             Preferences window = (Preferences)GetWindow(typeof(Preferences), false, "Preferences");
+            window.minSize = new Vector2(455,250);
             window.Show();
         }
 
         public void OnGUI() {
 
             int margin = 15;
-
-            GUILayout.Space(margin);
-            GUILayout.Label(Diplomata.Manager.logo, GUILayout.Width(Screen.width - 30), GUILayout.Height(30));
 
             GUILayout.Space(margin);
             GUILayout.BeginHorizontal();
@@ -94,11 +92,6 @@ namespace DiplomataEditor {
                 SetPrefsStrings();
                 Diplomata.Manager.UpdatePreferences();
             }
-            GUILayout.Space(margin);
-            GUILayout.Label("Diplomata Resources path: ");
-            resPath = GUILayout.TextField(resPath);
-
-            GUILayout.Space(margin);
         }
 
         public string[] ListToStringArray(List<string> list) {
@@ -113,12 +106,13 @@ namespace DiplomataEditor {
 
         public static void LoadJson() {
             TextAsset json = (TextAsset)Resources.Load("preferences");
+            resPath = AssetDatabase.GetAssetPath(json);
             preferences = JsonUtility.FromJson<Diplomata.Preferences>(json.text);
         }
 
         public void SaveJson() {
             string json = JsonUtility.ToJson(preferences);
-            using (FileStream fs = new FileStream(resPath + "preferences.json", FileMode.Create)) {
+            using (FileStream fs = new FileStream(resPath, FileMode.Create)) {
                 using (StreamWriter writer = new StreamWriter(fs)) {
                     writer.Write(json);
                 }

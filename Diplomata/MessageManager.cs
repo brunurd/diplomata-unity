@@ -9,24 +9,29 @@ namespace Diplomata {
 
     public class MessageManager : EditorWindow {
 
+        public readonly static int headerSize = 62;
+        private readonly static int colunmLimit = 100;
+        private readonly static int rowLimit = 100;
+        private readonly static int windowContentWidth = colunmLimit * 170;
+        private readonly static int windowContentHeight = headerSize + (rowLimit * 135);
+
         public static Character character;
         private readonly Color bgColor1 = new Color(0.085f, 0.085f, 0.085f);
         private readonly Color bgColor2 = new Color(0.125f, 0.125f, 0.125f);
         private GUIStyle bgStyle;
         public static List<List<Node>> colunms;
-        public static int headerSize = 62;
         public static List<string> languages;
         public static string[] languagesArray;
         public static int languageIndex;
         public static GUIStyle style;
         public static bool close;
+        public Vector2 scrollPos;
 
         static public void Init(Character character) {
             close = false;
             style = new GUIStyle();
             MessageManager.character = character;
             Manager.UpdatePreferences();
-            //character.messages = new List<Message>();
             SetLanguages();
             ResetColunms();
             MessageManager window = (MessageManager)GetWindow(typeof(MessageManager), false, "Messages", true);
@@ -104,13 +109,17 @@ namespace Diplomata {
 
             // Last add node in every colunm
             for (int i = 0; i <= colunmsMax; i++) {
-                colunms[i].Add(new Node(i,colunms[i].Count,character));
+                if (colunms[i].Count < rowLimit) {
+                    colunms[i].Add(new Node(i, colunms[i].Count, character));
+                }
             }
 
             // Add node in last colunm
             if (character.messages.Count > 0) {
-                colunms.Add(new List<Node>());
-                colunms[colunms.Count - 1].Add(new Node(colunmsMax + 1, 0, character));
+                if (colunms.Count < colunmLimit) {
+                    colunms.Add(new List<Node>());
+                    colunms[colunms.Count - 1].Add(new Node(colunmsMax + 1, 0, character));
+                }
             }
 
             // Add node in first colunm
@@ -123,14 +132,14 @@ namespace Diplomata {
         public void DrawBG() {
             bool turn = false;
             Color textColor;
-            for (int i = 0; i < 1700; i += 170) {
+            for (int i = 0; i < windowContentWidth; i += 170) {
                 if (turn) {
-                    EditorGUI.DrawRect(new Rect(i, headerSize - 30, 170, Screen.height), bgColor2);
+                    EditorGUI.DrawRect(new Rect(i, headerSize - 30, 170, windowContentHeight), bgColor2);
                     textColor = new Color(0.325f, 0.325f, 0.325f);
                     turn = false;
                 }
                 else {
-                    EditorGUI.DrawRect(new Rect(i, headerSize - 30, 170, Screen.height), bgColor1);
+                    EditorGUI.DrawRect(new Rect(i, headerSize - 30, 170, windowContentHeight), bgColor1);
                     textColor = new Color(0.285f, 0.285f, 0.285f);
                     turn = true;
                 }
@@ -155,11 +164,15 @@ namespace Diplomata {
         public void OnGUI() {
             Character characterTemp = character;
             int indexTemp = languageIndex;
-            
-            EditorGUILayout.BeginScrollView(new Vector2(0,0));
 
-            DrawBG();
             DrawHeader();
+
+            scrollPos = GUI.BeginScrollView(
+                new Rect(0, headerSize - 30, Screen.width, Screen.height - headerSize + 8), 
+                scrollPos, 
+                new Rect(0, headerSize - 30, windowContentWidth, windowContentHeight));
+            
+            DrawBG();
             
             if (languageIndex != indexTemp) {
                 Manager.UpdatePreferences();
@@ -193,7 +206,7 @@ namespace Diplomata {
                 }
             }
 
-            EditorGUILayout.EndScrollView();
+            GUI.EndScrollView();
 
             if (close) {
                 this.Close();

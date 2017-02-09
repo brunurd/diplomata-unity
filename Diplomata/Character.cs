@@ -31,19 +31,22 @@ namespace Diplomata {
         SerializedProperty attributes;
         SerializedProperty description;
         SerializedProperty startOnPlay;
-
-        public static void SetCharacter(Character character) {
-            CharacterEditor.character = character;
-        }
+        SerializedProperty path;
 
         public void OnEnable() {
+            attributes = serializedObject.FindProperty("attributes");
+            description = serializedObject.FindProperty("description");
+            startOnPlay = serializedObject.FindProperty("startOnPlay");
+            path = serializedObject.FindProperty("characterPath");
+
             if (GameObject.Find(serializedObject.targetObject.name) != null) {
                 GameObject obj = GameObject.Find(serializedObject.targetObject.name);
                 character = obj.GetComponent<Character>();
             }
-            attributes = serializedObject.FindProperty("attributes");
-            description = serializedObject.FindProperty("description");
-            startOnPlay = serializedObject.FindProperty("startOnPlay");
+
+            else {
+                character = (Character)AssetDatabase.LoadAssetAtPath(path.stringValue,typeof(Character));
+            }
         }
 
         public override void OnInspectorGUI() {
@@ -103,22 +106,17 @@ namespace Diplomata {
         private Message currentMessage;
         private List<Message> currentChoices = new List<Message>();
         private Events events;
+        public string characterPath;
 
         public void Awake() {
             InstantiateManager();
             SetAttributes();
-            #if (UNITY_EDITOR)
-            CharacterEditor.SetCharacter(this);
-            #endif
         }
 
         public void Start() {
             events = GetComponent<Events>();
             events.SetCharacter(this);
-            #if (UNITY_EDITOR)
-            CharacterEditor.SetCharacter(this);
-            #endif
-
+            
             InstantiateManager();
 
             talking = false;
@@ -300,6 +298,17 @@ namespace Diplomata {
 
             int tempInfluence = (max + influence) / 2;
             influence = (byte)tempInfluence;
+        }
+
+        public void Update() {
+            #if (UNITY_EDITOR)
+            if (characterPath == "" || characterPath == null) {
+                if (System.IO.File.Exists(AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(this)))) {
+                    characterPath = AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(this));
+                    PrefabUtility.ReplacePrefab(gameObject, PrefabUtility.GetPrefabParent(this), ReplacePrefabOptions.ConnectToPrefab);
+                }
+            }
+            #endif
         }
 
     }
