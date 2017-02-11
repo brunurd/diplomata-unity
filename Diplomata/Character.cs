@@ -195,25 +195,29 @@ namespace Diplomata {
             }
 
             if (talking) {
-                foreach (Message msg in next) {
+                for (int i = 0; i < next.Count; i++) {
                     conditions = true;
-                    msg.conditions.Invoke();
+                    next[i].conditions.Invoke();
 
                     if (conditions) {
                         if (emitter == null) {
-                            emitter = msg.emitter;
+                            emitter = next[i].emitter;
                         }
 
                         if (emitter != "Player") {
                             isTalking = true;
-                            currentMessage = msg;
+                            currentMessage = next[i];
                             break;
                         }
 
-                        if (emitter == "Player" && msg.emitter == "Player") {
+                        if (emitter == "Player" && next[i].emitter == "Player") {
                             waitingPlayer = true;
-                            currentChoices.Add(msg);
+                            currentChoices.Add(next[i]);
                         }
+                    }
+
+                    else if (i == next.Count - 1) {
+                        talking = false;
                     }
                 }
             }
@@ -253,6 +257,7 @@ namespace Diplomata {
         }
 
         public void ChooseMessage(string title) {
+            events.lastChoice = title;
             foreach (Message msg in currentChoices) {
                 foreach (DictLang titleTemp in msg.title) {
                     if (titleTemp.key == Options.language && titleTemp.value == title) {

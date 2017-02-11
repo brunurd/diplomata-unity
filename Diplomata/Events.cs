@@ -8,6 +8,8 @@ namespace Diplomata {
         [HideInInspector]
         [SerializeField]
         private Character character;
+        [HideInInspector]
+        public string lastChoice;
 
         public void SetCharacter(Character character) {
             this.character = character;
@@ -47,6 +49,15 @@ namespace Diplomata {
 
         public void InfluenceEqualTo(string value) {
             this.character.conditions = Compare(() => { if (double.Parse(value) == this.character.influence) return true; else return false; });
+        }
+
+        public void AfterChoice(string title) {
+            if (lastChoice == title) {
+                character.conditions = true;
+            }
+            else {
+                character.conditions = false;
+            }
         }
     }
 
