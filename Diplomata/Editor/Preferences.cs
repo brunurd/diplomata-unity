@@ -20,12 +20,9 @@ namespace DiplomataEditor {
 
         [MenuItem("Diplomata/Preferences")]
         static public void Init() {
-            if (GameObject.Find("Diplomata") == null) {
-                if (GameObject.Find("Diplomata(Clone)") == null) {
-                    UnityEngine.Object diplomata = Resources.Load("Diplomata");
-                    Instantiate(diplomata);
-                }
-            }
+            GameObject obj = new GameObject("Diplomata");
+            obj.hideFlags = HideFlags.HideInHierarchy;
+            obj.AddComponent<Diplomata.Manager>();
 
             GetPrefsStrings();
 

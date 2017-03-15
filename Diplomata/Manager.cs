@@ -30,7 +30,7 @@ namespace Diplomata {
             }
 
             else if (instance != this) {
-                Destroy(gameObject);
+                DestroyImmediate(gameObject);
             }
 
             UpdatePreferences();
