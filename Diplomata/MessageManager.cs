@@ -1,13 +1,12 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-#if (UNITY_EDITOR)
 using UnityEditor;
-#endif
+
 
 namespace Diplomata {
-
-#if (UNITY_EDITOR)
 
     public class MessageManager : EditorWindow {
 
@@ -29,24 +28,15 @@ namespace Diplomata {
         public static bool close;
         public Vector2 scrollPos;
 
-        static public void Init(Character character) {
+        static public void Init() {
             close = false;
             style = new GUIStyle();
-            MessageManager.character = character;
+            character = Manager.instance.characters[Manager.instance.currentCharacterIndex];
             Manager.UpdatePreferences();
             SetLanguages();
             ResetColunms();
             MessageManager window = (MessageManager)GetWindow(typeof(MessageManager), false, "Messages", true);
             window.minSize = new Vector2(730, 550);
-            window.Show();
-        }
-
-        [MenuItem("Diplomata/Message(s) Manager")]
-        public static void Init() {
-            style = new GUIStyle();
-            Manager.UpdatePreferences();
-            SetLanguages();
-            MessageManager window = (MessageManager)GetWindow(typeof(MessageManager), false, "Messages", true);
             window.Show();
         }
 
@@ -156,7 +146,7 @@ namespace Diplomata {
             GUI.Label(new Rect(110, 10, 70, headerSize - 30), "Character: ");
             character = EditorGUI.ObjectField(new Rect(180, 10, 200, 16), character, typeof(Character), true) as Character;
             GUI.Label(new Rect(410, 10, 70, headerSize - 30), "Language: ");
-            languageIndex = EditorGUI.Popup(new Rect(480, 10, 60, 16), languageIndex, MessageManager.languagesArray);
+            languageIndex = EditorGUI.Popup(new Rect(480, 10, 60, 16), languageIndex, languagesArray);
 
             if (GUI.Button(new Rect(Screen.width - 150, 5, 140, headerSize - 40),"Save as screenplay")) {
                 Debug.Log("Saved.");
@@ -211,11 +201,11 @@ namespace Diplomata {
             GUI.EndScrollView();
 
             if (close) {
-                this.Close();
+                Close();
             }
         }
     }
 
-#endif
-
 }
+
+#endif

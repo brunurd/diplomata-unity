@@ -29,41 +29,31 @@ namespace Diplomata {
     [Serializable]
     public class CharacterEditor : Editor {
 
+        private const byte MARGIN = 15;
+
         public static Character character;
         SerializedProperty attributes;
         SerializedProperty description;
         SerializedProperty startOnPlay;
-        SerializedProperty path;
 
         public void OnEnable() {
             attributes = serializedObject.FindProperty("attributes");
             description = serializedObject.FindProperty("description");
             startOnPlay = serializedObject.FindProperty("startOnPlay");
-            path = serializedObject.FindProperty("characterPath");
-
-            if (GameObject.Find(serializedObject.targetObject.name) != null) {
-                GameObject obj = GameObject.Find(serializedObject.targetObject.name);
-                character = obj.GetComponent<Character>();
-            }
-
-            else {
-                character = (Character)AssetDatabase.LoadAssetAtPath(path.stringValue,typeof(Character));
-            }
+            character = target as Character;
         }
 
         public override void OnInspectorGUI() {
             serializedObject.Update();
-
-            int margin = 15;
-
-            GUILayout.Space(margin);
+            
+            GUILayout.Space(MARGIN);
             GUILayout.Label("Description: ");
             description.stringValue = GUILayout.TextArea(description.stringValue, GUILayout.Height(50));
 
-            GUILayout.Space(margin);
+            GUILayout.Space(MARGIN);
             startOnPlay.boolValue = GUILayout.Toggle(startOnPlay.boolValue, "Start on play");
 
-            GUILayout.Space(margin);
+            GUILayout.Space(MARGIN);
             GUILayout.Label("Character attributes (influenceable by): ");
             for (int i = 0; i < attributes.arraySize; i++) {
                 SerializedProperty key = attributes.GetArrayElementAtIndex(i).FindPropertyRelative("key");
@@ -75,14 +65,25 @@ namespace Diplomata {
             }
 
             if (character != null) {
-                GUILayout.Space(margin);
+                GUILayout.Space(MARGIN);
 
                 if (GUILayout.Button("Edit messages", GUILayout.Height(40))) {
-                    MessageManager.Init(character);
+
+                    if (Manager.instance != null && Manager.instance.characters.IndexOf(character) != -1) {
+                        Manager.instance.currentCharacterIndex = Manager.instance.characters.IndexOf(character);
+                    }
+
+                    else {
+                        character.InstantiateManager();
+                        Manager.instance.characters.Add(character);
+                        Manager.instance.currentCharacterIndex = Manager.instance.characters.IndexOf(character);
+                    }
+
+                    MessageManager.Init();
                 }
             }
 
-            GUILayout.Space(margin);
+            GUILayout.Space(MARGIN);
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -108,11 +109,25 @@ namespace Diplomata {
         private Message currentMessage;
         private List<Message> currentChoices = new List<Message>();
         private Events events;
-        public string characterPath;
 
         public void Awake() {
             InstantiateManager();
             SetAttributes();
+
+            bool canAdd = true;
+
+            foreach (Character character in Manager.instance.characters) {
+                if (character != null) {
+                    if (character.gameObject.Equals(gameObject)) {
+                        canAdd = false;
+                        break;
+                    }
+                }
+            }
+
+            if (canAdd) {
+                Manager.instance.characters.Add(this);
+            }
         }
 
         public void Start() {
@@ -303,17 +318,5 @@ namespace Diplomata {
             int tempInfluence = (max + influence) / 2;
             influence = (byte)tempInfluence;
         }
-
-        public void Update() {
-            #if (UNITY_EDITOR)
-            if (characterPath == "" || characterPath == null) {
-                if (System.IO.File.Exists(AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(this)))) {
-                    characterPath = AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(this));
-                    PrefabUtility.ReplacePrefab(gameObject, PrefabUtility.GetPrefabParent(this), ReplacePrefabOptions.ConnectToPrefab);
-                }
-            }
-            #endif
-        }
-
     }
 }

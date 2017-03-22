@@ -1,5 +1,7 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 
 namespace Diplomata {
 
@@ -24,9 +26,19 @@ namespace Diplomata {
         [HideInInspector]
         public Options options;
 
+        [HideInInspector]
+        public List<Character> characters = new List<Character>();
+
+        [HideInInspector]
+        public int currentCharacterIndex;
+
         public void Awake() {
             if (instance == null) {
                 instance = this;
+
+                if (Application.isPlaying) {
+                    DontDestroyOnLoad(gameObject);
+                }
             }
 
             else if (instance != this) {
@@ -34,10 +46,20 @@ namespace Diplomata {
             }
 
             UpdatePreferences();
+            SetCharacters();
+        }
+
+        public void SetCharacters() {
+            characters = new List<Character>();
+
+            var charactersArray = (Character[])FindObjectsOfType(typeof(Character));
+
+            foreach (Character character in charactersArray) {
+                characters.Add(character);
+            }
         }
 
         static public void UpdatePreferences() {
-            logo = (Texture)Resources.Load("DIPLOMATA-logo");
             TextAsset json = (TextAsset)Resources.Load("preferences");
             preferences = JsonUtility.FromJson<Preferences>(json.text);
             Options.language = preferences.subLanguages[0];

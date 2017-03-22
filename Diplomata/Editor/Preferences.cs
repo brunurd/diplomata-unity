@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 namespace DiplomataEditor {
 
-#if (UNITY_EDITOR)
-
     [Serializable]
     public class Preferences : EditorWindow {
 
@@ -146,7 +144,5 @@ namespace DiplomataEditor {
             SaveJson();
         }
     }
-
-#endif
 
 }

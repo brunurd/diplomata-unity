@@ -98,7 +98,8 @@ namespace Diplomata {
             
             GUILayout.Space(margin);
             if (GUI.Button(new Rect(Screen.width - 110, Screen.height - 60, 100, 30), "Save changes")) {
-                MessageManager.Init(message.character);
+                Manager.instance.currentCharacterIndex = Manager.instance.characters.IndexOf(message.character);
+                MessageManager.Init();
                 this.Close();
             }
 
