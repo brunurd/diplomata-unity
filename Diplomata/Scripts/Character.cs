@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-#if (UNITY_EDITOR)
-using UnityEditor;
-#endif
 using System;
 using System.Collections.Generic;
 
@@ -21,75 +18,6 @@ namespace Diplomata {
             this.value = value;
         }
     }
-
-#if (UNITY_EDITOR)
-
-    [CustomEditor(typeof(Character))]
-    [CanEditMultipleObjects]
-    [Serializable]
-    public class CharacterEditor : Editor {
-
-        private const byte MARGIN = 15;
-
-        public static Character character;
-        SerializedProperty attributes;
-        SerializedProperty description;
-        SerializedProperty startOnPlay;
-
-        public void OnEnable() {
-            attributes = serializedObject.FindProperty("attributes");
-            description = serializedObject.FindProperty("description");
-            startOnPlay = serializedObject.FindProperty("startOnPlay");
-            character = target as Character;
-        }
-
-        public override void OnInspectorGUI() {
-            serializedObject.Update();
-            
-            GUILayout.Space(MARGIN);
-            GUILayout.Label("Description: ");
-            description.stringValue = GUILayout.TextArea(description.stringValue, GUILayout.Height(50));
-
-            GUILayout.Space(MARGIN);
-            startOnPlay.boolValue = GUILayout.Toggle(startOnPlay.boolValue, "Start on play");
-
-            GUILayout.Space(MARGIN);
-            GUILayout.Label("Character attributes (influenceable by): ");
-            for (int i = 0; i < attributes.arraySize; i++) {
-                SerializedProperty key = attributes.GetArrayElementAtIndex(i).FindPropertyRelative("key");
-                SerializedProperty value = attributes.GetArrayElementAtIndex(i).FindPropertyRelative("value");
-                GUILayout.BeginHorizontal();
-                    GUILayout.Label(key.stringValue);
-                    value.intValue = (byte)EditorGUILayout.Slider(value.intValue, 0, 100);
-                GUILayout.EndHorizontal();
-            }
-
-            if (character != null) {
-                GUILayout.Space(MARGIN);
-
-                if (GUILayout.Button("Edit messages", GUILayout.Height(40))) {
-
-                    if (Manager.instance != null && Manager.instance.characters.IndexOf(character) != -1) {
-                        Manager.instance.currentCharacterIndex = Manager.instance.characters.IndexOf(character);
-                    }
-
-                    else {
-                        character.InstantiateManager();
-                        Manager.instance.characters.Add(character);
-                        Manager.instance.currentCharacterIndex = Manager.instance.characters.IndexOf(character);
-                    }
-
-                    MessageManager.Init();
-                }
-            }
-
-            GUILayout.Space(MARGIN);
-
-            serializedObject.ApplyModifiedProperties();
-        }
-    }
-
-#endif
 
     [RequireComponent(typeof(Events))]
     [Serializable]
@@ -111,12 +39,12 @@ namespace Diplomata {
         private Events events;
 
         public void Awake() {
-            InstantiateManager();
+            Manager.Instantiate();
             SetAttributes();
 
             bool canAdd = true;
 
-            foreach (Character character in Manager.instance.characters) {
+            foreach (Character character in Manager.characters) {
                 if (character != null) {
                     if (character.gameObject.Equals(gameObject)) {
                         canAdd = false;
@@ -126,7 +54,7 @@ namespace Diplomata {
             }
 
             if (canAdd) {
-                Manager.instance.characters.Add(this);
+                Manager.characters.Add(this);
             }
         }
 
@@ -134,7 +62,7 @@ namespace Diplomata {
             events = GetComponent<Events>();
             events.SetCharacter(this);
             
-            InstantiateManager();
+            Manager.Instantiate();
 
             talking = false;
             isTalking = false;
@@ -146,16 +74,9 @@ namespace Diplomata {
             }
         }
 
-        public void InstantiateManager() {
-            GameObject obj = new GameObject("Diplomata");
-            obj.hideFlags = HideFlags.HideInHierarchy;
-            obj.AddComponent<Manager>();
-            Manager.UpdatePreferences();
-        }
-
         public void SetAttributes() {
             if (attributes.Count == 0) {
-                foreach (string attr in Manager.preferences.attributes) {
+                foreach (string attr in Preferences.attributes) {
                     attributes.Add(new DictAttr(attr, 0));
                 }
             }
@@ -170,7 +91,7 @@ namespace Diplomata {
             foreach (Message msg in messages) {
                 if (msg.colunm == 0) {
                     foreach (DictLang title in msg.title) {
-                        if (title.key == Options.language) {
+                        if (title.key == GameProgress.currentSubtitledLanguage) {
                             startNext.Add(title.value);
                         }
                     }
@@ -197,7 +118,7 @@ namespace Diplomata {
                         }
                         else {
                             foreach (DictLang title in msg.title) {
-                                if (title.key == Options.language) {
+                                if (title.key == GameProgress.currentSubtitledLanguage) {
                                     if (title.value == str) {
                                         next.Add(msg);
                                     }
@@ -242,7 +163,7 @@ namespace Diplomata {
 
             if (talking) {
                 foreach (DictLang content in currentMessage.content) {
-                    if (content.key == Options.language) {
+                    if (content.key == GameProgress.currentSubtitledLanguage) {
                         newContent += content.value;
                     }
                 }
@@ -261,7 +182,7 @@ namespace Diplomata {
 
             foreach (Message msg in currentChoices) {
                 foreach (DictLang title in msg.title) {
-                    if (title.key == Options.language) {
+                    if (title.key == GameProgress.currentSubtitledLanguage) {
                         returnChoices.Add(title.value);
                     }
                 }
@@ -274,7 +195,7 @@ namespace Diplomata {
             events.lastChoice = title;
             foreach (Message msg in currentChoices) {
                 foreach (DictLang titleTemp in msg.title) {
-                    if (titleTemp.key == Options.language && titleTemp.value == title) {
+                    if (titleTemp.key == GameProgress.currentSubtitledLanguage && titleTemp.value == title) {
                         waitingPlayer = false;
                         isListening = true;
                         currentMessage = msg;

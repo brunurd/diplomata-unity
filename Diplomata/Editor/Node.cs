@@ -1,8 +1,7 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace Diplomata {
+namespace DiplomataEditor {
     
     public class Node {
         private const int padding = 10;
@@ -104,5 +103,3 @@ namespace Diplomata {
     }
 
 }
-
-#endif
