@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Diplomata {
+namespace DiplomataLib {
 
     public class Events : MonoBehaviour {
-
+        /*
         [HideInInspector]
         [SerializeField]
         private Character character;
@@ -59,6 +59,7 @@ namespace Diplomata {
                 character.conditions = false;
             }
         }
+        */
     }
 
 }

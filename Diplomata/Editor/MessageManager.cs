@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using DiplomataLib;
 
 namespace DiplomataEditor {
 
@@ -28,8 +29,8 @@ namespace DiplomataEditor {
         static public void Init() {
             close = false;
             style = new GUIStyle();
-            character = Manager.instance.characters[Manager.instance.currentCharacterIndex];
-            Manager.UpdatePreferences();
+            //character = Diplomata.instance.characters[Diplomata.instance.currentCharacterIndex];
+            //Diplomata.UpdatePreferences();
             SetLanguages();
             ResetColunms();
             MessageManager window = (MessageManager)GetWindow(typeof(MessageManager), false, "Messages", true);
@@ -40,19 +41,19 @@ namespace DiplomataEditor {
         public static void SetLanguages() {
             languages = new List<string>();
 
-            for (int i = 0; i < Manager.preferences.subLanguages.Length; i++) {
-                languages.Add(Manager.preferences.subLanguages[i]);
+            for (int i = 0; i < Diplomata.preferences.subLanguages.Count; i++) {
+                languages.Add(Diplomata.preferences.subLanguages[i]);
             }
 
-            for (int i = 0; i < Manager.preferences.dubLanguages.Length; i++) {
+            for (int i = 0; i < Diplomata.preferences.dubLanguages.Count; i++) {
                 bool hasEqual = false;
                 for (int j = 0; j < languages.Count; j++) {
-                    if (Manager.preferences.dubLanguages[i] == languages[j]) {
+                    if (Diplomata.preferences.dubLanguages[i] == languages[j]) {
                         hasEqual = true;
                     }
                 }
                 if (!hasEqual) {
-                    languages.Add(Manager.preferences.dubLanguages[i]);
+                    languages.Add(Diplomata.preferences.dubLanguages[i]);
                 }
             }
 
@@ -65,8 +66,8 @@ namespace DiplomataEditor {
 
         public static void ResetColunms() {
             colunms = new List<List<Node>>();
-            int colunmsMax = 0;
-
+            //int colunmsMax = 0;
+            /*
             foreach (Message msg in character.messages) {
                 if (msg.colunm > colunmsMax) {
                     colunmsMax = msg.colunm;
@@ -115,7 +116,7 @@ namespace DiplomataEditor {
             else {
                 colunms.Add(new List<Node>());
                 colunms[colunms.Count - 1].Add(new Node(0, 0, character));
-            }
+            }*/
         }
 
         public void DrawBG() {
@@ -139,9 +140,8 @@ namespace DiplomataEditor {
         }
 
         public void DrawHeader() {
-            GUI.Label(new Rect(5, 7, 80, headerSize - 30), Manager.logo);
             GUI.Label(new Rect(110, 10, 70, headerSize - 30), "Character: ");
-            character = EditorGUI.ObjectField(new Rect(180, 10, 200, 16), character, typeof(Character), true) as Character;
+            //character = EditorGUI.ObjectField(new Rect(180, 10, 200, 16), character, typeof(Character), true) as Character;
             GUI.Label(new Rect(410, 10, 70, headerSize - 30), "Language: ");
             languageIndex = EditorGUI.Popup(new Rect(480, 10, 60, 16), languageIndex, languagesArray);
 
@@ -164,7 +164,7 @@ namespace DiplomataEditor {
             DrawBG();
             
             if (languageIndex != indexTemp) {
-                Manager.UpdatePreferences();
+                //Manager.UpdatePreferences();
                 SetLanguages();
                 ResetColunms();
             }

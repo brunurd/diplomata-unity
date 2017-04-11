@@ -1,83 +1,30 @@
-﻿using UnityEngine;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-namespace Diplomata {
+namespace DiplomataLib {
 
-    [Serializable]
-    public class DictAttr {
-        public string key;
-        public byte value;
-
-        public DictAttr(string k, byte v) {
-            key = k;
-            value = v;
-        }
-
-        public void SetValue(byte value) {
-            this.value = value;
-        }
-    }
-
-    [RequireComponent(typeof(Events))]
-    [Serializable]
     [ExecuteInEditMode]
-    public class Character : MonoBehaviour {
-        public string description = "";
-        public bool startOnPlay;
-        public List<DictAttr> attributes = new List<DictAttr>();
-        public List<Message> messages = new List<Message>();
-        public List<string> startNext = new List<string>();
-        public byte influence = 50;
+    public class DiplomataCharacter : MonoBehaviour {
+
+        public Character character;
         public bool conditions;
         public bool talking;
         public bool isTalking;
         public bool waitingPlayer;
         public bool isListening;
         private Message currentMessage;
+        public List<string> startNext = new List<string>();
         private List<Message> currentChoices = new List<Message>();
-        private Events events;
-
-        public void Awake() {
-            Manager.Instantiate();
-            SetAttributes();
-
-            bool canAdd = true;
-
-            foreach (Character character in Manager.characters) {
-                if (character != null) {
-                    if (character.gameObject.Equals(gameObject)) {
-                        canAdd = false;
-                        break;
-                    }
-                }
-            }
-
-            if (canAdd) {
-                Manager.characters.Add(this);
-            }
-        }
-
+        
         public void Start() {
-            events = GetComponent<Events>();
-            events.SetCharacter(this);
-            
-            Manager.Instantiate();
-
             talking = false;
             isTalking = false;
             waitingPlayer = false;
             isListening = false;
 
-            if (startOnPlay) {
-                StartTalk();
-            }
-        }
-
-        public void SetAttributes() {
-            if (attributes.Count == 0) {
-                foreach (string attr in Preferences.attributes) {
-                    attributes.Add(new DictAttr(attr, 0));
+            if (character != null) {
+                if (character.startOnPlay) {
+                    StartTalk();
                 }
             }
         }
@@ -88,11 +35,11 @@ namespace Diplomata {
             currentChoices = new List<Message>();
             startNext = new List<string>();
 
-            foreach (Message msg in messages) {
+            foreach (Message msg in character.messages) {
                 if (msg.colunm == 0) {
-                    foreach (DictLang title in msg.title) {
-                        if (title.key == GameProgress.currentSubtitledLanguage) {
-                            startNext.Add(title.value);
+                    foreach (KeyValuePair<string, string> title in msg.title) {
+                        if (title.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
+                            startNext.Add(title.Value);
                         }
                     }
                 }
@@ -109,7 +56,7 @@ namespace Diplomata {
             waitingPlayer = false;
             isListening = false;
 
-            foreach (Message msg in messages) {
+            foreach (Message msg in character.messages) {
                 if (talking) {
                     foreach (string str in nextArray) {
                         if (str == "__END") {
@@ -117,9 +64,9 @@ namespace Diplomata {
                             break;
                         }
                         else {
-                            foreach (DictLang title in msg.title) {
-                                if (title.key == GameProgress.currentSubtitledLanguage) {
-                                    if (title.value == str) {
+                            foreach (KeyValuePair<string, string> title in msg.title) {
+                                if (title.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
+                                    if (title.Value == str) {
                                         next.Add(msg);
                                     }
                                 }
@@ -132,7 +79,7 @@ namespace Diplomata {
             if (talking) {
                 for (int i = 0; i < next.Count; i++) {
                     conditions = true;
-                    next[i].conditions.Invoke();
+                    //next[i].conditions.Invoke();
 
                     if (conditions) {
                         if (emitter == null) {
@@ -162,9 +109,9 @@ namespace Diplomata {
             string newContent = currentMessage.emitter + ":\n";
 
             if (talking) {
-                foreach (DictLang content in currentMessage.content) {
-                    if (content.key == GameProgress.currentSubtitledLanguage) {
-                        newContent += content.value;
+                foreach (KeyValuePair<string, string> content in currentMessage.content) {
+                    if (content.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
+                        newContent += content.Value;
                     }
                 }
             }
@@ -173,7 +120,7 @@ namespace Diplomata {
         }
 
         public void NextMessage() {
-            currentMessage.callback.Invoke();
+            //currentMessage.callback.Invoke();
             Next(currentMessage.next);
         }
 
@@ -181,9 +128,9 @@ namespace Diplomata {
             List<string> returnChoices = new List<string>();
 
             foreach (Message msg in currentChoices) {
-                foreach (DictLang title in msg.title) {
-                    if (title.key == GameProgress.currentSubtitledLanguage) {
-                        returnChoices.Add(title.value);
+                foreach (KeyValuePair<string, string> title in msg.title) {
+                    if (title.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
+                        returnChoices.Add(title.Value);
                     }
                 }
             }
@@ -192,10 +139,9 @@ namespace Diplomata {
         }
 
         public void ChooseMessage(string title) {
-            events.lastChoice = title;
             foreach (Message msg in currentChoices) {
-                foreach (DictLang titleTemp in msg.title) {
-                    if (titleTemp.key == GameProgress.currentSubtitledLanguage && titleTemp.value == title) {
+                foreach (KeyValuePair<string, string> titleTemp in msg.title) {
+                    if (titleTemp.Key == Diplomata.gameProgress.currentSubtitledLanguage && titleTemp.Value == title) {
                         waitingPlayer = false;
                         isListening = true;
                         currentMessage = msg;
@@ -215,14 +161,14 @@ namespace Diplomata {
             byte max = 0;
             List<byte> min = new List<byte>();
 
-            foreach (DictAttr attrMsg in currentMessage.attributes) {
-                foreach (DictAttr attrChar in attributes) {
-                    if (attrMsg.key == attrChar.key) {
-                        if (attrMsg.value < attrChar.value) {
-                            min.Add(attrMsg.value);
+            foreach (KeyValuePair<string, byte> attrMsg in currentMessage.attributes) {
+                foreach (DictAttr attrChar in character.attributes) {
+                    if (attrMsg.Key == attrChar.key) {
+                        if (attrMsg.Value < attrChar.value) {
+                            min.Add(attrMsg.Value);
                             break;
                         }
-                        if (attrMsg.value >= attrChar.value) {
+                        if (attrMsg.Value >= attrChar.value) {
                             min.Add(attrChar.value);
                             break;
                         }
@@ -236,8 +182,10 @@ namespace Diplomata {
                 }
             }
 
-            int tempInfluence = (max + influence) / 2;
-            influence = (byte)tempInfluence;
+            int tempInfluence = (max + character.influence) / 2;
+            character.influence = (byte)tempInfluence;
         }
+
     }
+
 }

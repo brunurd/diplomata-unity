@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using DiplomataLib;
 
 namespace DiplomataEditor {
     
@@ -17,7 +18,7 @@ namespace DiplomataEditor {
         public string title;
         public Message message;
         public bool isAdd;
-        public Character character;
+        public DiplomataLib.Character character;
         public int colunmLimit;
 
         public Node(int col, int row, Character character) {
@@ -95,9 +96,9 @@ namespace DiplomataEditor {
 
         public void AddNode() {
             MessageManager.close = true;
-            character.messages.Add(new Message(character, colunm, row));
-            this.message = character.messages[character.messages.Count - 1];
-            MessageEditor.Init(this.message);
+            //character.messages.Add(new Message(character, colunm, row));
+            //message = character.messages[character.messages.Count - 1];
+            MessageEditor.Init(message);
             MessageManager.ResetColunms();
         }
     }

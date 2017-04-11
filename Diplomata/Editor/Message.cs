@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using Diplomata;
+using DiplomataLib;
 
 namespace DiplomataEditor {
 
-    public class Message : EditorWindow {
+    public class MessageEditor : EditorWindow {
 
         public static Message message;
         public static int resetTimer;
@@ -52,10 +52,10 @@ namespace DiplomataEditor {
             if (emitterPlayer = GUILayout.Toggle(emitterPlayer, "Player")) {
                 emitterCharacter = false;
             }
-
+            /*
             if (emitterCharacter = GUILayout.Toggle(emitterCharacter, message.character.name)) {
                 emitterPlayer = false;
-            }
+            }*/
 
             GUILayout.EndHorizontal();
 
@@ -65,26 +65,27 @@ namespace DiplomataEditor {
             }
 
             if (emitterCharacter) {
-                message.emitter = message.character.name;
+                //message.emitter = message.character.name;
                 emitterPlayer = false;
             }
 
             GUILayout.Space(margin);
             GUILayout.Label("Title in '" + MessageManager.languagesArray[MessageManager.languageIndex] + "':");
-            message.title[MessageManager.languageIndex].value = GUILayout.TextField(message.title[MessageManager.languageIndex].value);
+            //message.title[MessageManager.languageIndex].value = GUILayout.TextField(message.title[MessageManager.languageIndex].value);
 
             GUILayout.Space(margin);
             GUILayout.Label("Content in '" + MessageManager.languagesArray[MessageManager.languageIndex] + "':");
-            message.content[MessageManager.languageIndex].value = GUILayout.TextArea(message.content[MessageManager.languageIndex].value, GUILayout.Height(50));
+            //message.content[MessageManager.languageIndex].value = GUILayout.TextArea(message.content[MessageManager.languageIndex].value, GUILayout.Height(50));
 
             if (message.emitter == "Player") {
                 GUILayout.Space(margin);
+                /*
                 foreach (DictAttr attr in message.attributes) {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(attr.key);
                     attr.value = (byte)EditorGUILayout.Slider(attr.value, 0, 100);
                     GUILayout.EndHorizontal();
-                }
+                }*/
             }
 
             GUILayout.Space(margin);
@@ -92,7 +93,7 @@ namespace DiplomataEditor {
 
             GUILayout.Space(margin);
             if (GUI.Button(new Rect(Screen.width - 110, Screen.height - 60, 100, 30), "Save changes")) {
-                Manager.instance.currentCharacterIndex = Manager.instance.characters.IndexOf(message.character);
+                //Diplomata.instance.currentCharacterIndex = Diplomata.instance.characters.IndexOf(message.character);
                 MessageManager.Init();
                 this.Close();
             }
@@ -101,10 +102,10 @@ namespace DiplomataEditor {
         }
 
         public static void GetEventsField() {
-            characterObject = new SerializedObject(message.character);
+            //characterObject = new SerializedObject(message.character);
             messageObject = characterObject.FindProperty("messages");
-            conditions = messageObject.GetArrayElementAtIndex(message.character.messages.IndexOf(message)).FindPropertyRelative("conditions");
-            callback = messageObject.GetArrayElementAtIndex(message.character.messages.IndexOf(message)).FindPropertyRelative("callback");
+            //conditions = messageObject.GetArrayElementAtIndex(message.character.messages.IndexOf(message)).FindPropertyRelative("conditions");
+            //callback = messageObject.GetArrayElementAtIndex(message.character.messages.IndexOf(message)).FindPropertyRelative("callback");
         }
 
     }

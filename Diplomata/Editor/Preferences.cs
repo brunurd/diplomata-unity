@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using DiplomataLib;
 
 namespace DiplomataEditor {
     
@@ -8,121 +9,58 @@ namespace DiplomataEditor {
 
         public readonly byte MARGIN = 15;
 
-        public static List<string> attributes = new List<string>();
-        public static List<string> subLanguages = new List<string>();
-        public static List<string> dubLanguages = new List<string>();
-
         [MenuItem("Diplomata/Preferences")]
         static public void Init() {
-            Manager.Instantiate();
-
-            GetPrefsStrings();
+            Diplomata.Instantiate();
 
             Preferences window = (Preferences)GetWindow(typeof(Preferences), false, "Preferences");
-            window.minSize = new Vector2(455,250);
+            window.minSize = new Vector2(455,300);
             window.Show();
         }
 
         public void OnGUI() {
 
             GUILayout.Space(MARGIN);
+
+            GUILayout.Label("Default Resources folder:");
+            DiplomataLib.Preferences.defaultResourcesFolder = GUILayout.TextField(DiplomataLib.Preferences.defaultResourcesFolder);
+            GUILayout.Space(MARGIN);
+
             GUILayout.BeginHorizontal();
+            
+            ShowColunm(Diplomata.preferences.attributes, "Attributes:", "Add attribute");
+            ShowColunm(Diplomata.preferences.subLanguages, "Sub. Languages:", "Add language");
+            ShowColunm(Diplomata.preferences.dubLanguages, "Dub. Languages:", "Add language");
 
-            // ATTRIBUTES COLUNM
-
-            GUILayout.BeginVertical(GUILayout.Width(Screen.width / 3 - 5));
-
-            GUILayout.Label("Attributes: ");
-            for (int i = 0; i < attributes.Count; i++) {
-                GUILayout.BeginHorizontal();
-                attributes[i] = GUILayout.TextField(attributes[i]);
-                if (GUILayout.Button("X", GUILayout.Width(20))) {
-                    attributes.Remove(attributes[i]);
-                }
-                GUILayout.EndHorizontal();
-            }
-            if (GUILayout.Button("Add Attribute")) {
-                attributes.Add("");
-            }
-            GUILayout.EndVertical();
-
-            // SUBTITLE LANGUAGES COLUNM
-
-            GUILayout.BeginVertical(GUILayout.Width(Screen.width / 3 - 5));
-            GUILayout.Label("Sub. languages: ");
-            for (int i = 0; i < subLanguages.Count; i++) {
-                GUILayout.BeginHorizontal();
-                subLanguages[i] = GUILayout.TextField(subLanguages[i]);
-                if (GUILayout.Button("X", GUILayout.Width(20))) {
-                    subLanguages.Remove(subLanguages[i]);
-                }
-                GUILayout.EndHorizontal();
-            }
-            if (GUILayout.Button("Add language")) {
-                subLanguages.Add("");
-            }
-            GUILayout.EndVertical();
-
-            // DUBBED LANGUAGES COLUNM
-
-            GUILayout.BeginVertical(GUILayout.Width(Screen.width / 3 - 5));
-            GUILayout.Label("Dub. languages: ");
-            for (int i = 0; i < dubLanguages.Count; i++) {
-                GUILayout.BeginHorizontal();
-                dubLanguages[i] = GUILayout.TextField(dubLanguages[i]);
-                if (GUILayout.Button("X", GUILayout.Width(20))) {
-                    dubLanguages.Remove(dubLanguages[i]);
-                }
-                GUILayout.EndHorizontal();
-            }
-            if (GUILayout.Button("Add language")) {
-                dubLanguages.Add("");
-            }
-            GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-
-            // SAVE BUTTON
 
             GUILayout.Space(MARGIN);
             if (GUILayout.Button("Save Preferences", GUILayout.Height(50))) {
-                SetPrefsStrings();
-                Diplomata.Preferences.SaveJSON(Manager.preferences);
+                JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
             }
         }
 
-        public static void GetPrefsStrings() {
-            attributes = new List<string>();
-            subLanguages = new List<string>();
-            dubLanguages = new List<string>();
+        public void ShowColunm(List<string> list, string label, string addLabel) {
+            GUILayout.BeginVertical(GUILayout.Width(Screen.width / 3 - 5));
 
-            foreach (string str in Diplomata.Preferences.attributes) {
-                attributes.Add(str);
-            }
-
-            foreach (string str in Diplomata.Preferences.subLanguages) {
-                subLanguages.Add(str);
-            }
-
-            foreach (string str in Diplomata.Preferences.dubLanguages) {
-                dubLanguages.Add(str);
-            }
-        }
-        
-        public void SetPrefsStrings() {
-            Diplomata.Preferences.attributes = ListToStringArray(attributes);
-            Diplomata.Preferences.subLanguages = ListToStringArray(subLanguages);
-            Diplomata.Preferences.dubLanguages = ListToStringArray(dubLanguages);
-            Diplomata.Preferences.SaveJSON(Manager.preferences);
-        }
-
-        public string[] ListToStringArray(List<string> list) {
-            string[] array = new string[list.Count];
+            GUILayout.Label(label);
 
             for (int i = 0; i < list.Count; i++) {
-                array[i] = list[i];
+                GUILayout.BeginHorizontal();
+
+                    list[i] = GUILayout.TextField(list[i]);
+
+                    if (GUILayout.Button("X", GUILayout.Width(20))) {
+                        list.Remove(list[i]);
+                    }
+
+                GUILayout.EndHorizontal();
             }
 
-            return array;
+            if (GUILayout.Button(addLabel)) {
+                list.Add("");
+            }
+            GUILayout.EndVertical();
         }
     }
 

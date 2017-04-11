@@ -1,56 +1,47 @@
 ﻿using UnityEngine.Events;
 using System.Collections.Generic;
 using System;
-using UnityEngine;
 
-namespace Diplomata {
-
-    [Serializable]
-    public class DictLang {
-        public string key;
-        public string value;
-
-        public DictLang(string k, string v) {
-            key = k;
-            value = v;
-        }
-    }
-
+namespace DiplomataLib {
+    
     [Serializable]
     public class Message {
         public int colunm;
         public int row;
         public string emitter;
-        public List<DictLang> title;
-        public List<DictLang> content;
-        public List<DictAttr> attributes;
-        public UnityEvent conditions;
-        public UnityEvent callback;
-        public Character character;
+        public Dictionary<string, string> title;
+        public Dictionary<string, string> content;
+        public Dictionary<string, byte> attributes;
+        //public UnityEvent conditions;
+        //public UnityEvent callback;
+        //public Character character;
         public List<string> next;
 
         public Message(Character charct, int c, int r) {
             colunm = c;
             row = r;
             emitter = charct.name;
+            /*
             character = charct;
             conditions = new UnityEvent();
             callback = new UnityEvent();
-
             attributes = new List<DictAttr>();
-            foreach (string str in Preferences.attributes) {
+            
+            foreach (string str in Diplomata.preferences.attributes) {
                 attributes.Add(new DictAttr(str, 50));
             }
 
             title = new List<DictLang>();
-            foreach (string str in Preferences.subLanguages) {
+
+            foreach (string str in Diplomata.preferences.subLanguages) {
                 title.Add(new DictLang(str, ""));
             }
 
             content = new List<DictLang>();
-            foreach (string str in Preferences.subLanguages) {
+            
+            foreach (string str in Diplomata.preferences.subLanguages) {
                 content.Add(new DictLang(str, ""));
-            }
+            }*/
 
             SetNext();
         }
@@ -59,16 +50,16 @@ namespace Diplomata {
         }
 
         public void SetNext() {
-            next = new List<string>();
+            next = new List<string>();/*
             foreach (Message msg in character.messages) {
                 if (msg.colunm == colunm + 1) {
                     foreach (DictLang titleTemp in msg.title) {
-                        if (titleTemp.key == GameProgress.currentSubtitledLanguage) {
+                        if (titleTemp.key == Diplomata.gameProgress.currentSubtitledLanguage) {
                             next.Add(titleTemp.value);
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 
