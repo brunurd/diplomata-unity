@@ -9,6 +9,8 @@ namespace DiplomataLib {
         public string key;
         public byte value;
 
+        public DictAttr() { }
+
         public DictAttr(string key) {
             this.key = key;
             value = 50;
@@ -23,11 +25,13 @@ namespace DiplomataLib {
         public List<DictAttr> attributes = new List<DictAttr>();
         public byte influence = 50;
         public List<Message> messages = new List<Message>();
+        public List<Context> contexts = new List<Context>();
+
+        public Character() { }
 
         public Character(string name) {
             this.name = name;
 
-            Diplomata.Instantiate();
             SetAttributes();
             CheckRepeatedCharacter();
 
@@ -74,6 +78,8 @@ namespace DiplomataLib {
                 Diplomata.characters.Add(character);
                 Diplomata.preferences.characterList.Add(obj.name);
             }
+            
+            JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
         }
     }
 

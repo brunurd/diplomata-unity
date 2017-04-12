@@ -16,6 +16,7 @@ namespace DiplomataLib {
 
                 if (Application.isPlaying) {
                     DontDestroyOnLoad(gameObject);
+                    instance.hideFlags = HideFlags.None;
                 }
             }
 
@@ -26,29 +27,25 @@ namespace DiplomataLib {
             Restart();
         }
 
-        public void Restart() {
+        public static void Restart() {
             preferences = new Preferences();
             preferences.Start();
-
+            
             characters = new List<Character>();
             Character.UpdateList();
-
-            /*
+            
             gameProgress = new GameProgress();
             gameProgress.Start();
-
-            gameProgress.Save(Method.JSON);
-            */
         }
 
         public static void Instantiate() {
-            if (instance == null) {
-                GameObject obj = new GameObject("Diplomata");
-                //obj.hideFlags = HideFlags.HideInHierarchy;
+            if (instance == null && FindObjectsOfType<Diplomata>().Length < 1) {
+                GameObject obj = new GameObject("[ Diplomata ]");
+                obj.hideFlags = HideFlags.HideInHierarchy;
                 obj.AddComponent<Diplomata>();
             }
 
-            instance.Restart();
+            Restart();
         }
 
         private void CheckRepeated() {

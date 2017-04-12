@@ -1,7 +1,4 @@
-﻿using System.Xml;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using System.IO;
 using UnityEngine;
 
@@ -9,8 +6,7 @@ namespace DiplomataLib {
 
     public enum Method {
         XML,
-        JSON,
-        Binary
+        JSON
     }
 
     [System.Serializable]
@@ -36,97 +32,97 @@ namespace DiplomataLib {
             characters = Diplomata.ListToArray(Diplomata.characters);
         }
 
-        public T Serialize<T>(Method method) {
-            System.Object obj;
-
+        public string Serialize(Method method) {
             switch (method) {
                 case Method.JSON:
-                    obj = JsonUtility.ToJson(Diplomata.gameProgress);
-                    break;
+                    return JsonUtility.ToJson(Diplomata.gameProgress);
 
                 case Method.XML:
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameProgress));
 
                     using (StringWriter textWriter = new StringWriter()) {
                         xmlSerializer.Serialize(textWriter, Diplomata.gameProgress);
-                        obj = textWriter.GetStringBuilder().ToString();
-                        break;
+                        return textWriter.GetStringBuilder().ToString();
                     }
 
-                case Method.Binary:
-                    MemoryStream stream = new MemoryStream();
-                    IFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(stream, typeof(GameProgress));
-                    obj = stream;
-                    break;
-
                 default:
-                    obj = null;
-                    break;
+                    return null;
             }
-
-            return (T)obj;
         }
 
-        ///<summary>
-        /// Save a file in Application.persistentDataPath
-        /// <para>Choose the type of file: Method.JSON, Method.XML or Method.Binary. (default: Method.Binary)</para>
-        ///</summary>
-
-        public void Save(Method method = Method.Binary) {
-            string str = "null";
-            MemoryStream stream = new MemoryStream();
-            string extension = ".sav";
+        public void Save(Method method) {
+            string str = string.Empty;
+            string extension = string.Empty;
 
             UpdateCharacters();
 
             switch (method) {
                 case Method.JSON:
-                    str = Serialize<string>(Method.JSON);
+                    str = Serialize(Method.JSON);
                     extension = ".json";
                     break;
 
                 case Method.XML:
-                    str = Serialize<string>(Method.XML);
+                    str = Serialize(Method.XML);
                     extension = ".xml";
                     break;
-
-                case Method.Binary:
-                    stream = Serialize<MemoryStream>(Method.Binary);
-                    break;
             }
-
+            
             using (FileStream fs = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Create)) {
                 using (StreamWriter writer = new StreamWriter(fs)) {
-                    if (method == Method.Binary) {
-                        stream.WriteTo(fs);
-                    }
-                    else {
-                        writer.Write(str);
-                    }
+                    writer.Write(str);
                 }
             }
         }
 
-        /*
-        public void JSONDeserialize(string path) {
-            var file = new StreamReader(path);
-            var content = file.ReadToEnd();
-            Diplomata.gameProgress = JsonUtility.FromJson<GameProgress>(content);
+        public void Deserialize(string data, Method method) {
+            switch (method) {
+                case Method.JSON:
+                    Diplomata.gameProgress = JsonUtility.FromJson<GameProgress>(data);
+                    break;
+
+                case Method.XML:
+                    var serializer = new XmlSerializer(typeof(GameProgress));
+
+                    using (TextReader reader = new StringReader(data)) {
+                        Diplomata.gameProgress = (GameProgress) serializer.Deserialize(reader);
+                    }
+
+                    break;
+            }
         }
 
-        public void XMLDeserialize(string path) {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameProgress));
+        public void Load(Method method) {
+            string extension = string.Empty;
+            string path = Application.persistentDataPath + "/diplomata_gameProgress" + extension;
+            string content = string.Empty;
 
-            Stream file = File.Open(path, FileMode.Open);
-            XmlReader reader = XmlReader.Create(file);
-            Diplomata.gameProgress = (GameProgress) xmlSerializer.Deserialize(reader);
-            file.Close();
+            switch (method) {
+                case Method.JSON:
+                    extension = ".json";
+                    break;
+
+                case Method.XML:
+                    extension = ".xml";
+                    break;
+            }
+
+            if (File.Exists(path)) {
+                using (StreamReader sr = new StreamReader(path)) {
+                    content = sr.ReadToEnd();
+                }
+            }
+
+            switch (method) {
+                case Method.JSON:
+                    Deserialize(content, Method.JSON);
+                    break;
+
+                case Method.XML:
+                    Deserialize(content, Method.XML);
+                    break;
+            }
         }
-
-        public void BinaryDeserialize(string path) {
-
-        }*/
     }
 
 }

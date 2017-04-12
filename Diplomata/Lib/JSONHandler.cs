@@ -45,7 +45,7 @@ namespace DiplomataLib {
         public static void Update(System.Object obj, string filename, string folder = "") {
             #if UNITY_EDITOR
             try {
-                string json = JsonUtility.ToJson(obj);
+                string json = JsonUtility.ToJson(obj, true);
                 
                 using (FileStream fs = new FileStream(Preferences.defaultResourcesFolder + folder + filename + ".json", FileMode.Create)) {
                     using (StreamWriter writer = new StreamWriter(fs)) {
@@ -66,11 +66,14 @@ namespace DiplomataLib {
             #if UNITY_EDITOR
             try {
                 File.Delete(Preferences.defaultResourcesFolder + folder + filename + ".json");
+                File.Delete(Preferences.defaultResourcesFolder + folder + filename + ".json.meta");
             }
 
             catch (Exception e) {
                 Debug.LogError("Cannot delete " + filename + ".json. " + e.Message);
             }
+
+            UnityEditor.AssetDatabase.Refresh();
             #endif
         }
 

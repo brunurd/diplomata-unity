@@ -14,7 +14,7 @@ namespace DiplomataEditor {
             Diplomata.Instantiate();
 
             Preferences window = (Preferences)GetWindow(typeof(Preferences), false, "Preferences");
-            window.minSize = new Vector2(455,300);
+            window.minSize = new Vector2(455,285);
             window.Show();
         }
 
@@ -33,9 +33,9 @@ namespace DiplomataEditor {
             ShowColunm(Diplomata.preferences.dubLanguages, "Dub. Languages:", "Add language");
 
             GUILayout.EndHorizontal();
-
+            
             GUILayout.Space(MARGIN);
-            if (GUILayout.Button("Save Preferences", GUILayout.Height(50))) {
+            if (GUILayout.Button("Save Preferences", GUILayout.Height(30))) {
                 JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
             }
         }

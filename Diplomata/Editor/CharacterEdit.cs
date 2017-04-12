@@ -7,12 +7,13 @@ namespace DiplomataEditor {
     public class CharacterEdit : EditorWindow {
 
         private const byte MARGIN = 7;
-        private static readonly Vector2 EDIT_WIN_SIZE = new Vector2(400, 320);
+        private const byte BUTTON_HEIGHT = 30;
+        private static readonly Vector2 EDIT_WIN_SIZE = new Vector2(400, 330);
         private static readonly Vector2 CREATE_WIN_SIZE = new Vector2(400, 100);
 
         public static Character character;
         private string characterName = "";
-
+        
         public static void Init() {
             CharacterEdit window = (CharacterEdit)GetWindow(typeof(CharacterEdit), false, "Character Edit", true);
 
@@ -54,15 +55,15 @@ namespace DiplomataEditor {
             characterName = GUILayout.TextField(characterName);
 
             GUILayout.Space(MARGIN);
-            GUILayout.BeginHorizontal(GUILayout.Height(30));
+            GUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("Create")) {
+            if (GUILayout.Button("Create", GUILayout.Height(BUTTON_HEIGHT))) {
                 Diplomata.characters.Add(new Character(characterName));
                 CharacterInspector.characterList = Diplomata.ListToArray(Diplomata.preferences.characterList);
                 Close();
             }
 
-            if (GUILayout.Button("Cancel")) {
+            if (GUILayout.Button("Cancel", GUILayout.Height(BUTTON_HEIGHT))) {
                 Close();
             }
 
@@ -92,14 +93,13 @@ namespace DiplomataEditor {
             }
 
             GUILayout.Space(MARGIN);
-            GUILayout.BeginHorizontal(GUILayout.Height(30));
+            GUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("Save")) {
+            if (GUILayout.Button("Save", GUILayout.Height(BUTTON_HEIGHT))) {
                 JSONHandler.Update(character, character.name, "Diplomata/Characters/");
-                Debug.Log(character.name + " saved.");
             }
 
-            if (GUILayout.Button("Close")) {
+            if (GUILayout.Button("Close", GUILayout.Height(BUTTON_HEIGHT))) {
                 if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to close? All changed data will be lost.", "Yes", "No")) {
                     Close();
                 }

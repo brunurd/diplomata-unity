@@ -2,10 +2,11 @@
 using UnityEngine;
 
 namespace DiplomataLib {
-
+    
+    [System.Serializable]
     [ExecuteInEditMode]
     public class DiplomataCharacter : MonoBehaviour {
-
+        
         public Character character;
         public bool conditions;
         public bool talking;
@@ -15,7 +16,11 @@ namespace DiplomataLib {
         private Message currentMessage;
         public List<string> startNext = new List<string>();
         private List<Message> currentChoices = new List<Message>();
-        
+
+        public void Awake() {
+            Diplomata.Instantiate();
+        }
+
         public void Start() {
             talking = false;
             isTalking = false;
@@ -37,11 +42,11 @@ namespace DiplomataLib {
 
             foreach (Message msg in character.messages) {
                 if (msg.colunm == 0) {
-                    foreach (KeyValuePair<string, string> title in msg.title) {
+                    /*foreach (KeyValuePair<string, string> title in msg.title) {
                         if (title.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
                             startNext.Add(title.Value);
                         }
-                    }
+                    }*/
                 }
             }
 
@@ -64,13 +69,13 @@ namespace DiplomataLib {
                             break;
                         }
                         else {
-                            foreach (KeyValuePair<string, string> title in msg.title) {
+                            /*foreach (KeyValuePair<string, string> title in msg.title) {
                                 if (title.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
                                     if (title.Value == str) {
                                         next.Add(msg);
                                     }
                                 }
-                            }
+                            }*/
                         }
                     }
                 }
@@ -109,11 +114,11 @@ namespace DiplomataLib {
             string newContent = currentMessage.emitter + ":\n";
 
             if (talking) {
-                foreach (KeyValuePair<string, string> content in currentMessage.content) {
+                /*foreach (KeyValuePair<string, string> content in currentMessage.content) {
                     if (content.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
                         newContent += content.Value;
                     }
-                }
+                }*/
             }
 
             return newContent;
@@ -128,11 +133,11 @@ namespace DiplomataLib {
             List<string> returnChoices = new List<string>();
 
             foreach (Message msg in currentChoices) {
-                foreach (KeyValuePair<string, string> title in msg.title) {
+                /*foreach (KeyValuePair<string, string> title in msg.title) {
                     if (title.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
                         returnChoices.Add(title.Value);
                     }
-                }
+                }*/
             }
 
             return returnChoices;
@@ -140,7 +145,7 @@ namespace DiplomataLib {
 
         public void ChooseMessage(string title) {
             foreach (Message msg in currentChoices) {
-                foreach (KeyValuePair<string, string> titleTemp in msg.title) {
+                /*foreach (KeyValuePair<string, string> titleTemp in msg.title) {
                     if (titleTemp.Key == Diplomata.gameProgress.currentSubtitledLanguage && titleTemp.Value == title) {
                         waitingPlayer = false;
                         isListening = true;
@@ -148,7 +153,7 @@ namespace DiplomataLib {
                         SetInfluence();
                         break;
                     }
-                }
+                }*/
             }
         }
 
@@ -161,7 +166,7 @@ namespace DiplomataLib {
             byte max = 0;
             List<byte> min = new List<byte>();
 
-            foreach (KeyValuePair<string, byte> attrMsg in currentMessage.attributes) {
+            /*foreach (KeyValuePair<string, byte> attrMsg in currentMessage.attributes) {
                 foreach (DictAttr attrChar in character.attributes) {
                     if (attrMsg.Key == attrChar.key) {
                         if (attrMsg.Value < attrChar.value) {
@@ -174,7 +179,7 @@ namespace DiplomataLib {
                         }
                     }
                 }
-            }
+            }*/
 
             foreach (byte val in min) {
                 if (val > max) {

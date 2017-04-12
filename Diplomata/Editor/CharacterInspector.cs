@@ -9,11 +9,12 @@ namespace DiplomataEditor {
     public class CharacterInspector : Editor {
 
         private const byte MARGIN = 15;
+        private const byte BUTTON_HEIGHT = 30;
+        private const byte BIG_BUTTON_HEIGHT = 63;
 
         public DiplomataCharacter diplomataCharacter;
         public static string[] characterList;
-        private int selected = 0;
-
+        
         public void OnEnable() {
             Diplomata.Instantiate();
             diplomataCharacter = target as DiplomataCharacter;
@@ -24,28 +25,62 @@ namespace DiplomataEditor {
             serializedObject.Update();
 
             GUILayout.Space(MARGIN);
-            selected = EditorGUILayout.Popup("Character", selected, characterList);
-            
-            if (Diplomata.characters.Count > 0 && selected < Diplomata.characters.Count) {
-                diplomataCharacter.character = Diplomata.characters[selected];
-            }
 
-            else {
-                diplomataCharacter.character = null;
-            }
+            if (diplomataCharacter.character != null && Diplomata.characters.Count > 0) {
 
-            GUILayout.Space(MARGIN / 2);
+                GUILayout.BeginHorizontal();
 
-            if (diplomataCharacter.character != null) {
-                if (GUILayout.Button("Edit Character", GUILayout.Height(30))) {
+                GUILayout.Label("Character: ");
+
+                var selected = 0;
+
+                for (var i = 0; i < Diplomata.characters.Count; i++) {
+                    if (Diplomata.characters[i].name == diplomataCharacter.character.name) {
+                        selected = i;
+                        break;
+                    }
+                }
+
+                selected = EditorGUILayout.Popup(selected, characterList);
+
+                for (var i = 0; i < Diplomata.characters.Count; i++) {
+                    if (selected == i) {
+                        diplomataCharacter.character = Diplomata.characters[i];
+                        break;
+                    }
+                }
+
+                GUILayout.EndHorizontal();
+                GUILayout.Space(MARGIN / 2);
+
+                if (GUILayout.Button("Edit Character", GUILayout.Height(BUTTON_HEIGHT))) {
                     CharacterEdit.character = diplomataCharacter.character;
                     CharacterEdit.Init();
                 }
+
+                if (GUILayout.Button("Edit Messages", GUILayout.Height(BUTTON_HEIGHT))) {
+                    //
+                }
+
+                EditorGUILayout.Separator();
+
+                GUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("Create Character", GUILayout.Height(40))) {
+                    CharacterEdit.character = null;
+                    CharacterEdit.Init();
+                }
+
+                EditorGUILayout.HelpBox("Create does not interfe in this character.", MessageType.Info);
+
+                GUILayout.EndHorizontal();
             }
 
-            if (GUILayout.Button("Create Character", GUILayout.Height(30))) {
-                CharacterEdit.character = null;
-                CharacterEdit.Init();
+            else {
+                if (GUILayout.Button("Create Character", GUILayout.Height(BUTTON_HEIGHT))) {
+                    CharacterEdit.character = null;
+                    CharacterEdit.Init();
+                }
             }
 
             GUILayout.Space(MARGIN);

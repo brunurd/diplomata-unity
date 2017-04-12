@@ -3,15 +3,28 @@ using System.Collections.Generic;
 using System;
 
 namespace DiplomataLib {
-    
+
+    [Serializable]
+    public class DictLang {
+        public string key;
+        public string value;
+
+        public DictLang() { }
+
+        public DictLang(string key, string value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
     [Serializable]
     public class Message {
         public int colunm;
         public int row;
         public string emitter;
-        public Dictionary<string, string> title;
-        public Dictionary<string, string> content;
-        public Dictionary<string, byte> attributes;
+        public List<DictLang> title;
+        public List<DictLang> content;
+        public List<DictAttr> attributes;
         //public UnityEvent conditions;
         //public UnityEvent callback;
         //public Character character;
