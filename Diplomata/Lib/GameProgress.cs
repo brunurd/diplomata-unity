@@ -1,5 +1,6 @@
 ﻿using System.Xml.Serialization;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace DiplomataLib {
@@ -16,12 +17,9 @@ namespace DiplomataLib {
         public Character[] characters;
 
         public void Start() {
-            if (Diplomata.preferences.subLanguages.Count > 0) {
-                currentSubtitledLanguage = Diplomata.preferences.subLanguages[0];
-            }
-
-            if (Diplomata.preferences.dubLanguages.Count > 0) {
-                currentDubbedLanguage = Diplomata.preferences.dubLanguages[0];
+            if (Diplomata.preferences.languages.Count > 0) {
+                currentDubbedLanguage = Diplomata.preferences.languages[0].name;
+                currentSubtitledLanguage = Diplomata.preferences.languages[0].name;
             }
 
             UpdateCharacters();
@@ -44,34 +42,9 @@ namespace DiplomataLib {
                         xmlSerializer.Serialize(textWriter, Diplomata.gameProgress);
                         return textWriter.GetStringBuilder().ToString();
                     }
-
+                    
                 default:
                     return null;
-            }
-        }
-
-        public void Save(Method method) {
-            string str = string.Empty;
-            string extension = string.Empty;
-
-            UpdateCharacters();
-
-            switch (method) {
-                case Method.JSON:
-                    str = Serialize(Method.JSON);
-                    extension = ".json";
-                    break;
-
-                case Method.XML:
-                    str = Serialize(Method.XML);
-                    extension = ".xml";
-                    break;
-            }
-            
-            using (FileStream fs = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Create)) {
-                using (StreamWriter writer = new StreamWriter(fs)) {
-                    writer.Write(str);
-                }
             }
         }
 
@@ -92,35 +65,19 @@ namespace DiplomataLib {
             }
         }
 
-        public void Load(Method method) {
-            string extension = string.Empty;
-            string path = Application.persistentDataPath + "/diplomata_gameProgress" + extension;
-            string content = string.Empty;
-
-            switch (method) {
-                case Method.JSON:
-                    extension = ".json";
-                    break;
-
-                case Method.XML:
-                    extension = ".xml";
-                    break;
+        public void Save(string extension = ".sav") {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+           
+            using (FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Create)) {
+                binaryFormatter.Serialize(fileStream, Diplomata.gameProgress);
             }
+        }
 
-            if (File.Exists(path)) {
-                using (StreamReader sr = new StreamReader(path)) {
-                    content = sr.ReadToEnd();
-                }
-            }
-
-            switch (method) {
-                case Method.JSON:
-                    Deserialize(content, Method.JSON);
-                    break;
-
-                case Method.XML:
-                    Deserialize(content, Method.XML);
-                    break;
+        public void Load(string extension = ".sav") {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            
+            using (FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Open)) {
+                Diplomata.gameProgress = (GameProgress) binaryFormatter.Deserialize(fileStream);
             }
         }
     }

@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEditor;
 using DiplomataLib;
 
-namespace DiplomataEditor {
+namespace DiplomataEditor_Legacy {
 
     public class MessageManager : EditorWindow {
-
+    
         public readonly static int headerSize = 62;
         private readonly static int colunmLimit = 100;
         private readonly static int rowLimit = 100;
@@ -39,6 +39,7 @@ namespace DiplomataEditor {
         }
 
         public static void SetLanguages() {
+            /*
             languages = new List<string>();
 
             for (int i = 0; i < Diplomata.preferences.subLanguages.Count; i++) {
@@ -55,7 +56,7 @@ namespace DiplomataEditor {
                 if (!hasEqual) {
                     languages.Add(Diplomata.preferences.dubLanguages[i]);
                 }
-            }
+            }*/
 
             languagesArray = new string[languages.Count];
 

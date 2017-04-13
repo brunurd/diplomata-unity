@@ -45,14 +45,14 @@ namespace DiplomataLib {
         public static void Update(System.Object obj, string filename, string folder = "") {
             #if UNITY_EDITOR
             try {
-                string json = JsonUtility.ToJson(obj, true);
+                string json = JsonUtility.ToJson(obj, Diplomata.preferences.jsonPrettyPrint);
                 
                 using (FileStream fs = new FileStream(Preferences.defaultResourcesFolder + folder + filename + ".json", FileMode.Create)) {
                     using (StreamWriter writer = new StreamWriter(fs)) {
                         writer.Write(json);
                     }
                 }
-                
+
                 UnityEditor.AssetDatabase.Refresh();
             }
 
@@ -87,7 +87,7 @@ namespace DiplomataLib {
                 return true;
             }
             #else
-            return false
+            return false;
             #endif
         }
 

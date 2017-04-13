@@ -5,107 +5,155 @@ using DiplomataLib;
 namespace DiplomataEditor {
 
     public class CharacterEdit : EditorWindow {
-
-        private const byte MARGIN = 7;
-        private const byte BUTTON_HEIGHT = 30;
-        private static readonly Vector2 EDIT_WIN_SIZE = new Vector2(400, 330);
-        private static readonly Vector2 CREATE_WIN_SIZE = new Vector2(400, 100);
-
+        
         public static Character character;
         private string characterName = "";
+
+        public enum State {
+            None,
+            Create,
+            Edit,
+            Close
+        }
+
+        private static State state;
         
-        public static void Init() {
+        public static void Init(State state = State.None) {
+            CharacterEdit.state = state;
+
             CharacterEdit window = (CharacterEdit)GetWindow(typeof(CharacterEdit), false, "Character Edit", true);
 
-            if (character == null) {
-                window.maxSize = CREATE_WIN_SIZE;
+            if (state == State.Create) {
+                window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 100);
+                window.maxSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 101);
             }
 
             else {
-                window.minSize = EDIT_WIN_SIZE;
+                window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 335);
             }
 
-            window.Show();
+            if (state == State.Close) {
+                window.Close();
+            }
+
+            else {
+                window.Show();
+            }
+        }
+
+        public static void Create() {
+            character = null;
+            Diplomata.preferences.SetWorkingCharacter(string.Empty);
+            Init(State.Create);
+        }
+
+        public static void Edit(Character currentCharacter) {
+            character = currentCharacter;
+            Diplomata.preferences.SetWorkingCharacter(currentCharacter.name);
+            Init(State.Edit);
+        }
+
+        public static void Reset(string characterName) {
+            if (character != null) {
+                if (character.name == characterName) {
+                    Diplomata.preferences.SetWorkingCharacter(string.Empty);
+                    character = null;
+                    Init(State.Close);
+                }
+            }
         }
 
         public void OnGUI() {
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(MARGIN);
+            DGUI.WindowWrap(() => {
 
-            GUILayout.BeginVertical();
-            GUILayout.Space(MARGIN);
+                switch (state) {
+                    case State.None:
+                        if (Diplomata.preferences.workingCharacter != string.Empty) {
+                            character = Diplomata.FindCharacter(Diplomata.preferences.workingCharacter);
+                            DrawEditWindow();
+                        }
+                        else {
+                            DrawCreateWindow();
+                        }
+                        break;
 
-            if (character == null) {
-                DrawCreateWindow();
-            }
+                    case State.Create:
+                        DrawCreateWindow();
+                        break;
 
-            else {
-                DrawEditWindow();
-            }
+                    case State.Edit:
+                        DrawEditWindow();
+                        break;
+                }
 
-            GUILayout.Space(MARGIN);
-            GUILayout.EndVertical();
-
-            GUILayout.Space(MARGIN);
-            GUILayout.EndHorizontal();
+            });
         }
 
         public void DrawCreateWindow() {
             GUILayout.Label("Name: ");
-            characterName = GUILayout.TextField(characterName);
 
-            GUILayout.Space(MARGIN);
-            GUILayout.BeginHorizontal();
+            DGUI.Focus(() => {
+                characterName = EditorGUILayout.TextField(characterName);
+            });
 
-            if (GUILayout.Button("Create", GUILayout.Height(BUTTON_HEIGHT))) {
-                Diplomata.characters.Add(new Character(characterName));
-                CharacterInspector.characterList = Diplomata.ListToArray(Diplomata.preferences.characterList);
-                Close();
-            }
+            EditorGUILayout.Separator();
+                    
+            DGUI.Horizontal(() => {
+                if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                    if (characterName != "") {
+                        Diplomata.characters.Add(new Character(characterName));
+                        CharacterInspector.characterList = Diplomata.ListToArray(Diplomata.preferences.characterList);
+                    }
+                    Close();
+                }
 
-            if (GUILayout.Button("Cancel", GUILayout.Height(BUTTON_HEIGHT))) {
-                Close();
-            }
-
-            GUILayout.EndHorizontal();
+                if (GUILayout.Button("Cancel", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                    Close();
+                }
+            });
         }
 
         public void DrawEditWindow() {
-            GUILayout.Space(MARGIN);
             GUILayout.Label("Name: ");
-            character.name = GUILayout.TextField(character.name);
+            character.name = EditorGUILayout.TextField(character.name);
 
-            GUILayout.Space(MARGIN);
+            EditorGUILayout.Separator();
+
             GUILayout.Label("Description: ");
-            character.description = GUILayout.TextArea(character.description, GUILayout.Height(50));
+            character.description = EditorGUILayout.TextField(character.description);
 
-            GUILayout.Space(MARGIN);
+            EditorGUILayout.Separator();
+
             character.startOnPlay = GUILayout.Toggle(character.startOnPlay, "Start on play");
 
-            GUILayout.Space(MARGIN);
+            EditorGUILayout.Separator();
+
             GUILayout.Label("Character attributes (influenceable by): ");
 
-            for (int i = 0; i < character.attributes.Count; i++) {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(character.attributes[i].key);
-                character.attributes[i].value = (byte) EditorGUILayout.Slider(character.attributes[i].value, 0, 100);
-                GUILayout.EndHorizontal();
+            for (int i = 0; i < character.attributes.Length; i++) {
+                    character.attributes[i].value = (byte)EditorGUILayout.Slider(character.attributes[i].key, character.attributes[i].value, 0, 100);
             }
 
-            GUILayout.Space(MARGIN);
-            GUILayout.BeginHorizontal();
+            EditorGUILayout.Separator();
 
-            if (GUILayout.Button("Save", GUILayout.Height(BUTTON_HEIGHT))) {
-                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
-            }
+            DGUI.Horizontal(() => {
 
-            if (GUILayout.Button("Close", GUILayout.Height(BUTTON_HEIGHT))) {
-                if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to close? All changed data will be lost.", "Yes", "No")) {
+                if (GUILayout.Button("Save", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                    JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                }
+
+                if (GUILayout.Button("Close", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                    JSONHandler.Update(character, character.name, "Diplomata/Characters/");
                     Close();
                 }
-            }
 
-            GUILayout.EndHorizontal();
+            });
+        }
+
+        public void OnDisable() {
+            if (state == State.Edit && character != null) {
+                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+            }
         }
     }
 

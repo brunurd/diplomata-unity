@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace DiplomataLib {
 
+    [AddComponentMenu("")]
     [ExecuteInEditMode]
     public class Diplomata : MonoBehaviour {
         public static Diplomata instance = null;
@@ -16,7 +17,7 @@ namespace DiplomataLib {
 
                 if (Application.isPlaying) {
                     DontDestroyOnLoad(gameObject);
-                    instance.hideFlags = HideFlags.None;
+                    instance.gameObject.hideFlags = HideFlags.None;
                 }
             }
 
@@ -58,12 +59,40 @@ namespace DiplomataLib {
             }
         }
 
+        public static Character FindCharacter(string name) {
+            foreach (Character character in characters) {
+                if (character.name == name) {
+                    return character;
+                }
+            }
+
+            return null;
+        }
+
         public static T[] ListToArray<T>(List<T> list) {
             T[] array = new T[list.Count];
 
             for (int i = 0; i < list.Count; i++) {
                 array[i] = list[i];
             }
+
+            return array;
+        }
+
+        public static T[] Add<T>(T[] array, T element) {
+            var tempArray = new T[array.Length];
+
+            for (var i = 0; i < tempArray.Length; i++) {
+                tempArray[i] = array[i];
+            }
+
+            array = new T[tempArray.Length + 1];
+
+            for (var i = 0; i < tempArray.Length; i++) {
+                array[i] = tempArray[i];
+            }
+
+            array[array.Length - 1] = element;
 
             return array;
         }

@@ -2,7 +2,7 @@
 using UnityEditor;
 using DiplomataLib;
 
-namespace DiplomataEditor {
+namespace DiplomataEditor_Legacy {
 
     public class MessageEditor : EditorWindow {
 
@@ -71,11 +71,11 @@ namespace DiplomataEditor {
 
             GUILayout.Space(margin);
             GUILayout.Label("Title in '" + MessageManager.languagesArray[MessageManager.languageIndex] + "':");
-            //message.title[MessageManager.languageIndex].value = GUILayout.TextField(message.title[MessageManager.languageIndex].value);
+            //message.title[MessageManager.languageIndex].value = EditorGUILayout.TextField(message.title[MessageManager.languageIndex].value);
 
             GUILayout.Space(margin);
             GUILayout.Label("Content in '" + MessageManager.languagesArray[MessageManager.languageIndex] + "':");
-            //message.content[MessageManager.languageIndex].value = GUILayout.TextArea(message.content[MessageManager.languageIndex].value, GUILayout.Height(50));
+            //message.content[MessageManager.languageIndex].value = EditorGUILayout.TextArea(message.content[MessageManager.languageIndex].value, GUILayout.Height(50));
 
             if (message.emitter == "Player") {
                 GUILayout.Space(margin);

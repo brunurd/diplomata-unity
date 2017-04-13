@@ -2,7 +2,7 @@
 using UnityEngine;
 using DiplomataLib;
 
-namespace DiplomataEditor {
+namespace DiplomataEditor_Legacy {
     
     public class Node {
         private const int padding = 10;

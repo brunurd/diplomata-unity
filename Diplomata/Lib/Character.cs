@@ -22,16 +22,15 @@ namespace DiplomataLib {
         public string name;
         public string description = "";
         public bool startOnPlay;
-        public List<DictAttr> attributes = new List<DictAttr>();
+        public DictAttr[] attributes;
         public byte influence = 50;
-        public List<Message> messages = new List<Message>();
-        public List<Context> contexts = new List<Context>();
+        public Context[] contexts;
 
         public Character() { }
 
         public Character(string name) {
             this.name = name;
-
+            
             SetAttributes();
             CheckRepeatedCharacter();
 
@@ -39,10 +38,10 @@ namespace DiplomataLib {
         }
 
         public void SetAttributes() {
-            if (attributes.Count == 0) {
-                foreach (string attrName in Diplomata.preferences.attributes) {
-                    attributes.Add(new DictAttr(attrName));
-                }
+            attributes = new DictAttr[0];
+
+            foreach (string attrName in Diplomata.preferences.attributes) {
+                attributes = Diplomata.Add(attributes, new DictAttr(attrName));
             }
         }
 
@@ -78,8 +77,6 @@ namespace DiplomataLib {
                 Diplomata.characters.Add(character);
                 Diplomata.preferences.characterList.Add(obj.name);
             }
-            
-            JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
         }
     }
 

@@ -39,16 +39,18 @@ namespace DiplomataLib {
             currentMessage = new Message();
             currentChoices = new List<Message>();
             startNext = new List<string>();
-
+            
+            /*
             foreach (Message msg in character.messages) {
                 if (msg.colunm == 0) {
-                    /*foreach (KeyValuePair<string, string> title in msg.title) {
+                    foreach (KeyValuePair<string, string> title in msg.title) {
                         if (title.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
                             startNext.Add(title.Value);
                         }
-                    }*/
+                    }
                 }
             }
+            */
 
             Next(startNext);
         }
@@ -61,6 +63,7 @@ namespace DiplomataLib {
             waitingPlayer = false;
             isListening = false;
 
+            /*
             foreach (Message msg in character.messages) {
                 if (talking) {
                     foreach (string str in nextArray) {
@@ -69,17 +72,18 @@ namespace DiplomataLib {
                             break;
                         }
                         else {
-                            /*foreach (KeyValuePair<string, string> title in msg.title) {
+                            foreach (KeyValuePair<string, string> title in msg.title) {
                                 if (title.Key == Diplomata.gameProgress.currentSubtitledLanguage) {
                                     if (title.Value == str) {
                                         next.Add(msg);
                                     }
                                 }
-                            }*/
+                            }
                         }
                     }
                 }
             }
+            */
 
             if (talking) {
                 for (int i = 0; i < next.Count; i++) {
