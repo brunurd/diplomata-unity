@@ -1,4 +1,4 @@
-<a href="https://raw.githubusercontent.com/lavaleak/diplomata/master/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.svg" style="width:100%;height:115px;" download><img src="https://raw.githubusercontent.com/lavaleak/diplomata/master/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.svg" style="height:100%;"></a>
+<a href="https://raw.githubusercontent.com/lavaleak/diplomata/master/Logo/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.svg" style="width:100%;height:115px;" download><img src="https://raw.githubusercontent.com/lavaleak/diplomata/master/Logo/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" style="height:100%;"></a>
 
 
 #**Diplomata**
