@@ -70,8 +70,10 @@ namespace DiplomataLib {
 
             foreach (Character character in Diplomata.characters) {
                 foreach (DiplomataCharacter diplomataCharacter in charactersOnScene) {
-                    if (character.name == diplomataCharacter.character.name) {
-                        character.onScene = true;
+                    if (diplomataCharacter.character != null) {
+                        if (character.name == diplomataCharacter.character.name) {
+                            character.onScene = true;
+                        }
                     }
                 }
             }
