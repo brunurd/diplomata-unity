@@ -4,7 +4,7 @@
 ***Diplomata***  
 
 
-A Unity fully-featured solution to dialogue based games using fuzzy logic.  
+A Unity fully-featured solution to dialogue in games using fuzzy logic.  
 Create, edit, translate, set audio files and print screenplay of your game dialogue, all inside Unity Editor.  
 
 
