@@ -17,15 +17,14 @@ namespace DiplomataLib {
 
                 if (Application.isPlaying) {
                     DontDestroyOnLoad(gameObject);
-                    instance.gameObject.hideFlags = HideFlags.None;
                 }
+
+                Restart();
             }
 
             else {
                 DestroyImmediate(gameObject);
             }
-
-            Restart();
         }
 
         public static void Restart() {
@@ -40,13 +39,16 @@ namespace DiplomataLib {
         }
 
         public static void Instantiate() {
+            #if UNITY_EDITOR
+
             if (instance == null && FindObjectsOfType<Diplomata>().Length < 1) {
                 GameObject obj = new GameObject("[ Diplomata ]");
-                obj.hideFlags = HideFlags.HideInHierarchy;
                 obj.AddComponent<Diplomata>();
             }
 
             Restart();
+            
+            #endif
         }
 
         private void CheckRepeated() {
@@ -68,34 +70,17 @@ namespace DiplomataLib {
 
             return null;
         }
+    }
 
-        public static T[] ListToArray<T>(List<T> list) {
-            T[] array = new T[list.Count];
-
-            for (int i = 0; i < list.Count; i++) {
-                array[i] = list[i];
-            }
-
-            return array;
-        }
-
-        public static T[] Add<T>(T[] array, T element) {
-            var tempArray = new T[array.Length];
-
-            for (var i = 0; i < tempArray.Length; i++) {
-                tempArray[i] = array[i];
-            }
-
-            array = new T[tempArray.Length + 1];
-
-            for (var i = 0; i < tempArray.Length; i++) {
-                array[i] = tempArray[i];
-            }
-
-            array[array.Length - 1] = element;
-
-            return array;
+#if UNITY_EDITOR
+    [UnityEditor.CustomEditor(typeof(Diplomata))]
+    public class DiplomataWarning : UnityEditor.Editor {
+        public override void OnInspectorGUI() {
+            UnityEditor.EditorGUILayout.HelpBox("\nthis auto-generated file is a object to store all Diplomata data.\n\n" +
+                "The object instantiate just one time in the game build in the first scene it's appear. (It's a Singleton)\n\n" +
+                "The real data are stored in the resources folder, so don't worry if you need to delete this object during development.\n", UnityEditor.MessageType.Info);
         }
     }
+#endif
 
 }

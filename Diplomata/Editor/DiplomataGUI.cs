@@ -7,6 +7,7 @@ namespace DiplomataEditor {
     public class DGUI {
 
         public const byte MARGIN = 10;
+        public const byte PADDING = 5;
 
         public const byte BUTTON_HEIGHT_SMALL = 20;
         public const byte BUTTON_HEIGHT = 30;
@@ -15,6 +16,9 @@ namespace DiplomataEditor {
         public const int WINDOW_MIN_WIDTH = 400;
 
         public static Rect noClipRect;
+        public static Color BGColor = new Color(0.9764f, 0.9764f, 0.9764f);
+        public static Color proBGColor = new Color(0.2196f, 0.2196f, 0.2196f);
+        public static bool hasSlider;
 
         public static void Vertical(Action callback) {
             GUILayout.BeginVertical();
@@ -88,7 +92,12 @@ namespace DiplomataEditor {
                 });
 
                 if (Screen.height - 22 < contentRect.height) {
+                    hasSlider = true;
                     GUILayout.Space(MARGIN);
+                }
+
+                else {
+                    hasSlider = false;
                 }
 
                 GUILayout.Space(MARGIN);
@@ -99,7 +108,7 @@ namespace DiplomataEditor {
             return scrollPosOutput;
         }
 
-        public static Vector2 ScrollWindow(Action callback, Vector2 scrollPosInput, int contentHeight) {
+        public static Vector2 ScrollWindow(Action callback, Vector2 scrollPosInput, float contentHeight) {
             return ScrollWrap(callback, scrollPosInput, noClipRect, new Rect(0, 0, Screen.width - 15, contentHeight));
         }
 
@@ -109,13 +118,37 @@ namespace DiplomataEditor {
             EditorGUI.FocusTextInControl(name);
         }
 
-        public static void Area(Action callback, int x, int y, int width, int height) {
-            GUIStyle style = new GUIStyle();
-            style.border = new RectOffset();
+        public static float Box(string text, float x, float y, float width, Color color, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
+            GUIStyle style = GUI.skin.box;
 
-            GUILayout.BeginArea(new Rect(x, y, width, height), style);
-            callback();
-            GUILayout.EndArea();
+            style.alignment = textAlign;
+            style.padding = new RectOffset(PADDING, PADDING, 2 * PADDING, PADDING);
+
+            if (hasSlider) {
+                width -= MARGIN;
+            }
+
+            GUIContent content = new GUIContent(text);
+            float height = style.CalcHeight(content, width);
+            
+            GUI.color = color;
+            GUI.Box(new Rect(x, y, width, height + extraHeight), text, style);
+
+            return height;
+        }
+        
+        public static float Box(string text, float x, float y, float width, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
+            Color color = new Color();
+
+            if (EditorGUIUtility.isProSkin) {
+                color = proBGColor;
+            }
+
+            else {
+                color = BGColor;
+            }
+
+            return Box(text, x, y, width, color, extraHeight, textAlign);
         }
     }
 

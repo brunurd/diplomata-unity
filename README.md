@@ -1,7 +1,10 @@
-<a href="https://raw.githubusercontent.com/lavaleak/diplomata/master/Logo/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.svg" style="width:100%;height:115px;" download><img src="https://raw.githubusercontent.com/lavaleak/diplomata/master/Logo/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" style="height:100%;"></a>
+<center>![Diplomata Logo](https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/Resources/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png)</center>  
 
 
-#**Diplomata**
+<center>***Diplomata***</center>  
+
+
+---
 
 
 A Unity fully-featured solution to dialogue based games using fuzzy logic.  
@@ -11,7 +14,7 @@ Create, edit, translate, set audio files and print screenplay of your game dialo
 ---
 
 
-##**Links**
+**Links**
 
 
 Progress of project: [Diplomata - Trello Board](https://trello.com/b/Hp08JbV3/diplomata-roadmap)  

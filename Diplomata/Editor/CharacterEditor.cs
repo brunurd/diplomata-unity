@@ -4,7 +4,7 @@ using DiplomataLib;
 
 namespace DiplomataEditor {
 
-    public class CharacterEdit : EditorWindow {
+    public class CharacterEditor : EditorWindow {
         
         public static Character character;
         private string characterName = "";
@@ -19,9 +19,9 @@ namespace DiplomataEditor {
         private static State state;
         
         public static void Init(State state = State.None) {
-            CharacterEdit.state = state;
+            CharacterEditor.state = state;
 
-            CharacterEdit window = (CharacterEdit)GetWindow(typeof(CharacterEdit), false, "Character Edit", true);
+            CharacterEditor window = (CharacterEditor)GetWindow(typeof(CharacterEditor), false, "Character Edit", true);
 
             if (state == State.Create) {
                 window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 100);
@@ -29,7 +29,7 @@ namespace DiplomataEditor {
             }
 
             else {
-                window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 335);
+                window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 305);
             }
 
             if (state == State.Close) {
@@ -102,7 +102,7 @@ namespace DiplomataEditor {
                 if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                     if (characterName != "") {
                         Diplomata.characters.Add(new Character(characterName));
-                        CharacterInspector.characterList = Diplomata.ListToArray(Diplomata.preferences.characterList);
+                        CharacterInspector.characterList = ArrayHandler.ListToArray(Diplomata.preferences.characterList);
                     }
                     Close();
                 }

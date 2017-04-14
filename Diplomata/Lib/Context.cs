@@ -5,7 +5,7 @@
         public string name;
         public string characterName;
         public bool happened;
-        public Message[] messages;
+        public Column[] columns;
 
         public Context() { }
 

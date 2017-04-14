@@ -44,7 +44,7 @@ namespace DiplomataEditor {
 
                 DGUI.Horizontal(() => {
                     if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                        character.contexts = Diplomata.Add(character.contexts, new Context(contextName, character.name));
+                        character.contexts = ArrayHandler.Add(character.contexts, new Context(contextName, character.name));
                         JSONHandler.Update(character, character.name, "Diplomata/Characters/");
                         Close();
                     }

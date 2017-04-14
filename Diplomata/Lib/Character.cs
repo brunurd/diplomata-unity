@@ -1,23 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace DiplomataLib {
-
-    [Serializable]
-    public class DictAttr {
-        public string key;
-        public byte value;
-
-        public DictAttr() { }
-
-        public DictAttr(string key) {
-            this.key = key;
-            value = 50;
-        }
-    }
-
-    [Serializable]
+    
+    [System.Serializable]
     public class Character {
         public string name;
         public string description = "";
@@ -26,11 +12,14 @@ namespace DiplomataLib {
         public byte influence = 50;
         public Context[] contexts;
 
+        [System.NonSerialized]
+        public bool onScene;
+
         public Character() { }
 
         public Character(string name) {
             this.name = name;
-            
+
             SetAttributes();
             CheckRepeatedCharacter();
 
@@ -41,7 +30,7 @@ namespace DiplomataLib {
             attributes = new DictAttr[0];
 
             foreach (string attrName in Diplomata.preferences.attributes) {
-                attributes = Diplomata.Add(attributes, new DictAttr(attrName));
+                attributes = ArrayHandler.Add(attributes, new DictAttr(attrName));
             }
         }
 
@@ -64,20 +53,30 @@ namespace DiplomataLib {
 
         public static void UpdateList() {
             JSONHandler.CreateFolder("Diplomata/Characters/");
-
             var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
 
             Diplomata.characters = new List<Character>();
             Diplomata.preferences.characterList = new List<string>();
-            
-            foreach (UnityEngine.Object obj in charactersFiles) {
+
+            foreach (Object obj in charactersFiles) {
                 var json = (TextAsset)obj;
                 var character = JsonUtility.FromJson<Character>(json.text);
 
                 Diplomata.characters.Add(character);
                 Diplomata.preferences.characterList.Add(obj.name);
             }
+
+            var charactersOnScene = Object.FindObjectsOfType<DiplomataCharacter>();
+
+            foreach (Character character in Diplomata.characters) {
+                foreach (DiplomataCharacter diplomataCharacter in charactersOnScene) {
+                    if (character.name == diplomataCharacter.character.name) {
+                        character.onScene = true;
+                    }
+                }
+            }
         }
+
     }
 
 }

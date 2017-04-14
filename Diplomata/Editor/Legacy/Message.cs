@@ -17,7 +17,7 @@ namespace DiplomataEditor_Legacy {
 
         public static void Init(Message message) {
             MessageEditor.message = message;
-
+            /*
             if (message.emitter == "Player") {
                 emitterPlayer = true;
                 emitterCharacter = false;
@@ -26,7 +26,7 @@ namespace DiplomataEditor_Legacy {
                 emitterPlayer = false;
                 emitterCharacter = true;
             }
-
+            */
             GetEventsField();
 
             MessageEditor window = (MessageEditor)GetWindow(typeof(MessageEditor), false, "Edit Message", true);
@@ -40,7 +40,7 @@ namespace DiplomataEditor_Legacy {
             characterObject.Update();
 
             GUILayout.Space(margin);
-            GUILayout.Label("SPEECH " + message.colunm + " - Message " + message.row);
+            //GUILayout.Label("SPEECH " + message.colunm + " - Message " + message.row);
 
             GUILayout.Space(margin);
             EditorGUILayout.PropertyField(conditions, true);
@@ -60,7 +60,7 @@ namespace DiplomataEditor_Legacy {
             GUILayout.EndHorizontal();
 
             if (emitterPlayer) {
-                message.emitter = "Player";
+                //message.emitter = "Player";
                 emitterCharacter = false;
             }
 
@@ -76,18 +76,18 @@ namespace DiplomataEditor_Legacy {
             GUILayout.Space(margin);
             GUILayout.Label("Content in '" + MessageManager.languagesArray[MessageManager.languageIndex] + "':");
             //message.content[MessageManager.languageIndex].value = EditorGUILayout.TextArea(message.content[MessageManager.languageIndex].value, GUILayout.Height(50));
-
+            /*
             if (message.emitter == "Player") {
                 GUILayout.Space(margin);
-                /*
+                
                 foreach (DictAttr attr in message.attributes) {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(attr.key);
                     attr.value = (byte)EditorGUILayout.Slider(attr.value, 0, 100);
                     GUILayout.EndHorizontal();
-                }*/
+                }
             }
-
+            */
             GUILayout.Space(margin);
             EditorGUILayout.PropertyField(callback, true);
 

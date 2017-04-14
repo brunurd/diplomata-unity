@@ -13,7 +13,7 @@ namespace DiplomataLib {
         public bool isTalking;
         public bool waitingPlayer;
         public bool isListening;
-        private Message currentMessage;
+        //private Message currentMessage;
         public List<string> startNext = new List<string>();
         private List<Message> currentChoices = new List<Message>();
 
@@ -36,7 +36,7 @@ namespace DiplomataLib {
 
         public void StartTalk() {
             talking = true;
-            currentMessage = new Message();
+            //currentMessage = new Message();
             currentChoices = new List<Message>();
             startNext = new List<string>();
             
@@ -56,9 +56,9 @@ namespace DiplomataLib {
         }
 
         public void Next(List<string> nextArray) {
-            List<Message> next = new List<Message>();
+            //List<Message> next = new List<Message>();
             currentChoices = new List<Message>();
-            string emitter = null;
+            //string emitter = null;
             isTalking = false;
             waitingPlayer = false;
             isListening = false;
@@ -84,7 +84,7 @@ namespace DiplomataLib {
                 }
             }
             */
-
+            /*
             if (talking) {
                 for (int i = 0; i < next.Count; i++) {
                     conditions = true;
@@ -111,11 +111,11 @@ namespace DiplomataLib {
                         talking = false;
                     }
                 }
-            }
+            }*/
         }
 
         public string ShowMessageContent() {
-            string newContent = currentMessage.emitter + ":\n";
+            string newContent = "";// currentMessage.emitter + ":\n";
 
             if (talking) {
                 /*foreach (KeyValuePair<string, string> content in currentMessage.content) {
@@ -130,7 +130,7 @@ namespace DiplomataLib {
 
         public void NextMessage() {
             //currentMessage.callback.Invoke();
-            Next(currentMessage.next);
+            //Next(currentMessage.next);
         }
 
         public List<string> MessageChoices() {
@@ -195,6 +195,23 @@ namespace DiplomataLib {
             character.influence = (byte)tempInfluence;
         }
 
+        private void OnEnable() {
+            if (character != null) {
+                character.onScene = true;
+            }
+        }
+
+        private void OnDisable() {
+            if (character != null) {
+                character.onScene = false;
+            }
+        }
+
+        private void OnDestroy() {
+            if (character != null) {
+                character.onScene = false;
+            }
+        }
     }
 
 }

@@ -14,7 +14,7 @@ namespace DiplomataEditor {
         public void OnEnable() {
             Diplomata.Instantiate();
             diplomataCharacter = target as DiplomataCharacter;
-            characterList = Diplomata.ListToArray(Diplomata.preferences.characterList);
+            characterList = ArrayHandler.ListToArray(Diplomata.preferences.characterList);
         }
 
         public override void OnInspectorGUI() {
@@ -37,11 +37,15 @@ namespace DiplomataEditor {
                             }
                         }
 
+                        var selectedBefore = selected;
+
                         selected = EditorGUILayout.Popup(selected, characterList);
 
                         for (var i = 0; i < Diplomata.characters.Count; i++) {
                             if (selected == i) {
                                 diplomataCharacter.character = Diplomata.characters[i];
+                                Diplomata.characters[selectedBefore].onScene = false;
+                                diplomataCharacter.character.onScene = true;
                                 break;
                             }
                         }
@@ -51,18 +55,18 @@ namespace DiplomataEditor {
                     EditorGUILayout.Separator();
 
                     if (GUILayout.Button("Edit Character", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                        CharacterEdit.Edit(diplomataCharacter.character);
+                        CharacterEditor.Edit(diplomataCharacter.character);
                     }
 
                     if (GUILayout.Button("Edit Messages", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                        MessagesManager.ContextMenu(diplomataCharacter.character);
+                        CharacterMessagesManager.OpenContextMenu(diplomataCharacter.character);
                     }
 
                     EditorGUILayout.Separator();
 
                     DGUI.Horizontal(() => {
                         if (GUILayout.Button("Create Character", GUILayout.Height(DGUI.BUTTON_HEIGHT_BIG))) {
-                            CharacterEdit.Create();
+                            CharacterEditor.Create();
                         }
 
                         EditorGUILayout.HelpBox("Create does not interfe in this character.", MessageType.Info);
@@ -71,7 +75,7 @@ namespace DiplomataEditor {
 
                 else {
                     if (GUILayout.Button("Create Character", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                        CharacterEdit.Create();
+                        CharacterEditor.Create();
                     }
                 }
 
