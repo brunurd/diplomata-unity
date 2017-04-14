@@ -1,17 +1,10 @@
-![Diplomata Logo](https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/Resources/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png)  
-
-
-***Diplomata***  
-
-
-A Unity fully-featured solution to dialogue in games using fuzzy logic.  
-Create, edit, translate, set audio files and print screenplay of your game dialogue, all inside Unity Editor.  
+<center><img src="https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/Resources/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." width="115" height="115" /><br/><h2><strong>Diplomata</strong></h2><p>A Unity fully-featured solution to dialogue in games using fuzzy logic.<br/>Create, edit, translate, set audio files and print screenplay of your game dialogue, all inside Unity Editor.</p></center>
 
 
 ---
 
 
-**Links**
+**Links**  
 
 
 Progress of project: [Diplomata - Trello Board](https://trello.com/b/Hp08JbV3/diplomata-roadmap)  
