@@ -1,10 +1,7 @@
-<center>![Diplomata Logo](https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/Resources/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png)</center>  
+![Diplomata Logo](https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/Resources/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png)  
 
 
-<center>***Diplomata***</center>  
-
-
----
+***Diplomata***  
 
 
 A Unity fully-featured solution to dialogue based games using fuzzy logic.  
