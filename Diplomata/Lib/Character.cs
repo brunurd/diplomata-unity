@@ -6,7 +6,7 @@ namespace DiplomataLib {
     [System.Serializable]
     public class Character {
         public string name;
-        public string description = "";
+        public string description;
         public bool startOnPlay;
         public DictAttr[] attributes;
         public byte influence = 50;
@@ -19,6 +19,10 @@ namespace DiplomataLib {
 
         public Character(string name) {
             this.name = name;
+
+            if (Diplomata.characters.Count == 0) {
+                Diplomata.preferences.playerCharacterName = this.name;
+            }
 
             SetAttributes();
             CheckRepeatedCharacter();

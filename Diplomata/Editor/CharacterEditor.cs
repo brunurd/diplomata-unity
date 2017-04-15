@@ -124,7 +124,23 @@ namespace DiplomataEditor {
 
             EditorGUILayout.Separator();
 
-            character.startOnPlay = GUILayout.Toggle(character.startOnPlay, "Start on play");
+            DGUI.Horizontal(() => {
+
+                character.startOnPlay = GUILayout.Toggle(character.startOnPlay, " Start on play");
+
+                var player = false;
+
+                if (Diplomata.preferences.playerCharacterName == character.name) {
+                    player = true;
+                }
+
+                player = GUILayout.Toggle(player, " Is player");
+
+                if (player) {
+                    Diplomata.preferences.playerCharacterName = character.name;
+                }
+
+            });
 
             EditorGUILayout.Separator();
 
@@ -139,20 +155,25 @@ namespace DiplomataEditor {
             DGUI.Horizontal(() => {
 
                 if (GUILayout.Button("Save", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                    JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                    Save();
                 }
 
                 if (GUILayout.Button("Close", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                    JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                    Save();
                     Close();
                 }
 
             });
         }
 
+        public void Save() {
+            JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+            JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
+        }
+
         public void OnDisable() {
             if (state == State.Edit && character != null) {
-                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                Save();
             }
         }
     }

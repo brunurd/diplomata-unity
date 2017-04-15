@@ -9,7 +9,9 @@ namespace DiplomataEditor {
         private static Vector2 scrollPos = new Vector2(0, 0);
         private static float lateContextMenuHeight;
 
-        public static void DrawContextMenu(Character character) {
+        public static void Draw() {
+            var character = CharacterMessagesManager.character;
+
             var buttonAutoMargin = 3;
             var titleLabelHeight = 50;
             float yPos = DGUI.MARGIN + titleLabelHeight;
@@ -31,6 +33,7 @@ namespace DiplomataEditor {
                             GUILayout.Label(character.name, style, GUILayout.ExpandWidth(true), GUILayout.Height(titleLabelHeight));
 
                             style.fontSize = 11;
+                            style.alignment = TextAnchor.MiddleLeft;
 
                             foreach (Context context in character.contexts) {
 

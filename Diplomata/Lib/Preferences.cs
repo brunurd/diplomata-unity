@@ -24,6 +24,7 @@ namespace DiplomataLib {
         public bool jsonPrettyPrint;
         public string workingCharacter;
         public string workingContext;
+        public string playerCharacterName;
         
         public void Start() {
             if (!JSONHandler.Exists("preferences", "Diplomata/")) {

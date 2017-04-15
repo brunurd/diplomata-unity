@@ -63,25 +63,21 @@ namespace DiplomataEditor {
                         character = Diplomata.FindCharacter(Diplomata.preferences.workingCharacter);
 
                         if (Diplomata.preferences.workingContext != string.Empty) {
-                            DrawMessagesMenu();
+                            MessagesEditor.Draw();
                         }
 
                         else {
-                            ContextMenu.DrawContextMenu(character);
+                            ContextMenu.Draw();
                         }
                     }
                     break;
                 case State.Context:
-                    ContextMenu.DrawContextMenu(character);
+                    ContextMenu.Draw();
                     break;
                 case State.Messages:
-                    DrawMessagesMenu();
+                    MessagesEditor.Draw();
                     break;
             }
-        }
-
-        public void DrawMessagesMenu() {
-            //
         }
 
         public void OnInspectorUpdate() {

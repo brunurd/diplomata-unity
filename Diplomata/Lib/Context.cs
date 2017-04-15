@@ -12,6 +12,7 @@
         public Context(string name, string characterName) {
             this.name = name;
             this.characterName = characterName;
+            columns = new Column[] { new Column(0) };
         }
     }
 
