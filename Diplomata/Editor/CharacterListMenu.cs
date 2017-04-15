@@ -56,11 +56,11 @@ namespace DiplomataEditor {
                         DGUI.Horizontal(() => {
 
                             if (GUILayout.Button("Edit", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                                CharacterEditor.Edit(Diplomata.FindCharacter(name));
+                                CharacterEditor.Edit(Character.Find(name));
                             }
 
                             if (GUILayout.Button("Edit Messages", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                                CharacterMessagesManager.OpenContextMenu(Diplomata.FindCharacter(name));
+                                CharacterMessagesManager.OpenContextMenu(Character.Find(name));
                             }
 
                             if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
@@ -86,7 +86,7 @@ namespace DiplomataEditor {
                 }
 
                 if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                    CharacterEditor.Create();
+                    CharacterEditor.OpenCreate();
                 }
             }, scrollPos, ((DGUI.BUTTON_HEIGHT_SMALL + 10) * Diplomata.preferences.characterList.Count) + DGUI.BUTTON_HEIGHT + 10 + (3 * DGUI.MARGIN) );
 

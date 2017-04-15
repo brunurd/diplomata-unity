@@ -66,7 +66,7 @@ namespace DiplomataEditor {
 
                     DGUI.Horizontal(() => {
                         if (GUILayout.Button("Create Character", GUILayout.Height(DGUI.BUTTON_HEIGHT_BIG))) {
-                            CharacterEditor.Create();
+                            CharacterEditor.OpenCreate();
                         }
 
                         EditorGUILayout.HelpBox("Create does not interfe in this character.", MessageType.Info);
@@ -75,7 +75,7 @@ namespace DiplomataEditor {
 
                 else {
                     if (GUILayout.Button("Create Character", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                        CharacterEditor.Create();
+                        CharacterEditor.OpenCreate();
                     }
                 }
 

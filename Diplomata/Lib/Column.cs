@@ -11,6 +11,8 @@
         public Column(int id) {
             this.id = id;
             emitter = Diplomata.preferences.playerCharacterName;
+
+            messages = new Message[0];
         }
     }
 

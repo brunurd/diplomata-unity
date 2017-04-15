@@ -34,7 +34,7 @@ namespace DiplomataEditor {
 
                             style.fontSize = 11;
                             style.alignment = TextAnchor.MiddleLeft;
-
+                            
                             foreach (Context context in character.contexts) {
 
                                 var buttonHeight = DGUI.BUTTON_HEIGHT + buttonAutoMargin + (2 * DGUI.MARGIN);
@@ -47,8 +47,7 @@ namespace DiplomataEditor {
                                 DGUI.Horizontal(() => {
 
                                     if (GUILayout.Button("Edit", GUILayout.Height(DGUI.BUTTON_HEIGHT), GUILayout.ExpandWidth(true))) {
-                                        CharacterMessagesManager.context = context;
-                                        CharacterMessagesManager.state = CharacterMessagesManager.State.Messages;
+                                        CharacterMessagesManager.OpenMessagesMenu(character, context);
                                     }
 
                                     if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT), GUILayout.ExpandWidth(true))) {

@@ -60,16 +60,6 @@ namespace DiplomataLib {
                 }
             }
         }
-
-        public static Character FindCharacter(string name) {
-            foreach (Character character in characters) {
-                if (character.name == name) {
-                    return character;
-                }
-            }
-
-            return null;
-        }
     }
 
 #if UNITY_EDITOR

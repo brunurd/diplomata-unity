@@ -75,9 +75,7 @@ namespace DiplomataEditor {
         public static Vector2 ScrollWrap(Action callback, Vector2 scrollPosInput, Rect clipRect, Rect contentRect) {
             Vector2 scrollPosOutput = new Vector2(0, 0);
             scrollPosOutput = scrollPosInput;
-
-            noClipRect = new Rect(0, 0, Screen.width, Screen.height - 22);
-
+            
             scrollPosOutput = GUI.BeginScrollView(clipRect, scrollPosOutput, contentRect);
 
             Horizontal(() => {
@@ -109,6 +107,7 @@ namespace DiplomataEditor {
         }
 
         public static Vector2 ScrollWindow(Action callback, Vector2 scrollPosInput, float contentHeight) {
+            noClipRect = new Rect(0, 0, Screen.width, Screen.height - 22);
             return ScrollWrap(callback, scrollPosInput, noClipRect, new Rect(0, 0, Screen.width - 15, contentHeight));
         }
 
@@ -131,24 +130,104 @@ namespace DiplomataEditor {
             GUIContent content = new GUIContent(text);
             float height = style.CalcHeight(content, width);
             
-            GUI.color = color;
+            GUI.color = ColorMul(color, PlaymodeTint());
             GUI.Box(new Rect(x, y, width, height + extraHeight), text, style);
 
             return height;
         }
-        
-        public static float Box(string text, float x, float y, float width, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
-            Color color = new Color();
 
+        public static float Box(string text, float x, float y, float width, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
+            return Box(text, x, y, width, ResetColor(), extraHeight, textAlign);
+        }
+        
+        public static float Box(string text, float x, float y, float width, Color color, TextAnchor textAlign = TextAnchor.UpperCenter) {
+            return Box(text, x, y, width, color, 0, textAlign);
+        }
+
+        public static Color ColorAdd(Color color, float r, float g, float b) {
+            Color newColor = new Color(0, 0, 0);
+            newColor = color;
+            newColor.r += r;
+            newColor.g += g;
+            newColor.b += b;
+            return newColor;
+        }
+
+        public static Color ColorSub(Color color, float r, float g, float b) {
+            Color newColor = new Color(0, 0, 0);
+            newColor = color;
+            newColor.r -= r;
+            newColor.g -= g;
+            newColor.b -= b;
+            return newColor;
+        }
+
+        public static Color ColorMul(Color color, float r, float g, float b) {
+            Color newColor = new Color(0, 0, 0);
+            newColor = color;
+            newColor.r *= r;
+            newColor.g *= g;
+            newColor.b *= b;
+            return newColor;
+        }
+
+        public static Color ColorAdd(Color colorA, Color colorB) {
+            Color newColor = new Color(0, 0, 0);
+            newColor = colorA;
+            newColor.r += colorB.r;
+            newColor.g += colorB.g;
+            newColor.b += colorB.b;
+            return newColor;
+        }
+
+        public static Color ColorSub(Color colorA, Color colorB) {
+            Color newColor = new Color(0, 0, 0);
+            newColor = colorA;
+            newColor.r -= colorB.r;
+            newColor.g -= colorB.g;
+            newColor.b -= colorB.b;
+            return newColor;
+        }
+
+        public static Color ColorMul(Color colorA, Color colorB) {
+            Color newColor = new Color(0, 0, 0);
+            newColor = colorA;
+            newColor.r *= colorB.r;
+            newColor.g *= colorB.g;
+            newColor.b *= colorB.b;
+            return newColor;
+        }
+
+        public static void LabelBold(string content, params GUILayoutOption[] options) {
+            var style = GUI.skin.label;
+            style.fontStyle = FontStyle.Bold;
+            GUILayout.Label(content, options);
+            style.fontStyle = FontStyle.Normal;
+        }
+
+        public static Color ResetColor() {
             if (EditorGUIUtility.isProSkin) {
-                color = proBGColor;
+                return proBGColor;
             }
 
             else {
-                color = BGColor;
+                return BGColor;
+            }
+        }
+
+        public static Color PlaymodeTint() {
+            try {
+                if (Application.isPlaying) {
+                    string[] playmodeTintArray = EditorPrefs.GetString("Playmode tint").Split(';');
+                    return new Color(float.Parse(playmodeTintArray[1]), float.Parse(playmodeTintArray[2]), float.Parse(playmodeTintArray[3]));
+                }
             }
 
-            return Box(text, x, y, width, color, extraHeight, textAlign);
+            catch {
+                Debug.Log("Cannot get playmode tint.");
+            }
+
+            return new Color(1, 1, 1);
         }
     }
 

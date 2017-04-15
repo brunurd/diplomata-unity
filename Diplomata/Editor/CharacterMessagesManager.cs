@@ -21,7 +21,7 @@ namespace DiplomataEditor {
         public static void Init(State state = State.None) {
             CharacterMessagesManager.state = state;
             CharacterMessagesManager window = (CharacterMessagesManager)GetWindow(typeof(CharacterMessagesManager), false, "Messages", true);
-            window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 300);
+            window.minSize = new Vector2(960, 300);
             window.maximized = true;
 
             if (state == State.Close) {
@@ -36,13 +36,15 @@ namespace DiplomataEditor {
         public static void OpenContextMenu(Character currentCharacter) {
             character = currentCharacter;
             Diplomata.preferences.SetWorkingCharacter(currentCharacter.name);
-            Diplomata.preferences.workingContext = string.Empty;
+            Diplomata.preferences.SetWorkingContext(string.Empty);
             Init(State.Context);
         }
 
-        public static void OpenMessagesMenu(Context currentContext) {
+        public static void OpenMessagesMenu(Character currentCharacter, Context currentContext) {
+            character = currentCharacter;
             context = currentContext;
-            Diplomata.preferences.workingContext = currentContext.name;
+            Diplomata.preferences.SetWorkingCharacter(currentCharacter.name);
+            Diplomata.preferences.SetWorkingContext(currentContext.name);
             Init(State.Messages);
         }
 
@@ -60,9 +62,10 @@ namespace DiplomataEditor {
             switch (state) {
                 case State.None:
                     if (Diplomata.preferences.workingCharacter != string.Empty) {
-                        character = Diplomata.FindCharacter(Diplomata.preferences.workingCharacter);
+                        character = Character.Find(Diplomata.preferences.workingCharacter);
 
                         if (Diplomata.preferences.workingContext != string.Empty) {
+                            context = Context.Find(character, Diplomata.preferences.workingContext);
                             MessagesEditor.Draw();
                         }
 
@@ -85,7 +88,7 @@ namespace DiplomataEditor {
         }
 
         public void OnDisable() {
-            if (state == State.Context || state == State.Messages) {
+            if (character != null) {
                 JSONHandler.Update(character, character.name, "Diplomata/Characters/");
             }
         }

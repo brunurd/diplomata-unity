@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEditor;
 using DiplomataLib;
 
@@ -6,19 +7,29 @@ namespace DiplomataEditor {
     
     public class Preferences : EditorWindow {
 
+        public static List<string> attributesTemp;
+        public static List<Language> languagesTemp;
+        public static string defaultResourcesFolderTemp;
+        public static bool jsonPrettyPrintTemp;
+
         [MenuItem("Diplomata/Preferences")]
         static public void Init() {
             Diplomata.Instantiate();
 
+            attributesTemp = new List<string>(Diplomata.preferences.attributes);
+            languagesTemp = new List<Language>(Diplomata.preferences.languages);
+            defaultResourcesFolderTemp = DiplomataLib.Preferences.defaultResourcesFolder;
+            jsonPrettyPrintTemp = Diplomata.preferences.jsonPrettyPrint;
+
             Preferences window = (Preferences)GetWindow(typeof(Preferences), false, "Preferences");
-            window.minSize = new Vector2(600, 290);
+            window.minSize = new Vector2(600, 345);
             window.Show();
         }
 
         public void OnGUI() {
             DGUI.WindowWrap(() => {
                 GUILayout.Label("Default Resources folder:");
-                DiplomataLib.Preferences.defaultResourcesFolder = EditorGUILayout.TextField(DiplomataLib.Preferences.defaultResourcesFolder);
+                defaultResourcesFolderTemp = EditorGUILayout.TextField(defaultResourcesFolderTemp);
 
                 EditorGUILayout.Separator();
 
@@ -29,12 +40,16 @@ namespace DiplomataEditor {
 
                 EditorGUILayout.Separator();
 
-                Diplomata.preferences.jsonPrettyPrint = GUILayout.Toggle(Diplomata.preferences.jsonPrettyPrint, "JSON pretty print");
+                jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
+
+                EditorGUILayout.Separator();
+                
+                EditorGUILayout.HelpBox("\nClose or enter in play mode will restore the data of this window.\n", MessageType.Info);
 
                 EditorGUILayout.Separator();
 
                 if (GUILayout.Button("Save Preferences", GUILayout.Height(30))) {
-                    JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
+                    Save();
                 }
             });
         }
@@ -44,20 +59,20 @@ namespace DiplomataEditor {
 
                 GUILayout.Label("Attributes:");
 
-                for (int i = 0; i < Diplomata.preferences.attributes.Count; i++) {
+                for (int i = 0; i < attributesTemp.Count; i++) {
                     DGUI.Horizontal(() => {
 
-                        Diplomata.preferences.attributes[i] = EditorGUILayout.TextField(Diplomata.preferences.attributes[i]);
+                        attributesTemp[i] = EditorGUILayout.TextField(attributesTemp[i]);
 
                         if (GUILayout.Button("X", GUILayout.Width(20))) {
-                            Diplomata.preferences.attributes.Remove(Diplomata.preferences.attributes[i]);
+                            attributesTemp.Remove(attributesTemp[i]);
                         }
 
                     });
                 }
 
                 if (GUILayout.Button("Add attribute")) {
-                    Diplomata.preferences.attributes.Add("");
+                    attributesTemp.Add("");
                 }
 
             }, GUILayout.Width(Screen.width / 2));
@@ -68,28 +83,36 @@ namespace DiplomataEditor {
 
                 GUILayout.Label("Languages:");
 
-                for (int i = 0; i < Diplomata.preferences.languages.Count; i++) {
+                for (int i = 0; i < languagesTemp.Count; i++) {
                     DGUI.Horizontal(() => {
 
-                        Diplomata.preferences.languages[i].name = EditorGUILayout.TextField(Diplomata.preferences.languages[i].name);
-                        Diplomata.preferences.languages[i].subtitle = GUILayout.Toggle(Diplomata.preferences.languages[i].subtitle, "Sub");
-                        Diplomata.preferences.languages[i].dubbing = GUILayout.Toggle(Diplomata.preferences.languages[i].dubbing, "Dub");
+                        languagesTemp[i].name = EditorGUILayout.TextField(languagesTemp[i].name);
+                        languagesTemp[i].subtitle = GUILayout.Toggle(languagesTemp[i].subtitle, "Sub");
+                        languagesTemp[i].dubbing = GUILayout.Toggle(languagesTemp[i].dubbing, "Dub");
 
                         if (GUILayout.Button("X", GUILayout.Width(20))) {
-                            Diplomata.preferences.languages.Remove(Diplomata.preferences.languages[i]);
+                            languagesTemp.Remove(languagesTemp[i]);
                         }
                     });
                 }
 
                 if (GUILayout.Button("Add language")) {
-                    Diplomata.preferences.languages.Add(new Language(""));
+                    languagesTemp.Add(new Language(""));
                 }
 
             });
         }
 
-        private void OnDisable() {
+        public void Save() {
+            Diplomata.preferences.attributes = new List<string>(attributesTemp);
+            Diplomata.preferences.languages = new List<Language>(languagesTemp);
+            DiplomataLib.Preferences.defaultResourcesFolder = defaultResourcesFolderTemp;
+            Diplomata.preferences.jsonPrettyPrint = jsonPrettyPrintTemp;
+
+            MessagesEditor.SetLanguagesList();
+
             JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
+            Close();
         }
     }
 

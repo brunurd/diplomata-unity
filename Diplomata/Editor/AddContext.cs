@@ -44,9 +44,7 @@ namespace DiplomataEditor {
 
                 DGUI.Horizontal(() => {
                     if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                        character.contexts = ArrayHandler.Add(character.contexts, new Context(contextName, character.name));
-                        JSONHandler.Update(character, character.name, "Diplomata/Characters/");
-                        Close();
+                        Create();
                     }
 
                     if (GUILayout.Button("Cancel", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
@@ -55,6 +53,18 @@ namespace DiplomataEditor {
                 });
 
             });
+
+            if (focusedWindow.ToString() == " (DiplomataEditor.AddContext)") {
+                if (Event.current.keyCode == KeyCode.Return) {
+                    Create();
+                }
+            }
+        }
+
+        public void Create() {
+            character.contexts = ArrayHandler.Add(character.contexts, new Context(contextName, character.name));
+            JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+            Close();
         }
     }
 

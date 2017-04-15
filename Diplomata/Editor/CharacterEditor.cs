@@ -41,7 +41,7 @@ namespace DiplomataEditor {
             }
         }
 
-        public static void Create() {
+        public static void OpenCreate() {
             character = null;
             Diplomata.preferences.SetWorkingCharacter(string.Empty);
             Init(State.Create);
@@ -69,7 +69,7 @@ namespace DiplomataEditor {
                 switch (state) {
                     case State.None:
                         if (Diplomata.preferences.workingCharacter != string.Empty) {
-                            character = Diplomata.FindCharacter(Diplomata.preferences.workingCharacter);
+                            character = Character.Find(Diplomata.preferences.workingCharacter);
                             DrawEditWindow();
                         }
                         else {
@@ -100,17 +100,33 @@ namespace DiplomataEditor {
                     
             DGUI.Horizontal(() => {
                 if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                    if (characterName != "") {
-                        Diplomata.characters.Add(new Character(characterName));
-                        CharacterInspector.characterList = ArrayHandler.ListToArray(Diplomata.preferences.characterList);
-                    }
-                    Close();
+                    Create();
                 }
 
                 if (GUILayout.Button("Cancel", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                     Close();
                 }
             });
+            
+
+            if (focusedWindow.ToString() == " (DiplomataEditor.CharacterEditor)") {
+                if (Event.current.keyCode == KeyCode.Return) {
+                    Create();
+                }
+            }
+        }
+
+        public void Create() {
+            if (characterName != "") {
+                Diplomata.characters.Add(new Character(characterName));
+                CharacterInspector.characterList = ArrayHandler.ListToArray(Diplomata.preferences.characterList);
+            }
+
+            else {
+                Debug.LogError("Character name was empty.");
+            }
+
+            Close();
         }
 
         public void DrawEditWindow() {
