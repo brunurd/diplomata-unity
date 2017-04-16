@@ -68,13 +68,37 @@ namespace DiplomataEditor {
                                 AddContext.character = character;
                                 AddContext.Init();
                             }
-
+                            
+                            yPos += DGUI.BUTTON_HEIGHT_BIG + buttonAutoMargin + DGUI.MARGIN;
                         });
 
                         GUILayout.Space(third);
                     });
 
-                }, scrollPos, lateContextMenuHeight + DGUI.BUTTON_HEIGHT_BIG + buttonAutoMargin + DGUI.MARGIN);
+                }, scrollPos, lateContextMenuHeight);
+
+                /*
+                 * SAVE AS SCREENPLAY BUTTON 
+                
+                var saveAsScreenplayButtonWidth = 200;
+                var saveAsScreenplayButtonXPos = Screen.width - saveAsScreenplayButtonWidth - DGUI.MARGIN;
+                var saveAsScreenplayButtonYPos = Screen.height - (DGUI.BUTTON_HEIGHT_BIG * 1.5f) - DGUI.MARGIN;
+                
+                if (DGUI.hasSlider) {
+                    saveAsScreenplayButtonXPos -= 15;
+                    saveAsScreenplayButtonYPos = (Screen.height + scrollPos.x) - (DGUI.BUTTON_HEIGHT_BIG * 1.5f) - DGUI.MARGIN;
+                }
+
+                if (GUI.Button(new Rect(
+                        saveAsScreenplayButtonXPos,
+                        saveAsScreenplayButtonYPos,
+                        saveAsScreenplayButtonWidth,
+                        DGUI.BUTTON_HEIGHT_BIG
+                ), "Save as Screenplay")) {
+                    Screenplay.Save(character);
+                }
+                
+                */
             }
 
             else {

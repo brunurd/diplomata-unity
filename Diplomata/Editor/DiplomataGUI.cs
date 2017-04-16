@@ -19,7 +19,8 @@ namespace DiplomataEditor {
         public static Color BGColor = new Color(0.9764f, 0.9764f, 0.9764f);
         public static Color proBGColor = new Color(0.2196f, 0.2196f, 0.2196f);
         public static bool hasSlider;
-
+        public static Texture2D transparent = UniformColorTexture(1, 1, new Color(0,0,0,0));
+        
         public static void Vertical(Action callback) {
             GUILayout.BeginVertical();
             callback();
@@ -118,20 +119,28 @@ namespace DiplomataEditor {
         }
 
         public static float Box(string text, float x, float y, float width, Color color, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
-            GUIStyle style = GUI.skin.box;
-
-            style.alignment = textAlign;
-            style.padding = new RectOffset(PADDING, PADDING, 2 * PADDING, PADDING);
+            GUIStyle style = new GUIStyle();
+            var content = new GUIContent(text);
+            var height = style.CalcHeight(content, width);
 
             if (hasSlider) {
                 width -= MARGIN;
             }
-
-            GUIContent content = new GUIContent(text);
-            float height = style.CalcHeight(content, width);
             
-            GUI.color = ColorMul(color, PlaymodeTint());
-            GUI.Box(new Rect(x, y, width, height + extraHeight), text, style);
+            style.alignment = textAlign;
+            style.padding = new RectOffset(PADDING, PADDING, 2 * PADDING, PADDING);
+            style.normal.textColor = Color.black;
+            style.normal.background = transparent;
+
+            if (color.r * color.g * color.b < 0.1f) {
+                style.normal.textColor = Color.white;
+            }
+
+            Rect boxRect = new Rect(x, y, width, height + extraHeight);
+            
+            EditorGUI.DrawRect(new Rect(x - 1, y - 1, width + 2, height + extraHeight + 2), ColorSub(color, 0.5f, 0.5f, 0.5f));
+            EditorGUI.DrawRect(boxRect, color);
+            GUI.Box(boxRect, text, style);
 
             return height;
         }
@@ -144,30 +153,43 @@ namespace DiplomataEditor {
             return Box(text, x, y, width, color, 0, textAlign);
         }
 
-        public static Color ColorAdd(Color color, float r, float g, float b) {
+        public static Color ColorAdd(Color color, float r, float g, float b, float a = 0) {
             Color newColor = new Color(0, 0, 0);
             newColor = color;
             newColor.r += r;
             newColor.g += g;
             newColor.b += b;
+            newColor.a += a;
             return newColor;
         }
 
-        public static Color ColorSub(Color color, float r, float g, float b) {
+        public static Color ColorSub(Color color, float r, float g, float b, float a = 0) {
             Color newColor = new Color(0, 0, 0);
             newColor = color;
             newColor.r -= r;
             newColor.g -= g;
             newColor.b -= b;
+            newColor.a -= a;
             return newColor;
         }
 
-        public static Color ColorMul(Color color, float r, float g, float b) {
+        public static Color ColorMul(Color color, float r, float g, float b, float a = 1) {
             Color newColor = new Color(0, 0, 0);
             newColor = color;
             newColor.r *= r;
             newColor.g *= g;
             newColor.b *= b;
+            newColor.a *= a;
+            return newColor;
+        }
+
+        public static Color ColorDiv(Color color, float r, float g, float b, float a = 1) {
+            Color newColor = new Color(0, 0, 0);
+            newColor = color;
+            newColor.r /= r;
+            newColor.g /= g;
+            newColor.b /= b;
+            newColor.a /= a;
             return newColor;
         }
 
@@ -177,6 +199,7 @@ namespace DiplomataEditor {
             newColor.r += colorB.r;
             newColor.g += colorB.g;
             newColor.b += colorB.b;
+            newColor.a += colorB.a;
             return newColor;
         }
 
@@ -186,6 +209,7 @@ namespace DiplomataEditor {
             newColor.r -= colorB.r;
             newColor.g -= colorB.g;
             newColor.b -= colorB.b;
+            newColor.a -= colorB.a;
             return newColor;
         }
 
@@ -195,6 +219,17 @@ namespace DiplomataEditor {
             newColor.r *= colorB.r;
             newColor.g *= colorB.g;
             newColor.b *= colorB.b;
+            newColor.a *= colorB.a;
+            return newColor;
+        }
+
+        public static Color ColorDiv(Color colorA, Color colorB) {
+            Color newColor = new Color(0, 0, 0);
+            newColor = colorA;
+            newColor.r /= colorB.r;
+            newColor.g /= colorB.g;
+            newColor.b /= colorB.b;
+            newColor.a /= colorB.a;
             return newColor;
         }
 
@@ -219,7 +254,7 @@ namespace DiplomataEditor {
             try {
                 if (Application.isPlaying) {
                     string[] playmodeTintArray = EditorPrefs.GetString("Playmode tint").Split(';');
-                    return new Color(float.Parse(playmodeTintArray[1]), float.Parse(playmodeTintArray[2]), float.Parse(playmodeTintArray[3]));
+                    return new Color(float.Parse(playmodeTintArray[1]), float.Parse(playmodeTintArray[2]), float.Parse(playmodeTintArray[3]), float.Parse(playmodeTintArray[4]));
                 }
             }
 
@@ -228,6 +263,19 @@ namespace DiplomataEditor {
             }
 
             return new Color(1, 1, 1);
+        }
+
+        public static Texture2D UniformColorTexture(int w, int h, Color color) {
+            Texture2D tex = new Texture2D(w, h);
+
+            for (int i = 0; i < tex.width; i++) {
+                for (int j = 0; j < tex.height; j++) {
+                    tex.SetPixel(i, j, color);
+                }
+            }
+
+            tex.Apply();
+            return tex;
         }
     }
 

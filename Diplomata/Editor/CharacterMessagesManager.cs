@@ -21,9 +21,9 @@ namespace DiplomataEditor {
         public static void Init(State state = State.None) {
             CharacterMessagesManager.state = state;
             CharacterMessagesManager window = (CharacterMessagesManager)GetWindow(typeof(CharacterMessagesManager), false, "Messages", true);
-            window.minSize = new Vector2(960, 300);
+            window.minSize = new Vector2(1000, 300);
             window.maximized = true;
-
+            
             if (state == State.Close) {
                 window.Close();
             }

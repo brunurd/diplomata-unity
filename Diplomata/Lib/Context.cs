@@ -38,7 +38,8 @@
         public bool callbacksFilter = true;
         public CurrentMessage currentMessage = new CurrentMessage(-1, -1);
         public MessageEditorState messageEditorState = MessageEditorState.None;
-        
+        public float columnWidth = 200;
+
         public Context() { }
 
         public Context(string name, string characterName) {

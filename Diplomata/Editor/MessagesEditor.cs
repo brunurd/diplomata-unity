@@ -8,7 +8,6 @@ namespace DiplomataEditor {
 
         private const byte HEADER_HEIGHT = DGUI.BUTTON_HEIGHT_SMALL + (2 * DGUI.MARGIN);
         private const ushort SIDEBAR_WIDTH = 300;
-        private const ushort COLUMN_WIDTH = 200;
 
         public static string[] languagesList;
         
@@ -49,8 +48,6 @@ namespace DiplomataEditor {
             else {
                 baseColor = new Color(0.8705f, 0.8705f, 0.8705f);
             }
-
-            baseColor = DGUI.ColorMul(baseColor, DGUI.PlaymodeTint());
 
             headerBGColor = DGUI.ColorAdd(baseColor, 0.05f, 0.05f, 0.05f);
             mainBGColor = baseColor;
@@ -93,6 +90,10 @@ namespace DiplomataEditor {
                     GUILayout.Space(DGUI.MARGIN);
                     GUILayout.Label("Character: " + character.name);
 
+                    GUILayout.Space(DGUI.MARGIN);
+                    GUILayout.Label("Column Width: ");
+                    context.columnWidth = EditorGUILayout.Slider(context.columnWidth, 116, 1000);
+
                     var selected = 0;
 
                     for (var i = 0; i < Diplomata.preferences.languages.Count; i++) {
@@ -115,23 +116,14 @@ namespace DiplomataEditor {
 
                     GUILayout.Space(DGUI.MARGIN);
                     GUILayout.Label("Filters: ");
-
-                    context.conditionsFilter = GUILayout.Toggle(context.conditionsFilter, "Conditions");
-                    GUILayout.Space(DGUI.MARGIN);
-                    context.titleFilter = GUILayout.Toggle(context.titleFilter, "Title");
-                    GUILayout.Space(DGUI.MARGIN);
-                    context.contentFilter = GUILayout.Toggle(context.contentFilter, "Content");
-                    GUILayout.Space(DGUI.MARGIN);
-                    context.callbacksFilter = GUILayout.Toggle(context.callbacksFilter, "Callbacks");
+                    context.conditionsFilter = GUILayout.Toggle(context.conditionsFilter, "Conditions ");
+                    context.titleFilter = GUILayout.Toggle(context.titleFilter, "Title ");
+                    context.contentFilter = GUILayout.Toggle(context.contentFilter, "Content ");
+                    context.callbacksFilter = GUILayout.Toggle(context.callbacksFilter, "Callbacks ");
 
                     GUILayout.Space(DGUI.MARGIN);
                     if (GUILayout.Button("Save", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
                         JSONHandler.Update(character, character.name, "Diplomata/Characters/");
-                    }
-
-                    GUILayout.Space(DGUI.MARGIN);
-                    if (GUILayout.Button("Save as screenplay", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                        //
                     }
 
                     GUILayout.Space(DGUI.MARGIN);
@@ -145,9 +137,9 @@ namespace DiplomataEditor {
             var character = CharacterMessagesManager.character;
             var context = CharacterMessagesManager.context;
             var buttonAutoMargin = 3;
-            var buttonWidth = COLUMN_WIDTH - (2 * DGUI.MARGIN);
+            var buttonWidth = context.columnWidth - (2 * DGUI.MARGIN);
 
-            Rect mainContentRect = new Rect(0, 0, (2 * DGUI.MARGIN) + ((context.columns.Length + 1) * (DGUI.MARGIN + COLUMN_WIDTH)), mainMaxHeight);
+            Rect mainContentRect = new Rect(0, 0, ((context.columns.Length + 1) * (DGUI.MARGIN + context.columnWidth)) - DGUI.MARGIN, mainMaxHeight);
 
             float height = 0;
 
@@ -187,7 +179,7 @@ namespace DiplomataEditor {
                                     }
                                 }
 
-                                var x = DGUI.MARGIN + (i * (COLUMN_WIDTH + DGUI.MARGIN));
+                                var x = DGUI.MARGIN + (i * (context.columnWidth + DGUI.MARGIN));
                                 var text = "";
 
                                 if (context.conditionsFilter) {
@@ -232,16 +224,16 @@ namespace DiplomataEditor {
 
                                 if (context.currentMessage.columnId != -1 && context.currentMessage.rowId != -1) {
                                     if (context.currentMessage.columnId == currentMessage.columnId && context.currentMessage.rowId == currentMessage.id) {
-                                        color = DGUI.ColorAdd(currentMessage.color, -0.1f, -0.1f, -0.1f);
+                                        color = DGUI.ColorSub(currentMessage.color, 0.2f, 0.2f, 0.2f);
                                         message = currentMessage;
                                     }
                                 }
 
-                                var boxHeight = DGUI.Box(text, x, localHeight, COLUMN_WIDTH, color, TextAnchor.UpperLeft);
+                                var boxHeight = DGUI.Box(text, x, localHeight, context.columnWidth, color, TextAnchor.UpperLeft);
 
                                 GUI.color = new Color(0, 0, 0, 0);
 
-                                if (GUI.Button(new Rect(x, localHeight, COLUMN_WIDTH, boxHeight), "")) {
+                                if (GUI.Button(new Rect(x, localHeight, context.columnWidth, boxHeight), "")) {
                                     context.messageEditorState = MessageEditorState.Normal;
                                     context.currentMessage.Set(currentMessage.columnId, currentMessage.id);
                                     message = currentMessage;
@@ -278,7 +270,7 @@ namespace DiplomataEditor {
                                 height = localHeight;
                             }
 
-                        }, GUILayout.Width(COLUMN_WIDTH));
+                        }, GUILayout.Width(context.columnWidth));
 
                         GUILayout.Space(DGUI.MARGIN - 4);
 
@@ -293,7 +285,7 @@ namespace DiplomataEditor {
                             JSONHandler.Update(character, character.name, "Diplomata/Characters/");
                         }
 
-                    }, GUILayout.Width(COLUMN_WIDTH));
+                    }, GUILayout.Width(context.columnWidth));
 
                 });
 
@@ -315,9 +307,8 @@ namespace DiplomataEditor {
 
                         case MessageEditorState.Normal:
 
-                            if (GUILayout.Button("Edit Conditions", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                                context.messageEditorState = MessageEditorState.Conditions;
-                            }
+                            GUILayout.Label("Message Color:");
+                            message.color = EditorGUILayout.ColorField(message.color);
 
                             EditorGUILayout.Separator();
 
@@ -345,6 +336,10 @@ namespace DiplomataEditor {
                             content.value = EditorGUILayout.TextField(content.value);
 
                             EditorGUILayout.Separator();
+
+                            if (GUILayout.Button("Edit Conditions", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                                context.messageEditorState = MessageEditorState.Conditions;
+                            }
 
                             if (GUILayout.Button("Edit Callbacks", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                                 context.messageEditorState = MessageEditorState.Callbacks;

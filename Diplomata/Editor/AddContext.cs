@@ -26,8 +26,10 @@ namespace DiplomataEditor {
         }
 
         public static void Reset(string characterName) {
-            if (character.name == characterName) {
-                Init(false);
+            if (character != null) {
+                if (character.name == characterName) {
+                    Init(false);
+                }
             }
         }
 
