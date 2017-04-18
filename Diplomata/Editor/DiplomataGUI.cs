@@ -7,20 +7,32 @@ namespace DiplomataEditor {
     public class DGUI {
 
         public const byte MARGIN = 10;
-        public const byte PADDING = 5;
-
+        
         public const byte BUTTON_HEIGHT_SMALL = 20;
         public const byte BUTTON_HEIGHT = 30;
         public const byte BUTTON_HEIGHT_BIG = 40;
 
         public const int WINDOW_MIN_WIDTH = 400;
 
-        public static Rect noClipRect;
+        public static bool hasSlider;
+        public static int padding = 10;
         public static Color BGColor = new Color(0.9764f, 0.9764f, 0.9764f);
         public static Color proBGColor = new Color(0.2196f, 0.2196f, 0.2196f);
-        public static bool hasSlider;
-        public static Texture2D transparent = UniformColorTexture(1, 1, new Color(0,0,0,0));
-        
+        public static Color transparentColor = new Color(0, 0, 0, 0);
+        public static Texture2D transparentTexture = UniformColorTexture(1, 1, transparentColor);
+        public static GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+        public static GUIStyle textAreaStyle = new GUIStyle(GUI.skin.textArea);
+        public static GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
+        public static GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+        public static GUIContent textContent = new GUIContent("");
+        public static Vector2 universalScrollPos = new Vector2();
+        public static RectOffset boxPadding = new RectOffset(padding, padding, padding, padding);
+        public static int strokeWidth = 1;
+        public static Rect boxFillRect = new Rect(0, 0, 0, 0);
+        public static Rect boxStrokeRect = new Rect(0, 0, 0, 0);
+        public static Rect noClipRect = new Rect(0, 0, 0, 0);
+        public static Rect contentRect = new Rect(0, 0, 0, 0);
+
         public static void Vertical(Action callback) {
             GUILayout.BeginVertical();
             callback();
@@ -74,10 +86,9 @@ namespace DiplomataEditor {
         }
 
         public static Vector2 ScrollWrap(Action callback, Vector2 scrollPosInput, Rect clipRect, Rect contentRect) {
-            Vector2 scrollPosOutput = new Vector2(0, 0);
-            scrollPosOutput = scrollPosInput;
-            
-            scrollPosOutput = GUI.BeginScrollView(clipRect, scrollPosOutput, contentRect);
+            universalScrollPos = scrollPosInput;
+
+            universalScrollPos = GUI.BeginScrollView(clipRect, universalScrollPos, contentRect);
 
             Horizontal(() => {
                 GUILayout.Space(MARGIN);
@@ -104,12 +115,15 @@ namespace DiplomataEditor {
 
             GUI.EndScrollView();
 
-            return scrollPosOutput;
+            return universalScrollPos;
         }
 
         public static Vector2 ScrollWindow(Action callback, Vector2 scrollPosInput, float contentHeight) {
-            noClipRect = new Rect(0, 0, Screen.width, Screen.height - 22);
-            return ScrollWrap(callback, scrollPosInput, noClipRect, new Rect(0, 0, Screen.width - 15, contentHeight));
+            noClipRect.width = Screen.width;
+            noClipRect.height = Screen.height - 22;
+            contentRect.width = Screen.width - 15;
+            contentRect.height = contentHeight;
+            return ScrollWrap(callback, scrollPosInput, noClipRect, contentRect);
         }
 
         public static void Focus(Action callback, string name = "focus") {
@@ -119,28 +133,41 @@ namespace DiplomataEditor {
         }
 
         public static float Box(string text, float x, float y, float width, Color color, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
-            GUIStyle style = new GUIStyle();
-            var content = new GUIContent(text);
-            var height = style.CalcHeight(content, width);
+            textContent.text = text;
+            var height = boxStyle.CalcHeight(textContent, width);
 
             if (hasSlider) {
                 width -= MARGIN;
             }
-            
-            style.alignment = textAlign;
-            style.padding = new RectOffset(PADDING, PADDING, 2 * PADDING, PADDING);
-            style.normal.textColor = Color.black;
-            style.normal.background = transparent;
+
+            boxPadding.left = padding;
+            boxPadding.right = padding;
+            boxPadding.top = padding;
+            boxPadding.bottom = padding;
+
+            boxStyle.alignment = textAlign;
+            boxStyle.padding = boxPadding;
+            boxStyle.normal.textColor = Color.black;
+            boxStyle.normal.background = transparentTexture;
+            boxStyle.richText = true;
 
             if (color.r * color.g * color.b < 0.1f) {
-                style.normal.textColor = Color.white;
+                boxStyle.normal.textColor = Color.white;
             }
-
-            Rect boxRect = new Rect(x, y, width, height + extraHeight);
             
-            EditorGUI.DrawRect(new Rect(x - 1, y - 1, width + 2, height + extraHeight + 2), ColorSub(color, 0.5f, 0.5f, 0.5f));
-            EditorGUI.DrawRect(boxRect, color);
-            GUI.Box(boxRect, text, style);
+            boxFillRect.x = x;
+            boxFillRect.y = y;
+            boxFillRect.width = width;
+            boxFillRect.height = height + extraHeight;
+
+            boxStrokeRect.x = x - strokeWidth;
+            boxStrokeRect.y = y - strokeWidth;
+            boxStrokeRect.width = width + (strokeWidth * 2);
+            boxStrokeRect.height = boxFillRect.height + (strokeWidth * 2);
+
+            EditorGUI.DrawRect(boxStrokeRect, ColorSub(color, 0.5f, 0.5f, 0.5f));
+            EditorGUI.DrawRect(boxFillRect, color);
+            GUI.Box(boxFillRect, text, boxStyle);
 
             return height;
         }
@@ -164,8 +191,7 @@ namespace DiplomataEditor {
         }
 
         public static Color ColorSub(Color color, float r, float g, float b, float a = 0) {
-            Color newColor = new Color(0, 0, 0);
-            newColor = color;
+            Color newColor = color;
             newColor.r -= r;
             newColor.g -= g;
             newColor.b -= b;
@@ -174,8 +200,7 @@ namespace DiplomataEditor {
         }
 
         public static Color ColorMul(Color color, float r, float g, float b, float a = 1) {
-            Color newColor = new Color(0, 0, 0);
-            newColor = color;
+            Color newColor = color;
             newColor.r *= r;
             newColor.g *= g;
             newColor.b *= b;
@@ -184,8 +209,7 @@ namespace DiplomataEditor {
         }
 
         public static Color ColorDiv(Color color, float r, float g, float b, float a = 1) {
-            Color newColor = new Color(0, 0, 0);
-            newColor = color;
+            Color newColor = color;
             newColor.r /= r;
             newColor.g /= g;
             newColor.b /= b;
@@ -194,8 +218,7 @@ namespace DiplomataEditor {
         }
 
         public static Color ColorAdd(Color colorA, Color colorB) {
-            Color newColor = new Color(0, 0, 0);
-            newColor = colorA;
+            Color newColor = colorA;
             newColor.r += colorB.r;
             newColor.g += colorB.g;
             newColor.b += colorB.b;
@@ -204,8 +227,7 @@ namespace DiplomataEditor {
         }
 
         public static Color ColorSub(Color colorA, Color colorB) {
-            Color newColor = new Color(0, 0, 0);
-            newColor = colorA;
+            Color newColor = colorA;
             newColor.r -= colorB.r;
             newColor.g -= colorB.g;
             newColor.b -= colorB.b;
@@ -214,8 +236,7 @@ namespace DiplomataEditor {
         }
 
         public static Color ColorMul(Color colorA, Color colorB) {
-            Color newColor = new Color(0, 0, 0);
-            newColor = colorA;
+            Color newColor = colorA;
             newColor.r *= colorB.r;
             newColor.g *= colorB.g;
             newColor.b *= colorB.b;
@@ -224,8 +245,7 @@ namespace DiplomataEditor {
         }
 
         public static Color ColorDiv(Color colorA, Color colorB) {
-            Color newColor = new Color(0, 0, 0);
-            newColor = colorA;
+            Color newColor = colorA;
             newColor.r /= colorB.r;
             newColor.g /= colorB.g;
             newColor.b /= colorB.b;
@@ -234,10 +254,9 @@ namespace DiplomataEditor {
         }
 
         public static void LabelBold(string content, params GUILayoutOption[] options) {
-            var style = GUI.skin.label;
-            style.fontStyle = FontStyle.Bold;
+            labelStyle.fontStyle = FontStyle.Bold;
             GUILayout.Label(content, options);
-            style.fontStyle = FontStyle.Normal;
+            labelStyle.fontStyle = FontStyle.Normal;
         }
 
         public static Color ResetColor() {

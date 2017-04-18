@@ -49,7 +49,7 @@ namespace DiplomataLib {
 
             if (canAdd) {
                 Diplomata.characters.Add(this);
-                Diplomata.preferences.characterList.Add(name);
+                Diplomata.preferences.characterList = ArrayHandler.Add(Diplomata.preferences.characterList, name);
                 JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
                 JSONHandler.Create(this, name, "Diplomata/Characters/");
             }
@@ -64,14 +64,14 @@ namespace DiplomataLib {
             var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
 
             Diplomata.characters = new List<Character>();
-            Diplomata.preferences.characterList = new List<string>();
+            Diplomata.preferences.characterList = new string[0];
 
             foreach (Object obj in charactersFiles) {
                 var json = (TextAsset)obj;
                 var character = JsonUtility.FromJson<Character>(json.text);
 
                 Diplomata.characters.Add(character);
-                Diplomata.preferences.characterList.Add(obj.name);
+                Diplomata.preferences.characterList = ArrayHandler.Add(Diplomata.preferences.characterList, obj.name);
             }
 
             var charactersOnScene = Object.FindObjectsOfType<DiplomataCharacter>();

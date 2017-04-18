@@ -29,7 +29,7 @@ namespace DiplomataEditor {
             }
 
             else {
-                window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 305);
+                window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 335);
             }
 
             if (state == State.Close) {
@@ -119,7 +119,6 @@ namespace DiplomataEditor {
         public void Create() {
             if (characterName != "") {
                 Diplomata.characters.Add(new Character(characterName));
-                CharacterInspector.characterList = ArrayHandler.ListToArray(Diplomata.preferences.characterList);
             }
 
             else {
@@ -135,8 +134,11 @@ namespace DiplomataEditor {
 
             EditorGUILayout.Separator();
 
+            DGUI.textContent.text = character.description;
+            var textAreaHeight = DGUI.textAreaStyle.CalcHeight(DGUI.textContent, Screen.width - (4 * DGUI.MARGIN));
+            
             GUILayout.Label("Description: ");
-            character.description = EditorGUILayout.TextField(character.description);
+            character.description = EditorGUILayout.TextArea(character.description, DGUI.textAreaStyle, GUILayout.Height(textAreaHeight));
 
             EditorGUILayout.Separator();
 

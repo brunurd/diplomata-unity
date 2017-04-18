@@ -4,6 +4,7 @@ namespace DiplomataLib {
     
     [System.Serializable]
     public class Message {
+        
         public int id;
         public Condition[] conditions;
         public DictLang[] title;
@@ -55,10 +56,6 @@ namespace DiplomataLib {
 
             #endif
 
-            Update(id, emitter, columnId);
-        }
-
-        public void Update(int id, string emitter, int columnId) {
             this.id = id;
             this.emitter = emitter;
             this.columnId = columnId;
@@ -72,6 +69,17 @@ namespace DiplomataLib {
             }
 
             return null;
+        }
+
+        public static Message[] ResetIDs(Message[] array) {
+
+            for (int i = 0; i < array.Length; i++) {
+                if (array[i].id == i + 1) {
+                    array[i].id = i;
+                }
+            }
+
+            return array;
         }
     }
 

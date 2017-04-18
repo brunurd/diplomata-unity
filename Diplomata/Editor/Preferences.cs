@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using DiplomataLib;
 
@@ -7,18 +6,18 @@ namespace DiplomataEditor {
     
     public class Preferences : EditorWindow {
 
-        public static List<string> attributesTemp;
-        public static List<Language> languagesTemp;
-        public static string defaultResourcesFolderTemp;
-        public static bool jsonPrettyPrintTemp;
+        public static string[] attributesTemp = new string[0];
+        public static Language[] languagesTemp = new Language[0];
+        public static string defaultResourcesFolderTemp = "";
+        public static bool jsonPrettyPrintTemp = false;
 
         [MenuItem("Diplomata/Preferences")]
         static public void Init() {
             Diplomata.Instantiate();
 
-            attributesTemp = new List<string>(Diplomata.preferences.attributes);
-            languagesTemp = new List<Language>(Diplomata.preferences.languages);
-            defaultResourcesFolderTemp = DiplomataLib.Preferences.defaultResourcesFolder;
+            attributesTemp = ArrayHandler.Copy(Diplomata.preferences.attributes);
+            languagesTemp = ArrayHandler.Copy(Diplomata.preferences.languages);
+            defaultResourcesFolderTemp = string.Copy(DiplomataLib.Preferences.defaultResourcesFolder);
             jsonPrettyPrintTemp = Diplomata.preferences.jsonPrettyPrint;
 
             Preferences window = (Preferences)GetWindow(typeof(Preferences), false, "Preferences");
@@ -59,20 +58,20 @@ namespace DiplomataEditor {
 
                 GUILayout.Label("Attributes:");
 
-                for (int i = 0; i < attributesTemp.Count; i++) {
+                for (int i = 0; i < attributesTemp.Length; i++) {
                     DGUI.Horizontal(() => {
 
                         attributesTemp[i] = EditorGUILayout.TextField(attributesTemp[i]);
 
                         if (GUILayout.Button("X", GUILayout.Width(20))) {
-                            attributesTemp.Remove(attributesTemp[i]);
+                            attributesTemp = ArrayHandler.Remove(attributesTemp, attributesTemp[i]);
                         }
 
                     });
                 }
 
                 if (GUILayout.Button("Add attribute")) {
-                    attributesTemp.Add("");
+                    attributesTemp = ArrayHandler.Add(attributesTemp, "");
                 }
 
             }, GUILayout.Width(Screen.width / 2));
@@ -83,7 +82,7 @@ namespace DiplomataEditor {
 
                 GUILayout.Label("Languages:");
 
-                for (int i = 0; i < languagesTemp.Count; i++) {
+                for (int i = 0; i < languagesTemp.Length; i++) {
                     DGUI.Horizontal(() => {
 
                         languagesTemp[i].name = EditorGUILayout.TextField(languagesTemp[i].name);
@@ -91,23 +90,24 @@ namespace DiplomataEditor {
                         languagesTemp[i].dubbing = GUILayout.Toggle(languagesTemp[i].dubbing, "Dub");
 
                         if (GUILayout.Button("X", GUILayout.Width(20))) {
-                            languagesTemp.Remove(languagesTemp[i]);
+                            languagesTemp = ArrayHandler.Remove(languagesTemp, languagesTemp[i]);
                         }
                     });
                 }
 
                 if (GUILayout.Button("Add language")) {
-                    languagesTemp.Add(new Language(""));
+                    languagesTemp = ArrayHandler.Add(languagesTemp, new Language(""));
                 }
 
             });
         }
 
         public void Save() {
-            Diplomata.preferences.attributes = new List<string>(attributesTemp);
-            Diplomata.preferences.languages = new List<Language>(languagesTemp);
-            DiplomataLib.Preferences.defaultResourcesFolder = defaultResourcesFolderTemp;
+            Diplomata.preferences.attributes = ArrayHandler.Copy(attributesTemp);
+            Diplomata.preferences.languages = ArrayHandler.Copy(languagesTemp);
             Diplomata.preferences.jsonPrettyPrint = jsonPrettyPrintTemp;
+
+            DiplomataLib.Preferences.defaultResourcesFolder = string.Copy(defaultResourcesFolderTemp);
 
             MessagesEditor.SetLanguagesList();
 

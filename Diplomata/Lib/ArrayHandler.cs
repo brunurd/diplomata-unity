@@ -70,11 +70,11 @@ namespace DiplomataLib {
                         returnedArray[i] = array[i];
                     }
 
-                    else if (i == from) {
+                    if (i == from) {
                         returnedArray[to] = array[from];
                     }
 
-                    else if (i == to) {
+                    if (i == to) {
                         returnedArray[from] = array[to];
                     }
                 }
@@ -86,6 +86,27 @@ namespace DiplomataLib {
                 Debug.LogWarning( from +" and " + to + " are indexes out of range (0 - " + (array.Length - 1) + ").");
                 return array;
             }
+        }
+
+        public static T[] Copy<T>(T[] copyOf) {
+            T[] array = new T[copyOf.Length];
+
+            for (int i = 0; i < copyOf.Length; i++) {
+                array[i] = copyOf[i];
+            }
+
+            return array;
+        }
+
+        public static int GetIndex(string[] array, string element) {
+
+            for (int i = 0; i < array.Length; i++) {
+                if (array[i] == element) {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 

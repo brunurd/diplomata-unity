@@ -32,13 +32,14 @@
         public bool happened;
         public Column[] columns;
         public string currentLanguage;
+        public bool idFilter = false;
         public bool conditionsFilter = true;
         public bool titleFilter = true;
         public bool contentFilter = true;
         public bool callbacksFilter = true;
         public CurrentMessage currentMessage = new CurrentMessage(-1, -1);
         public MessageEditorState messageEditorState = MessageEditorState.None;
-        public float columnWidth = 200;
+        public ushort columnWidth = 200;
 
         public Context() { }
 

@@ -8,6 +8,7 @@ namespace DiplomataEditor {
 
         private static Vector2 scrollPos = new Vector2(0, 0);
         private static float lateContextMenuHeight;
+        private static Rect saveAsScreenplayButton = new Rect(0, 0, 200, DGUI.BUTTON_HEIGHT_BIG);
 
         public static void Draw() {
             var character = CharacterMessagesManager.character;
@@ -24,16 +25,14 @@ namespace DiplomataEditor {
                         GUILayout.Space(third);
 
                         DGUI.Vertical(() => {
+                            
+                            DGUI.labelStyle.fontSize = 24;
+                            DGUI.labelStyle.alignment = TextAnchor.MiddleCenter;
 
-                            GUIStyle style = GUI.skin.label;
+                            GUILayout.Label(character.name, DGUI.labelStyle, GUILayout.ExpandWidth(true), GUILayout.Height(titleLabelHeight));
 
-                            style.fontSize = 24;
-                            style.alignment = TextAnchor.MiddleCenter;
-
-                            GUILayout.Label(character.name, style, GUILayout.ExpandWidth(true), GUILayout.Height(titleLabelHeight));
-
-                            style.fontSize = 11;
-                            style.alignment = TextAnchor.MiddleLeft;
+                            DGUI.labelStyle.fontSize = 11;
+                            DGUI.labelStyle.alignment = TextAnchor.MiddleLeft;
                             
                             foreach (Context context in character.contexts) {
 
@@ -77,28 +76,18 @@ namespace DiplomataEditor {
 
                 }, scrollPos, lateContextMenuHeight);
 
-                /*
-                 * SAVE AS SCREENPLAY BUTTON 
                 
-                var saveAsScreenplayButtonWidth = 200;
-                var saveAsScreenplayButtonXPos = Screen.width - saveAsScreenplayButtonWidth - DGUI.MARGIN;
-                var saveAsScreenplayButtonYPos = Screen.height - (DGUI.BUTTON_HEIGHT_BIG * 1.5f) - DGUI.MARGIN;
+                saveAsScreenplayButton.x = Screen.width - saveAsScreenplayButton.width - DGUI.MARGIN;
+                saveAsScreenplayButton.y = Screen.height - (DGUI.BUTTON_HEIGHT_BIG * 1.5f) - DGUI.MARGIN;
                 
                 if (DGUI.hasSlider) {
-                    saveAsScreenplayButtonXPos -= 15;
-                    saveAsScreenplayButtonYPos = (Screen.height + scrollPos.x) - (DGUI.BUTTON_HEIGHT_BIG * 1.5f) - DGUI.MARGIN;
+                    saveAsScreenplayButton.x -= 15;
+                    saveAsScreenplayButton.y = (Screen.height + scrollPos.x) - (DGUI.BUTTON_HEIGHT_BIG * 1.5f) - DGUI.MARGIN;
                 }
 
-                if (GUI.Button(new Rect(
-                        saveAsScreenplayButtonXPos,
-                        saveAsScreenplayButtonYPos,
-                        saveAsScreenplayButtonWidth,
-                        DGUI.BUTTON_HEIGHT_BIG
-                ), "Save as Screenplay")) {
+                if (GUI.Button(saveAsScreenplayButton, "Save as Screenplay")) {
                     Screenplay.Save(character);
                 }
-                
-                */
             }
 
             else {

@@ -18,7 +18,7 @@ namespace DiplomataLib {
         public Character[] characters;
 
         public void Start() {
-            if (Diplomata.preferences.languages.Count > 0) {
+            if (Diplomata.preferences.languages.Length > 0) {
                 currentDubbedLanguage = Diplomata.preferences.languages[0].name;
                 currentSubtitledLanguage = Diplomata.preferences.languages[0].name;
             }

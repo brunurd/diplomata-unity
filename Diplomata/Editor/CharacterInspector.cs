@@ -9,12 +9,14 @@ namespace DiplomataEditor {
     public class CharacterInspector : Editor {
         
         public DiplomataCharacter diplomataCharacter;
-        public static string[] characterList;
         
         public void OnEnable() {
+            Refresh();
+        }
+
+        public void Refresh() {
             Diplomata.Instantiate();
             diplomataCharacter = target as DiplomataCharacter;
-            characterList = ArrayHandler.ListToArray(Diplomata.preferences.characterList);
         }
 
         public override void OnInspectorGUI() {
@@ -23,7 +25,7 @@ namespace DiplomataEditor {
             DGUI.WindowWrap(() => {
 
                 if (diplomataCharacter.character != null && Diplomata.characters.Count > 0) {
-
+                    
                     DGUI.Horizontal(() => {
 
                         GUILayout.Label("Character: ");
@@ -39,7 +41,7 @@ namespace DiplomataEditor {
 
                         var selectedBefore = selected;
 
-                        selected = EditorGUILayout.Popup(selected, characterList);
+                        selected = EditorGUILayout.Popup(selected, Diplomata.preferences.characterList);
 
                         for (var i = 0; i < Diplomata.characters.Count; i++) {
                             if (selected == i) {
@@ -50,6 +52,9 @@ namespace DiplomataEditor {
                             }
                         }
 
+                        if (GUILayout.Button("Refresh", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+                            Refresh();
+                        }
                     });
 
                     EditorGUILayout.Separator();
@@ -61,6 +66,10 @@ namespace DiplomataEditor {
                     if (GUILayout.Button("Edit Messages", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                         CharacterMessagesManager.OpenContextMenu(diplomataCharacter.character);
                     }
+
+                    EditorGUILayout.Separator();
+
+                    GUILayout.Label("Influence: " + diplomataCharacter.character.influence);
 
                     EditorGUILayout.Separator();
 

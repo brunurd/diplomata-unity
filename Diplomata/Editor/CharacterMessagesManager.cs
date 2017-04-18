@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEditor;
 using DiplomataLib;
 
@@ -8,7 +9,8 @@ namespace DiplomataEditor {
 
         public static Character character;
         public static Context context;
-        
+        private ushort timer = 0;
+
         public enum State {
             None,
             Context,
@@ -84,7 +86,19 @@ namespace DiplomataEditor {
         }
 
         public void OnInspectorUpdate() {
+            AutoSave();
             Repaint();
+        }
+
+        private void AutoSave() {
+
+            if (timer == 120) {
+                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                timer = 0;
+            }
+
+            timer++;
+
         }
 
         public void OnDisable() {

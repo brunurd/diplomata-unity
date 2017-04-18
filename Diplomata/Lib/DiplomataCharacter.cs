@@ -5,6 +5,7 @@ namespace DiplomataLib {
     
     [System.Serializable]
     [ExecuteInEditMode]
+    [DisallowMultipleComponent]
     public class DiplomataCharacter : MonoBehaviour {
         
         public Character character;

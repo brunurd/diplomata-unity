@@ -20,7 +20,7 @@ namespace DiplomataEditor {
         public void OnGUI() {
             scrollPos = DGUI.ScrollWindow(() => {
                 
-                if (Diplomata.preferences.characterList.Count <= 0) {
+                if (Diplomata.preferences.characterList.Length <= 0) {
                     EditorGUILayout.HelpBox("No characters yet.", MessageType.Info);
                 }
 
@@ -32,24 +32,19 @@ namespace DiplomataEditor {
                     }
 
                     half /= 2;
-
-                    var style = GUI.skin.label;
-
+                    
                     DGUI.Horizontal(() => {
 
                         DGUI.Horizontal(() => {
-
-                            style.alignment = TextAnchor.MiddleLeft;
-                            GUILayout.Label(name, style);
                             
-                            style.alignment = TextAnchor.MiddleRight;
-                            style.fontStyle = FontStyle.Bold;
-                            if (Diplomata.preferences.playerCharacterName == name) {
-                                GUILayout.Label("[Player]", style);
-                            }
+                            DGUI.labelStyle.alignment = TextAnchor.MiddleLeft;
+                            GUILayout.Label(name, DGUI.labelStyle);
 
-                            style.alignment = TextAnchor.MiddleLeft;
-                            style.fontStyle = FontStyle.Normal;
+                            DGUI.labelStyle.alignment = TextAnchor.MiddleRight;
+                            DGUI.labelStyle.fontStyle = FontStyle.Bold;
+                            if (Diplomata.preferences.playerCharacterName == name) {
+                                GUILayout.Label("[Player]", DGUI.labelStyle);
+                            }
 
                         }, half);
 
@@ -70,8 +65,6 @@ namespace DiplomataEditor {
                                     Character.UpdateList();
                                     JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
 
-                                    CharacterInspector.characterList = ArrayHandler.ListToArray(Diplomata.preferences.characterList);
-
                                     CharacterEditor.Reset(name);
                                     CharacterMessagesManager.Reset(name);
                                     AddContext.Reset(name);
@@ -88,7 +81,7 @@ namespace DiplomataEditor {
                 if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                     CharacterEditor.OpenCreate();
                 }
-            }, scrollPos, ((DGUI.BUTTON_HEIGHT_SMALL + 10) * Diplomata.preferences.characterList.Count) + DGUI.BUTTON_HEIGHT + 10 + (3 * DGUI.MARGIN) );
+            }, scrollPos, ((DGUI.BUTTON_HEIGHT_SMALL + 10) * Diplomata.preferences.characterList.Length) + DGUI.BUTTON_HEIGHT + 10 + (3 * DGUI.MARGIN) );
 
         }
 

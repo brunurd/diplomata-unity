@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DiplomataLib {
+﻿namespace DiplomataLib {
 
     [System.Serializable]
     public class Language {
@@ -13,14 +11,20 @@ namespace DiplomataLib {
             subtitle = true;
             dubbing = true;
         }
+
+        public Language(Language other) {
+            name = other.name;
+            subtitle = other.subtitle;
+            dubbing = other.dubbing;
+        }
     }
 
     [System.Serializable]
     public class Preferences {
-        public List<string> attributes;
-        public List<Language> languages;
+        public string[] attributes = new string[0];
+        public Language[] languages = new Language[0];
         public static string defaultResourcesFolder = "Assets/Resources/";
-        public List<string> characterList;
+        public string[] characterList = new string[0];
         public bool jsonPrettyPrint;
         public string workingCharacter;
         public string workingContext;
@@ -28,10 +32,9 @@ namespace DiplomataLib {
         
         public void Start() {
             if (!JSONHandler.Exists("preferences", "Diplomata/")) {
-                attributes = new List<string>() { "fear", "politeness", "argumentation", "insistence", "charm", "confidence" };
-                languages = new List<Language>() { new Language("English") };
-                characterList = new List<string>();
-                jsonPrettyPrint = true;
+                attributes = new string[] { "fear", "politeness", "argumentation", "insistence", "charm", "confidence" };
+                languages = new Language[] { new Language("English") };
+                jsonPrettyPrint = false;
                 workingCharacter = string.Empty;
                 workingContext = string.Empty;
 
