@@ -109,7 +109,7 @@ namespace DiplomataEditor {
 
             DiplomataLib.Preferences.defaultResourcesFolder = string.Copy(defaultResourcesFolderTemp);
 
-            MessagesEditor.SetLanguagesList();
+            CharacterMessagesManager.SetLanguagesList();
 
             JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
             Close();

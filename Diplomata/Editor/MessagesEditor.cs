@@ -9,8 +9,6 @@ namespace DiplomataEditor {
         private const byte HEADER_HEIGHT = DGUI.BUTTON_HEIGHT_SMALL + (2 * DGUI.MARGIN);
         private const ushort SIDEBAR_WIDTH = 300;
         private const byte EMITTER_FIELD_HEIGHT = 15;
-
-        public static string[] languagesList;
         
         public static Color baseColor = new Color(0.8705f, 0.8705f, 0.8705f);
         private static Color headerBGColor;
@@ -36,8 +34,6 @@ namespace DiplomataEditor {
 
         public static void Draw() {
             DrawBG();
-
-            SetLanguagesList();
 
             if (CharacterMessagesManager.context != null) {
                 Header();
@@ -72,14 +68,6 @@ namespace DiplomataEditor {
             EditorGUI.DrawRect(sidebarRect, sidebarBGColor);
         }
 
-        public static void SetLanguagesList() {
-            languagesList = new string[Diplomata.preferences.languages.Length];
-
-            for (int i = 0; i < Diplomata.preferences.languages.Length; i++) {
-                languagesList[i] = Diplomata.preferences.languages[i].name;
-            }
-        }
-
         public static void Header() {
             var character = CharacterMessagesManager.character;
             var context = CharacterMessagesManager.context;
@@ -103,9 +91,9 @@ namespace DiplomataEditor {
                     GUILayout.Space(DGUI.MARGIN);
                     GUILayout.Label("Zoom: ");
                     context.columnWidth = (ushort) EditorGUILayout.Slider(context.columnWidth, 116, 675);
-                    DGUI.boxStyle.fontSize = (int) (context.columnWidth * 11) / 200;
-                    textAreaStyle.fontSize = (int)(context.columnWidth * 11) / 200;
-                    DGUI.padding = (int)(context.columnWidth * 10) / 200;
+                    DGUI.boxStyle.fontSize = (context.columnWidth * 11) / 200;
+                    textAreaStyle.fontSize = (context.columnWidth * 11) / 200;
+                    DGUI.padding = (context.columnWidth * 10) / 200;
 
                     var selected = 0;
 
@@ -118,7 +106,7 @@ namespace DiplomataEditor {
 
                     GUILayout.Space(DGUI.MARGIN);
                     GUILayout.Label("Language: ");
-                    selected = EditorGUILayout.Popup(selected, languagesList);
+                    selected = EditorGUILayout.Popup(selected, CharacterMessagesManager.languagesList);
 
                     for (var i = 0; i < Diplomata.preferences.languages.Length; i++) {
                         if (selected == i) {
@@ -237,7 +225,7 @@ namespace DiplomataEditor {
                                 var halfPadding = DGUI.padding / 2;
 
                                 if (context.titleFilter && (!currentMessage.disposable || currentMessage.isAChoice)) {
-                                    if (DictHandle.ContainsKey(currentMessage.title, context.currentLanguage) == null) {
+                                    if (DictHandler.ContainsKey(currentMessage.title, context.currentLanguage) == null) {
                                         currentMessage.title = ArrayHandler.Add(currentMessage.title, new DictLang(context.currentLanguage, ""));
                                     }
 
@@ -247,7 +235,7 @@ namespace DiplomataEditor {
                                         DGUI.textContent.text = text;
                                         titleRect.y = localHeight + textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) - halfPadding;
 
-                                        var titleTemp = DictHandle.ContainsKey(currentMessage.title, context.currentLanguage);
+                                        var titleTemp = DictHandler.ContainsKey(currentMessage.title, context.currentLanguage);
 
                                         text += titleTemp.value + "\n\n";
 
@@ -258,7 +246,7 @@ namespace DiplomataEditor {
 
 
                                 if (context.contentFilter) {
-                                    if (DictHandle.ContainsKey(currentMessage.content, context.currentLanguage) == null) {
+                                    if (DictHandler.ContainsKey(currentMessage.content, context.currentLanguage) == null) {
                                         currentMessage.content = ArrayHandler.Add(currentMessage.content, new DictLang(context.currentLanguage, ""));
                                     }
 
@@ -268,7 +256,7 @@ namespace DiplomataEditor {
                                         DGUI.textContent.text = text;
                                         contentRect.y = localHeight + textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) - halfPadding;
 
-                                        var contentTemp = DictHandle.ContainsKey(currentMessage.content, context.currentLanguage);
+                                        var contentTemp = DictHandler.ContainsKey(currentMessage.content, context.currentLanguage);
 
                                         text += contentTemp.value + "\n\n";
 
@@ -302,7 +290,7 @@ namespace DiplomataEditor {
                                 var boxHeight = DGUI.Box(text, x, localHeight, context.columnWidth, color, TextAnchor.UpperLeft);
                                 
                                 if (context.titleFilter && (!currentMessage.disposable || currentMessage.isAChoice)) {
-                                    var title = DictHandle.ContainsKey(currentMessage.title, context.currentLanguage);
+                                    var title = DictHandler.ContainsKey(currentMessage.title, context.currentLanguage);
                                     titleRect.x = x + DGUI.padding;
                                     titleRect.width = context.columnWidth - (2 * DGUI.padding);
 
@@ -311,7 +299,7 @@ namespace DiplomataEditor {
                                 }
 
                                 if (context.contentFilter) {
-                                    var content = DictHandle.ContainsKey(currentMessage.content, context.currentLanguage);
+                                    var content = DictHandler.ContainsKey(currentMessage.content, context.currentLanguage);
                                     contentRect.x = x + DGUI.padding;
                                     contentRect.width = context.columnWidth - (2 * DGUI.padding);
 

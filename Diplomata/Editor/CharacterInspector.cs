@@ -59,6 +59,13 @@ namespace DiplomataEditor {
 
                     EditorGUILayout.Separator();
 
+                    var showInfluence = true;
+
+                    if (diplomataCharacter.character.name == Diplomata.preferences.playerCharacterName) {
+                        EditorGUILayout.HelpBox("\nThis character is the player, he doesn't influence himself, use his messages only in the case he speaks with himself.\n", MessageType.Info);
+                        showInfluence = false;
+                    }
+                    
                     if (GUILayout.Button("Edit Character", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                         CharacterEditor.Edit(diplomataCharacter.character);
                     }
@@ -67,9 +74,10 @@ namespace DiplomataEditor {
                         CharacterMessagesManager.OpenContextMenu(diplomataCharacter.character);
                     }
 
-                    EditorGUILayout.Separator();
-
-                    GUILayout.Label("Influence: " + diplomataCharacter.character.influence);
+                    if (showInfluence) {
+                        EditorGUILayout.Separator();
+                        GUILayout.Label("Influence: " + diplomataCharacter.character.influence);
+                    }
 
                     EditorGUILayout.Separator();
 

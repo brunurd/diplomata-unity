@@ -67,7 +67,7 @@ namespace DiplomataEditor {
 
                                     CharacterEditor.Reset(name);
                                     CharacterMessagesManager.Reset(name);
-                                    AddContext.Reset(name);
+                                    ContextEditor.Reset(name);
                                 }
                             }
 

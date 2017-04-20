@@ -20,8 +20,9 @@ namespace DiplomataEditor {
         
         public static void Init(State state = State.None) {
             CharacterEditor.state = state;
+            DGUI.focusOnStart = true;
 
-            CharacterEditor window = (CharacterEditor)GetWindow(typeof(CharacterEditor), false, "Character Edit", true);
+            CharacterEditor window = (CharacterEditor)GetWindow(typeof(CharacterEditor), false, "Character Editor", true);
 
             if (state == State.Create) {
                 window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 100);

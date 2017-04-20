@@ -32,6 +32,7 @@ namespace DiplomataEditor {
         public static Rect boxStrokeRect = new Rect(0, 0, 0, 0);
         public static Rect noClipRect = new Rect(0, 0, 0, 0);
         public static Rect contentRect = new Rect(0, 0, 0, 0);
+        public static bool focusOnStart = true;
 
         public static void Vertical(Action callback) {
             GUILayout.BeginVertical();
@@ -129,7 +130,10 @@ namespace DiplomataEditor {
         public static void Focus(Action callback, string name = "focus") {
             GUI.SetNextControlName(name);
             callback();
-            EditorGUI.FocusTextInControl(name);
+            if (focusOnStart) {
+                EditorGUI.FocusTextInControl(name);
+                focusOnStart = false;
+            }
         }
 
         public static float Box(string text, float x, float y, float width, Color color, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {

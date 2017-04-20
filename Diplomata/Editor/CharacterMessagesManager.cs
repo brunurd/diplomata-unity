@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using DiplomataLib;
 
@@ -10,6 +9,7 @@ namespace DiplomataEditor {
         public static Character character;
         public static Context context;
         private ushort timer = 0;
+        public static string[] languagesList;
 
         public enum State {
             None,
@@ -31,14 +31,23 @@ namespace DiplomataEditor {
             }
 
             else {
+                SetLanguagesList();
                 window.Show();
+            }
+        }
+
+        public static void SetLanguagesList() {
+            languagesList = new string[Diplomata.preferences.languages.Length];
+
+            for (int i = 0; i < Diplomata.preferences.languages.Length; i++) {
+                languagesList[i] = Diplomata.preferences.languages[i].name;
             }
         }
 
         public static void OpenContextMenu(Character currentCharacter) {
             character = currentCharacter;
             Diplomata.preferences.SetWorkingCharacter(currentCharacter.name);
-            Diplomata.preferences.SetWorkingContext(string.Empty);
+            Diplomata.preferences.SetWorkingContextMessagesId(-1);
             Init(State.Context);
         }
 
@@ -46,7 +55,7 @@ namespace DiplomataEditor {
             character = currentCharacter;
             context = currentContext;
             Diplomata.preferences.SetWorkingCharacter(currentCharacter.name);
-            Diplomata.preferences.SetWorkingContext(currentContext.name);
+            Diplomata.preferences.SetWorkingContextMessagesId(currentContext.id);
             Init(State.Messages);
         }
 
@@ -66,18 +75,18 @@ namespace DiplomataEditor {
                     if (Diplomata.preferences.workingCharacter != string.Empty) {
                         character = Character.Find(Diplomata.preferences.workingCharacter);
 
-                        if (Diplomata.preferences.workingContext != string.Empty) {
-                            context = Context.Find(character, Diplomata.preferences.workingContext);
+                        if (Diplomata.preferences.workingContextMessagesId > -1) {
+                            context = Context.Find(character, Diplomata.preferences.workingContextMessagesId);
                             MessagesEditor.Draw();
                         }
 
                         else {
-                            ContextMenu.Draw();
+                            ContextListMenu.Draw();
                         }
                     }
                     break;
                 case State.Context:
-                    ContextMenu.Draw();
+                    ContextListMenu.Draw();
                     break;
                 case State.Messages:
                     MessagesEditor.Draw();

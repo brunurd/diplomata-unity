@@ -29,7 +29,7 @@
         }
     }
 
-    public class DictHandle {
+    public class DictHandler {
 
         public static DictAttr ContainsKey(DictAttr[] array, string key) {
             for (int i = 0; i < array.Length; i++) {

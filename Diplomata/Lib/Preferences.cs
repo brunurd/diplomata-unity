@@ -27,7 +27,8 @@
         public string[] characterList = new string[0];
         public bool jsonPrettyPrint;
         public string workingCharacter;
-        public string workingContext;
+        public int workingContextMessagesId;
+        public int workingContextEditId;
         public string playerCharacterName;
         
         public void Start() {
@@ -36,7 +37,8 @@
                 languages = new Language[] { new Language("English") };
                 jsonPrettyPrint = false;
                 workingCharacter = string.Empty;
-                workingContext = string.Empty;
+                workingContextMessagesId = -1;
+                workingContextEditId = -1;
 
                 JSONHandler.Create(this, "preferences", "Diplomata/");
             }
@@ -51,8 +53,13 @@
             JSONHandler.Update(this, "preferences", "Diplomata/");
         }
 
-        public void SetWorkingContext(string contextName) {
-            workingContext = contextName;
+        public void SetWorkingContextMessagesId(int contextId) {
+            workingContextMessagesId = contextId;
+            JSONHandler.Update(this, "preferences", "Diplomata/");
+        }
+
+        public void SetWorkingContextEditId(int contextId) {
+            workingContextEditId = contextId;
             JSONHandler.Update(this, "preferences", "Diplomata/");
         }
     }

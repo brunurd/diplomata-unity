@@ -27,7 +27,9 @@
 
     [System.Serializable]
     public class Context {
-        public string name;
+        public int id;
+        public DictLang[] name;
+        public DictLang[] description;
         public string characterName;
         public bool happened;
         public Column[] columns;
@@ -43,21 +45,39 @@
 
         public Context() { }
 
-        public Context(string name, string characterName) {
-            this.name = name;
+        public Context(int id, string characterName) {
+            this.id = id;
             this.characterName = characterName;
             columns = new Column[0];
+            name = new DictLang[0];
+            description = new DictLang[0];
+
+            foreach (Language lang in Diplomata.preferences.languages) {
+                name = ArrayHandler.Add(name, new DictLang(lang.name, "Name [Change clicking on Edit]"));
+                description = ArrayHandler.Add(description, new DictLang(lang.name, "Description [Change clicking on Edit]"));
+            }
         }
 
-        public static Context Find(Character character, string contextName) {
+        public static Context Find(Character character, int id) {
 
             foreach (Context context in character.contexts) {
-                if (context.name == contextName) {
+                if (context.id == id) {
                     return context;
                 }
             }
 
             return null;
+        }
+
+        public static Context[] ResetIDs(Context[] array) {
+
+            for (int i = 0; i < array.Length; i++) {
+                if (array[i].id == i + 1) {
+                    array[i].id = i;
+                }
+            }
+
+            return array;
         }
     }
 

@@ -1,0 +1,3 @@
+[submodule "Diplomata/Editor/RTF-Exporter"]
+	path = Diplomata/Editor/RTF-Exporter
+	url = https://github.com/brunurd/RTF-Exporter
