@@ -10,7 +10,8 @@ namespace DiplomataEditor {
         public static Language[] languagesTemp = new Language[0];
         public static string defaultResourcesFolderTemp = "";
         public static bool jsonPrettyPrintTemp = false;
-
+        public static string currentLanguageTemp; 
+        
         [MenuItem("Diplomata/Preferences")]
         static public void Init() {
             Diplomata.Instantiate();
@@ -19,6 +20,7 @@ namespace DiplomataEditor {
             languagesTemp = ArrayHandler.Copy(Diplomata.preferences.languages);
             defaultResourcesFolderTemp = string.Copy(DiplomataLib.Preferences.defaultResourcesFolder);
             jsonPrettyPrintTemp = Diplomata.preferences.jsonPrettyPrint;
+            currentLanguageTemp = string.Copy(Diplomata.preferences.currentLanguage);
 
             Preferences window = (Preferences)GetWindow(typeof(Preferences), false, "Preferences");
             window.minSize = new Vector2(600, 345);
@@ -39,7 +41,24 @@ namespace DiplomataEditor {
 
                 EditorGUILayout.Separator();
 
-                jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
+                var selected = 0;
+
+                for (int i = 0; i < Diplomata.preferences.languagesList.Length; i++) {
+                    if (Diplomata.preferences.languagesList[i] == currentLanguageTemp) {
+                        selected = i;
+                    }
+                }
+
+                DGUI.Horizontal(() => {
+                    jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
+                    selected = EditorGUILayout.Popup("Current Language", selected, Diplomata.preferences.languagesList);
+                });
+
+                for (int i = 0; i < Diplomata.preferences.languagesList.Length; i++) {
+                    if (selected == i) {
+                        currentLanguageTemp = Diplomata.preferences.languagesList[i];
+                    }
+                }
 
                 EditorGUILayout.Separator();
                 
@@ -108,9 +127,10 @@ namespace DiplomataEditor {
             Diplomata.preferences.jsonPrettyPrint = jsonPrettyPrintTemp;
 
             DiplomataLib.Preferences.defaultResourcesFolder = string.Copy(defaultResourcesFolderTemp);
+            Diplomata.preferences.currentLanguage = string.Copy(currentLanguageTemp);
 
-            CharacterMessagesManager.SetLanguagesList();
-
+            Diplomata.preferences.SetLanguageList();
+            
             JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
             Close();
         }

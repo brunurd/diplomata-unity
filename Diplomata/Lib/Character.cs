@@ -6,12 +6,11 @@ namespace DiplomataLib {
     [System.Serializable]
     public class Character {
         public string name;
-        public string description;
+        public DictLang[] description;
         public bool startOnPlay;
         public DictAttr[] attributes;
         public byte influence = 50;
         public Context[] contexts;
-        public string currentLanguage;
 
         [System.NonSerialized]
         public bool onScene;
@@ -21,9 +20,14 @@ namespace DiplomataLib {
         public Character(string name) {
             this.name = name;
             contexts = new Context[0];
+            description = new DictLang[0];
 
             if (Diplomata.characters.Count == 0) {
                 Diplomata.preferences.playerCharacterName = this.name;
+            }
+
+            foreach (Language lang in Diplomata.preferences.languages) {
+                description = ArrayHandler.Add(description, new DictLang(lang.name, ""));
             }
 
             SetAttributes();

@@ -77,8 +77,8 @@ namespace DiplomataEditor {
         }
         
         public void DrawEditWindow() {
-            var name = DictHandler.ContainsKey(context.name, character.currentLanguage);
-            var description = DictHandler.ContainsKey(context.description, character.currentLanguage);
+            var name = DictHandler.ContainsKey(context.name, Diplomata.preferences.currentLanguage);
+            var description = DictHandler.ContainsKey(context.description, Diplomata.preferences.currentLanguage);
 
             if (name != null && description != null) {
                 GUILayout.Label("Name: ");
@@ -93,7 +93,7 @@ namespace DiplomataEditor {
                 var height = DGUI.textAreaStyle.CalcHeight(DGUI.textContent, Screen.width - (2 * DGUI.MARGIN));
 
                 GUILayout.Label("Description: ");
-                description.value = EditorGUILayout.TextArea(description.value, DGUI.textAreaStyle, GUILayout.Height(height));
+                description.value = EditorGUILayout.TextArea(description.value, DGUI.textAreaStyle, GUILayout.Height(height + 15));
 
                 EditorGUILayout.Separator();
 

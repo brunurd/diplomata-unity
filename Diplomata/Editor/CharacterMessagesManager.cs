@@ -9,7 +9,6 @@ namespace DiplomataEditor {
         public static Character character;
         public static Context context;
         private ushort timer = 0;
-        public static string[] languagesList;
 
         public enum State {
             None,
@@ -23,7 +22,7 @@ namespace DiplomataEditor {
         public static void Init(State state = State.None) {
             CharacterMessagesManager.state = state;
             CharacterMessagesManager window = (CharacterMessagesManager)GetWindow(typeof(CharacterMessagesManager), false, "Messages", true);
-            window.minSize = new Vector2(1000, 300);
+            window.minSize = new Vector2(960, 300);
             window.maximized = true;
             
             if (state == State.Close) {
@@ -31,16 +30,7 @@ namespace DiplomataEditor {
             }
 
             else {
-                SetLanguagesList();
                 window.Show();
-            }
-        }
-
-        public static void SetLanguagesList() {
-            languagesList = new string[Diplomata.preferences.languages.Length];
-
-            for (int i = 0; i < Diplomata.preferences.languages.Length; i++) {
-                languagesList[i] = Diplomata.preferences.languages[i].name;
             }
         }
 

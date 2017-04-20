@@ -23,9 +23,11 @@
     public class Preferences {
         public string[] attributes = new string[0];
         public Language[] languages = new Language[0];
+        public string[] languagesList = new string[0];
         public static string defaultResourcesFolder = "Assets/Resources/";
         public string[] characterList = new string[0];
         public bool jsonPrettyPrint;
+        public string currentLanguage;
         public string workingCharacter;
         public int workingContextMessagesId;
         public int workingContextEditId;
@@ -34,17 +36,35 @@
         public void Start() {
             if (!JSONHandler.Exists("preferences", "Diplomata/")) {
                 attributes = new string[] { "fear", "politeness", "argumentation", "insistence", "charm", "confidence" };
+
                 languages = new Language[] { new Language("English") };
+                SetCurrentLanguage("English");
+                
                 jsonPrettyPrint = false;
+
                 workingCharacter = string.Empty;
                 workingContextMessagesId = -1;
                 workingContextEditId = -1;
-
+                
                 JSONHandler.Create(this, "preferences", "Diplomata/");
             }
 
             else {
                 Diplomata.preferences = JSONHandler.Read<Preferences>("preferences", "Diplomata/");
+            }
+        }
+
+        public void SetCurrentLanguage(string language) {
+            currentLanguage = language;
+
+            SetLanguageList();
+        }
+
+        public void SetLanguageList() {
+            languagesList = new string[languages.Length];
+
+            for (int i = 0; i < languages.Length; i++) {
+                languagesList[i] = languages[i].name;
             }
         }
 

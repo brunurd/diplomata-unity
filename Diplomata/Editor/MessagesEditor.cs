@@ -31,6 +31,7 @@ namespace DiplomataEditor {
         public static GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
         private static Texture2D textAreaBGTextureNormal = DGUI.UniformColorTexture(1, 1, new Color(0.5f, 0.5f, 0.5f, 0.06f));
         private static Texture2D textAreaBGTextureFocused = DGUI.UniformColorTexture(1, 1, new Color(1, 1, 1, 1));
+        private static RectOffset textAreaPadding = new RectOffset(2, 2, 2, 2);
 
         public static void Draw() {
             DrawBG();
@@ -94,27 +95,7 @@ namespace DiplomataEditor {
                     DGUI.boxStyle.fontSize = (context.columnWidth * 11) / 200;
                     textAreaStyle.fontSize = (context.columnWidth * 11) / 200;
                     DGUI.padding = (context.columnWidth * 10) / 200;
-
-                    var selected = 0;
-
-                    for (var i = 0; i < Diplomata.preferences.languages.Length; i++) {
-                        if (Diplomata.preferences.languages[i].name == context.currentLanguage) {
-                            selected = i;
-                            break;
-                        }
-                    }
-
-                    GUILayout.Space(DGUI.MARGIN);
-                    GUILayout.Label("Language: ");
-                    selected = EditorGUILayout.Popup(selected, CharacterMessagesManager.languagesList);
-
-                    for (var i = 0; i < Diplomata.preferences.languages.Length; i++) {
-                        if (selected == i) {
-                            context.currentLanguage = Diplomata.preferences.languages[i].name;
-                            break;
-                        }
-                    }
-
+                    
                     GUILayout.Space(DGUI.MARGIN);
                     GUILayout.Label("Filters: ");
                     context.idFilter = GUILayout.Toggle(context.idFilter, "Id ");
@@ -221,47 +202,45 @@ namespace DiplomataEditor {
                                         text += condition.displayName + "\n\n";
                                     }
                                 }
-
-                                var halfPadding = DGUI.padding / 2;
-
+                                
                                 if (context.titleFilter && (!currentMessage.disposable || currentMessage.isAChoice)) {
-                                    if (DictHandler.ContainsKey(currentMessage.title, context.currentLanguage) == null) {
-                                        currentMessage.title = ArrayHandler.Add(currentMessage.title, new DictLang(context.currentLanguage, ""));
+                                    if (DictHandler.ContainsKey(currentMessage.title, Diplomata.preferences.currentLanguage) == null) {
+                                        currentMessage.title = ArrayHandler.Add(currentMessage.title, new DictLang(Diplomata.preferences.currentLanguage, ""));
                                     }
 
                                     else {
                                         text += "<i>Title:</i>\n\n";
                                         
                                         DGUI.textContent.text = text;
-                                        titleRect.y = localHeight + textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) - halfPadding;
+                                        titleRect.y = localHeight + textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) - 15;
 
-                                        var titleTemp = DictHandler.ContainsKey(currentMessage.title, context.currentLanguage);
+                                        var titleTemp = DictHandler.ContainsKey(currentMessage.title, Diplomata.preferences.currentLanguage);
 
                                         text += titleTemp.value + "\n\n";
 
                                         DGUI.textContent.text = titleTemp.value;
-                                        titleRect.height = textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) + halfPadding;
+                                        titleRect.height = textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) + 15;
                                     }
                                 }
 
 
                                 if (context.contentFilter) {
-                                    if (DictHandler.ContainsKey(currentMessage.content, context.currentLanguage) == null) {
-                                        currentMessage.content = ArrayHandler.Add(currentMessage.content, new DictLang(context.currentLanguage, ""));
+                                    if (DictHandler.ContainsKey(currentMessage.content, Diplomata.preferences.currentLanguage) == null) {
+                                        currentMessage.content = ArrayHandler.Add(currentMessage.content, new DictLang(Diplomata.preferences.currentLanguage, ""));
                                     }
 
                                     else {
                                         text += "<i>Content:</i>\n\n";
 
                                         DGUI.textContent.text = text;
-                                        contentRect.y = localHeight + textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) - halfPadding;
+                                        contentRect.y = localHeight + textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) - 15;
 
-                                        var contentTemp = DictHandler.ContainsKey(currentMessage.content, context.currentLanguage);
+                                        var contentTemp = DictHandler.ContainsKey(currentMessage.content, Diplomata.preferences.currentLanguage);
 
                                         text += contentTemp.value + "\n\n";
 
                                         DGUI.textContent.text = contentTemp.value;
-                                        contentRect.height = textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) + halfPadding;
+                                        contentRect.height = textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth) + 15;
                                     }
                                 }
 
@@ -290,7 +269,7 @@ namespace DiplomataEditor {
                                 var boxHeight = DGUI.Box(text, x, localHeight, context.columnWidth, color, TextAnchor.UpperLeft);
                                 
                                 if (context.titleFilter && (!currentMessage.disposable || currentMessage.isAChoice)) {
-                                    var title = DictHandler.ContainsKey(currentMessage.title, context.currentLanguage);
+                                    var title = DictHandler.ContainsKey(currentMessage.title, Diplomata.preferences.currentLanguage);
                                     titleRect.x = x + DGUI.padding;
                                     titleRect.width = context.columnWidth - (2 * DGUI.padding);
 
@@ -299,7 +278,7 @@ namespace DiplomataEditor {
                                 }
 
                                 if (context.contentFilter) {
-                                    var content = DictHandler.ContainsKey(currentMessage.content, context.currentLanguage);
+                                    var content = DictHandler.ContainsKey(currentMessage.content, Diplomata.preferences.currentLanguage);
                                     contentRect.x = x + DGUI.padding;
                                     contentRect.width = context.columnWidth - (2 * DGUI.padding);
 
@@ -424,6 +403,21 @@ namespace DiplomataEditor {
                                 }
 
                             }
+
+                            EditorGUILayout.Separator();
+
+                            var screenplayNotes = DictHandler.ContainsKey(message.screenplayNotes, Diplomata.preferences.currentLanguage);
+
+                            if (screenplayNotes == null) {
+                                message.screenplayNotes = ArrayHandler.Add(message.screenplayNotes, new DictLang(Diplomata.preferences.currentLanguage, ""));
+                                screenplayNotes = DictHandler.ContainsKey(message.screenplayNotes, Diplomata.preferences.currentLanguage);
+                            }
+
+                            DGUI.textContent.text = screenplayNotes.value;
+                            var height = DGUI.textAreaStyle.CalcHeight(DGUI.textContent, Screen.width - (2 * DGUI.MARGIN)) + 15;
+
+                            GUILayout.Label("Screenplay notes: ");
+                            screenplayNotes.value = EditorGUILayout.TextArea(screenplayNotes.value, DGUI.textAreaStyle, GUILayout.Height(height));
 
                             EditorGUILayout.Separator();
 
@@ -579,6 +573,7 @@ namespace DiplomataEditor {
             textAreaStyle.normal.background = textAreaBGTextureNormal;
             textAreaStyle.normal.textColor = DGUI.transparentColor;
             textAreaStyle.focused.background = textAreaBGTextureFocused;
+            textAreaStyle.padding = textAreaPadding;
             buttonStyle.normal.background = DGUI.transparentTexture;
             buttonStyle.active.background = DGUI.transparentTexture;
         }

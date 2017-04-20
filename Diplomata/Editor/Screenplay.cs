@@ -28,8 +28,8 @@ namespace DiplomataEditor {
 
         private static RTFDocument CreateDocument() {
             RTFDocument document = new RTFDocument();
-            document.Init(21, 29.7f, RTFDocument.Orientation.Portrait, RTFDocument.Units.Centimeters);
-            document.margin = new RTFDocument.Margin(2.54f, 2.54f, 2.54f, 2.54f);
+            document.Init(21, 29.7f, Orientation.Portrait, Units.Centimeters);
+            document.margin = new Margin(2.54f, 2.54f, 2.54f, 2.54f);
 
             if (Environment.UserName != null) {
                 document.author = Environment.UserName;
@@ -39,39 +39,61 @@ namespace DiplomataEditor {
         }
 
         private static RTFDocument AddCharacter(RTFDocument document, Character character) {
-            RTFStyle style = new RTFStyle(false, false, 12, "Courier", Color.black);
-            RTFStyle styleAllcaps = new RTFStyle(false, false, false, false, true, false, 12, "Courier", Color.black, RTFStyle.Underline.None);
+            RTFTextStyle style = new RTFTextStyle(false, false, 12, "Courier", Color.black);
+            RTFTextStyle styleAllcaps = new RTFTextStyle(false, false, false, false, true, false, 12, "Courier", Color.black, Underline.None);
 
-            RTFParagraph.Indent noIndent = new RTFParagraph.Indent(0, 0, 0);
-            RTFParagraph.Indent messageContentIndent = new RTFParagraph.Indent(0, 2.54f, 0);
+            RTFParagraphStyle noIndent = new RTFParagraphStyle(Alignment.Left, new Indent(0, 0, 0), 0, 400);
+            RTFParagraphStyle messageContentIndent = new RTFParagraphStyle(Alignment.Left, new Indent(0, 2.54f, 0), 0, 400);
 
-            var presentation = document.AppendParagraph(RTFParagraph.Alignment.Left, noIndent);
+            var presentation = document.AppendParagraph(noIndent);
             presentation.AppendText(character.name, styleAllcaps);
+            
+            var characterDescription = DictHandler.ContainsKey(character.description, Diplomata.preferences.currentLanguage);
 
-            presentation.AppendText(", " + character.description, style);
+            var text = ", " + characterDescription.value;
 
+            if (text[text.Length - 1] != '.') {
+                text += ".";
+            }
+
+            presentation.AppendText(text, style);
+            
             foreach (Context context in character.contexts) {
 
-                var contextNamePar = document.AppendParagraph(RTFParagraph.Alignment.Left, noIndent);
-                var name = DictHandler.ContainsKey(context.name, character.currentLanguage);
-                contextNamePar.AppendText(name.value, styleAllcaps);
+                var contextPar = document.AppendParagraph(noIndent);
 
-                var contextDescriptionPar = document.AppendParagraph(RTFParagraph.Alignment.Left, noIndent);
-                var description = DictHandler.ContainsKey(context.description, character.currentLanguage);
-                contextDescriptionPar.AppendText(description.value, style);
+                var name = DictHandler.ContainsKey(context.name, Diplomata.preferences.currentLanguage);
+                var contextDescription = DictHandler.ContainsKey(context.description, Diplomata.preferences.currentLanguage);
+
+                contextPar.AppendText(name.value + "\n", styleAllcaps);
+                contextPar.AppendText(contextDescription.value, style);
 
                 foreach (Column column in context.columns) {
-                    foreach (Message message in column.messages) {
-                        var messagePar = document.AppendParagraph(RTFParagraph.Alignment.Left, messageContentIndent);
-                        messagePar.AppendText("\t" + message.emitter + "\n", styleAllcaps);
-                        var content = DictHandler.ContainsKey(message.content, character.currentLanguage);
-                        messagePar.AppendText(content.value, style);
+                    for (int i = 0; i < column.messages.Length; i++) {
+                        var messagePar = document.AppendParagraph(messageContentIndent);
+                        messagePar.AppendText("\t\t" + column.messages[i].emitter + "\n", styleAllcaps);
+
+                        var screenplayNotes = DictHandler.ContainsKey(column.messages[i].screenplayNotes, Diplomata.preferences.currentLanguage);
+
+                        if (screenplayNotes != null) {
+                            if (screenplayNotes.value != "") {
+                                messagePar.AppendText("\t(" + screenplayNotes.value + ")\n", style);
+                            }
+                        }
+
+                        var content = DictHandler.ContainsKey(column.messages[i].content, Diplomata.preferences.currentLanguage);
+
+                        if (column.messages.Length > 1) {
+                            messagePar.AppendText("(" + i + "): " + content.value, style);
+                        }
+
+                        else {
+                            messagePar.AppendText(content.value, style);
+                        }
                     }
                 }
 
             }
-
-            document.AppendParagraph().AppendText("\n");
 
             return document;
         }

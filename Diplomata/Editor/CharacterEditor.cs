@@ -134,13 +134,21 @@ namespace DiplomataEditor {
             character.name = EditorGUILayout.TextField(character.name);
 
             EditorGUILayout.Separator();
-
-            DGUI.textContent.text = character.description;
-            var textAreaHeight = DGUI.textAreaStyle.CalcHeight(DGUI.textContent, Screen.width - (4 * DGUI.MARGIN));
             
-            GUILayout.Label("Description: ");
-            character.description = EditorGUILayout.TextArea(character.description, DGUI.textAreaStyle, GUILayout.Height(textAreaHeight));
+            var description = DictHandler.ContainsKey(character.description, Diplomata.preferences.currentLanguage);
 
+            if (description == null) {
+                character.description = ArrayHandler.Add(character.description, new DictLang(Diplomata.preferences.currentLanguage, ""));
+                description = DictHandler.ContainsKey(character.description, Diplomata.preferences.currentLanguage);
+            }
+            
+            DGUI.textContent.text = description.value;
+            DGUI.textAreaStyle.padding = DGUI.boxPadding;
+            var height = DGUI.textAreaStyle.CalcHeight(DGUI.textContent, Screen.width - (2 * DGUI.MARGIN));
+
+            GUILayout.Label("Description: ");
+            description.value = EditorGUILayout.TextArea(description.value, DGUI.textAreaStyle, GUILayout.Height(height + 15));
+            
             EditorGUILayout.Separator();
 
             DGUI.Horizontal(() => {
@@ -161,12 +169,14 @@ namespace DiplomataEditor {
 
             });
 
-            EditorGUILayout.Separator();
+            if (character.name != Diplomata.preferences.playerCharacterName) {
+                EditorGUILayout.Separator();
 
-            GUILayout.Label("Character attributes (influenceable by): ");
+                GUILayout.Label("Character attributes (influenceable by): ");
 
-            for (int i = 0; i < character.attributes.Length; i++) {
+                for (int i = 0; i < character.attributes.Length; i++) {
                     character.attributes[i].value = (byte)EditorGUILayout.Slider(character.attributes[i].key, character.attributes[i].value, 0, 100);
+                }
             }
 
             EditorGUILayout.Separator();
@@ -175,6 +185,7 @@ namespace DiplomataEditor {
 
                 if (GUILayout.Button("Save", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                     Save();
+                    Close();
                 }
 
                 if (GUILayout.Button("Close", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {

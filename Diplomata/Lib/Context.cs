@@ -33,7 +33,6 @@
         public string characterName;
         public bool happened;
         public Column[] columns;
-        public string currentLanguage;
         public bool idFilter = false;
         public bool conditionsFilter = true;
         public bool titleFilter = true;

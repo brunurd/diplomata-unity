@@ -9,6 +9,7 @@ namespace DiplomataLib {
         public Condition[] conditions;
         public DictLang[] title;
         public DictLang[] content;
+        public DictLang[] screenplayNotes;
         public DictAttr[] attributes;
         public Callback[] callbacks;
         public string[] audioClipNames;
@@ -29,6 +30,7 @@ namespace DiplomataLib {
             title = new DictLang[0];
             content = new DictLang[0];
             attributes = new DictAttr[0];
+            screenplayNotes = new DictLang[0];
             callbacks = new Callback[0];
             audioClipNames = new string[0];
             audioClip = new AudioClip[0];
@@ -41,6 +43,7 @@ namespace DiplomataLib {
                 title = ArrayHandler.Add(title, new DictLang(lang.name, ""));
                 content = ArrayHandler.Add(content, new DictLang(lang.name, ""));
                 audioClipNames = ArrayHandler.Add(audioClipNames, "");
+                screenplayNotes = ArrayHandler.Add(screenplayNotes, new DictLang(lang.name, ""));
                 audioClip = ArrayHandler.Add(audioClip, new AudioClip());
             }
 
