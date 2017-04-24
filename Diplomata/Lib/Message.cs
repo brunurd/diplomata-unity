@@ -11,7 +11,7 @@ namespace DiplomataLib {
         public DictLang[] content;
         public DictLang[] screenplayNotes;
         public DictAttr[] attributes;
-        public Callback[] callbacks;
+        public Effect[] effects;
         public string[] audioClipNames;
         public bool isAChoice;
         public bool disposable;
@@ -31,7 +31,7 @@ namespace DiplomataLib {
             content = new DictLang[0];
             attributes = new DictAttr[0];
             screenplayNotes = new DictLang[0];
-            callbacks = new Callback[0];
+            effects = new Effect[0];
             audioClipNames = new string[0];
             audioClip = new AudioClip[0];
 
@@ -40,7 +40,7 @@ namespace DiplomataLib {
             }
 
             foreach (Language lang in Diplomata.preferences.languages) {
-                title = ArrayHandler.Add(title, new DictLang(lang.name, ""));
+                title = ArrayHandler.Add(title, new DictLang(lang.name, "placeholder" + columnId.ToString() + id.ToString()));
                 content = ArrayHandler.Add(content, new DictLang(lang.name, ""));
                 audioClipNames = ArrayHandler.Add(audioClipNames, "");
                 screenplayNotes = ArrayHandler.Add(screenplayNotes, new DictLang(lang.name, ""));
@@ -64,9 +64,9 @@ namespace DiplomataLib {
             this.columnId = columnId;
         }
 
-        public static Message Find(Message[] messages, int columnId, int rowId) {
+        public static Message Find(Message[] messages, int rowId) {
             foreach (Message message in messages) {
-                if (message.columnId == columnId && message.id == rowId) {
+                if (message.id == rowId) {
                     return message;
                 }
             }

@@ -4,7 +4,7 @@
         None,
         Normal,
         Conditions,
-        Callbacks
+        Effects
     }
 
     [System.Serializable]

@@ -27,17 +27,22 @@
             return null;
         }
 
-        public static Column[] RemoveEmptyColumns(Column[] array) {
+        public static Column[] RemoveEmptyColumns(Column[] columns) {
+            var array = columns;
             
             for (int i = 0; i < array.Length; i++) {
                 if (array[i].messages.Length == 0) {
                     array = ArrayHandler.Remove(array, array[i]);
                 }
             }
-
+            
             for (int i = 0; i < array.Length; i++) {
                 if (array[i].id == i + 1) {
                     array[i].id = i;
+
+                    foreach (Message msg in array[i].messages) {
+                        msg.columnId = i;
+                    }
                 }
             }
 

@@ -22,7 +22,7 @@ namespace DiplomataEditor {
             CharacterEditor.state = state;
             DGUI.focusOnStart = true;
 
-            CharacterEditor window = (CharacterEditor)GetWindow(typeof(CharacterEditor), false, "Character Editor", true);
+            CharacterEditor window = (CharacterEditor)GetWindow(typeof(CharacterEditor), false, "Character", true);
 
             if (state == State.Create) {
                 window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 100);
@@ -30,7 +30,7 @@ namespace DiplomataEditor {
             }
 
             else {
-                window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 335);
+                window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 390);
             }
 
             if (state == State.Close) {
@@ -125,7 +125,7 @@ namespace DiplomataEditor {
             else {
                 Debug.LogError("Character name was empty.");
             }
-
+            
             Close();
         }
 
@@ -133,7 +133,7 @@ namespace DiplomataEditor {
             GUILayout.Label("Name: ");
             character.name = EditorGUILayout.TextField(character.name);
 
-            EditorGUILayout.Separator();
+            DGUI.Separator();
             
             var description = DictHandler.ContainsKey(character.description, Diplomata.preferences.currentLanguage);
 
@@ -165,21 +165,26 @@ namespace DiplomataEditor {
 
                 if (player) {
                     Diplomata.preferences.playerCharacterName = character.name;
+                    CharacterMessagesManager.UpdateCharacterList();
                 }
 
             });
-
+            
             if (character.name != Diplomata.preferences.playerCharacterName) {
-                EditorGUILayout.Separator();
+                DGUI.Separator();
 
                 GUILayout.Label("Character attributes (influenceable by): ");
 
                 for (int i = 0; i < character.attributes.Length; i++) {
                     character.attributes[i].value = (byte)EditorGUILayout.Slider(character.attributes[i].key, character.attributes[i].value, 0, 100);
                 }
+
+                DGUI.Separator();
             }
 
-            EditorGUILayout.Separator();
+            else {
+                EditorGUILayout.Separator();
+            }
 
             DGUI.Horizontal(() => {
 

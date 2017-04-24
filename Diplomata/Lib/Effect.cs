@@ -3,27 +3,25 @@
 namespace DiplomataLib {
 
     [System.Serializable]
-    public class Callback {
+    public class Effect {
 
         public string displayName;
-
-        public enum Type {
-            Custom,
-            EndOfContext,
-            GoTo,
-            None
-        }
-
         public Type type;
-
         public string contextName;
         public string nextMessage;
-        public UnityAction custom;
 
-        public Callback() { }
+        [System.NonSerialized]
+        public UnityEvent custom;
 
-        public Callback(string contextName) {
-            type = Type.None;
+        public enum Type {
+            None,
+            EndOfContext,
+            GoTo
+        }
+
+        public Effect() { }
+
+        public Effect(string contextName) {
             this.contextName = contextName;
             ApplyNone();
         }
@@ -35,11 +33,6 @@ namespace DiplomataLib {
         public void ApplyEndOfContext(string contextName) {
             this.contextName = contextName;
             displayName = "End of context";
-        }
-
-        public void ApplyCustom(UnityAction function) {
-            custom = function;
-            displayName = custom.Method.Name;
         }
 
         public void ApplyGoTo(string nextMessage) {

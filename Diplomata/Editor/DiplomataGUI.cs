@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEditor;
 
 namespace DiplomataEditor {
@@ -20,9 +20,11 @@ namespace DiplomataEditor {
         public static Color proBGColor = new Color(0.2196f, 0.2196f, 0.2196f);
         public static Color transparentColor = new Color(0, 0, 0, 0);
         public static Texture2D transparentTexture = UniformColorTexture(1, 1, transparentColor);
+        public static Texture2D softAlphaBlack = UniformColorTexture(1, 1, new Color(0, 0, 0, 0.05f));
         public static GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
         public static GUIStyle textAreaStyle = new GUIStyle(GUI.skin.textArea);
         public static GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
+        public static GUIStyle separatorStyle = new GUIStyle(GUI.skin.box);
         public static GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
         public static GUIContent textContent = new GUIContent("");
         public static Vector2 universalScrollPos = new Vector2();
@@ -33,44 +35,46 @@ namespace DiplomataEditor {
         public static Rect noClipRect = new Rect(0, 0, 0, 0);
         public static Rect contentRect = new Rect(0, 0, 0, 0);
         public static bool focusOnStart = true;
-
-        public static void Vertical(Action callback) {
+        
+        public static void Vertical(UnityAction callback) {
             GUILayout.BeginVertical();
             callback();
             GUILayout.EndVertical();
         }
 
-        public static void Vertical(Action callback, int height) {
+        public static void Vertical(UnityAction callback, int height) {
             GUILayout.BeginVertical(GUILayout.Height(height));
             callback();
             GUILayout.EndVertical();
         }
 
-        public static void Vertical(Action callback, params GUILayoutOption[] options) {
+        public static void Vertical(UnityAction callback, params GUILayoutOption[] options) {
             GUILayout.BeginVertical(options);
             callback();
             GUILayout.EndVertical();
         }
 
-        public static void Horizontal(Action callback) {
+        public static void Horizontal(UnityAction callback) {
             GUILayout.BeginHorizontal();
             callback();
             GUILayout.EndHorizontal();
         }
 
-        public static void Horizontal(Action callback, int width) {
+        public static void Horizontal(UnityAction callback, int width) {
             GUILayout.BeginHorizontal(GUILayout.Width(width));
             callback();
             GUILayout.EndHorizontal();
         }
 
-        public static void Horizontal(Action callback, params GUILayoutOption[] options) {
+        public static void Horizontal(UnityAction callback, params GUILayoutOption[] options) {
             GUILayout.BeginHorizontal(options);
-            callback();
+            if (callback != null) {
+                callback();
+            }
             GUILayout.EndHorizontal();
         }
 
-        public static void WindowWrap(Action callback) {
+        public static void WindowWrap(UnityAction callback) {
             Horizontal(() => {
                 GUILayout.Space(MARGIN);
 
@@ -86,7 +90,7 @@ namespace DiplomataEditor {
             });
         }
 
-        public static Vector2 ScrollWrap(Action callback, Vector2 scrollPosInput, Rect clipRect, Rect contentRect) {
+        public static Vector2 ScrollWrap(UnityAction callback, Vector2 scrollPosInput, Rect clipRect, Rect contentRect) {
             universalScrollPos = scrollPosInput;
 
             universalScrollPos = GUI.BeginScrollView(clipRect, universalScrollPos, contentRect);
@@ -119,7 +123,7 @@ namespace DiplomataEditor {
             return universalScrollPos;
         }
 
-        public static Vector2 ScrollWindow(Action callback, Vector2 scrollPosInput, float contentHeight) {
+        public static Vector2 ScrollWindow(UnityAction callback, Vector2 scrollPosInput, float contentHeight) {
             noClipRect.width = Screen.width;
             noClipRect.height = Screen.height - 22;
             contentRect.width = Screen.width - 15;
@@ -127,7 +131,7 @@ namespace DiplomataEditor {
             return ScrollWrap(callback, scrollPosInput, noClipRect, contentRect);
         }
 
-        public static void Focus(Action callback, string name = "focus") {
+        public static void Focus(UnityAction callback, string name = "focus") {
             GUI.SetNextControlName(name);
             callback();
             if (focusOnStart) {
@@ -135,7 +139,7 @@ namespace DiplomataEditor {
                 focusOnStart = false;
             }
         }
-
+        
         public static float Box(string text, float x, float y, float width, Color color, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
             textContent.text = text;
             var height = boxStyle.CalcHeight(textContent, width);
@@ -257,6 +261,22 @@ namespace DiplomataEditor {
             return newColor;
         }
 
+        public static Color ColorAdd(Color color, float value) {
+            return ColorAdd(color, value, value, value);
+        }
+
+        public static Color ColorSub(Color color, float value) {
+            return ColorSub(color, value, value, value);
+        }
+
+        public static Color ColorMul(Color color, float value) {
+            return ColorMul(color, value, value, value);
+        }
+
+        public static Color ColorDiv(Color color, float value) {
+            return ColorDiv(color, value, value, value);
+        }
+
         public static void LabelBold(string content, params GUILayoutOption[] options) {
             labelStyle.fontStyle = FontStyle.Bold;
             GUILayout.Label(content, options);
@@ -299,6 +319,40 @@ namespace DiplomataEditor {
 
             tex.Apply();
             return tex;
+        }
+
+        public static string Popup(string label, string choice, string[] array) {
+            var selected = 0;
+            string str = choice;
+
+            for (int i = 0; i < array.Length; i++) {
+                if (str == array[i]) {
+                    selected = i;
+                    break;
+                }
+            }
+
+            Horizontal(() => {
+                GUILayout.Label(label);
+                selected = EditorGUILayout.Popup(selected, array);
+            });
+
+            for (int i = 0; i < array.Length; i++) {
+                if (selected == i) {
+                    str = array[i];
+                    break;
+                }
+            }
+
+            return str;
+        }
+        
+        public static void Separator() {
+            separatorStyle.normal.background = softAlphaBlack;
+
+            EditorGUILayout.Separator();
+            GUILayout.Box("", separatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(2));
+            EditorGUILayout.Separator();
         }
     }
 

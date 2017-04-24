@@ -23,7 +23,7 @@ namespace DiplomataEditor {
             currentLanguageTemp = string.Copy(Diplomata.preferences.currentLanguage);
 
             Preferences window = (Preferences)GetWindow(typeof(Preferences), false, "Preferences");
-            window.minSize = new Vector2(600, 345);
+            window.minSize = new Vector2(600, 385);
             window.Show();
         }
 
@@ -32,33 +32,19 @@ namespace DiplomataEditor {
                 GUILayout.Label("Default Resources folder:");
                 defaultResourcesFolderTemp = EditorGUILayout.TextField(defaultResourcesFolderTemp);
 
-                EditorGUILayout.Separator();
+                DGUI.Separator();
 
                 DGUI.Horizontal(() => {
                     DrawAttributes();
                     DrawLanguages();
                 });
 
-                EditorGUILayout.Separator();
-
-                var selected = 0;
-
-                for (int i = 0; i < Diplomata.preferences.languagesList.Length; i++) {
-                    if (Diplomata.preferences.languagesList[i] == currentLanguageTemp) {
-                        selected = i;
-                    }
-                }
-
+                DGUI.Separator();
+                
                 DGUI.Horizontal(() => {
                     jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
-                    selected = EditorGUILayout.Popup("Current Language", selected, Diplomata.preferences.languagesList);
+                    currentLanguageTemp = DGUI.Popup("Current Language", currentLanguageTemp, Diplomata.preferences.languagesList);
                 });
-
-                for (int i = 0; i < Diplomata.preferences.languagesList.Length; i++) {
-                    if (selected == i) {
-                        currentLanguageTemp = Diplomata.preferences.languagesList[i];
-                    }
-                }
 
                 EditorGUILayout.Separator();
                 
@@ -89,6 +75,8 @@ namespace DiplomataEditor {
                     });
                 }
 
+                EditorGUILayout.Separator();
+
                 if (GUILayout.Button("Add attribute")) {
                     attributesTemp = ArrayHandler.Add(attributesTemp, "");
                 }
@@ -113,6 +101,8 @@ namespace DiplomataEditor {
                         }
                     });
                 }
+
+                EditorGUILayout.Separator();
 
                 if (GUILayout.Button("Add language")) {
                     languagesTemp = ArrayHandler.Add(languagesTemp, new Language(""));

@@ -6,6 +6,7 @@ namespace DiplomataEditor {
 
     public class CharacterMessagesManager : EditorWindow {
 
+        public static string[] characterList;
         public static Character character;
         public static Context context;
         private ushort timer = 0;
@@ -24,13 +25,25 @@ namespace DiplomataEditor {
             CharacterMessagesManager window = (CharacterMessagesManager)GetWindow(typeof(CharacterMessagesManager), false, "Messages", true);
             window.minSize = new Vector2(960, 300);
             window.maximized = true;
-            
+
+            UpdateCharacterList();
+
             if (state == State.Close) {
                 window.Close();
             }
 
             else {
                 window.Show();
+            }
+        }
+
+        public static void UpdateCharacterList() {
+            characterList = new string[Diplomata.preferences.characterList.Length - 1];
+
+            foreach (string str in Diplomata.preferences.characterList) {
+                if (str != Diplomata.preferences.playerCharacterName) {
+                    characterList = ArrayHandler.Add(characterList, str);
+                }
             }
         }
 

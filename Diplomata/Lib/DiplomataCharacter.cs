@@ -35,6 +35,20 @@ namespace DiplomataLib {
             }
         }
 
+        public Message FindMessage(string messageTitle, string language = "English") {
+            foreach (Context context in character.contexts) {
+                foreach (Column column in context.columns) {
+                    for (int i = 0; i < column.messages.Length; i++) {
+                        DictLang title = DictHandler.ContainsKey(Message.Find(column.messages, i).title, language);
+                        if (title.value == messageTitle && title != null) {
+                            return column.messages[i];
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
         public void StartTalk() {
             talking = true;
             //currentMessage = new Message();

@@ -52,12 +52,13 @@ namespace DiplomataEditor {
                             }
                         }
 
-                        if (GUILayout.Button("Refresh", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                            Refresh();
-                        }
                     });
 
-                    EditorGUILayout.Separator();
+                    if (GUILayout.Button("Refresh", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+                        Refresh();
+                    }
+
+                    DGUI.Separator();
 
                     var showInfluence = true;
 
@@ -75,11 +76,13 @@ namespace DiplomataEditor {
                     }
 
                     if (showInfluence) {
+                        DGUI.labelStyle.alignment = TextAnchor.UpperCenter;
+                        DGUI.labelStyle.richText = true;
                         EditorGUILayout.Separator();
-                        GUILayout.Label("Influence: " + diplomataCharacter.character.influence);
+                        GUILayout.Label("Influence: <b>" + diplomataCharacter.character.influence + "</b>", DGUI.labelStyle);
                     }
 
-                    EditorGUILayout.Separator();
+                    DGUI.Separator();
 
                     DGUI.Horizontal(() => {
                         if (GUILayout.Button("Create Character", GUILayout.Height(DGUI.BUTTON_HEIGHT_BIG))) {

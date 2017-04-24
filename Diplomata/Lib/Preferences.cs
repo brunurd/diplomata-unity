@@ -21,17 +21,17 @@
 
     [System.Serializable]
     public class Preferences {
-        public string[] attributes = new string[0];
+        public static string defaultResourcesFolder = "Assets/Resources/";
         public Language[] languages = new Language[0];
         public string[] languagesList = new string[0];
-        public static string defaultResourcesFolder = "Assets/Resources/";
         public string[] characterList = new string[0];
-        public bool jsonPrettyPrint;
+        public string[] attributes = new string[0];
         public string currentLanguage;
         public string workingCharacter;
+        public string playerCharacterName;
+        public bool jsonPrettyPrint;
         public int workingContextMessagesId;
         public int workingContextEditId;
-        public string playerCharacterName;
         
         public void Start() {
             if (!JSONHandler.Exists("preferences", "Diplomata/")) {
