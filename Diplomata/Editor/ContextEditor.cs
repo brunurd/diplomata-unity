@@ -7,7 +7,8 @@ namespace DiplomataEditor {
     public class ContextEditor : EditorWindow {
 
         public static Character character;
-        public static Context context; 
+        public static Context context;
+        private Vector2 scrollPos = new Vector2(0, 0);
 
         public enum State {
             None,
@@ -20,6 +21,7 @@ namespace DiplomataEditor {
         public static void Init(State state = State.None) {
             DGUI.focusOnStart = true;
             ContextEditor.state = state;
+            DGUI.Init();
 
             ContextEditor window = (ContextEditor)GetWindow(typeof(ContextEditor), false, "Context Editor", true);
             window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 170);
@@ -54,26 +56,28 @@ namespace DiplomataEditor {
         }
 
         public void OnGUI() {
-            DGUI.WindowWrap(() => {
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            GUILayout.BeginVertical(DGUI.windowStyle);
 
-                switch (state) {
-                    case State.None:
-                        if (Diplomata.preferences.workingCharacter != string.Empty) {
-                            character = Character.Find(Diplomata.preferences.workingCharacter);
+            switch (state) {
+                case State.None:
+                    if (Diplomata.preferences.workingCharacter != string.Empty) {
+                        character = Character.Find(Diplomata.preferences.workingCharacter);
 
-                            if (Diplomata.preferences.workingContextEditId > -1) {
-                                context = Context.Find(character, Diplomata.preferences.workingContextEditId);
-                                DrawEditWindow();
-                            }
+                        if (Diplomata.preferences.workingContextEditId > -1) {
+                            context = Context.Find(character, Diplomata.preferences.workingContextEditId);
+                            DrawEditWindow();
                         }
-                        break;
+                    }
+                    break;
 
-                    case State.Edit:
-                        DrawEditWindow();
-                        break;
-                }
-                
-            });
+                case State.Edit:
+                    DrawEditWindow();
+                    break;
+            }
+
+            GUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
         }
         
         public void DrawEditWindow() {
@@ -83,9 +87,10 @@ namespace DiplomataEditor {
             if (name != null && description != null) {
                 GUILayout.Label("Name: ");
 
-                DGUI.Focus(() => {
+                GUI.SetNextControlName("name");
                     name.value = EditorGUILayout.TextField(name.value);
-                }, "name");
+
+                DGUI.Focus("name");
 
                 EditorGUILayout.Separator();
 
@@ -93,19 +98,19 @@ namespace DiplomataEditor {
                 var height = DGUI.textAreaStyle.CalcHeight(DGUI.textContent, Screen.width - (2 * DGUI.MARGIN));
 
                 GUILayout.Label("Description: ");
-                description.value = EditorGUILayout.TextArea(description.value, DGUI.textAreaStyle, GUILayout.Height(height + 15));
+                description.value = EditorGUILayout.TextArea(description.value, DGUI.textAreaStyle, GUILayout.Height(height));
 
                 EditorGUILayout.Separator();
 
-                DGUI.Horizontal(() => {
-                    if (GUILayout.Button("Update", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                        UpdateContext();
-                    }
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Update", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                    UpdateContext();
+                }
 
-                    if (GUILayout.Button("Cancel", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                        UpdateContext();
-                    }
-                });
+                if (GUILayout.Button("Cancel", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                    UpdateContext();
+                }
+                GUILayout.EndHorizontal();
             }
         }
 

@@ -11,6 +11,7 @@ namespace DiplomataEditor {
         [MenuItem("Diplomata/Character List")]
         static public void Init() {
             Diplomata.Instantiate();
+            DGUI.Init();
 
             CharacterListMenu window = (CharacterListMenu)GetWindow(typeof(CharacterListMenu), false, "Character List");
             window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH + 80, 300);
@@ -19,88 +20,82 @@ namespace DiplomataEditor {
         }
 
         public void OnGUI() {
-            scrollPos = DGUI.ScrollWindow(() => {
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            GUILayout.BeginVertical(DGUI.windowStyle);
 
-                if (Diplomata.preferences.characterList.Length <= 0) {
-                    EditorGUILayout.HelpBox("No characters yet.", MessageType.Info);
+            if (Diplomata.preferences.characterList.Length <= 0) {
+                EditorGUILayout.HelpBox("No characters yet.", MessageType.Info);
+            }
+
+            for (int i = 0; i < Diplomata.preferences.characterList.Length; i++) {
+                var name = Diplomata.preferences.characterList[i];
+                
+                GUILayout.BeginHorizontal();
+
+                GUILayout.BeginHorizontal();
+
+                DGUI.labelStyle.alignment = TextAnchor.MiddleLeft;
+                GUILayout.Label(name, DGUI.labelStyle);
+
+                DGUI.labelStyle.alignment = TextAnchor.MiddleRight;
+                if (Diplomata.preferences.playerCharacterName == name) {
+                    GUILayout.Label("<b>[Player]</b>", DGUI.labelStyle);
                 }
 
-                for (int i = 0; i < Diplomata.preferences.characterList.Length; i++) {
-                    var half = Screen.width - (2 * DGUI.MARGIN) - 6;
-                    var name = Diplomata.preferences.characterList[i];
+                GUILayout.EndHorizontal();
 
-                    if (DGUI.hasSlider) {
-                        half -= 15;
-                    }
+                GUILayout.BeginHorizontal(GUILayout.MaxWidth(Screen.width / 2));
 
-                    half /= 2;
+                if (GUILayout.Button("Edit", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+                    CharacterEditor.Edit(Character.Find(name));
+                }
 
-                    DGUI.Horizontal(() => {
+                if (GUILayout.Button("Edit Messages", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+                    CharacterMessagesManager.OpenContextMenu(Character.Find(name));
+                    Close();
+                }
 
-                        DGUI.Horizontal(() => {
+                if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+                    if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No")) {
+                        var isPlayer = false;
 
-                            DGUI.labelStyle.alignment = TextAnchor.MiddleLeft;
-                            GUILayout.Label(name, DGUI.labelStyle);
+                        if (name == Diplomata.preferences.playerCharacterName) {
+                            isPlayer = true;
+                        }
 
-                            DGUI.labelStyle.alignment = TextAnchor.MiddleRight;
-                            DGUI.labelStyle.richText = true;
-                            if (Diplomata.preferences.playerCharacterName == name) {
-                                GUILayout.Label("<b>[Player]</b>", DGUI.labelStyle);
-                            }
+                        JSONHandler.Delete(name, "Diplomata/Characters/");
 
-                        }, half);
+                        Character.UpdateList();
 
-                        DGUI.Horizontal(() => {
+                        if (isPlayer && Diplomata.preferences.characterList.Length > 0) {
+                            Diplomata.preferences.playerCharacterName = Diplomata.preferences.characterList[0];
+                        }
 
-                            if (GUILayout.Button("Edit", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                                CharacterEditor.Edit(Character.Find(name));
-                            }
+                        JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
 
-                            if (GUILayout.Button("Edit Messages", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                                CharacterMessagesManager.OpenContextMenu(Character.Find(name));
-                                Close();
-                            }
-
-                            if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                                if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No")) {
-                                    var isPlayer = false;
-
-                                    if (name == Diplomata.preferences.playerCharacterName) {
-                                        isPlayer = true;
-                                    }
-
-                                    JSONHandler.Delete(name, "Diplomata/Characters/");
-
-                                    Character.UpdateList();
-
-                                    if (isPlayer && Diplomata.preferences.characterList.Length > 0) {
-                                        Diplomata.preferences.playerCharacterName = Diplomata.preferences.characterList[0];
-                                    }
-
-                                    JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
-
-                                    CharacterEditor.Reset(name);
-                                    CharacterMessagesManager.Reset(name);
-                                    ContextEditor.Reset(name);
-                                }
-                            }
-
-                        }, half);
-
-                    });
-
-                    if (i < Diplomata.preferences.characterList.Length - 1) {
-                        DGUI.Separator();
+                        CharacterEditor.Reset(name);
+                        CharacterMessagesManager.Reset(name);
+                        ContextEditor.Reset(name);
                     }
                 }
 
-                EditorGUILayout.Separator();
+                GUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                    CharacterEditor.OpenCreate();
+                GUILayout.EndHorizontal();
+
+                if (i < Diplomata.preferences.characterList.Length - 1) {
+                    DGUI.Separator();
                 }
+            }
 
-            }, scrollPos, ((DGUI.BUTTON_HEIGHT_SMALL + 10) * Diplomata.preferences.characterList.Length) + DGUI.BUTTON_HEIGHT + 10 + (3 * DGUI.MARGIN));
+            EditorGUILayout.Separator();
+
+            if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                CharacterEditor.OpenCreate();
+            }
+            
+            GUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
         }
 
         public void OnInspectorUpdate() {

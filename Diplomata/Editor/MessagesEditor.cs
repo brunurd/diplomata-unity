@@ -10,11 +10,6 @@ namespace DiplomataEditor {
         private const ushort SIDEBAR_WIDTH = 300;
         private const byte EMITTER_FIELD_HEIGHT = 15;
         
-        public static Color baseColor = new Color(0.8705f, 0.8705f, 0.8705f);
-        private static Color headerBGColor;
-        private static Color mainBGColor;
-        private static Color sidebarBGColor;
-
         private static Rect headerRect = new Rect(0, 0, 0, HEADER_HEIGHT);
         private static Rect mainRect = new Rect(0, HEADER_HEIGHT, 0, 0);
         private static Rect sidebarRect = new Rect(0, HEADER_HEIGHT, SIDEBAR_WIDTH, 0);
@@ -34,12 +29,13 @@ namespace DiplomataEditor {
         private static RectOffset textAreaPadding = new RectOffset(2, 2, 2, 2);
 
         public static void Draw() {
-            DrawBG();
-
             if (CharacterMessagesManager.context != null) {
                 Header();
+
+                GUILayout.BeginHorizontal();
                 Main();
                 Sidebar();
+                GUILayout.EndHorizontal();
             }
 
             else {
@@ -47,76 +43,51 @@ namespace DiplomataEditor {
             }
         }
 
-        public static void DrawBG() {
-            if (EditorGUIUtility.isProSkin) {
-                baseColor = DGUI.proBGColor;
-            }
-
-            headerBGColor = DGUI.ColorAdd(baseColor, 0.05f, 0.05f, 0.05f);
-            mainBGColor = baseColor;
-            sidebarBGColor = DGUI.ColorAdd(baseColor, -0.1f, -0.1f, -0.1f);
-            
-            headerRect.width = Screen.width;
-
-            mainRect.width = Screen.width - SIDEBAR_WIDTH;
-            mainRect.height = Screen.height - HEADER_HEIGHT - 22;
-            
-            sidebarRect.x = Screen.width - SIDEBAR_WIDTH;
-            sidebarRect.height = Screen.height - HEADER_HEIGHT;
-
-            EditorGUI.DrawRect(headerRect, headerBGColor);
-            EditorGUI.DrawRect(mainRect, mainBGColor);
-            EditorGUI.DrawRect(sidebarRect, sidebarBGColor);
-        }
-
         public static void Header() {
             var character = CharacterMessagesManager.character;
             var context = CharacterMessagesManager.context;
-                
-            DGUI.Vertical(() => {
 
-                GUILayout.Space(DGUI.MARGIN);
+            DGUI.windowStyle.normal.background = CharacterMessagesManager.headerBG;
 
-                DGUI.Horizontal(() => {
+            GUILayout.BeginHorizontal(DGUI.windowStyle, GUILayout.Height(HEADER_HEIGHT));
 
-                    GUILayout.Space(DGUI.MARGIN);
+            if (GUILayout.Button("< Back", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                CharacterMessagesManager.OpenContextMenu(character);
+            }
 
-                    if (GUILayout.Button("< Back", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                        JSONHandler.Update(character, character.name, "Diplomata/Characters/");
-                        CharacterMessagesManager.OpenContextMenu(character);
-                    }
+            EditorGUILayout.Separator();
 
-                    GUILayout.Space(DGUI.MARGIN);
-                    GUILayout.Label("Character: " + character.name);
+            GUILayout.Label("Character: " + character.name);
 
-                    GUILayout.Space(DGUI.MARGIN);
-                    GUILayout.Label("Zoom: ");
-                    context.columnWidth = (ushort) EditorGUILayout.Slider(context.columnWidth, 116, 675);
-                    DGUI.boxStyle.fontSize = (context.columnWidth * 11) / 200;
-                    textAreaStyle.fontSize = (context.columnWidth * 11) / 200;
-                    DGUI.padding = (context.columnWidth * 10) / 200;
-                    
-                    GUILayout.Space(DGUI.MARGIN);
-                    GUILayout.Label("Filters: ");
-                    context.idFilter = GUILayout.Toggle(context.idFilter, "Id ");
-                    context.conditionsFilter = GUILayout.Toggle(context.conditionsFilter, "Conditions ");
-                    context.titleFilter = GUILayout.Toggle(context.titleFilter, "Title ");
-                    context.contentFilter = GUILayout.Toggle(context.contentFilter, "Content ");
-                    context.callbacksFilter = GUILayout.Toggle(context.callbacksFilter, "Callbacks ");
+            EditorGUILayout.Separator();
 
-                    GUILayout.Space(DGUI.MARGIN);
-                    if (GUILayout.Button("Save", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
-                        JSONHandler.Update(character, character.name, "Diplomata/Characters/");
-                    }
+            GUILayout.Label("Zoom: ");
+            context.columnWidth = (ushort) EditorGUILayout.Slider(context.columnWidth, 116, 675);
+            DGUI.boxStyle.fontSize = (context.columnWidth * 11) / 200;
+            textAreaStyle.fontSize = (context.columnWidth * 11) / 200;
+            DGUI.padding = (context.columnWidth * 10) / 200;
+            
+            EditorGUILayout.Separator();
 
-                    GUILayout.Space(DGUI.MARGIN);
+            GUILayout.Label("Filters: ");
+            context.idFilter = GUILayout.Toggle(context.idFilter, "Id ");
+            context.conditionsFilter = GUILayout.Toggle(context.conditionsFilter, "Conditions ");
+            context.titleFilter = GUILayout.Toggle(context.titleFilter, "Title ");
+            context.contentFilter = GUILayout.Toggle(context.contentFilter, "Content ");
+            context.callbacksFilter = GUILayout.Toggle(context.callbacksFilter, "Callbacks ");
+            
+            EditorGUILayout.Separator();
 
-                });
-
-            }, GUILayout.Height(HEADER_HEIGHT));
+            if (GUILayout.Button("Save", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+            }
+            
+            GUILayout.EndHorizontal();
         }
 
         public static void Main() {
+            /*
             var character = CharacterMessagesManager.character;
             var context = CharacterMessagesManager.context;
             var buttonAutoMargin = 3;
@@ -359,9 +330,11 @@ namespace DiplomataEditor {
             }
             
             mainMaxHeight = height;
+            */
         }
 
         public static void Sidebar() {
+            /*
             var character = CharacterMessagesManager.character;
             var context = CharacterMessagesManager.context;
 
@@ -644,6 +617,7 @@ namespace DiplomataEditor {
 
                 GUILayout.Space(DGUI.MARGIN);
             });
+            */
         }
 
         public static void SetMessage(Message msg) {

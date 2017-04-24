@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Events;
 using UnityEditor;
 
 namespace DiplomataEditor {
@@ -15,179 +14,60 @@ namespace DiplomataEditor {
         public const int WINDOW_MIN_WIDTH = 400;
 
         public static bool hasSlider;
-        public static int padding = 10;
-        public static Color BGColor = new Color(0.9764f, 0.9764f, 0.9764f);
+        public static bool focusOnStart = true;
+
+        public static int padding = 8;
+        public static int strokeWidth = 1;
+        
+        public static Color BGColor = new Color(0.76078f, 0.76078f, 0.76078f);
         public static Color proBGColor = new Color(0.2196f, 0.2196f, 0.2196f);
+        public static Color BGBoxColor = ColorAdd(BGColor, 0.1647f);
+        public static Color proBGBoxColor = ColorAdd(proBGColor, 0.1647f);
         public static Color transparentColor = new Color(0, 0, 0, 0);
+
         public static Texture2D transparentTexture = UniformColorTexture(1, 1, transparentColor);
         public static Texture2D softAlphaBlack = UniformColorTexture(1, 1, new Color(0, 0, 0, 0.05f));
+
         public static GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
         public static GUIStyle textAreaStyle = new GUIStyle(GUI.skin.textArea);
         public static GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
         public static GUIStyle separatorStyle = new GUIStyle(GUI.skin.box);
         public static GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+        public static GUIStyle windowStyle = new GUIStyle();
+
         public static GUIContent textContent = new GUIContent("");
-        public static Vector2 universalScrollPos = new Vector2();
-        public static RectOffset boxPadding = new RectOffset(padding, padding, padding, padding);
-        public static int strokeWidth = 1;
-        public static Rect boxFillRect = new Rect(0, 0, 0, 0);
-        public static Rect boxStrokeRect = new Rect(0, 0, 0, 0);
-        public static Rect noClipRect = new Rect(0, 0, 0, 0);
-        public static Rect contentRect = new Rect(0, 0, 0, 0);
-        public static bool focusOnStart = true;
         
-        public static void Vertical(UnityAction callback) {
-            GUILayout.BeginVertical();
-            callback();
-            GUILayout.EndVertical();
+        public static RectOffset boxPadding = new RectOffset(padding, padding, padding, padding);
+        public static RectOffset windowPadding = new RectOffset(MARGIN, MARGIN, MARGIN, MARGIN);
+        
+        //public static Rect boxFillRect = new Rect(0, 0, 0, 0);
+        //public static Rect boxStrokeRect = new Rect(0, 0, 0, 0);
+        
+        public static void Init() {
+            windowStyle.padding = windowPadding;
+            
+            textAreaStyle.padding = boxPadding;
+
+            boxStyle.padding = boxPadding;
+            boxStyle.richText = true;
+
+            labelStyle.fontSize = 11;
+            labelStyle.alignment = TextAnchor.MiddleLeft;
+            labelStyle.richText = true;
+            labelStyle.wordWrap = true;
+
+            separatorStyle.normal.background = softAlphaBlack;
+
+            textContent.text = "";
         }
-
-        public static void Vertical(UnityAction callback, int height) {
-            GUILayout.BeginVertical(GUILayout.Height(height));
-            callback();
-            GUILayout.EndVertical();
-        }
-
-        public static void Vertical(UnityAction callback, params GUILayoutOption[] options) {
-            GUILayout.BeginVertical(options);
-            callback();
-            GUILayout.EndVertical();
-        }
-
-        public static void Horizontal(UnityAction callback) {
-            GUILayout.BeginHorizontal();
-            callback();
-            GUILayout.EndHorizontal();
-        }
-
-        public static void Horizontal(UnityAction callback, int width) {
-            GUILayout.BeginHorizontal(GUILayout.Width(width));
-            callback();
-            GUILayout.EndHorizontal();
-        }
-
-        public static void Horizontal(UnityAction callback, params GUILayoutOption[] options) {
-            GUILayout.BeginHorizontal(options);
-            if (callback != null) {
-                callback();
-            }
-            GUILayout.EndHorizontal();
-        }
-
-        public static void WindowWrap(UnityAction callback) {
-            Horizontal(() => {
-                GUILayout.Space(MARGIN);
-
-                Vertical(() => {
-                    GUILayout.Space(MARGIN);
-
-                    callback();
-
-                    GUILayout.Space(MARGIN);
-                });
-
-                GUILayout.Space(MARGIN);
-            });
-        }
-
-        public static Vector2 ScrollWrap(UnityAction callback, Vector2 scrollPosInput, Rect clipRect, Rect contentRect) {
-            universalScrollPos = scrollPosInput;
-
-            universalScrollPos = GUI.BeginScrollView(clipRect, universalScrollPos, contentRect);
-
-            Horizontal(() => {
-                GUILayout.Space(MARGIN);
-
-                Vertical(() => {
-                    GUILayout.Space(MARGIN);
-
-                    callback();
-
-                    GUILayout.Space(MARGIN);
-                });
-
-                if (Screen.height - 22 < contentRect.height) {
-                    hasSlider = true;
-                    GUILayout.Space(MARGIN);
-                }
-
-                else {
-                    hasSlider = false;
-                }
-
-                GUILayout.Space(MARGIN);
-            });
-
-            GUI.EndScrollView();
-
-            return universalScrollPos;
-        }
-
-        public static Vector2 ScrollWindow(UnityAction callback, Vector2 scrollPosInput, float contentHeight) {
-            noClipRect.width = Screen.width;
-            noClipRect.height = Screen.height - 22;
-            contentRect.width = Screen.width - 15;
-            contentRect.height = contentHeight;
-            return ScrollWrap(callback, scrollPosInput, noClipRect, contentRect);
-        }
-
-        public static void Focus(UnityAction callback, string name = "focus") {
-            GUI.SetNextControlName(name);
-            callback();
+        
+        public static void Focus(string name) {
             if (focusOnStart) {
                 EditorGUI.FocusTextInControl(name);
                 focusOnStart = false;
             }
         }
         
-        public static float Box(string text, float x, float y, float width, Color color, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
-            textContent.text = text;
-            var height = boxStyle.CalcHeight(textContent, width);
-
-            if (hasSlider) {
-                width -= MARGIN;
-            }
-
-            boxPadding.left = padding;
-            boxPadding.right = padding;
-            boxPadding.top = padding;
-            boxPadding.bottom = padding;
-
-            boxStyle.alignment = textAlign;
-            boxStyle.padding = boxPadding;
-            boxStyle.normal.textColor = Color.black;
-            boxStyle.normal.background = transparentTexture;
-            boxStyle.richText = true;
-
-            if (color.r * color.g * color.b < 0.1f) {
-                boxStyle.normal.textColor = Color.white;
-            }
-            
-            boxFillRect.x = x;
-            boxFillRect.y = y;
-            boxFillRect.width = width;
-            boxFillRect.height = height + extraHeight;
-
-            boxStrokeRect.x = x - strokeWidth;
-            boxStrokeRect.y = y - strokeWidth;
-            boxStrokeRect.width = width + (strokeWidth * 2);
-            boxStrokeRect.height = boxFillRect.height + (strokeWidth * 2);
-
-            EditorGUI.DrawRect(boxStrokeRect, ColorSub(color, 0.5f, 0.5f, 0.5f));
-            EditorGUI.DrawRect(boxFillRect, color);
-            GUI.Box(boxFillRect, text, boxStyle);
-
-            return height;
-        }
-
-        public static float Box(string text, float x, float y, float width, float extraHeight = 0, TextAnchor textAlign = TextAnchor.UpperCenter) {
-            return Box(text, x, y, width, ResetColor(), extraHeight, textAlign);
-        }
-        
-        public static float Box(string text, float x, float y, float width, Color color, TextAnchor textAlign = TextAnchor.UpperCenter) {
-            return Box(text, x, y, width, color, 0, textAlign);
-        }
-
         public static Color ColorAdd(Color color, float r, float g, float b, float a = 0) {
             Color newColor = new Color(0, 0, 0);
             newColor = color;
@@ -226,63 +106,37 @@ namespace DiplomataEditor {
         }
 
         public static Color ColorAdd(Color colorA, Color colorB) {
-            Color newColor = colorA;
-            newColor.r += colorB.r;
-            newColor.g += colorB.g;
-            newColor.b += colorB.b;
-            newColor.a += colorB.a;
-            return newColor;
+            return ColorAdd(colorA, colorB.r, colorB.g, colorB.b, colorB.a);
         }
 
         public static Color ColorSub(Color colorA, Color colorB) {
-            Color newColor = colorA;
-            newColor.r -= colorB.r;
-            newColor.g -= colorB.g;
-            newColor.b -= colorB.b;
-            newColor.a -= colorB.a;
-            return newColor;
+            return ColorSub(colorA, colorB.r, colorB.g, colorB.b, colorB.a);
         }
 
         public static Color ColorMul(Color colorA, Color colorB) {
-            Color newColor = colorA;
-            newColor.r *= colorB.r;
-            newColor.g *= colorB.g;
-            newColor.b *= colorB.b;
-            newColor.a *= colorB.a;
-            return newColor;
+            return ColorMul(colorA, colorB.r, colorB.g, colorB.b, colorB.a);
         }
 
         public static Color ColorDiv(Color colorA, Color colorB) {
-            Color newColor = colorA;
-            newColor.r /= colorB.r;
-            newColor.g /= colorB.g;
-            newColor.b /= colorB.b;
-            newColor.a /= colorB.a;
-            return newColor;
+            return ColorDiv(colorA, colorB.r, colorB.g, colorB.b, colorB.a);
         }
 
-        public static Color ColorAdd(Color color, float value) {
-            return ColorAdd(color, value, value, value);
+        public static Color ColorAdd(Color color, float value, float alpha = 1.0f) {
+            return ColorAdd(color, value, value, value, alpha);
         }
 
-        public static Color ColorSub(Color color, float value) {
-            return ColorSub(color, value, value, value);
+        public static Color ColorSub(Color color, float value, float alpha = 1.0f) {
+            return ColorSub(color, value, value, value, alpha);
         }
 
-        public static Color ColorMul(Color color, float value) {
-            return ColorMul(color, value, value, value);
+        public static Color ColorMul(Color color, float value, float alpha = 1.0f) {
+            return ColorMul(color, value, value, value, alpha);
         }
 
-        public static Color ColorDiv(Color color, float value) {
-            return ColorDiv(color, value, value, value);
+        public static Color ColorDiv(Color color, float value, float alpha = 1.0f) {
+            return ColorDiv(color, value, value, value, alpha);
         }
-
-        public static void LabelBold(string content, params GUILayoutOption[] options) {
-            labelStyle.fontStyle = FontStyle.Bold;
-            GUILayout.Label(content, options);
-            labelStyle.fontStyle = FontStyle.Normal;
-        }
-
+        
         public static Color ResetColor() {
             if (EditorGUIUtility.isProSkin) {
                 return proBGColor;
@@ -305,7 +159,7 @@ namespace DiplomataEditor {
                 Debug.Log("Cannot get playmode tint.");
             }
 
-            return new Color(1, 1, 1);
+            return Color.gray;
         }
 
         public static Texture2D UniformColorTexture(int w, int h, Color color) {
@@ -332,10 +186,10 @@ namespace DiplomataEditor {
                 }
             }
 
-            Horizontal(() => {
-                GUILayout.Label(label);
-                selected = EditorGUILayout.Popup(selected, array);
-            });
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(label);
+            selected = EditorGUILayout.Popup(selected, array);
+            GUILayout.EndHorizontal();
 
             for (int i = 0; i < array.Length; i++) {
                 if (selected == i) {
@@ -348,8 +202,6 @@ namespace DiplomataEditor {
         }
         
         public static void Separator() {
-            separatorStyle.normal.background = softAlphaBlack;
-
             EditorGUILayout.Separator();
             GUILayout.Box("", separatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(2));
             EditorGUILayout.Separator();

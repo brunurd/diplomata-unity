@@ -10,11 +10,13 @@ namespace DiplomataEditor {
         public static Language[] languagesTemp = new Language[0];
         public static string defaultResourcesFolderTemp = "";
         public static bool jsonPrettyPrintTemp = false;
-        public static string currentLanguageTemp; 
+        public static string currentLanguageTemp;
+        private Vector2 scrollPos = new Vector2(0, 0);
         
         [MenuItem("Diplomata/Preferences")]
         static public void Init() {
             Diplomata.Instantiate();
+            DGUI.Init();
 
             attributesTemp = ArrayHandler.Copy(Diplomata.preferences.attributes);
             languagesTemp = ArrayHandler.Copy(Diplomata.preferences.languages);
@@ -28,87 +30,92 @@ namespace DiplomataEditor {
         }
 
         public void OnGUI() {
-            DGUI.WindowWrap(() => {
-                GUILayout.Label("Default Resources folder:");
-                defaultResourcesFolderTemp = EditorGUILayout.TextField(defaultResourcesFolderTemp);
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            GUILayout.BeginVertical(DGUI.windowStyle);
 
-                DGUI.Separator();
+            GUILayout.Label("Default Resources folder:");
+            defaultResourcesFolderTemp = EditorGUILayout.TextField(defaultResourcesFolderTemp);
 
-                DGUI.Horizontal(() => {
-                    DrawAttributes();
-                    DrawLanguages();
-                });
+            DGUI.Separator();
 
-                DGUI.Separator();
+            GUILayout.BeginHorizontal();
+            DrawAttributes();
+            DrawLanguages();
+            GUILayout.EndHorizontal();
+
+            DGUI.Separator();
                 
-                DGUI.Horizontal(() => {
-                    jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
-                    currentLanguageTemp = DGUI.Popup("Current Language", currentLanguageTemp, Diplomata.preferences.languagesList);
-                });
+            GUILayout.BeginHorizontal();
+            jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
+            currentLanguageTemp = DGUI.Popup("Current Language", currentLanguageTemp, Diplomata.preferences.languagesList);
+            GUILayout.EndHorizontal();
 
-                EditorGUILayout.Separator();
+            EditorGUILayout.Separator();
                 
-                EditorGUILayout.HelpBox("\nClose or enter in play mode will restore the data of this window.\n", MessageType.Info);
+            EditorGUILayout.HelpBox("\nClose or enter in play mode will restore the data of this window.\n", MessageType.Info);
 
-                EditorGUILayout.Separator();
+            EditorGUILayout.Separator();
 
-                if (GUILayout.Button("Save Preferences", GUILayout.Height(30))) {
-                    Save();
-                }
-            });
+            if (GUILayout.Button("Save Preferences", GUILayout.Height(30))) {
+                Save();
+            }
+
+            GUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
         }
 
         public void DrawAttributes() {
-            DGUI.Vertical(() => { 
+            GUILayout.BeginVertical(GUILayout.Width(Screen.width / 2));
 
-                GUILayout.Label("Attributes:");
+            GUILayout.Label("Attributes:");
 
-                for (int i = 0; i < attributesTemp.Length; i++) {
-                    DGUI.Horizontal(() => {
+            for (int i = 0; i < attributesTemp.Length; i++) {
+                GUILayout.BeginHorizontal();
 
-                        attributesTemp[i] = EditorGUILayout.TextField(attributesTemp[i]);
+                attributesTemp[i] = EditorGUILayout.TextField(attributesTemp[i]);
 
-                        if (GUILayout.Button("X", GUILayout.Width(20))) {
-                            attributesTemp = ArrayHandler.Remove(attributesTemp, attributesTemp[i]);
-                        }
-
-                    });
+                if (GUILayout.Button("X", GUILayout.Width(20))) {
+                    attributesTemp = ArrayHandler.Remove(attributesTemp, attributesTemp[i]);
                 }
 
-                EditorGUILayout.Separator();
+                GUILayout.EndHorizontal();
+            }
 
-                if (GUILayout.Button("Add attribute")) {
-                    attributesTemp = ArrayHandler.Add(attributesTemp, "");
-                }
+            EditorGUILayout.Separator();
 
-            }, GUILayout.Width(Screen.width / 2));
+            if (GUILayout.Button("Add attribute")) {
+                attributesTemp = ArrayHandler.Add(attributesTemp, "");
+            }
+
+            GUILayout.EndVertical();
         }
 
         public void DrawLanguages() {
-            DGUI.Vertical(() => {
+            GUILayout.BeginVertical();
 
-                GUILayout.Label("Languages:");
+            GUILayout.Label("Languages:");
 
-                for (int i = 0; i < languagesTemp.Length; i++) {
-                    DGUI.Horizontal(() => {
+            for (int i = 0; i < languagesTemp.Length; i++) {
+                GUILayout.BeginHorizontal();
 
-                        languagesTemp[i].name = EditorGUILayout.TextField(languagesTemp[i].name);
-                        languagesTemp[i].subtitle = GUILayout.Toggle(languagesTemp[i].subtitle, "Sub");
-                        languagesTemp[i].dubbing = GUILayout.Toggle(languagesTemp[i].dubbing, "Dub");
+                languagesTemp[i].name = EditorGUILayout.TextField(languagesTemp[i].name);
+                languagesTemp[i].subtitle = GUILayout.Toggle(languagesTemp[i].subtitle, "Sub");
+                languagesTemp[i].dubbing = GUILayout.Toggle(languagesTemp[i].dubbing, "Dub");
 
-                        if (GUILayout.Button("X", GUILayout.Width(20))) {
-                            languagesTemp = ArrayHandler.Remove(languagesTemp, languagesTemp[i]);
-                        }
-                    });
+                if (GUILayout.Button("X", GUILayout.Width(20))) {
+                    languagesTemp = ArrayHandler.Remove(languagesTemp, languagesTemp[i]);
                 }
 
-                EditorGUILayout.Separator();
+                GUILayout.EndHorizontal();
+            }
 
-                if (GUILayout.Button("Add language")) {
-                    languagesTemp = ArrayHandler.Add(languagesTemp, new Language(""));
-                }
+            EditorGUILayout.Separator();
 
-            });
+            if (GUILayout.Button("Add language")) {
+                languagesTemp = ArrayHandler.Add(languagesTemp, new Language(""));
+            }
+
+            GUILayout.EndVertical();
         }
 
         public void Save() {

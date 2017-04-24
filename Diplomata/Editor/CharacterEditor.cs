@@ -8,6 +8,7 @@ namespace DiplomataEditor {
         
         public static Character character;
         private string characterName = "";
+        private Vector2 scrollPos = new Vector2(0, 0);
 
         public enum State {
             None,
@@ -20,13 +21,13 @@ namespace DiplomataEditor {
         
         public static void Init(State state = State.None) {
             CharacterEditor.state = state;
+            DGUI.Init();
             DGUI.focusOnStart = true;
-
+            
             CharacterEditor window = (CharacterEditor)GetWindow(typeof(CharacterEditor), false, "Character", true);
 
             if (state == State.Create) {
                 window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 100);
-                window.maxSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 101);
             }
 
             else {
@@ -65,49 +66,54 @@ namespace DiplomataEditor {
         }
 
         public void OnGUI() {
-            DGUI.WindowWrap(() => {
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            GUILayout.BeginVertical(DGUI.windowStyle);
 
-                switch (state) {
-                    case State.None:
-                        if (Diplomata.preferences.workingCharacter != string.Empty) {
-                            character = Character.Find(Diplomata.preferences.workingCharacter);
-                            DrawEditWindow();
-                        }
-                        else {
-                            DrawCreateWindow();
-                        }
-                        break;
-
-                    case State.Create:
-                        DrawCreateWindow();
-                        break;
-
-                    case State.Edit:
+            switch (state) {
+                case State.None:
+                    if (Diplomata.preferences.workingCharacter != string.Empty) {
+                        character = Character.Find(Diplomata.preferences.workingCharacter);
                         DrawEditWindow();
-                        break;
-                }
+                    }
+                    else {
+                        DrawCreateWindow();
+                    }
+                    break;
 
-            });
+                case State.Create:
+                    DrawCreateWindow();
+                    break;
+
+                case State.Edit:
+                    DrawEditWindow();
+                    break;
+            }
+
+            GUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
         }
 
         public void DrawCreateWindow() {
             GUILayout.Label("Name: ");
 
-            DGUI.Focus(() => {
-                characterName = EditorGUILayout.TextField(characterName);
-            });
+            GUI.SetNextControlName("name");
+            characterName = EditorGUILayout.TextField(characterName);
+
+            DGUI.Focus("name");
 
             EditorGUILayout.Separator();
-                    
-            DGUI.Horizontal(() => {
-                if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                    Create();
-                }
 
-                if (GUILayout.Button("Cancel", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                    Close();
-                }
-            });
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Create", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                Create();
+            }
+
+            if (GUILayout.Button("Cancel", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                Close();
+            }
+
+            GUILayout.EndHorizontal();
             
 
             if (focusedWindow.ToString() == " (DiplomataEditor.CharacterEditor)") {
@@ -134,7 +140,7 @@ namespace DiplomataEditor {
             character.name = EditorGUILayout.TextField(character.name);
 
             DGUI.Separator();
-            
+
             var description = DictHandler.ContainsKey(character.description, Diplomata.preferences.currentLanguage);
 
             if (description == null) {
@@ -143,15 +149,14 @@ namespace DiplomataEditor {
             }
             
             DGUI.textContent.text = description.value;
-            DGUI.textAreaStyle.padding = DGUI.boxPadding;
             var height = DGUI.textAreaStyle.CalcHeight(DGUI.textContent, Screen.width - (2 * DGUI.MARGIN));
 
             GUILayout.Label("Description: ");
-            description.value = EditorGUILayout.TextArea(description.value, DGUI.textAreaStyle, GUILayout.Height(height + 15));
+            description.value = EditorGUILayout.TextArea(description.value, DGUI.textAreaStyle, GUILayout.Height(height));
             
             EditorGUILayout.Separator();
 
-            DGUI.Horizontal(() => {
+            EditorGUILayout.BeginHorizontal();
 
                 character.startOnPlay = GUILayout.Toggle(character.startOnPlay, " Start on play");
 
@@ -168,7 +173,7 @@ namespace DiplomataEditor {
                     CharacterMessagesManager.UpdateCharacterList();
                 }
 
-            });
+            EditorGUILayout.EndHorizontal();
             
             if (character.name != Diplomata.preferences.playerCharacterName) {
                 DGUI.Separator();
@@ -186,7 +191,7 @@ namespace DiplomataEditor {
                 EditorGUILayout.Separator();
             }
 
-            DGUI.Horizontal(() => {
+            GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("Save", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                     Save();
@@ -198,7 +203,7 @@ namespace DiplomataEditor {
                     Close();
                 }
 
-            });
+            GUILayout.EndHorizontal();
         }
 
         public void Save() {
