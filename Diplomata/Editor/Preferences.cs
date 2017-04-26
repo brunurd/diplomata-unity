@@ -15,9 +15,8 @@ namespace DiplomataEditor {
         
         [MenuItem("Diplomata/Preferences")]
         static public void Init() {
-            Diplomata.Instantiate();
-            DGUI.Init();
-
+            EditorData.Instantiate();
+            
             attributesTemp = ArrayHandler.Copy(Diplomata.preferences.attributes);
             languagesTemp = ArrayHandler.Copy(Diplomata.preferences.languages);
             defaultResourcesFolderTemp = string.Copy(DiplomataLib.Preferences.defaultResourcesFolder);
@@ -30,6 +29,8 @@ namespace DiplomataEditor {
         }
 
         public void OnGUI() {
+            DGUI.Init();
+
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             GUILayout.BeginVertical(DGUI.windowStyle);
 

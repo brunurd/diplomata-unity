@@ -10,16 +10,17 @@ namespace DiplomataEditor {
 
         [MenuItem("Diplomata/Character List")]
         static public void Init() {
-            Diplomata.Instantiate();
-            DGUI.Init();
+            EditorData.Instantiate();
 
             CharacterListMenu window = (CharacterListMenu)GetWindow(typeof(CharacterListMenu), false, "Character List");
             window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH + 80, 300);
 
             window.Show();
         }
-
+        
         public void OnGUI() {
+            DGUI.Init();
+
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             GUILayout.BeginVertical(DGUI.windowStyle);
 

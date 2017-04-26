@@ -9,6 +9,7 @@ namespace DiplomataEditor {
         public static Character character;
         public static Context context;
         private Vector2 scrollPos = new Vector2(0, 0);
+        private static EditorData editorData;
 
         public enum State {
             None,
@@ -21,11 +22,10 @@ namespace DiplomataEditor {
         public static void Init(State state = State.None) {
             DGUI.focusOnStart = true;
             ContextEditor.state = state;
-            DGUI.Init();
 
             ContextEditor window = (ContextEditor)GetWindow(typeof(ContextEditor), false, "Context Editor", true);
             window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 170);
-
+            
             if (state == State.Close || character == null) {
                 window.Close();
             }
@@ -35,10 +35,15 @@ namespace DiplomataEditor {
             }
         }
 
+        public void OnEnable() {
+            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
+        }
+
         public static void Edit(Character currentCharacter, Context currentContext) {
             character = currentCharacter;
             context = currentContext;
-            Diplomata.preferences.SetWorkingContextEditId(context.id);
+            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
+            editorData.SetWorkingContextEditId(context.id);
 
             Init(State.Edit);
         }
@@ -48,7 +53,7 @@ namespace DiplomataEditor {
                 if (character.name == characterName) {
                     character = null;
                     context = null;
-                    Diplomata.preferences.SetWorkingContextEditId(-1);
+                    editorData.SetWorkingContextEditId(-1);
 
                     Init(State.Close);
                 }
@@ -56,16 +61,18 @@ namespace DiplomataEditor {
         }
 
         public void OnGUI() {
+            DGUI.Init();
+
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             GUILayout.BeginVertical(DGUI.windowStyle);
 
             switch (state) {
                 case State.None:
-                    if (Diplomata.preferences.workingCharacter != string.Empty) {
-                        character = Character.Find(Diplomata.preferences.workingCharacter);
+                    if (editorData.workingCharacter != string.Empty) {
+                        character = Character.Find(editorData.workingCharacter);
 
-                        if (Diplomata.preferences.workingContextEditId > -1) {
-                            context = Context.Find(character, Diplomata.preferences.workingContextEditId);
+                        if (editorData.workingContextEditId > -1) {
+                            context = Context.Find(character, editorData.workingContextEditId);
                             DrawEditWindow();
                         }
                     }

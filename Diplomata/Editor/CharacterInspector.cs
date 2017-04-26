@@ -15,7 +15,7 @@ namespace DiplomataEditor {
         }
 
         public void Refresh() {
-            Diplomata.Instantiate();
+            EditorData.Instantiate();
             diplomataCharacter = target as DiplomataCharacter;
         }
 

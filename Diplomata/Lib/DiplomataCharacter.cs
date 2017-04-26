@@ -17,11 +17,7 @@ namespace DiplomataLib {
         //private Message currentMessage;
         public List<string> startNext = new List<string>();
         private List<Message> currentChoices = new List<Message>();
-
-        public void Awake() {
-            Diplomata.Instantiate();
-        }
-
+        
         public void Start() {
             talking = false;
             isTalking = false;

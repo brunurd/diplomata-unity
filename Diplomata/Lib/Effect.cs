@@ -23,21 +23,29 @@ namespace DiplomataLib {
 
         public Effect(string contextName) {
             this.contextName = contextName;
-            ApplyNone();
+            DisplayNone();
         }
 
-        public void ApplyNone() {
-            displayName = "None";
+        public void DisplayNone() {
+            displayName = "None.";
         }
 
         public void ApplyEndOfContext(string contextName) {
             this.contextName = contextName;
-            displayName = "End of context";
+            DisplayEndOfContext();
+        }
+
+        public void DisplayEndOfContext() {
+            displayName = "End of context.";
         }
 
         public void ApplyGoTo(string nextMessage) {
             this.nextMessage = nextMessage;
-            displayName = "Go to " + nextMessage;
+            DisplayGoTo();
+        }
+
+        public void DisplayGoTo() {
+            displayName = "Go to <i>" + nextMessage +"</i>.";
         }
     }
 

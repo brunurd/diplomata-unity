@@ -7,9 +7,9 @@ namespace DiplomataLib {
 
         public string displayName = "None.";
         public Type type;
-        public string afterOfMessageName = "<none>";
+        public string afterOfMessageName;
         public int comparedInfluence;
-        public string characterInfluencedName = "<none>";
+        public string characterInfluencedName;
 
         [System.NonSerialized]
         public UnityEvent custom;
@@ -34,7 +34,7 @@ namespace DiplomataLib {
         }
 
         public void DisplayAfterOf() {
-            displayName = "After of " + afterOfMessageName + ".";
+            displayName = "After of <i>" + afterOfMessageName + "</i>.";
         }
 
         public void ApplyCompareInfluence(string characterName, int influence) {
@@ -47,13 +47,13 @@ namespace DiplomataLib {
         public void DisplayCompareInfluence() {
             switch (type) {
                 case Type.InfluenceEqualTo:
-                    displayName = "Influence equal to " + comparedInfluence + " in " + characterInfluencedName + ".";
+                    displayName = "Influence <i>equal</i> to \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>.";
                     break;
                 case Type.InfluenceGreaterThan:
-                    displayName = "Influence greater then " + comparedInfluence + " in " + characterInfluencedName + ".";
+                    displayName = "Influence <i>greater</i> then \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>.";
                     break;
                 case Type.InfluenceLessThan:
-                    displayName = "Influence less then " + comparedInfluence + " in " + characterInfluencedName + ".";
+                    displayName = "Influence <i>less</i> then \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>.";
                     break;
             }
         }

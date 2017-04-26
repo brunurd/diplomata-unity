@@ -6,25 +6,6 @@ namespace DiplomataLib {
     
     public class JSONHandler {
         
-        public static void Create(System.Object obj, string filename, string folder = "") {
-            try {
-                #if UNITY_EDITOR
-                CreateFolder(folder);
-
-                var file = File.Create(Preferences.defaultResourcesFolder + folder + filename + ".json");
-                file.Close();
-
-                UnityEditor.AssetDatabase.Refresh();
-
-                Update(obj, filename, folder);
-                #endif
-            }
-
-            catch (Exception e) {
-                Debug.LogError("Cannot create " + folder + filename + ".json in " + Preferences.defaultResourcesFolder + ". " + e.Message);
-            }
-        }
-
         public static T Read<T>(string filename, string folder = "") {
             try {
                 TextAsset json = (TextAsset)Resources.Load(folder + filename);
@@ -42,11 +23,31 @@ namespace DiplomataLib {
             }
         }
 
+        public static void Create(System.Object obj, string filename, string folder = "") {
+            #if UNITY_EDITOR
+            try {
+                CreateFolder(folder);
+
+                var file = File.Create(Preferences.defaultResourcesFolder + folder + filename + ".json");
+                file.Close();
+
+                UnityEditor.AssetDatabase.Refresh();
+
+                Update(obj, filename, folder);
+            }
+
+            catch (Exception e) {
+                Debug.LogError("Cannot create " + folder + filename + ".json in " + Preferences.defaultResourcesFolder + ". " + e.Message);
+            }
+            #endif
+        }
+
+
         public static void Update(System.Object obj, string filename, string folder = "") {
             #if UNITY_EDITOR
             try {
                 string json = JsonUtility.ToJson(obj, Diplomata.preferences.jsonPrettyPrint);
-                
+
                 using (FileStream fs = new FileStream(Preferences.defaultResourcesFolder + folder + filename + ".json", FileMode.Create)) {
                     using (StreamWriter writer = new StreamWriter(fs)) {
                         writer.Write(json);
@@ -79,7 +80,8 @@ namespace DiplomataLib {
 
         public static bool Exists(string filename, string folder = "") {
             #if UNITY_EDITOR
-            if (!File.Exists(Preferences.defaultResourcesFolder + filename + ".json") && !File.Exists(Preferences.defaultResourcesFolder + folder + filename + ".json")) {
+            if (!File.Exists(Preferences.defaultResourcesFolder + filename + ".json") &&
+                !File.Exists(Preferences.defaultResourcesFolder + folder + filename + ".json")) {
                 return false;
             }
 
@@ -100,6 +102,7 @@ namespace DiplomataLib {
             }
             #endif
         }
+
     }
 
 }

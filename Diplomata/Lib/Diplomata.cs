@@ -7,9 +7,9 @@ namespace DiplomataLib {
     [ExecuteInEditMode]
     public class Diplomata : MonoBehaviour {
         public static Diplomata instance = null;
-        public static Preferences preferences;
-        public static GameProgress gameProgress;
-        public static List<Character> characters;
+        public static Preferences preferences = new Preferences();
+        public static GameProgress gameProgress = new GameProgress();
+        public static List<Character> characters = new List<Character>();
 
         public void Awake() {
             if (instance == null) {
@@ -36,19 +36,6 @@ namespace DiplomataLib {
             
             gameProgress = new GameProgress();
             gameProgress.Start();
-        }
-
-        public static void Instantiate() {
-            #if UNITY_EDITOR
-
-            if (instance == null && FindObjectsOfType<Diplomata>().Length < 1) {
-                GameObject obj = new GameObject("[ Diplomata ]");
-                obj.AddComponent<Diplomata>();
-            }
-
-            Restart();
-            
-            #endif
         }
 
         private void CheckRepeated() {

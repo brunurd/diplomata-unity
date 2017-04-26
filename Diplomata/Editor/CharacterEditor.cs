@@ -9,6 +9,7 @@ namespace DiplomataEditor {
         public static Character character;
         private string characterName = "";
         private Vector2 scrollPos = new Vector2(0, 0);
+        private static EditorData editorData;
 
         public enum State {
             None,
@@ -21,7 +22,6 @@ namespace DiplomataEditor {
         
         public static void Init(State state = State.None) {
             CharacterEditor.state = state;
-            DGUI.Init();
             DGUI.focusOnStart = true;
             
             CharacterEditor window = (CharacterEditor)GetWindow(typeof(CharacterEditor), false, "Character", true);
@@ -43,22 +43,31 @@ namespace DiplomataEditor {
             }
         }
 
+        public void OnEnable() {
+            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
+        }
+
         public static void OpenCreate() {
             character = null;
-            Diplomata.preferences.SetWorkingCharacter(string.Empty);
+
+            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
+            editorData.SetWorkingCharacter(string.Empty);
             Init(State.Create);
         }
 
         public static void Edit(Character currentCharacter) {
             character = currentCharacter;
-            Diplomata.preferences.SetWorkingCharacter(currentCharacter.name);
+
+            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
+            editorData.SetWorkingCharacter(currentCharacter.name);
             Init(State.Edit);
         }
 
         public static void Reset(string characterName) {
             if (character != null) {
                 if (character.name == characterName) {
-                    Diplomata.preferences.SetWorkingCharacter(string.Empty);
+                    editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
+                    editorData.SetWorkingCharacter(string.Empty);
                     character = null;
                     Init(State.Close);
                 }
@@ -66,13 +75,15 @@ namespace DiplomataEditor {
         }
 
         public void OnGUI() {
+            DGUI.Init();
+
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             GUILayout.BeginVertical(DGUI.windowStyle);
 
             switch (state) {
                 case State.None:
-                    if (Diplomata.preferences.workingCharacter != string.Empty) {
-                        character = Character.Find(Diplomata.preferences.workingCharacter);
+                    if (editorData.workingCharacter != string.Empty) {
+                        character = Character.Find(editorData.workingCharacter);
                         DrawEditWindow();
                     }
                     else {

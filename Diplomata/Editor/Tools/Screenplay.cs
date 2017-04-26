@@ -11,7 +11,7 @@ namespace DiplomataEditor {
             RTFDocument doc = CreateDocument();
             doc = AddCharacter(doc, character);
 
-            RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + character.name + ".rtf", doc);
+            RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + character.name + " - " + Diplomata.preferences.currentLanguage + ".rtf", doc);
             AssetDatabase.Refresh();
         }
 
@@ -22,7 +22,7 @@ namespace DiplomataEditor {
                 doc = AddCharacter(doc, character);
             }
 
-            RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay.rtf", doc);
+            RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + Diplomata.preferences.currentLanguage + ".rtf", doc);
             AssetDatabase.Refresh();
         }
 
@@ -49,9 +49,10 @@ namespace DiplomataEditor {
             presentation.AppendText(character.name, styleAllcaps);
             
             var characterDescription = DictHandler.ContainsKey(character.description, Diplomata.preferences.currentLanguage);
+            var text = string.Empty;
 
-            var text = ", " + characterDescription.value;
-
+            text = ", " + characterDescription.value;
+            
             if (text[text.Length - 1] != '.') {
                 text += ".";
             }

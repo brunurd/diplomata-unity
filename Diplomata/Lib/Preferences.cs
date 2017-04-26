@@ -22,16 +22,14 @@
     [System.Serializable]
     public class Preferences {
         public static string defaultResourcesFolder = "Assets/Resources/";
+        public bool jsonPrettyPrint;
         public Language[] languages = new Language[0];
         public string[] languagesList = new string[0];
         public string[] characterList = new string[0];
         public string[] attributes = new string[0];
         public string currentLanguage;
-        public string workingCharacter;
         public string playerCharacterName;
-        public bool jsonPrettyPrint;
-        public int workingContextMessagesId;
-        public int workingContextEditId;
+        
         
         public void Start() {
             if (!JSONHandler.Exists("preferences", "Diplomata/")) {
@@ -39,13 +37,8 @@
 
                 languages = new Language[] { new Language("English") };
                 SetCurrentLanguage("English");
-                
                 jsonPrettyPrint = false;
 
-                workingCharacter = string.Empty;
-                workingContextMessagesId = -1;
-                workingContextEditId = -1;
-                
                 JSONHandler.Create(this, "preferences", "Diplomata/");
             }
 
@@ -66,21 +59,6 @@
             for (int i = 0; i < languages.Length; i++) {
                 languagesList[i] = languages[i].name;
             }
-        }
-
-        public void SetWorkingCharacter(string characterName) {
-            workingCharacter = characterName;
-            JSONHandler.Update(this, "preferences", "Diplomata/");
-        }
-
-        public void SetWorkingContextMessagesId(int contextId) {
-            workingContextMessagesId = contextId;
-            JSONHandler.Update(this, "preferences", "Diplomata/");
-        }
-
-        public void SetWorkingContextEditId(int contextId) {
-            workingContextEditId = contextId;
-            JSONHandler.Update(this, "preferences", "Diplomata/");
         }
     }
 

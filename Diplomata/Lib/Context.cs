@@ -37,7 +37,7 @@
         public bool conditionsFilter = true;
         public bool titleFilter = true;
         public bool contentFilter = true;
-        public bool callbacksFilter = true;
+        public bool effectsFilter = true;
         public CurrentMessage currentMessage = new CurrentMessage(-1, -1);
         public MessageEditorState messageEditorState = MessageEditorState.None;
         public ushort columnWidth = 200;
