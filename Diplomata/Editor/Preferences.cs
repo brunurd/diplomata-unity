@@ -8,23 +8,23 @@ namespace DiplomataEditor {
 
         public static string[] attributesTemp = new string[0];
         public static Language[] languagesTemp = new Language[0];
-        public static string defaultResourcesFolderTemp = "";
         public static bool jsonPrettyPrintTemp = false;
         public static string currentLanguageTemp;
         private Vector2 scrollPos = new Vector2(0, 0);
+        private static Diplomata diplomataEditor;
         
         [MenuItem("Diplomata/Preferences")]
         static public void Init() {
-            EditorData.Instantiate();
-            
-            attributesTemp = ArrayHandler.Copy(Diplomata.preferences.attributes);
-            languagesTemp = ArrayHandler.Copy(Diplomata.preferences.languages);
-            defaultResourcesFolderTemp = string.Copy(DiplomataLib.Preferences.defaultResourcesFolder);
-            jsonPrettyPrintTemp = Diplomata.preferences.jsonPrettyPrint;
-            currentLanguageTemp = string.Copy(Diplomata.preferences.currentLanguage);
+            Diplomata.Instantiate();
+            diplomataEditor = (Diplomata)AssetHandler.Read("Diplomata.asset", "Diplomata/");
+
+            attributesTemp = ArrayHandler.Copy(diplomataEditor.preferences.attributes);
+            languagesTemp = ArrayHandler.Copy(diplomataEditor.preferences.languages);
+            jsonPrettyPrintTemp = diplomataEditor.preferences.jsonPrettyPrint;
+            currentLanguageTemp = string.Copy(diplomataEditor.preferences.currentLanguage);
 
             Preferences window = (Preferences)GetWindow(typeof(Preferences), false, "Preferences");
-            window.minSize = new Vector2(600, 385);
+            window.minSize = new Vector2(600, 325);
             window.Show();
         }
 
@@ -33,12 +33,7 @@ namespace DiplomataEditor {
 
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             GUILayout.BeginVertical(DGUI.windowStyle);
-
-            GUILayout.Label("Default Resources folder:");
-            defaultResourcesFolderTemp = EditorGUILayout.TextField(defaultResourcesFolderTemp);
-
-            DGUI.Separator();
-
+            
             GUILayout.BeginHorizontal();
             DrawAttributes();
             DrawLanguages();
@@ -48,7 +43,7 @@ namespace DiplomataEditor {
                 
             GUILayout.BeginHorizontal();
             jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
-            currentLanguageTemp = DGUI.Popup("Current Language", currentLanguageTemp, Diplomata.preferences.languagesList);
+            currentLanguageTemp = DGUI.Popup("Current Language", currentLanguageTemp, diplomataEditor.preferences.languagesList);
             GUILayout.EndHorizontal();
 
             EditorGUILayout.Separator();
@@ -120,16 +115,13 @@ namespace DiplomataEditor {
         }
 
         public void Save() {
-            Diplomata.preferences.attributes = ArrayHandler.Copy(attributesTemp);
-            Diplomata.preferences.languages = ArrayHandler.Copy(languagesTemp);
-            Diplomata.preferences.jsonPrettyPrint = jsonPrettyPrintTemp;
+            diplomataEditor.preferences.attributes = ArrayHandler.Copy(attributesTemp);
+            diplomataEditor.preferences.languages = ArrayHandler.Copy(languagesTemp);
+            diplomataEditor.preferences.jsonPrettyPrint = jsonPrettyPrintTemp;
+            diplomataEditor.preferences.currentLanguage = string.Copy(currentLanguageTemp);
+            diplomataEditor.preferences.SetLanguageList();
 
-            DiplomataLib.Preferences.defaultResourcesFolder = string.Copy(defaultResourcesFolderTemp);
-            Diplomata.preferences.currentLanguage = string.Copy(currentLanguageTemp);
-
-            Diplomata.preferences.SetLanguageList();
-            
-            JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
+            diplomataEditor.SavePreferences();
             Close();
         }
     }

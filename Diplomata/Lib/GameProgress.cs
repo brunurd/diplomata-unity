@@ -13,14 +13,22 @@ namespace DiplomataLib {
 
     [System.Serializable]
     public class GameProgress {   
-        public string currentSubtitledLanguage;
-        public string currentDubbedLanguage;
+        public string currentSubtitledLanguage = string.Empty;
+        public string currentDubbedLanguage = string.Empty;
         public Character[] characters;
 
         public void Start() {
-            if (Diplomata.preferences.languages.Length > 0) {
-                currentDubbedLanguage = Diplomata.preferences.languages[0].name;
-                currentSubtitledLanguage = Diplomata.preferences.languages[0].name;
+
+            foreach (Language lang in Diplomata.preferences.languages) {
+
+                if (lang.subtitle && currentSubtitledLanguage == string.Empty) {
+                    currentSubtitledLanguage = lang.name;
+                }
+
+                if (lang.dubbing && currentDubbedLanguage == string.Empty) {
+                    currentDubbedLanguage = lang.name;
+                }
+
             }
 
             UpdateCharacters();
@@ -28,7 +36,7 @@ namespace DiplomataLib {
 
         public void UpdateCharacters() {
             characters = new Character[Diplomata.characters.Count];
-            characters = ArrayHandler.ListToArray(Diplomata.characters);
+            Diplomata.characters.CopyTo(characters);
         }
 
         public string Serialize(Method method) {

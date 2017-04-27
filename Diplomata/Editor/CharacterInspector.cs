@@ -9,13 +9,15 @@ namespace DiplomataEditor {
     public class CharacterInspector : Editor {
         
         public DiplomataCharacter diplomataCharacter;
+        private static Diplomata diplomataEditor;
         
         public void OnEnable() {
             Refresh();
         }
 
         public void Refresh() {
-            EditorData.Instantiate();
+            Diplomata.Instantiate();
+            diplomataEditor = (Diplomata)AssetHandler.Read("Diplomata.asset", "Diplomata/");
             diplomataCharacter = target as DiplomataCharacter;
         }
 
@@ -26,7 +28,7 @@ namespace DiplomataEditor {
             
             GUILayout.BeginVertical(DGUI.windowStyle);
 
-            if (diplomataCharacter.character != null && Diplomata.characters.Count > 0) {
+            if (diplomataCharacter.character != null && diplomataEditor.characters.Count > 0) {
                     
                 GUILayout.BeginHorizontal();
 
@@ -34,8 +36,8 @@ namespace DiplomataEditor {
 
                 var selected = 0;
 
-                for (var i = 0; i < Diplomata.characters.Count; i++) {
-                    if (Diplomata.characters[i].name == diplomataCharacter.character.name) {
+                for (var i = 0; i < diplomataEditor.characters.Count; i++) {
+                    if (diplomataEditor.characters[i].name == diplomataCharacter.character.name) {
                         selected = i;
                         break;
                     }
@@ -43,12 +45,12 @@ namespace DiplomataEditor {
 
                 var selectedBefore = selected;
 
-                selected = EditorGUILayout.Popup(selected, Diplomata.preferences.characterList);
+                selected = EditorGUILayout.Popup(selected, diplomataEditor.preferences.characterList);
 
-                for (var i = 0; i < Diplomata.characters.Count; i++) {
+                for (var i = 0; i < diplomataEditor.characters.Count; i++) {
                     if (selected == i) {
-                        diplomataCharacter.character = Diplomata.characters[i];
-                        Diplomata.characters[selectedBefore].onScene = false;
+                        diplomataCharacter.character = diplomataEditor.characters[i];
+                        diplomataEditor.characters[selectedBefore].onScene = false;
                         diplomataCharacter.character.onScene = true;
                         break;
                     }
@@ -64,7 +66,7 @@ namespace DiplomataEditor {
 
                 var showInfluence = true;
 
-                if (diplomataCharacter.character.name == Diplomata.preferences.playerCharacterName) {
+                if (diplomataCharacter.character.name == diplomataEditor.preferences.playerCharacterName) {
                     EditorGUILayout.HelpBox("\nThis character is the player, he doesn't influence himself, use his messages only in the case he speaks with himself.\n", MessageType.Info);
                     showInfluence = false;
                 }
@@ -103,10 +105,6 @@ namespace DiplomataEditor {
             GUILayout.EndVertical();
 
             serializedObject.ApplyModifiedProperties();
-        }
-
-        public void OnInspectorUpdate() {
-            Repaint();
         }
     }
 

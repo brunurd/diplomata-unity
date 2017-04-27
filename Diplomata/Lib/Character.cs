@@ -21,17 +21,12 @@ namespace DiplomataLib {
             this.name = name;
             contexts = new Context[0];
             description = new DictLang[0];
-
-            if (Diplomata.characters.Count == 0) {
-                Diplomata.preferences.playerCharacterName = this.name;
-            }
-
+            
             foreach (Language lang in Diplomata.preferences.languages) {
                 description = ArrayHandler.Add(description, new DictLang(lang.name, ""));
             }
 
             SetAttributes();
-            CheckRepeatedCharacter();
         }
 
         public void SetAttributes() {
@@ -42,30 +37,7 @@ namespace DiplomataLib {
             }
         }
 
-        public void CheckRepeatedCharacter() {
-            bool canAdd = true;
-
-            foreach (string characterName in Diplomata.preferences.characterList) {
-                if (characterName == name) {
-                    canAdd = false;
-                    break;
-                }
-            }
-
-            if (canAdd) {
-                Diplomata.characters.Add(this);
-                Diplomata.preferences.characterList = ArrayHandler.Add(Diplomata.preferences.characterList, name);
-                JSONHandler.Update(Diplomata.preferences, "preferences", "Diplomata/");
-                JSONHandler.Create(this, name, "Diplomata/Characters/");
-            }
-
-            else {
-                Debug.LogError("This name already exists!");
-            }
-        }
-
         public static void UpdateList() {
-            JSONHandler.CreateFolder("Diplomata/Characters/");
             var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
 
             Diplomata.characters = new List<Character>();
@@ -92,13 +64,14 @@ namespace DiplomataLib {
             }
         }
 
-        public static Character Find(string name) {
-            foreach (Character character in Diplomata.characters) {
+        public static Character Find(List<Character> characters, string name) {
+            foreach (Character character in characters) {
                 if (character.name == name) {
                     return character;
                 }
             }
 
+            Debug.LogError(name + " not found, this character doesn't exist or you made a typo. returned null.");
             return null;
         }
 

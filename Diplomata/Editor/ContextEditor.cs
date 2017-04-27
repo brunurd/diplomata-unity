@@ -9,7 +9,7 @@ namespace DiplomataEditor {
         public static Character character;
         public static Context context;
         private Vector2 scrollPos = new Vector2(0, 0);
-        private static EditorData editorData;
+        private static Diplomata diplomataEditor;
 
         public enum State {
             None,
@@ -36,15 +36,15 @@ namespace DiplomataEditor {
         }
 
         public void OnEnable() {
-            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
+            diplomataEditor = (Diplomata) AssetHandler.Read("Diplomata.asset", "Diplomata/");
         }
 
         public static void Edit(Character currentCharacter, Context currentContext) {
             character = currentCharacter;
             context = currentContext;
-            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
-            editorData.SetWorkingContextEditId(context.id);
 
+            diplomataEditor = (Diplomata)AssetHandler.Read("Diplomata.asset", "Diplomata/");
+            diplomataEditor.SetWorkingContextEditId(context.id);
             Init(State.Edit);
         }
         
@@ -53,7 +53,9 @@ namespace DiplomataEditor {
                 if (character.name == characterName) {
                     character = null;
                     context = null;
-                    editorData.SetWorkingContextEditId(-1);
+
+                    diplomataEditor = (Diplomata)AssetHandler.Read("Diplomata.asset", "Diplomata/");
+                    diplomataEditor.SetWorkingContextEditId(-1);
 
                     Init(State.Close);
                 }
@@ -68,11 +70,11 @@ namespace DiplomataEditor {
 
             switch (state) {
                 case State.None:
-                    if (editorData.workingCharacter != string.Empty) {
-                        character = Character.Find(editorData.workingCharacter);
+                    if (diplomataEditor.workingCharacter != string.Empty) {
+                        character = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
 
-                        if (editorData.workingContextEditId > -1) {
-                            context = Context.Find(character, editorData.workingContextEditId);
+                        if (diplomataEditor.workingContextEditId > -1) {
+                            context = Context.Find(character, diplomataEditor.workingContextEditId);
                             DrawEditWindow();
                         }
                     }
@@ -88,8 +90,8 @@ namespace DiplomataEditor {
         }
         
         public void DrawEditWindow() {
-            var name = DictHandler.ContainsKey(context.name, Diplomata.preferences.currentLanguage);
-            var description = DictHandler.ContainsKey(context.description, Diplomata.preferences.currentLanguage);
+            var name = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
+            var description = DictHandler.ContainsKey(context.description, diplomataEditor.preferences.currentLanguage);
 
             if (name != null && description != null) {
                 GUILayout.Label("Name: ");
@@ -122,13 +124,13 @@ namespace DiplomataEditor {
         }
 
         public void UpdateContext() {
-            JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+            diplomataEditor.Save(character);
             Close();
         }
 
         public void OnDisable() {
             if (character != null) {
-                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                diplomataEditor.Save(character);
             }
         }
     }

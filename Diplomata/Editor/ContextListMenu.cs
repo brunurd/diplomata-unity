@@ -9,6 +9,7 @@ namespace DiplomataEditor {
         private static Vector2 scrollPos = new Vector2(0, 0);
 
         public static void Draw() {
+            var diplomataEditor = CharacterMessagesManager.diplomataEditor;
             var character = CharacterMessagesManager.character;
             var listWidth = Screen.width / 3;
 
@@ -29,18 +30,18 @@ namespace DiplomataEditor {
                     Rect boxRect = EditorGUILayout.BeginVertical(DGUI.boxStyle);
                     GUI.Box(boxRect, GUIContent.none);
 
-                    var name = DictHandler.ContainsKey(context.name, Diplomata.preferences.currentLanguage);
+                    var name = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
 
                     if (name == null) {
-                        context.name = ArrayHandler.Add(context.name, new DictLang(Diplomata.preferences.currentLanguage, "Name [Change clicking on Edit]"));
-                        name = DictHandler.ContainsKey(context.name, Diplomata.preferences.currentLanguage);
+                        context.name = ArrayHandler.Add(context.name, new DictLang(diplomataEditor.preferences.currentLanguage, "Name [Change clicking on Edit]"));
+                        name = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
                     }
 
-                    var description = DictHandler.ContainsKey(context.description, Diplomata.preferences.currentLanguage);
+                    var description = DictHandler.ContainsKey(context.description, diplomataEditor.preferences.currentLanguage);
 
                     if (description == null) {
-                        context.description = ArrayHandler.Add(context.description, new DictLang(Diplomata.preferences.currentLanguage, "Description [Change clicking on Edit]"));
-                        description = DictHandler.ContainsKey(context.description, Diplomata.preferences.currentLanguage);
+                        context.description = ArrayHandler.Add(context.description, new DictLang(diplomataEditor.preferences.currentLanguage, "Description [Change clicking on Edit]"));
+                        description = DictHandler.ContainsKey(context.description, diplomataEditor.preferences.currentLanguage);
                     }
 
                     DGUI.labelStyle.fontSize = 11;
@@ -65,7 +66,7 @@ namespace DiplomataEditor {
                             ContextEditor.Reset(character.name);
                             character.contexts = ArrayHandler.Remove(character.contexts, context);
                             Context.ResetIDs(character.contexts);
-                            JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                            diplomataEditor.Save(character);
                         }
                     }
                     GUILayout.EndHorizontal();
@@ -106,7 +107,7 @@ namespace DiplomataEditor {
             var character = CharacterMessagesManager.character;
 
             character.contexts = ArrayHandler.Add(character.contexts, new Context(character.contexts.Length, character.name));
-            JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+            CharacterMessagesManager.diplomataEditor.Save(character);
         }
 
     }

@@ -1,19 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DiplomataLib {
 
     public class ArrayHandler {
-        public static T[] ListToArray<T>(List<T> list) {
-            T[] array = new T[list.Count];
-
-            for (int i = 0; i < list.Count; i++) {
-                array[i] = list[i];
-            }
-
-            return array;
-        }
-
         public static T[] Add<T>(T[] array, T element) {
             if (array == null) {
                 array = new T[0];
@@ -106,6 +95,7 @@ namespace DiplomataLib {
                 }
             }
 
+            Debug.LogWarning("Cannot find this index. returned: -1");
             return -1;
         }
     }

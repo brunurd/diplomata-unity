@@ -1,4 +1,6 @@
-﻿namespace DiplomataLib {
+﻿using UnityEngine;
+
+namespace DiplomataLib {
 
     public enum MessageEditorState {
         None,
@@ -6,25 +8,7 @@
         Conditions,
         Effects
     }
-
-    [System.Serializable]
-    public class CurrentMessage {
-        public int columnId;
-        public int rowId;
-
-        public CurrentMessage() { }
-
-        public CurrentMessage(int columnId, int rowId) {
-            this.columnId = columnId;
-            this.rowId = rowId;
-        }
-
-        public void Set(int columnId, int rowId) {
-            this.columnId = columnId;
-            this.rowId = rowId;
-        }
-    }
-
+    
     [System.Serializable]
     public class Context {
         public int id;
@@ -42,6 +26,21 @@
         public MessageEditorState messageEditorState = MessageEditorState.None;
         public ushort columnWidth = 200;
 
+        public struct CurrentMessage {
+            public int columnId;
+            public int rowId;
+
+            public CurrentMessage(int columnId, int rowId) {
+                this.columnId = columnId;
+                this.rowId = rowId;
+            }
+
+            public void Set(int columnId, int rowId) {
+                this.columnId = columnId;
+                this.rowId = rowId;
+            }
+        }
+
         public Context() { }
 
         public Context(int id, string characterName) {
@@ -58,14 +57,44 @@
         }
 
         public static Context Find(Character character, int id) {
-
-            foreach (Context context in character.contexts) {
-                if (context.id == id) {
-                    return context;
+            if (character != null) {
+                foreach (Context context in character.contexts) {
+                    if (context.id == id) {
+                        return context;
+                    }
                 }
+                
+                Debug.LogError("The context with the id " + id + " not found in " + character.name +
+                    ", this context doesn't exist or you mistake the id. returned null.");
+                return null;
             }
 
-            return null;
+            else {
+                Debug.LogError("This character doesn't exist. returned null.");
+                return null;
+            }
+        }
+
+        public static Context Find(Character character, string name, string language) {
+            if (character != null) {
+
+                foreach (Context context in character.contexts) {
+                    DictLang contextName = DictHandler.ContainsKey(context.name, language);
+
+                    if (name == contextName.value) {
+                        return context;
+                    }
+                }
+
+                Debug.LogError("The context with the name " + name + " not found in " + character.name + 
+                    ", this context doesn't exist or you mistake the name in " + language + ". returned null.");
+                return null;
+            }
+
+            else {
+                Debug.LogError("This character doesn't exist. returned null.");
+                return null;
+            }
         }
 
         public static Context[] ResetIDs(Context[] array) {

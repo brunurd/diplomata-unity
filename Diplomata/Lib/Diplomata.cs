@@ -29,23 +29,18 @@ namespace DiplomataLib {
 
         public static void Restart() {
             preferences = new Preferences();
-            preferences.Start();
-            
+
+            var json = (TextAsset) Resources.Load("Diplomata/preferences");
+
+            if (json != null) {
+                preferences = JsonUtility.FromJson<Preferences>(json.text);
+            }
+
             characters = new List<Character>();
             Character.UpdateList();
             
             gameProgress = new GameProgress();
             gameProgress.Start();
-        }
-
-        private void CheckRepeated() {
-            var repeated = FindObjectsOfType<Diplomata>();
-
-            foreach (Diplomata item in repeated) {
-                if (!item.Equals(instance)) {
-                    DestroyImmediate(item.gameObject);
-                }
-            }
         }
     }
 

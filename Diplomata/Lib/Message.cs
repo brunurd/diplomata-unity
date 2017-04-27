@@ -57,6 +57,8 @@ namespace DiplomataLib {
                 color = new Color(0.9764f, 0.9764f, 0.9764f);
             }
 
+            #else
+            color = new Color(0.9764f, 0.9764f, 0.9764f);
             #endif
 
             this.id = id;
@@ -71,6 +73,7 @@ namespace DiplomataLib {
                 }
             }
 
+            Debug.LogError("The message with the id " + rowId + " not found, this message doesn't exist or you mistake the id. returned null.");
             return null;
         }
 

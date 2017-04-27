@@ -1,4 +1,6 @@
-﻿namespace DiplomataLib {
+﻿using UnityEngine;
+
+namespace DiplomataLib {
 
     [System.Serializable]
     public class Column {
@@ -24,6 +26,7 @@
                 }
             }
 
+            Debug.LogError("The column with the id " + columnId + " not found, this column doesn't exist or you mistake the id. returned null.");
             return null;
         }
 

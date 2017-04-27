@@ -1,38 +1,22 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using DiplomataLib;
 
 public class ExampleGUI : MonoBehaviour {
-        /*
-    public Character character;
-    private List<string> choices = new List<string>();
-        
+    
+    public DiplomataCharacter character;
+
+    public void Start() {
+        character = GetComponent<DiplomataCharacter>();
+    }
+
     public void OnGUI() {
             
-        // Talking routine
+        // Talking loop
         if (character.talking) {
-
-            // Character is talking
-            if (character.isTalking) {
-                GUILayout.Label( character.ShowMessageContent() );
-                    
-                if (GUILayout.Button("Next")) {
-                    character.NextMessage();
-                }
-            }
-
-            // Player is talking
-            if (character.isListening) {
-                GUILayout.Label(character.ShowMessageContent());
-
-                if (GUILayout.Button("Next")) {
-                    character.NextMessage();
-                }
-            }
-
+            
             // Choice menu
-            if (character.waitingPlayer) {
-                choices = character.MessageChoices();
+            if (character.choiceMenu) {
+                var choices = character.MessageChoices();
 
                 // Show choices buttons
                 foreach (string choice in choices) {
@@ -40,6 +24,26 @@ public class ExampleGUI : MonoBehaviour {
                         character.ChooseMessage(choice);
                     }
                 }
+            }
+
+            // Simple message (not a choice)
+            else {
+                GUILayout.Label( character.ShowMessageContentSubtitle() );
+
+                // Last message feedback
+                if (character.IsLastMessage()) {
+                    if (GUILayout.Button("Bye")) {
+                        character.EndTalk();
+                    }
+                }
+
+                // Next message input
+                else {
+                    if (GUILayout.Button("Next")) {
+                        character.NextMessage();
+                    }
+                }
+
             }
         }
 
@@ -50,5 +54,5 @@ public class ExampleGUI : MonoBehaviour {
             }
         }
 
-    }*/
+    }
 }

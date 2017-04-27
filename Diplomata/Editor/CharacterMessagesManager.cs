@@ -6,8 +6,7 @@ namespace DiplomataEditor {
 
     public class CharacterMessagesManager : EditorWindow {
 
-        private ushort timer = 0;
-        public static string[] characterList = new string[0];
+        private ushort iteractions = 0;
         public static Character character;
         public static Context context;
         private Vector2 scrollPos = new Vector2(0, 0);
@@ -16,7 +15,7 @@ namespace DiplomataEditor {
         public static Texture2D sidebarBG;
         public static Texture2D textAreaBGTextureNormal;
         public static Texture2D textAreaBGTextureFocused;
-        private static EditorData editorData;
+        public static Diplomata diplomataEditor;
 
         public enum State {
             None,
@@ -30,12 +29,9 @@ namespace DiplomataEditor {
         public static void Init(State state = State.None) {
             CharacterMessagesManager window = (CharacterMessagesManager)GetWindow(typeof(CharacterMessagesManager), false, "Messages", true);
             window.minSize = new Vector2(960, 300);
-            window.maximized = true;
             
             CharacterMessagesManager.state = state;
             
-            UpdateCharacterList();
-
             if (state == State.Close) {
                 window.Close();
             }
@@ -46,7 +42,7 @@ namespace DiplomataEditor {
         }
 
         public void OnEnable() {
-            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
+            diplomataEditor = (Diplomata) AssetHandler.Read("Diplomata.asset", "Diplomata/");
         }
 
         public void SetTextures() {
@@ -73,22 +69,12 @@ namespace DiplomataEditor {
             }
         }
 
-        public static void UpdateCharacterList() {
-            characterList = new string[Diplomata.preferences.characterList.Length - 1];
-
-            foreach (string str in Diplomata.preferences.characterList) {
-                if (str != Diplomata.preferences.playerCharacterName) {
-                    characterList = ArrayHandler.Add(characterList, str);
-                }
-            }
-        }
-
         public static void OpenContextMenu(Character currentCharacter) {
             character = currentCharacter;
 
-            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
-            editorData.SetWorkingCharacter(currentCharacter.name);
-            editorData.SetWorkingContextMessagesId(-1);
+            diplomataEditor = (Diplomata)AssetHandler.Read("Diplomata.asset", "Diplomata/");
+            diplomataEditor.SetWorkingCharacter(currentCharacter.name);
+            diplomataEditor.SetWorkingContextMessagesId(-1);
             Init(State.Context);
         }
 
@@ -96,16 +82,16 @@ namespace DiplomataEditor {
             character = currentCharacter;
             context = currentContext;
 
-            editorData = (EditorData)AssetHandler.Read<EditorData>("editorData.asset", "Diplomata/");
-            editorData.SetWorkingCharacter(currentCharacter.name);
-            editorData.SetWorkingContextMessagesId(currentContext.id);
+            diplomataEditor = (Diplomata)AssetHandler.Read("Diplomata.asset", "Diplomata/");
+            diplomataEditor.SetWorkingCharacter(currentCharacter.name);
+            diplomataEditor.SetWorkingContextMessagesId(currentContext.id);
             Init(State.Messages);
         }
 
         public static void Reset(string characterName) {
             if (character != null) {
                 if (character.name == characterName) {
-                    editorData.SetWorkingCharacter(string.Empty);
+                    diplomataEditor.SetWorkingCharacter(string.Empty);
                     character = null;
                     Init(State.Close);
                 }
@@ -119,11 +105,11 @@ namespace DiplomataEditor {
 
             switch (state) {
                 case State.None:
-                    if (editorData.workingCharacter != string.Empty) {
-                        character = Character.Find(editorData.workingCharacter);
+                    if (diplomataEditor.workingCharacter != string.Empty) {
+                        character = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
 
-                        if (editorData.workingContextMessagesId > -1) {
-                            context = Context.Find(character, editorData.workingContextMessagesId);
+                        if (diplomataEditor.workingContextMessagesId > -1) {
+                            context = Context.Find(character, diplomataEditor.workingContextMessagesId);
                             MessagesEditor.Draw();
                         }
 
@@ -143,27 +129,23 @@ namespace DiplomataEditor {
             }
 
             EditorGUILayout.EndScrollView();
-        }
-
-        public void OnInspectorUpdate() {
             AutoSave();
-            Repaint();
         }
 
         private void AutoSave() {
 
-            if (timer == 120 && character != null) {
-                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
-                timer = 0;
+            if (iteractions == 100 && character != null) {
+                diplomataEditor.Save(character);
+                iteractions = 0;
             }
 
-            timer++;
+            iteractions++;
 
         }
 
         public void OnDisable() {
             if (character != null) {
-                JSONHandler.Update(character, character.name, "Diplomata/Characters/");
+                diplomataEditor.Save(character);
             }
         }
     }
