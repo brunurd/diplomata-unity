@@ -6,14 +6,16 @@ namespace DiplomataLib {
     [System.Serializable]
     public class Character {
         public string name;
-        public DictLang[] description;
         public bool startOnPlay;
+        public DictLang[] description;
         public DictAttr[] attributes;
-        public byte influence = 50;
         public Context[] contexts;
 
         [System.NonSerialized]
         public bool onScene;
+
+        [System.NonSerialized]
+        public byte influence = 50;
 
         public Character() { }
 
@@ -70,8 +72,7 @@ namespace DiplomataLib {
                     return character;
                 }
             }
-
-            Debug.LogError(name + " not found, this character doesn't exist or you made a typo. returned null.");
+            
             return null;
         }
 

@@ -1,16 +1,12 @@
 ﻿namespace DiplomataLib {
-
+    
     [System.Serializable]
     public class Effect {
-
-        public string displayName = "None";
+        
         public Type type;
-        public DictLang[] endContextName = new DictLang[0];
-        public DictLang[] nextMessage = new DictLang[0];
-        public int nextMessageId = -1;
-        public int nextMessageColumnId = -1;
-        public int endContextId = -1;
-
+        public EndOfContext endOfContext;
+        public GoTo goTo;
+        
         [System.NonSerialized]
         public Events custom = new Events();
 
@@ -20,18 +16,58 @@
             GoTo
         }
 
+        [System.Serializable]
+        public struct GoTo {
+            public int columnId;
+            public int messageId;
+
+            public GoTo(int columnId, int messageId) {
+                this.columnId = columnId;
+                this.messageId = messageId;
+            }
+
+            public void Set(int columnId, int messageId) {
+                this.columnId = columnId;
+                this.messageId = messageId;
+            }
+
+            public Message GetMessage(Context context) {
+                return Message.Find(Column.Find(context, columnId).messages, messageId);
+            }
+        }
+
+        [System.Serializable]
+        public struct EndOfContext {
+            public string characterName;
+            public int contextId;
+
+            public EndOfContext(string characterName, int contextId) {
+                this.characterName = characterName;
+                this.contextId = contextId;
+            }
+
+            public void Set(string characterName, int contextId) {
+                this.characterName = characterName;
+                this.contextId = contextId;
+            }
+
+            public Context GetContext(System.Collections.Generic.List<Character> characters) {
+                return Context.Find(Character.Find(characters, characterName), contextId);
+            }
+        }
+
         public Effect() { }
         
-        public void DisplayNone() {
-            displayName = "None";
+        public string DisplayNone() {
+            return "None";
         }
 
-        public void DisplayEndOfContext() {
-            displayName = "End of the context\n<i>" + endContextName[0].value + "</i>";
+        public string DisplayEndOfContext(string contextName) {
+            return "End of the context\n<i>" + contextName + "</i>";
         }
 
-        public void DisplayGoTo() {
-            displayName = "Go to <i>" + nextMessage[0].value +"</i>";
+        public string DisplayGoTo(string messageTitle) {
+            return "Go to <i>"  + messageTitle + "</i>";
         }
     }
 

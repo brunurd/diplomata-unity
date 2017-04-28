@@ -1,22 +1,19 @@
 ﻿namespace DiplomataLib {
-
+    
     [System.Serializable]
     public class Condition {
-
-        public string displayName = "None";
+        
         public Type type;
-        public DictLang[] afterOfMessageName = new DictLang[0];
-        public int afterOfMessageId = -1;
-        public int afterOfMessageColumnId = -1;
         public int comparedInfluence;
         public string characterInfluencedName;
+        public AfterOf afterOf;
 
         [System.NonSerialized]
         public Events custom = new Events();
 
         [System.NonSerialized]
         public bool proceed = true;
-
+        
         public enum Type {
             None,
             AfterOf,
@@ -25,27 +22,46 @@
             InfluenceLessThan
         }
 
+        [System.Serializable]
+        public struct AfterOf {
+            public int columnId;
+            public int messageId;
+
+            public AfterOf(int columnId, int messageId) {
+                this.columnId = columnId;
+                this.messageId = messageId;
+            }
+
+            public void Set(int columnId, int messageId) {
+                this.columnId = columnId;
+                this.messageId = messageId;
+            }
+
+            public Message GetMessage(Context context) {
+                return Message.Find(Column.Find(context, columnId).messages, messageId);
+            }
+        }
+
         public Condition() { }
 
-        public void DisplayNone() {
-            displayName = "None";
+        public string DisplayNone() {
+            return "None";
         }
 
-        public void DisplayAfterOf() {
-            displayName = "After of <i>" + afterOfMessageName[0].value + "</i>";
+        public string DisplayAfterOf(string messageTitle) {
+            return "After of <i>" + messageTitle + "</i>";
         }
         
-        public void DisplayCompareInfluence() {
+        public string DisplayCompareInfluence() {
             switch (type) {
                 case Type.InfluenceEqualTo:
-                    displayName = "Influence <i>equal</i> to \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
-                    break;
+                    return "Influence <i>equal</i> to \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
                 case Type.InfluenceGreaterThan:
-                    displayName = "Influence <i>greater</i> then \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
-                    break;
+                    return "Influence <i>greater</i> then \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
                 case Type.InfluenceLessThan:
-                    displayName = "Influence <i>less</i> then \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
-                    break;
+                    return "Influence <i>less</i> then \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
+                default:
+                    return string.Empty;
             }
         }
 

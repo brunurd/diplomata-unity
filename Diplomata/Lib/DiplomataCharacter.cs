@@ -7,18 +7,18 @@ namespace DiplomataLib {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
     public class DiplomataCharacter : MonoBehaviour {
-        
+
         public Character character;
-        public List<Message> choices = new List<Message>();
         public Message currentMessage;
+        public List<Message> choices = new List<Message>();
         public bool talking;
         public bool choiceMenu;
 
-        private int lastMessageId;
-        private int lastColumnId;
+        private Dictionary<string, int> controlIndexes = new Dictionary<string, int>();
         private Context currentContext;
         private Column currentColumn;
-        private Dictionary<string, int> controlIndexes = new Dictionary<string, int>();
+        private int lastMessageId;
+        private int lastColumnId;
         
         public void Start() {
             if (Application.isPlaying) {
@@ -82,132 +82,151 @@ namespace DiplomataLib {
                 talking = false;
             }
         }
-
         
-
         private void Next(bool hasFate) {
+
             if (character != null && currentContext != null) {
 
-                currentColumn = Column.Find(currentContext, controlIndexes["column"]);
+                if (!currentContext.happened) {
 
-                if (currentColumn == null) {
-                    for (controlIndexes["column"] = controlIndexes["column"]; controlIndexes["column"] < character.contexts.Length; controlIndexes["column"]++) {
-                        currentColumn = Column.Find(currentContext, controlIndexes["column"]);
+                    currentColumn = Column.Find(currentContext, controlIndexes["column"]);
 
-                        if (currentColumn != null) {
-                            break;
+                    if (currentColumn == null) {
+                        for (controlIndexes["column"] = controlIndexes["column"]; controlIndexes["column"] < character.contexts.Length; controlIndexes["column"]++) {
+                            currentColumn = Column.Find(currentContext, controlIndexes["column"]);
+
+                            if (currentColumn != null) {
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (currentColumn != null) {
+                    if (currentColumn != null) {
 
-                    if (hasFate) {
-                        currentMessage = currentColumn.messages[controlIndexes["message"]];
-                    }
+                        if (hasFate) {
+                            currentMessage = currentColumn.messages[controlIndexes["message"]];
+                        }
 
-                    else {
-                        var msg = Message.Find(currentColumn.messages, controlIndexes["message"]);
-                        var proceed = true;
+                        else {
+                            var msg = Message.Find(currentColumn.messages, controlIndexes["message"]);
+                            var proceed = true;
 
-                        if (msg != null) {
-                            if (msg.conditions.Length > 0) {
+                            if (msg != null) {
 
-                                foreach (Condition condition in msg.conditions) {
-
-                                    switch (condition.type) {
-                                        case Condition.Type.AfterOf:
-                                            if (condition.afterOfMessageId != lastMessageId && condition.afterOfMessageColumnId != lastColumnId) {
-                                                condition.proceed = false;
-                                            }
-
-                                            break;
-
-                                        case Condition.Type.InfluenceEqualTo:
-                                            if (character.influence != condition.comparedInfluence) {
-                                                condition.proceed = false;
-                                            }
-                                            break;
-
-                                        case Condition.Type.InfluenceGreaterThan:
-                                            if (character.influence <= condition.comparedInfluence) {
-                                                condition.proceed = false;
-                                            }
-                                            break;
-
-                                        case Condition.Type.InfluenceLessThan:
-                                            if (character.influence >= condition.comparedInfluence) {
-                                                condition.proceed = false;
-                                            }
-                                            break;
-                                    }
-
-                                    if (!condition.custom.CheckAll()) {
-                                        condition.proceed = false;
-                                    }
-                                }
-
-                                proceed = Condition.CanProceed(msg.conditions);
-                            }
-
-                            var lastMsg = currentColumn.messages.Length - 1;
-
-                            if (proceed) {
-                                if (msg.isAChoice) {
-                                    choices.Add(msg);
-
-                                    if (controlIndexes["message"] < lastMsg) {
-                                        controlIndexes["message"] += 1;
-                                        Next(false);
-                                    }
-                                }
-
-                                else if (choices.Count == 0) {
-                                    currentMessage = msg;
-                                }
-
-                                else if (controlIndexes["message"] < lastMsg) {
+                                if (msg.alreadySpoked && msg.disposable) {
                                     controlIndexes["message"] += 1;
                                     Next(false);
                                 }
 
                                 else {
-                                    choiceMenu = true;
+                                    if (msg.conditions.Length > 0) {
+
+                                        foreach (Condition condition in msg.conditions) {
+
+                                            switch (condition.type) {
+                                                case Condition.Type.AfterOf:
+                                                    if (condition.afterOf.messageId == lastMessageId && condition.afterOf.columnId == lastColumnId) {
+                                                        condition.proceed = true;
+                                                    }
+
+                                                    else {
+                                                        condition.proceed = false;
+                                                    }
+
+                                                    break;
+
+                                                case Condition.Type.InfluenceEqualTo:
+                                                    if (character.influence != condition.comparedInfluence) {
+                                                        condition.proceed = false;
+                                                    }
+                                                    break;
+
+                                                case Condition.Type.InfluenceGreaterThan:
+                                                    if (character.influence <= condition.comparedInfluence) {
+                                                        condition.proceed = false;
+                                                    }
+                                                    break;
+
+                                                case Condition.Type.InfluenceLessThan:
+                                                    if (character.influence >= condition.comparedInfluence) {
+                                                        condition.proceed = false;
+                                                    }
+                                                    break;
+                                            }
+
+                                            if (!condition.custom.CheckAll()) {
+                                                condition.proceed = false;
+                                            }
+                                        }
+
+                                        proceed = Condition.CanProceed(msg.conditions);
+                                    }
+
+                                    var lastMsg = currentColumn.messages.Length - 1;
+
+                                    if (proceed) {
+                                        if (msg.isAChoice) {
+                                            choiceMenu = true;
+                                            choices.Add(msg);
+
+                                            if (controlIndexes["message"] < lastMsg) {
+                                                controlIndexes["message"] += 1;
+                                                Next(false);
+                                            }
+                                        }
+
+                                        else if (choices.Count == 0) {
+                                            currentMessage = msg;
+                                        }
+
+                                        else if (controlIndexes["message"] < lastMsg) {
+                                            controlIndexes["message"] += 1;
+                                            Next(false);
+                                        }
+
+                                        else {
+                                            choiceMenu = true;
+                                        }
+                                    }
+
+                                    else if (controlIndexes["message"] == lastMsg) {
+
+                                        if (IsLastMessage()) {
+                                            EndTalk();
+                                        }
+
+                                        else {
+                                            controlIndexes["column"] += 1;
+                                            controlIndexes["message"] = 0;
+                                            Next(false);
+                                        }
+
+                                    }
+
+                                    else {
+                                        controlIndexes["message"] += 1;
+                                        Next(false);
+                                    }
                                 }
-                            }
-
-                            else if (controlIndexes["message"] == lastMsg) {
-
-                                if (IsLastMessage()) {
-                                    EndTalk();
-                                }
-
-                                else {
-                                    controlIndexes["column"] += 1;
-                                    controlIndexes["message"] = 0;
-                                    Next(false);
-                                }
-
                             }
 
                             else {
-                                controlIndexes["message"] += 1;
-                                Next(false);
+                                Debug.LogWarning("The column with id " + currentColumn.id + " of context " + currentContext.id + " of " + character.name + " is empty.");
+                                talking = false;
                             }
                         }
-
-                        else {
-                            Debug.LogWarning("The column with id " + currentColumn.id + " of context " + currentContext.id + " of " + character.name + " is empty.");
-                            talking = false;
-                        }
                     }
+
+                    else {
+                        Debug.LogWarning("The current context don't have any column left.");
+                        talking = false;
+                    }
+
                 }
 
                 else {
-                    Debug.LogWarning("The current context don't have any column left.");
-                    talking = false;
+                    EndTalk();
                 }
-
             }
 
             else {
@@ -227,7 +246,7 @@ namespace DiplomataLib {
                 }
 
                 else {
-                    var errorText = "There's no message to show.";
+                    var errorText = "Current message to show is not setted.";
                     Debug.LogError(errorText);
                     talking = false;
                     return errorText;
@@ -255,8 +274,12 @@ namespace DiplomataLib {
 
         public void NextMessage() {
             var hasFate = false;
-
+            
             if (currentMessage != null) {
+
+                controlIndexes["column"] = currentMessage.columnId;
+                controlIndexes["message"] = currentMessage.id;
+
                 lastColumnId = controlIndexes["column"];
                 lastMessageId = controlIndexes["message"];
 
@@ -264,27 +287,26 @@ namespace DiplomataLib {
 
                     switch (effect.type) {
                         case Effect.Type.EndOfContext:
-                            if (effect.endContextId > -1) {
-                                foreach (Character characterTemp in Diplomata.characters) {
-                                    var ctx = Context.Find(characterTemp, effect.endContextId);
+                            effect.endOfContext.GetContext(Diplomata.characters).happened = true;
 
-                                    if (ctx != null) {
-                                        ctx.happened = true;
-                                    }
-                                }
+                            if (currentContext.characterName == effect.endOfContext.characterName && currentContext.id == effect.endOfContext.contextId) {
+                                currentContext.happened = true;
                             }
 
                             break;
 
                         case Effect.Type.GoTo:
-                            if (effect.nextMessageColumnId > -1 && effect.nextMessageId > -1) {
-                                controlIndexes["column"] = effect.nextMessageColumnId;
-                                controlIndexes["message"] = effect.nextMessageId;
-                            }
+                            controlIndexes["column"] = effect.goTo.columnId;
+                            controlIndexes["message"] = effect.goTo.messageId;
+                            hasFate = true;
                             break;
                     }
 
                     effect.custom.Invoke();
+                }
+
+                if (currentMessage.disposable) {
+                    currentMessage.alreadySpoked = true;
                 }
             }
 
@@ -331,31 +353,19 @@ namespace DiplomataLib {
 
         public void ChooseMessage(string title) {
             if (currentColumn != null) {
-                foreach (Message msg in currentColumn.messages) {
-                    foreach (DictLang localTitle in msg.title) {
-                        if (title == localTitle.value) {
-                            currentMessage = msg;
-                        }
+                foreach (Message msg in choices) {
+                    var localTitle = DictHandler.ContainsKey(msg.title, Diplomata.gameProgress.currentSubtitledLanguage).value;
+                    
+                    if (localTitle == title) {
+                        currentMessage = msg;
+                        break;
                     }
                 }
 
                 if (currentMessage != null) {
-                    lastColumnId = controlIndexes["column"];
-                    lastMessageId = controlIndexes["message"];
-
                     choiceMenu = false;
                     choices = new List<Message>();
                     SetInfluence();
-
-                    if (IsLastMessage()) {
-                        EndTalk();
-                    }
-
-                    else {
-                        controlIndexes["column"] += 1;
-                        controlIndexes["message"] = 0;
-                        Next(false);
-                    }
                 }
 
                 else {

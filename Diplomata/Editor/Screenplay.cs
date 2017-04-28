@@ -31,8 +31,7 @@ namespace DiplomataEditor {
         }
 
         private static RTFDocument CreateDocument() {
-            RTFDocument document = new RTFDocument();
-            document.Init(21, 29.7f, Orientation.Portrait, Units.Centimeters);
+            RTFDocument document = new RTFDocument(21, 29.7f, Orientation.Portrait, Units.Centimeters);
             document.margin = new Margin(2.54f, 2.54f, 2.54f, 2.54f);
 
             if (Environment.UserName != null) {

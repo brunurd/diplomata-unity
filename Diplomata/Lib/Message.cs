@@ -6,20 +6,22 @@ namespace DiplomataLib {
     public class Message {
         
         public int id;
-        public Condition[] conditions;
-        public DictLang[] title;
-        public DictLang[] content;
-        public DictLang[] screenplayNotes;
-        public DictAttr[] attributes;
-        public Effect[] effects;
-        public string[] audioClipNames;
         public bool isAChoice;
         public bool disposable;
-        public bool alreadySpoked;
         public string emitter;
         public int columnId;
         public Color color;
-        
+        public Condition[] conditions;
+        public DictLang[] title;
+        public DictLang[] content;
+        public string[] audioClipNames;
+        public DictLang[] screenplayNotes;
+        public DictAttr[] attributes;
+        public Effect[] effects;
+
+        [System.NonSerialized]
+        public bool alreadySpoked;
+
         [System.NonSerialized]
         public AudioClip[] audioClip;
         
@@ -72,8 +74,7 @@ namespace DiplomataLib {
                     return message;
                 }
             }
-
-            Debug.LogError("The message with the id " + rowId + " not found, this message doesn't exist or you mistake the id. returned null.");
+            
             return null;
         }
 

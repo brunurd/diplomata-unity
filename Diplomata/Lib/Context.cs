@@ -12,11 +12,7 @@ namespace DiplomataLib {
     [System.Serializable]
     public class Context {
         public int id;
-        public DictLang[] name;
-        public DictLang[] description;
         public string characterName;
-        public bool happened;
-        public Column[] columns;
         public bool idFilter = false;
         public bool conditionsFilter = true;
         public bool titleFilter = true;
@@ -25,6 +21,12 @@ namespace DiplomataLib {
         public CurrentMessage currentMessage = new CurrentMessage(-1, -1);
         public MessageEditorState messageEditorState = MessageEditorState.None;
         public ushort columnWidth = 200;
+        public DictLang[] name;
+        public DictLang[] description;
+        public Column[] columns;
+
+        [System.NonSerialized]
+        public bool happened;
 
         public struct CurrentMessage {
             public int columnId;
@@ -63,16 +65,9 @@ namespace DiplomataLib {
                         return context;
                     }
                 }
-                
-                Debug.LogError("The context with the id " + id + " not found in " + character.name +
-                    ", this context doesn't exist or you mistake the id. returned null.");
-                return null;
             }
 
-            else {
-                Debug.LogError("This character doesn't exist. returned null.");
-                return null;
-            }
+            return null;
         }
 
         public static Context Find(Character character, string name, string language) {
@@ -85,16 +80,9 @@ namespace DiplomataLib {
                         return context;
                     }
                 }
-
-                Debug.LogError("The context with the name " + name + " not found in " + character.name + 
-                    ", this context doesn't exist or you mistake the name in " + language + ". returned null.");
-                return null;
             }
 
-            else {
-                Debug.LogError("This character doesn't exist. returned null.");
-                return null;
-            }
+            return null;
         }
 
         public static Context[] ResetIDs(Context[] array) {
