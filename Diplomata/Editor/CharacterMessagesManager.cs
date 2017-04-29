@@ -31,7 +31,7 @@ namespace DiplomataEditor {
             window.minSize = new Vector2(960, 300);
             
             CharacterMessagesManager.state = state;
-            
+
             if (state == State.Close) {
                 window.Close();
             }
@@ -102,7 +102,7 @@ namespace DiplomataEditor {
             DGUI.Init();
             SetTextures();
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
-
+            
             switch (state) {
                 case State.None:
                     if (diplomataEditor.workingCharacter != string.Empty) {

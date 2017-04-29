@@ -8,9 +8,9 @@ namespace DiplomataLib {
     [DisallowMultipleComponent]
     public class DiplomataCharacter : MonoBehaviour {
 
-        public Character character;
-        public Message currentMessage;
         public List<Message> choices = new List<Message>();
+        public Message currentMessage;
+        public Character character;
         public bool talking;
         public bool choiceMenu;
 
@@ -19,20 +19,6 @@ namespace DiplomataLib {
         private Column currentColumn;
         private int lastMessageId;
         private int lastColumnId;
-        
-        public void Start() {
-            if (Application.isPlaying) {
-                if (character != null) {
-                    if (character.startOnPlay) {
-                        StartTalk();
-                    }
-                }
-
-                else {
-                    Debug.LogWarning("You don't attached a character in the Game Object!");
-                }
-            }
-        }
         
         public void StartTalk() {
             if (character != null) {
@@ -136,7 +122,11 @@ namespace DiplomataLib {
                                                     break;
 
                                                 case Condition.Type.InfluenceEqualTo:
-                                                    if (character.influence != condition.comparedInfluence) {
+                                                    if (character.influence == condition.comparedInfluence) {
+                                                        condition.proceed = true;
+                                                    }
+
+                                                    else {
                                                         condition.proceed = false;
                                                     }
                                                     break;
@@ -268,7 +258,6 @@ namespace DiplomataLib {
         }
 
         public void EndTalk() {
-            Debug.Log("Dialogue with " + character.name + " ended.");
             talking = false;
         }
 
@@ -365,7 +354,7 @@ namespace DiplomataLib {
                 if (currentMessage != null) {
                     choiceMenu = false;
                     choices = new List<Message>();
-                    SetInfluence();
+                    character.influence = SetInfluence();
                 }
 
                 else {
@@ -380,8 +369,8 @@ namespace DiplomataLib {
             }
         }
 
-        public void SetInfluence() {
-            if (character != null && currentMessage != null) {
+        public byte SetInfluence() {
+            if (currentMessage != null) {
                 byte max = 0;
                 List<byte> min = new List<byte>();
 
@@ -392,7 +381,7 @@ namespace DiplomataLib {
                                 min.Add(attrMsg.value);
                                 break;
                             }
-                            if (attrMsg.value >= attrChar.value) {
+                            else if (attrMsg.value >= attrChar.value) {
                                 min.Add(attrChar.value);
                                 break;
                             }
@@ -407,11 +396,12 @@ namespace DiplomataLib {
                 }
 
                 int tempInfluence = (max + character.influence) / 2;
-                character.influence = (byte)tempInfluence;
+                return (byte)tempInfluence;
             }
 
             else {
                 Debug.Log("Cannot set influence, no character attached or message selected.");
+                return 50;
             }
         }
 
@@ -464,6 +454,8 @@ namespace DiplomataLib {
             if (character != null) {
                 character.onScene = true;
             }
+
+            Character.OnSceneEnter();
         }
 
         private void OnDisable() {

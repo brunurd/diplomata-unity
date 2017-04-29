@@ -171,7 +171,10 @@ namespace DiplomataEditor {
                                         text += condition.DisplayNone();
                                         break;
                                     case Condition.Type.AfterOf:
-                                        text += condition.DisplayAfterOf(DictHandler.ContainsKey(condition.afterOf.GetMessage(context).title, diplomataEditor.preferences.currentLanguage).value);
+                                        if (condition.afterOf.GetMessage(context) != null) {
+                                            text += condition.DisplayAfterOf(DictHandler.ContainsKey(condition.afterOf.GetMessage(context).title,
+                                                diplomataEditor.preferences.currentLanguage).value);
+                                        }
                                         break;
 
                                     case Condition.Type.InfluenceEqualTo:
@@ -381,7 +384,7 @@ namespace DiplomataEditor {
                         GUILayout.Label("Message Color:");
                         message.color = EditorGUILayout.ColorField(message.color);
 
-                        EditorGUILayout.Separator();
+                        EditorGUILayout.Separator(); // <- Layout bug here
 
                         var disposable = message.disposable;
                         var isAChoice = message.isAChoice;

@@ -13,7 +13,6 @@
 
         public DictAttr(string key) {
             this.key = key;
-            value = 50;
         }
     }
 

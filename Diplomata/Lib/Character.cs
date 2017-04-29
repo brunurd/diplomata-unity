@@ -10,13 +10,11 @@ namespace DiplomataLib {
         public DictLang[] description;
         public DictAttr[] attributes;
         public Context[] contexts;
+        public byte influence = 50;
 
         [System.NonSerialized]
         public bool onScene;
-
-        [System.NonSerialized]
-        public byte influence = 50;
-
+        
         public Character() { }
 
         public Character(string name) {
@@ -53,13 +51,29 @@ namespace DiplomataLib {
                 Diplomata.preferences.characterList = ArrayHandler.Add(Diplomata.preferences.characterList, obj.name);
             }
 
+            OnSceneEnter();
+        }
+
+        public static void OnSceneEnter() {
             var charactersOnScene = Object.FindObjectsOfType<DiplomataCharacter>();
+            var someoneStartOnPlay = false;
 
             foreach (Character character in Diplomata.characters) {
                 foreach (DiplomataCharacter diplomataCharacter in charactersOnScene) {
                     if (diplomataCharacter.character != null) {
                         if (character.name == diplomataCharacter.character.name) {
                             character.onScene = true;
+
+                            if (character.startOnPlay) {
+                                if (someoneStartOnPlay) {
+                                    character.startOnPlay = false;
+                                }
+
+                                else {
+                                    someoneStartOnPlay = true;
+                                    diplomataCharacter.StartTalk();
+                                }
+                            }
                         }
                     }
                 }

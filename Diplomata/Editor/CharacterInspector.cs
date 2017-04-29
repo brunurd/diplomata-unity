@@ -34,26 +34,32 @@ namespace DiplomataEditor {
 
                 GUILayout.Label("Character: ");
 
-                var selected = 0;
+                if (!Application.isPlaying) {
+                    var selected = 0;
 
-                for (var i = 0; i < diplomataEditor.characters.Count; i++) {
-                    if (diplomataEditor.characters[i].name == diplomataCharacter.character.name) {
-                        selected = i;
-                        break;
+                    for (var i = 0; i < diplomataEditor.characters.Count; i++) {
+                        if (diplomataEditor.characters[i].name == diplomataCharacter.character.name) {
+                            selected = i;
+                            break;
+                        }
+                    }
+
+                    var selectedBefore = selected;
+
+                    selected = EditorGUILayout.Popup(selected, diplomataEditor.preferences.characterList);
+
+                    for (var i = 0; i < diplomataEditor.characters.Count; i++) {
+                        if (selected == i) {
+                            diplomataCharacter.character = diplomataEditor.characters[i];
+                            diplomataEditor.characters[selectedBefore].onScene = false;
+                            diplomataCharacter.character.onScene = true;
+                            break;
+                        }
                     }
                 }
 
-                var selectedBefore = selected;
-
-                selected = EditorGUILayout.Popup(selected, diplomataEditor.preferences.characterList);
-
-                for (var i = 0; i < diplomataEditor.characters.Count; i++) {
-                    if (selected == i) {
-                        diplomataCharacter.character = diplomataEditor.characters[i];
-                        diplomataEditor.characters[selectedBefore].onScene = false;
-                        diplomataCharacter.character.onScene = true;
-                        break;
-                    }
+                else {
+                    GUILayout.Label(diplomataCharacter.character.name);
                 }
 
                 GUILayout.EndHorizontal();
@@ -82,7 +88,7 @@ namespace DiplomataEditor {
                 if (showInfluence) {
                     DGUI.labelStyle.alignment = TextAnchor.UpperCenter;
                     EditorGUILayout.Separator();
-                    GUILayout.Label("Influence: <b>" + diplomataCharacter.character.influence + "</b>", DGUI.labelStyle);
+                    GUILayout.Label("Influence: <b>" + diplomataCharacter.character.influence.ToString() + "</b>", DGUI.labelStyle);
                 }
 
                 DGUI.Separator();
