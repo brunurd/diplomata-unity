@@ -5,7 +5,7 @@ using DiplomataLib;
 namespace DiplomataEditor {
     
     public class Preferences : EditorWindow {
-
+        
         public static string[] attributesTemp = new string[0];
         public static Language[] languagesTemp = new Language[0];
         public static bool jsonPrettyPrintTemp = false;
@@ -17,7 +17,7 @@ namespace DiplomataEditor {
         static public void Init() {
             Diplomata.Instantiate();
             diplomataEditor = (Diplomata)AssetHandler.Read("Diplomata.asset", "Diplomata/");
-
+            
             attributesTemp = ArrayHandler.Copy(diplomataEditor.preferences.attributes);
             languagesTemp = ArrayHandler.Copy(diplomataEditor.preferences.languages);
             jsonPrettyPrintTemp = diplomataEditor.preferences.jsonPrettyPrint;
@@ -33,7 +33,7 @@ namespace DiplomataEditor {
 
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             GUILayout.BeginVertical(DGUI.windowStyle);
-            
+
             GUILayout.BeginHorizontal();
             DrawAttributes();
             DrawLanguages();

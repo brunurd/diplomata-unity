@@ -19,7 +19,18 @@ namespace DiplomataLib {
         private Column currentColumn;
         private int lastMessageId;
         private int lastColumnId;
-        
+
+        public void Start() {
+            controlIndexes = new Dictionary<string, int>();
+            controlIndexes.Add("context", 0);
+            controlIndexes.Add("column", 0);
+            controlIndexes.Add("message", 0);
+
+            if (character != null && Application.isPlaying) {
+                character = Character.Find(Diplomata.characters, character.name);
+            }
+        }
+
         public void StartTalk() {
             if (character != null) {
 
@@ -229,10 +240,7 @@ namespace DiplomataLib {
 
             if (talking) {
                 if (currentMessage != null) {
-                    string newContent = currentMessage.emitter + ":\n";
-                    newContent += DictHandler.ContainsKey(currentMessage.content, Diplomata.gameProgress.currentSubtitledLanguage).value;
-
-                    return newContent;
+                    return DictHandler.ContainsKey(currentMessage.content, Diplomata.gameProgress.currentSubtitledLanguage).value;
                 }
 
                 else {
@@ -405,6 +413,29 @@ namespace DiplomataLib {
             }
         }
 
+        public bool EmitterIsPlayer() {
+            if (currentMessage != null) {
+                if (currentMessage.emitter == Diplomata.preferences.playerCharacterName) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public string PlayerName() {
+            return Diplomata.preferences.playerCharacterName;
+        }
+
+        public string Emitter() {
+            if (currentMessage != null) {
+                return currentColumn.emitter;
+                //return currentMessage.emitter;
+            }
+
+            return null;
+        }
+
         public Message FindMessage(string messageTitle, string language = "English") {
             if (character != null) {
                 foreach (Context context in character.contexts) {
@@ -454,8 +485,6 @@ namespace DiplomataLib {
             if (character != null) {
                 character.onScene = true;
             }
-
-            Character.OnSceneEnter();
         }
 
         private void OnDisable() {

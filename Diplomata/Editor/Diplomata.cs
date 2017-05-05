@@ -5,9 +5,7 @@ using DiplomataLib;
 namespace DiplomataEditor {
 
     public class Diplomata : ScriptableObject {
-
         public static string resourcesFolder = "Assets/Resources/";
-        public static string editorDefaultResourcesFolder = "Assets/Editor Default Resources/";
         public int workingContextMessagesId;
         public int workingContextEditId;
         public string workingCharacter;

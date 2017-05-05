@@ -108,7 +108,15 @@ namespace DiplomataEditor {
                 GUILayout.BeginVertical(GUILayout.Width(context.columnWidth));
 
                 GUILayout.Space(4);
+
+                EditorGUI.BeginChangeCheck();
                 column.emitter = DGUI.Popup("Emitter: ", column.emitter, diplomataEditor.preferences.characterList);
+                if (EditorGUI.EndChangeCheck()) {
+                    foreach (Message msg in column.messages) {
+                        msg.emitter = column.emitter;
+                    }
+                }
+
                 EditorGUILayout.Separator();
                 
                 for (int j = 0; j < column.messages.Length; j++) {

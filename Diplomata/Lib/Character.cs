@@ -51,29 +51,17 @@ namespace DiplomataLib {
                 Diplomata.preferences.characterList = ArrayHandler.Add(Diplomata.preferences.characterList, obj.name);
             }
 
-            OnSceneEnter();
+            SetOnScene();
         }
 
-        public static void OnSceneEnter() {
+        public static void SetOnScene() {
             var charactersOnScene = Object.FindObjectsOfType<DiplomataCharacter>();
-            var someoneStartOnPlay = false;
 
             foreach (Character character in Diplomata.characters) {
                 foreach (DiplomataCharacter diplomataCharacter in charactersOnScene) {
                     if (diplomataCharacter.character != null) {
                         if (character.name == diplomataCharacter.character.name) {
                             character.onScene = true;
-
-                            if (character.startOnPlay) {
-                                if (someoneStartOnPlay) {
-                                    character.startOnPlay = false;
-                                }
-
-                                else {
-                                    someoneStartOnPlay = true;
-                                    diplomataCharacter.StartTalk();
-                                }
-                            }
                         }
                     }
                 }

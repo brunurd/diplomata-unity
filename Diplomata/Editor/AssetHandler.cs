@@ -7,7 +7,7 @@ namespace DiplomataEditor {
     public class AssetHandler {
         
         public static void Create(Object obj, string name, string folder = "") {
-            string path = Diplomata.editorDefaultResourcesFolder + folder + name;
+            string path = Diplomata.resourcesFolder + folder + name;
 
             try {
                 CreateFolder(folder);
@@ -21,7 +21,7 @@ namespace DiplomataEditor {
         }
 
         public static Object Read(string name, string folder = "") {
-            string path = Diplomata.editorDefaultResourcesFolder + folder + name;
+            string path = Diplomata.resourcesFolder + folder + name;
 
             try {
                 return AssetDatabase.LoadAssetAtPath(path, typeof(Object));
@@ -34,7 +34,7 @@ namespace DiplomataEditor {
         }
 
         public static void Delete(string name, string folder = "") {
-            string path = Diplomata.editorDefaultResourcesFolder + folder + name;
+            string path = Diplomata.resourcesFolder + folder + name;
 
             try {
                 AssetDatabase.DeleteAsset(path);
@@ -47,8 +47,8 @@ namespace DiplomataEditor {
         }
 
         public static bool Exists(string filename, string folder = "") {
-            if (!File.Exists(Diplomata.editorDefaultResourcesFolder + filename) &&
-                !File.Exists(Diplomata.editorDefaultResourcesFolder + folder + filename)) {
+            if (!File.Exists(Diplomata.resourcesFolder + filename) &&
+                !File.Exists(Diplomata.resourcesFolder + folder + filename)) {
                 return false;
             }
 
@@ -58,7 +58,7 @@ namespace DiplomataEditor {
         }
 
         public static void CreateFolder(string folderName) {
-            var path = Diplomata.editorDefaultResourcesFolder + folderName;
+            var path = Diplomata.resourcesFolder + folderName;
 
             if (!Directory.Exists(path) && folderName != "") {
                 Directory.CreateDirectory(path);
