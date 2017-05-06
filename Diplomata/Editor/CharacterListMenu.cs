@@ -37,7 +37,6 @@ namespace DiplomataEditor {
                 var name = diplomataEditor.preferences.characterList[i];
                 
                 GUILayout.BeginHorizontal();
-
                 GUILayout.BeginHorizontal();
 
                 DGUI.labelStyle.alignment = TextAnchor.MiddleLeft;
@@ -87,7 +86,6 @@ namespace DiplomataEditor {
                 }
 
                 GUILayout.EndHorizontal();
-
                 GUILayout.EndHorizontal();
 
                 if (i < diplomataEditor.preferences.characterList.Length - 1) {

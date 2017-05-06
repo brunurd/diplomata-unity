@@ -10,6 +10,7 @@ namespace DiplomataLib {
         public static Preferences preferences = new Preferences();
         public static GameProgress gameProgress = new GameProgress();
         public static List<Character> characters = new List<Character>();
+        public static Inventory inventory = new Inventory();
 
         public void Awake() {
             if (instance == null) {
@@ -38,7 +39,10 @@ namespace DiplomataLib {
 
             characters = new List<Character>();
             Character.UpdateList();
-            
+
+            inventory = new Inventory();
+            Inventory.Update();
+
             gameProgress = new GameProgress();
             gameProgress.Start();
         }

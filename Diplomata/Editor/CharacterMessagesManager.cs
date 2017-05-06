@@ -9,7 +9,6 @@ namespace DiplomataEditor {
         private ushort iteractions = 0;
         public static Character character;
         public static Context context;
-        private Vector2 scrollPos = new Vector2(0, 0);
         public static Texture2D headerBG;
         public static Texture2D mainBG;
         public static Texture2D sidebarBG;
@@ -28,7 +27,7 @@ namespace DiplomataEditor {
         
         public static void Init(State state = State.None) {
             CharacterMessagesManager window = (CharacterMessagesManager)GetWindow(typeof(CharacterMessagesManager), false, "Messages", true);
-            window.minSize = new Vector2(960, 300);
+            window.minSize = new Vector2(1100, 300);
             
             CharacterMessagesManager.state = state;
 
@@ -101,7 +100,6 @@ namespace DiplomataEditor {
         public void OnGUI() {
             DGUI.Init();
             SetTextures();
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             
             switch (state) {
                 case State.None:
@@ -127,8 +125,7 @@ namespace DiplomataEditor {
                     MessagesEditor.Draw();
                     break;
             }
-
-            EditorGUILayout.EndScrollView();
+            
             AutoSave();
         }
 

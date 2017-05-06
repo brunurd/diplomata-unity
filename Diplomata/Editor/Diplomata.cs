@@ -9,9 +9,11 @@ namespace DiplomataEditor {
         public int workingContextMessagesId;
         public int workingContextEditId;
         public string workingCharacter;
+        public int workingItemId;
         public List<Character> characters = new List<Character>();
         public DiplomataLib.Preferences preferences = new DiplomataLib.Preferences();
-        
+        public Inventory inventory = new Inventory();
+
         public static void Instantiate() {
             if (DiplomataLib.Diplomata.instance == null && FindObjectsOfType<DiplomataLib.Diplomata>().Length < 1) {
                 GameObject obj = new GameObject("[ Diplomata ]");
@@ -24,11 +26,16 @@ namespace DiplomataEditor {
                 JSONHandler.Create(new DiplomataLib.Preferences(), "preferences", false, "Diplomata/");
             }
 
+            if (!JSONHandler.Exists("inventory", "Diplomata/")) {
+                JSONHandler.Create(new Inventory(), "inventory", false, "Diplomata/");
+            }
+
             DiplomataLib.Diplomata.Restart();
             var diplomataEditor = CreateInstance<Diplomata>();
 
             if (!AssetHandler.Exists("Diplomata.asset", "Diplomata/")) {
                 diplomataEditor.preferences = DiplomataLib.Diplomata.preferences;
+                diplomataEditor.inventory = DiplomataLib.Diplomata.inventory;
                 diplomataEditor.characters = DiplomataLib.Diplomata.characters;
 
                 AssetHandler.Create(diplomataEditor, "Diplomata.asset", "Diplomata/");
@@ -37,6 +44,7 @@ namespace DiplomataEditor {
             else {
                 diplomataEditor = (Diplomata) AssetHandler.Read("Diplomata.asset", "Diplomata/");
                 diplomataEditor.preferences = JSONHandler.Read<DiplomataLib.Preferences>("preferences", "Diplomata/");
+                diplomataEditor.inventory = JSONHandler.Read<Inventory>("inventory", "Diplomata/");
                 diplomataEditor.UpdateList();
             }
         }
@@ -45,6 +53,7 @@ namespace DiplomataEditor {
             workingCharacter = string.Empty;
             workingContextMessagesId = -1;
             workingContextEditId = -1;
+            workingItemId = -1;
         }
 
         public void UpdateList() {
@@ -100,6 +109,10 @@ namespace DiplomataEditor {
             JSONHandler.Update(preferences, "preferences", preferences.jsonPrettyPrint, "Diplomata/");
         }
 
+        public void SaveInventory() {
+            JSONHandler.Update(inventory, "inventory", preferences.jsonPrettyPrint, "Diplomata/");
+        }
+
         public void Save(Character character) {
             JSONHandler.Update(character, character.name, preferences.jsonPrettyPrint, "Diplomata/Characters/");
         }
@@ -114,6 +127,10 @@ namespace DiplomataEditor {
 
         public void SetWorkingContextEditId(int contextId) {
             workingContextEditId = contextId;
+        }
+
+        public void SetWorkingItemId(int itemId) {
+            workingItemId = itemId;
         }
     }
 

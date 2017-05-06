@@ -19,7 +19,8 @@ namespace DiplomataEditor {
         public static GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
         public static GUIStyle fakeButtonStyle = new GUIStyle(GUI.skin.button);
 
-        private static Vector2 scrollPos = new Vector2(0, 0);
+        private static Vector2 scrollPosMain = new Vector2(0, 0);
+        private static Vector2 scrollPosSidebar = new Vector2(0, 0);
         private static Message message;
         
         public static void Draw() {
@@ -62,11 +63,17 @@ namespace DiplomataEditor {
 
             EditorGUILayout.Separator();
 
-            GUILayout.Label("Zoom: ");
+            GUILayout.Label("Column Width: ");
             context.columnWidth = (ushort) EditorGUILayout.Slider(context.columnWidth, 116, 675);
-            DGUI.boxStyle.fontSize = (context.columnWidth * 11) / 200;
-            DGUI.labelStyle.fontSize = (context.columnWidth * 11) / 200;
-            textAreaStyle.fontSize = (context.columnWidth * 11) / 200;
+
+            EditorGUILayout.Separator();
+
+            GUILayout.Label("Font Size: ");
+            context.fontSize = (ushort)EditorGUILayout.Slider(context.fontSize, 8, 36);
+
+            DGUI.boxStyle.fontSize = context.fontSize;
+            DGUI.labelStyle.fontSize = context.fontSize;
+            textAreaStyle.fontSize = context.fontSize;
             
             EditorGUILayout.Separator();
 
@@ -94,7 +101,7 @@ namespace DiplomataEditor {
             
             ResetStyle();
 
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, messagesWindowMainStyle, GUILayout.Width(width));
+            scrollPosMain = EditorGUILayout.BeginScrollView(scrollPosMain, messagesWindowMainStyle, GUILayout.Width(width));
             GUILayout.BeginHorizontal();
             
             for (int i = 0; i < context.columns.Length; i++) {
@@ -374,8 +381,8 @@ namespace DiplomataEditor {
         }
 
         public static void Sidebar() {
-            GUILayout.BeginVertical(messagesWindowSidebarStyle, GUILayout.Width(SIDEBAR_WIDTH), GUILayout.ExpandHeight(true));
-
+            scrollPosSidebar = EditorGUILayout.BeginScrollView(scrollPosSidebar, messagesWindowSidebarStyle, GUILayout.Width(SIDEBAR_WIDTH), GUILayout.ExpandHeight(true));
+            
             var diplomataEditor = CharacterMessagesManager.diplomataEditor;
             var character = CharacterMessagesManager.character;
             var context = CharacterMessagesManager.context;
@@ -508,6 +515,8 @@ namespace DiplomataEditor {
                                 message.imagePath = string.Empty;
                             }
                         }
+
+                        EditorGUILayout.Separator();
 
                         EditorGUILayout.HelpBox("\nMake sure to store this audio clip and texture in Resources folder.\n\n" +
                             "Use PlayMessageAudioContent() to play audio clip and StopMessageAudioContent() to stop.\n\n" +
@@ -973,8 +982,8 @@ namespace DiplomataEditor {
 
                 diplomataEditor.Save(character);
             }
-
-            GUILayout.EndVertical();
+            
+            EditorGUILayout.EndScrollView();
         }
 
         public static void UpdateCharacterList() {

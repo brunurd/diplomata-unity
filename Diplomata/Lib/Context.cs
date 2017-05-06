@@ -19,6 +19,7 @@
         public CurrentMessage currentMessage = new CurrentMessage(-1, -1);
         public MessageEditorState messageEditorState = MessageEditorState.None;
         public ushort columnWidth = 200;
+        public ushort fontSize = 11;
         public DictLang[] name;
         public DictLang[] description;
         public Column[] columns;
