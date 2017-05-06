@@ -10,21 +10,29 @@ namespace DiplomataLib {
         public bool disposable;
         public string emitter;
         public int columnId;
+        public string imagePath = string.Empty;
         public Color color;
         public Condition[] conditions;
         public DictLang[] title;
         public DictLang[] content;
-        public string[] audioClipNames;
         public DictLang[] screenplayNotes;
         public DictAttr[] attributes;
         public Effect[] effects;
+        public AnimatorAttributeSetter[] animatorAttributesSetters;
+        public DictLang[] audioClipPath;
 
         [System.NonSerialized]
         public bool alreadySpoked;
 
         [System.NonSerialized]
-        public AudioClip[] audioClip;
-        
+        public AudioClip audioClip;
+
+        [System.NonSerialized]
+        public Texture2D image;
+
+        [System.NonSerialized]
+        public Sprite sprite;
+
         public Message() { }
 
         public Message(int id, string emitter, int columnId) {
@@ -34,8 +42,8 @@ namespace DiplomataLib {
             attributes = new DictAttr[0];
             screenplayNotes = new DictLang[0];
             effects = new Effect[0];
-            audioClipNames = new string[0];
-            audioClip = new AudioClip[0];
+            audioClipPath = new DictLang[0];
+            animatorAttributesSetters = new AnimatorAttributeSetter[0];
 
             foreach (string str in Diplomata.preferences.attributes) {
                 attributes = ArrayHandler.Add(attributes, new DictAttr(str));
@@ -43,10 +51,9 @@ namespace DiplomataLib {
 
             foreach (Language lang in Diplomata.preferences.languages) {
                 title = ArrayHandler.Add(title, new DictLang(lang.name, "placeholder" + columnId.ToString() + id.ToString()));
-                content = ArrayHandler.Add(content, new DictLang(lang.name, ""));
-                audioClipNames = ArrayHandler.Add(audioClipNames, "");
+                content = ArrayHandler.Add(content, new DictLang(lang.name, "[ Message content here ]"));
                 screenplayNotes = ArrayHandler.Add(screenplayNotes, new DictLang(lang.name, ""));
-                audioClip = ArrayHandler.Add(audioClip, new AudioClip());
+                audioClipPath = ArrayHandler.Add(audioClipPath, new DictLang(lang.name, string.Empty));
             }
 
             #if UNITY_EDITOR
@@ -66,6 +73,15 @@ namespace DiplomataLib {
             this.id = id;
             this.emitter = emitter;
             this.columnId = columnId;
+        }
+
+        public Sprite GetSprite(Vector2 pivot) {
+            if (sprite == null) {
+                image = (Texture2D) Resources.Load(imagePath);
+                sprite = Sprite.Create(image, new Rect(0, 0, image.width, image.height), pivot);
+            }
+
+            return sprite;
         }
 
         public static Message Find(Message[] messages, int rowId) {

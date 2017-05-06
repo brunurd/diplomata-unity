@@ -28,25 +28,25 @@
         }
 
         public static Column[] RemoveEmptyColumns(Column[] columns) {
-            var array = columns;
+            var newArray = new Column[0];
             
-            for (int i = 0; i < array.Length; i++) {
-                if (array[i].messages.Length == 0) {
-                    array = ArrayHandler.Remove(array, array[i]);
+            for (int i = 0; i < columns.Length; i++) {
+                if (columns[i].messages.Length > 0) {
+                    newArray = ArrayHandler.Add(newArray, columns[i]);
                 }
             }
-            
-            for (int i = 0; i < array.Length; i++) {
-                if (array[i].id == i + 1) {
-                    array[i].id = i;
 
-                    foreach (Message msg in array[i].messages) {
+            for (int i = 0; i < newArray.Length; i++) {
+                if (newArray[i].id == i + 1) {
+                    newArray[i].id = i;
+
+                    foreach (Message msg in newArray[i].messages) {
                         msg.columnId = i;
                     }
                 }
             }
 
-            return array;
+            return newArray;
         }
     }
 

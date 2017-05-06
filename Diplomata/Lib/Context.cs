@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace DiplomataLib {
+﻿namespace DiplomataLib {
 
     public enum MessageEditorState {
         None,

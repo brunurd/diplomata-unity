@@ -28,9 +28,12 @@ namespace DiplomataEditor {
                 messagesWindowMainStyle.normal.background = CharacterMessagesManager.mainBG;
                 messagesWindowSidebarStyle.normal.background = CharacterMessagesManager.sidebarBG;
 
+                messagesWindowMainStyle.alignment = TextAnchor.UpperLeft;
+                messagesWindowSidebarStyle.alignment = TextAnchor.UpperLeft;
+
                 Header();
 
-                GUILayout.BeginHorizontal(GUILayout.Width(Screen.width));
+                GUILayout.BeginHorizontal();
                 Main();
                 Sidebar();
                 GUILayout.EndHorizontal();
@@ -213,8 +216,8 @@ namespace DiplomataEditor {
                         var title = DictHandler.ContainsKey(currentMessage.title, diplomataEditor.preferences.currentLanguage);
 
                         if (title == null) {
-                            currentMessage.title = ArrayHandler.Add(currentMessage.title, 
-                                new DictLang(diplomataEditor.preferences.currentLanguage, currentMessage.columnId + " " + currentMessage.id));
+                            currentMessage.title = ArrayHandler.Add(currentMessage.title,
+                                new DictLang(diplomataEditor.preferences.currentLanguage, "placeholder" + currentMessage.columnId.ToString() + currentMessage.id.ToString() ));
                             title = DictHandler.ContainsKey(currentMessage.title, diplomataEditor.preferences.currentLanguage);
                         }
 
@@ -234,7 +237,7 @@ namespace DiplomataEditor {
                         var content = DictHandler.ContainsKey(currentMessage.content, diplomataEditor.preferences.currentLanguage);
 
                         if (content == null) {
-                            currentMessage.content = ArrayHandler.Add(currentMessage.content, new DictLang(diplomataEditor.preferences.currentLanguage, ""));
+                            currentMessage.content = ArrayHandler.Add(currentMessage.content, new DictLang(diplomataEditor.preferences.currentLanguage, "[ Message content here ]"));
                             content = DictHandler.ContainsKey(currentMessage.content, diplomataEditor.preferences.currentLanguage);
                         }
 
@@ -269,6 +272,9 @@ namespace DiplomataEditor {
                                         if (effect.goTo.GetMessage(context) != null) {
                                             text += effect.DisplayGoTo(DictHandler.ContainsKey(effect.goTo.GetMessage(context).title, diplomataEditor.preferences.currentLanguage).value);
                                         }
+                                        break;
+                                    case Effect.Type.SetAnimatorAttribute:
+                                        text += effect.DisplaySetAnimatorAttribute();
                                         break;
                                 }
 
@@ -418,7 +424,7 @@ namespace DiplomataEditor {
 
                         }
 
-                        EditorGUILayout.Separator();
+                        DGUI.Separator();
 
                         var screenplayNotes = DictHandler.ContainsKey(message.screenplayNotes, diplomataEditor.preferences.currentLanguage);
 
@@ -431,15 +437,167 @@ namespace DiplomataEditor {
                         GUILayout.Label("Screenplay notes:\n<size=10>(Example: <i>whispering and gasping</i>)</size>", DGUI.labelStyle);
                         screenplayNotes.value = EditorGUILayout.TextField(screenplayNotes.value);
 
+                        DGUI.Separator();
+                        
                         EditorGUILayout.Separator();
 
-                        GUILayout.BeginHorizontal();
+                        var audioClipPath = DictHandler.ContainsKey(message.audioClipPath, diplomataEditor.preferences.currentLanguage);
 
-                        if (GUILayout.Button("Edit Conditions", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                        if (audioClipPath == null) {
+                            message.audioClipPath = ArrayHandler.Add(message.audioClipPath, new DictLang(diplomataEditor.preferences.currentLanguage, string.Empty));
+                            audioClipPath = DictHandler.ContainsKey(message.audioClipPath, diplomataEditor.preferences.currentLanguage);
+                        }
+
+                        message.audioClip = (AudioClip) Resources.Load(audioClipPath.value);
+                        
+                        if (message.audioClip == null && audioClipPath.value != string.Empty) {
+                            Debug.LogWarning("Cannot find the file \"" + audioClipPath.value + "\" in Resources folder.");
+                        }
+                        
+                        GUILayout.Label("Audio to play: ");
+                        EditorGUI.BeginChangeCheck();
+
+                        message.audioClip = (AudioClip) EditorGUILayout.ObjectField(message.audioClip, typeof(AudioClip), false);
+
+                        if (EditorGUI.EndChangeCheck()) {
+                            if (message.audioClip != null) {
+                                var str = AssetDatabase.GetAssetPath(message.audioClip).Replace("Resources/", "¬");
+                                var strings = str.Split('¬');
+                                str = strings[1].Replace(".mp3","");
+                                str = str.Replace(".aif", "");
+                                str = str.Replace(".aiff", "");
+                                str = str.Replace(".ogg", "");
+                                str = str.Replace(".wav", "");
+                                audioClipPath.value = str;
+                            }
+
+                            else {
+                                audioClipPath.value = string.Empty;
+                            }
+                        }
+
+                        EditorGUILayout.Separator();
+                        
+                        message.image = (Texture2D)Resources.Load(message.imagePath);
+
+                        if (message.image == null && message.imagePath != string.Empty) {
+                            Debug.LogWarning("Cannot find the file \"" + message.imagePath + "\" in Resources folder.");
+                        }
+
+                        GUILayout.Label("Static image: ");
+                        EditorGUI.BeginChangeCheck();
+
+                        message.image = (Texture2D)EditorGUILayout.ObjectField(message.image, typeof(Texture2D), false);
+
+                        if (EditorGUI.EndChangeCheck()) {
+                            if (message.image != null) {
+                                var str = AssetDatabase.GetAssetPath(message.image).Replace("Resources/", "¬");
+                                var strings = str.Split('¬');
+                                str = strings[1].Replace(".png", "");
+                                str = str.Replace(".jpg", "");
+                                str = str.Replace(".jpeg", "");
+                                str = str.Replace(".psd", "");
+                                str = str.Replace(".tga", "");
+                                str = str.Replace(".tiff", "");
+                                str = str.Replace(".gif", "");
+                                str = str.Replace(".bmp", "");
+                                message.imagePath = str;
+                            }
+
+                            else {
+                                message.imagePath = string.Empty;
+                            }
+                        }
+
+                        EditorGUILayout.HelpBox("\nMake sure to store this audio clip and texture in Resources folder.\n\n" +
+                            "Use PlayMessageAudioContent() to play audio clip and StopMessageAudioContent() to stop.\n\n" +
+                            "Use SwapStaticSprite(Vector pivot) to show static image.\n", MessageType.Info);
+
+                        DGUI.Separator();
+
+                        GUILayout.Label("Animator Attributes Setters");
+
+                        foreach (AnimatorAttributeSetter animatorAttribute in message.animatorAttributesSetters) {
+                            
+                            EditorGUILayout.Separator();
+                            
+                            GUILayout.BeginHorizontal();
+
+                            GUILayout.Label("Type: ");
+                            animatorAttribute.type = (AnimatorControllerParameterType)EditorGUILayout.EnumPopup(animatorAttribute.type);
+
+                            EditorGUI.BeginChangeCheck();
+
+                            GUILayout.Label("Name: ");
+                            animatorAttribute.name = EditorGUILayout.TextField(animatorAttribute.name);
+
+                            if (EditorGUI.EndChangeCheck()) {
+                                animatorAttribute.setTrigger = Animator.StringToHash(animatorAttribute.name);
+                            }
+
+                            GUILayout.EndHorizontal();
+
+                            GUILayout.BeginHorizontal();
+                        
+                            switch (animatorAttribute.type) {
+                                case AnimatorControllerParameterType.Bool:
+                                    string selected = animatorAttribute.setBool.ToString();
+
+                                    selected = DGUI.Popup("Set boolean to ", selected, new string[] { "True", "False" });
+
+                                    if (selected == "True") {
+                                        animatorAttribute.setBool = true;
+                                    }
+
+                                    else {
+                                        animatorAttribute.setBool = false;
+                                    }
+
+                                    break;
+
+                                case AnimatorControllerParameterType.Float:
+                                    GUILayout.Label("Set float to ");
+                                    animatorAttribute.setFloat = EditorGUILayout.FloatField(animatorAttribute.setFloat);
+                                    break;
+
+                                case AnimatorControllerParameterType.Int:
+                                    GUILayout.Label("Set integer to ");
+                                    animatorAttribute.setInt = EditorGUILayout.IntField(animatorAttribute.setInt);
+                                    break;
+
+                                case AnimatorControllerParameterType.Trigger:
+                                    GUILayout.Label("Pull the trigger of [ " + animatorAttribute.name + " ]");
+                                    break;
+                            }
+
+                            GUILayout.EndHorizontal();
+                            EditorGUILayout.Separator();
+
+                            if (GUILayout.Button("Delete Animator Attribute Setter", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+                                message.animatorAttributesSetters = ArrayHandler.Remove(message.animatorAttributesSetters, animatorAttribute);
+                                diplomataEditor.Save(character);
+                            }
+
+                            DGUI.Separator();
+                        }
+
+                        if (GUILayout.Button("Add Animator Attribute Setter", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                            message.animatorAttributesSetters = ArrayHandler.Add(message.animatorAttributesSetters, new AnimatorAttributeSetter());
+                            diplomataEditor.Save(character);
+                        }
+
+                        DGUI.Separator();
+
+                        GUILayout.Label("Edit: ");
+
+                        GUILayout.BeginHorizontal();
+                        
+                        
+                        if (GUILayout.Button("Conditions", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                             context.messageEditorState = MessageEditorState.Conditions;
                         }
 
-                        if (GUILayout.Button("Edit Effects", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                        if (GUILayout.Button("Effects", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                             context.messageEditorState = MessageEditorState.Effects;
                         }
 
@@ -537,11 +695,9 @@ namespace DiplomataEditor {
                         }
 
                         GUILayout.EndHorizontal();
-
-                        if (column.messages.Length > 1 || context.columns.Length > 1) {
-                            DGUI.Separator();
-                        }
-
+                        
+                        DGUI.Separator();
+                        
                         if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
                             if (EditorUtility.DisplayDialog("Are you sure?", "If you agree all this message data will be lost forever.", "Yes", "No")) {
 
@@ -730,6 +886,61 @@ namespace DiplomataEditor {
                                             }
                                         }
                                     }
+
+                                    break;
+
+                                case Effect.Type.SetAnimatorAttribute:
+
+                                    GUILayout.BeginHorizontal();
+
+                                    GUILayout.Label("Type: ");
+                                    effect.animatorAttributeSetter.type = (AnimatorControllerParameterType)EditorGUILayout.EnumPopup(effect.animatorAttributeSetter.type);
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    GUILayout.Label("Name: ");
+                                    effect.animatorAttributeSetter.name = EditorGUILayout.TextField(effect.animatorAttributeSetter.name);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        effect.animatorAttributeSetter.setTrigger = Animator.StringToHash(effect.animatorAttributeSetter.name);
+                                    }
+
+                                    GUILayout.EndHorizontal();
+
+                                    GUILayout.BeginHorizontal();
+
+                                    switch (effect.animatorAttributeSetter.type) {
+                                        case AnimatorControllerParameterType.Bool:
+                                            string selected = effect.animatorAttributeSetter.setBool.ToString();
+
+                                            selected = DGUI.Popup("Set boolean to ", selected, new string[] { "True", "False" });
+
+                                            if (selected == "True") {
+                                                effect.animatorAttributeSetter.setBool = true;
+                                            }
+
+                                            else {
+                                                effect.animatorAttributeSetter.setBool = false;
+                                            }
+
+                                            break;
+
+                                        case AnimatorControllerParameterType.Float:
+                                            GUILayout.Label("Set float to ");
+                                            effect.animatorAttributeSetter.setFloat = EditorGUILayout.FloatField(effect.animatorAttributeSetter.setFloat);
+                                            break;
+
+                                        case AnimatorControllerParameterType.Int:
+                                            GUILayout.Label("Set integer to ");
+                                            effect.animatorAttributeSetter.setInt = EditorGUILayout.IntField(effect.animatorAttributeSetter.setInt);
+                                            break;
+
+                                        case AnimatorControllerParameterType.Trigger:
+                                            GUILayout.Label("Pull the trigger of [ " + effect.animatorAttributeSetter.name + " ]");
+                                            break;
+                                    }
+
+                                    GUILayout.EndHorizontal();
 
                                     break;
                             }

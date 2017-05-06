@@ -7,7 +7,7 @@ namespace DiplomataLib {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
     public class DiplomataCharacter : MonoBehaviour {
-
+        
         public List<Message> choices = new List<Message>();
         public Message currentMessage;
         public Character character;
@@ -19,13 +19,13 @@ namespace DiplomataLib {
         private Column currentColumn;
         private int lastMessageId;
         private int lastColumnId;
-
+        
         public void Start() {
             controlIndexes = new Dictionary<string, int>();
             controlIndexes.Add("context", 0);
             controlIndexes.Add("column", 0);
             controlIndexes.Add("message", 0);
-
+            
             if (character != null && Application.isPlaying) {
                 character = Character.Find(Diplomata.characters, character.name);
             }
@@ -102,6 +102,7 @@ namespace DiplomataLib {
 
                         if (hasFate) {
                             currentMessage = currentColumn.messages[controlIndexes["message"]];
+                            OnStartCallbacks();
                         }
 
                         else {
@@ -178,6 +179,7 @@ namespace DiplomataLib {
 
                                         else if (choices.Count == 0) {
                                             currentMessage = msg;
+                                            OnStartCallbacks();
                                         }
 
                                         else if (controlIndexes["message"] < lastMsg) {
@@ -240,7 +242,7 @@ namespace DiplomataLib {
 
             if (talking) {
                 if (currentMessage != null) {
-                    return DictHandler.ContainsKey(currentMessage.content, Diplomata.gameProgress.currentSubtitledLanguage).value;
+                    return DictHandler.ContainsKey(currentMessage.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
                 }
 
                 else {
@@ -253,6 +255,123 @@ namespace DiplomataLib {
 
             Debug.Log("Empty string returned.");
             return string.Empty;
+        }
+
+        public void PlayMessageAudioContent() {
+            if (currentMessage != null) {
+                var audioClipPath = DictHandler.ContainsKey(currentMessage.audioClipPath, Diplomata.gameProgress.options.currentDubbedLanguage);
+
+                if (audioClipPath.value != string.Empty) {
+                    if (currentMessage.audioClip == null) {
+                        currentMessage.audioClip = (AudioClip) Resources.Load(audioClipPath.value);
+
+                        if (currentMessage.audioClip == null) {
+                            Debug.LogError("This audio clip doesn't exist or is not in the Resources folder.");
+                        }
+                    }
+
+                    if (currentMessage.audioClip != null) {
+                        var audioSource = GetComponent<AudioSource>();
+
+                        if (audioSource != null) {
+                            audioSource.PlayOneShot(currentMessage.audioClip, Diplomata.gameProgress.options.volumeScale);
+                        }
+
+                        else {
+                            Debug.LogWarning("You have a audio clip in this message, but the game object don't have a AudioSource.");
+                        }
+                    }
+                }
+            }
+        }
+
+        public void StopMessageAudioContent() {
+            if (currentMessage != null) {
+                var audioClipPath = DictHandler.ContainsKey(currentMessage.audioClipPath, Diplomata.gameProgress.options.currentDubbedLanguage);
+
+                if (audioClipPath.value != string.Empty) {
+
+                    var audioSource = GetComponent<AudioSource>();
+
+                    if (audioSource != null) {
+                        audioSource.Stop();
+                    }
+
+                    else {
+                        Debug.LogWarning("You have a audio clip in this message, but the game object don't have a AudioSource.");
+                    }
+                }
+            }
+        }
+
+        public void SetAnimatorAttributes() {
+            if (currentMessage != null) {
+                if (currentMessage.animatorAttributesSetters.Length > 0) {
+                    var animator = GetComponent<Animator>();
+
+                    if (animator != null) {
+
+                        foreach (AnimatorAttributeSetter animatorAttribute in currentMessage.animatorAttributesSetters) {
+                            switch (animatorAttribute.type) {
+
+                                case AnimatorControllerParameterType.Bool:
+                                    animator.SetBool(animatorAttribute.name, animatorAttribute.setBool);
+                                    break;
+
+                                case AnimatorControllerParameterType.Float:
+                                    animator.SetFloat(animatorAttribute.name, animatorAttribute.setFloat);
+                                    break;
+
+                                case AnimatorControllerParameterType.Int:
+                                    animator.SetInteger(animatorAttribute.name, animatorAttribute.setInt);
+                                    break;
+
+                                case AnimatorControllerParameterType.Trigger:
+                                    animator.SetTrigger(animatorAttribute.name);
+                                    break;
+
+                            }
+                        }
+
+                    }
+
+                    else {
+                        Debug.LogWarning("You have animation attributes in this message, but the game object don't have a Animator.");
+                    }
+                }
+            }
+        }
+
+        public void ResetAnimator() {
+            var animator = GetComponent<Animator>();
+
+            if (animator != null) {
+                animator.Rebind();
+            }
+                    
+            else {
+                Debug.LogWarning("This game object don't have a Animator.");
+            }
+        }
+
+        public void SwapStaticSprite(Vector2 pivot) {
+            if (currentMessage != null) {
+                if (currentMessage.imagePath != string.Empty) {
+                    var spriteRenderer = GetComponent<SpriteRenderer>();
+
+                    if (spriteRenderer != null) {
+                        spriteRenderer.sprite = currentMessage.GetSprite(pivot);
+                    }
+
+                    else {
+                        Debug.LogWarning("You have a static image in this message, but the game object don't have a Sprite Renderer.");
+                    }
+                }
+            }
+        }
+
+        public void SwapStaticSprite() {
+            SwapStaticSprite(new Vector2(0.5f, 0.5f));
         }
 
         public bool IsLastMessage() {
@@ -276,7 +395,7 @@ namespace DiplomataLib {
 
                 controlIndexes["column"] = currentMessage.columnId;
                 controlIndexes["message"] = currentMessage.id;
-
+                
                 lastColumnId = controlIndexes["column"];
                 lastMessageId = controlIndexes["message"];
 
@@ -297,9 +416,40 @@ namespace DiplomataLib {
                             controlIndexes["message"] = effect.goTo.messageId;
                             hasFate = true;
                             break;
+
+                        case Effect.Type.SetAnimatorAttribute:
+                            var animator = GetComponent<Animator>();
+
+                            if (animator != null) {
+                                switch (effect.animatorAttributeSetter.type) {
+
+                                    case AnimatorControllerParameterType.Bool:
+                                        animator.SetBool(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setBool);
+                                        break;
+
+                                    case AnimatorControllerParameterType.Float:
+                                        animator.SetFloat(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setFloat);
+                                        break;
+
+                                    case AnimatorControllerParameterType.Int:
+                                        animator.SetInteger(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setInt);
+                                        break;
+
+                                    case AnimatorControllerParameterType.Trigger:
+                                        animator.SetTrigger(effect.animatorAttributeSetter.name);
+                                        break;
+
+                                }
+                            }
+
+                            else {
+                                Debug.LogWarning("You have a animation attributes setter effect in this message, but the game object don't have a Animator.");
+                            }
+
+                            break;
                     }
 
-                    effect.custom.Invoke();
+                    effect.onComplete.Invoke();
                 }
 
                 if (currentMessage.disposable) {
@@ -327,7 +477,7 @@ namespace DiplomataLib {
 
             if (choices.Count > 0) {                
                 foreach (Message choice in choices) {
-                    choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.currentSubtitledLanguage).value);
+                    choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
                 }
             }
 
@@ -348,13 +498,22 @@ namespace DiplomataLib {
             return choicesText;
         }
 
+        public void OnStartCallbacks() {
+            if (currentMessage != null) {
+                foreach (Effect effect in currentMessage.effects) {
+                    effect.onStart.Invoke();
+                }
+            }
+        }
+
         public void ChooseMessage(string title) {
             if (currentColumn != null) {
                 foreach (Message msg in choices) {
-                    var localTitle = DictHandler.ContainsKey(msg.title, Diplomata.gameProgress.currentSubtitledLanguage).value;
+                    var localTitle = DictHandler.ContainsKey(msg.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
                     
                     if (localTitle == title) {
                         currentMessage = msg;
+                        OnStartCallbacks();
                         break;
                     }
                 }
@@ -428,12 +587,19 @@ namespace DiplomataLib {
         }
 
         public string Emitter() {
-            if (currentMessage != null) {
+            if (currentColumn != null) {
                 return currentColumn.emitter;
-                //return currentMessage.emitter;
+            }
+
+            else if (currentMessage != null) {
+                return currentMessage.emitter;
             }
 
             return null;
+        }
+
+        public Message FindMessage(int contextId, int columnId, int messageId) {
+            return Message.Find(Column.Find(Context.Find(character, contextId), columnId).messages, messageId);
         }
 
         public Message FindMessage(string messageTitle, string language = "English") {

@@ -1,4 +1,6 @@
-﻿namespace DiplomataLib {
+﻿using UnityEngine;
+
+namespace DiplomataLib {
     
     [System.Serializable]
     public class Effect {
@@ -6,14 +8,19 @@
         public Type type;
         public EndOfContext endOfContext;
         public GoTo goTo;
-        
+        public AnimatorAttributeSetter animatorAttributeSetter = new AnimatorAttributeSetter();
+
         [System.NonSerialized]
-        public Events custom = new Events();
+        public Events onStart = new Events();
+
+        [System.NonSerialized]
+        public Events onComplete = new Events();
 
         public enum Type {
             None,
             EndOfContext,
-            GoTo
+            GoTo,
+            SetAnimatorAttribute
         }
 
         [System.Serializable]
@@ -68,6 +75,33 @@
 
         public string DisplayGoTo(string messageTitle) {
             return "Go to <i>"  + messageTitle + "</i>";
+        }
+
+        public string DisplaySetAnimatorAttribute() {
+            if (animatorAttributeSetter != null) {
+
+                switch (animatorAttributeSetter.type) {
+                    case AnimatorControllerParameterType.Bool:
+                        return "Set animator attribute <i>" + animatorAttributeSetter.name + "</i> to <i>" + animatorAttributeSetter.setBool + "</i>";
+
+                    case AnimatorControllerParameterType.Float:
+                        return "Set animator attribute <i>" + animatorAttributeSetter.name + "</i> to <i>" + animatorAttributeSetter.setFloat + "</i>";
+
+                    case AnimatorControllerParameterType.Int:
+                        return "Set animator attribute <i>" + animatorAttributeSetter.name + "</i> to <i>" + animatorAttributeSetter.setInt + "</i>";
+
+                    case AnimatorControllerParameterType.Trigger:
+                        return "Pull the trigger <i>" + animatorAttributeSetter.name + "</i> of animator";
+
+                    default:
+                        return "Animator attribute setter type not found.";
+                }
+
+            }
+
+            else {
+                return "Animator attribute setter not found.";
+            }
         }
     }
 

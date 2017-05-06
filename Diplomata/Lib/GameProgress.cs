@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
@@ -6,19 +7,13 @@ using UnityEngine;
 
 namespace DiplomataLib {
 
-    public enum Method {
-        XML,
-        JSON
-    }
-
-    [System.Serializable]
-    public class GameProgress {   
+    [Serializable]
+    public class Options {
         public string currentSubtitledLanguage = string.Empty;
         public string currentDubbedLanguage = string.Empty;
-        public Character[] characters;
+        public float volumeScale = 1.0f;
 
-        public void Start() {
-
+        public Options() {
             foreach (Language lang in Diplomata.preferences.languages) {
 
                 if (lang.subtitle && currentSubtitledLanguage == string.Empty) {
@@ -30,13 +25,123 @@ namespace DiplomataLib {
                 }
 
             }
+        }
+    }
 
-            UpdateCharacters();
+    [Serializable]
+    public class CharacterProgress {
+        public string name;
+        public byte influence;
+        public ContextProgress[] contexts = new ContextProgress[0];
+
+        public CharacterProgress() { }
+
+        public CharacterProgress(string name, byte influence) {
+            this.name = name;
+            this.influence = influence;
+        }
+    }
+
+    [Serializable]
+    public class ContextProgress {
+        public uint id;
+        public bool happened;
+        public ColumnProgress[] columns = new ColumnProgress[0];
+
+        public ContextProgress() { }
+
+        public ContextProgress(int id, bool happened) {
+            this.id = (uint) id;
+            this.happened = happened;
+        }
+    }
+
+    [Serializable]
+    public class ColumnProgress {
+        public uint id;
+        public MessageProgress[] messages = new MessageProgress[0];
+
+        public ColumnProgress() { }
+
+        public ColumnProgress(int id) {
+            this.id = (uint) id;
+        }
+    }
+
+    [Serializable]
+    public class MessageProgress {
+        public uint id;
+        public bool alreadySpoked;
+
+        public MessageProgress() { }
+
+        public MessageProgress(int id, bool alreadySpoked) {
+            this.id = (uint) id;
+            this.alreadySpoked = alreadySpoked;
+        }
+    }
+
+    public enum Method {
+        XML,
+        JSON
+    }
+
+    [Serializable]
+    public class GameProgress {
+
+        public Options options;
+        public CharacterProgress[] characters = new CharacterProgress[0];
+
+        public void Start() {
+            options = new Options();
+            SaveCharacters();
         }
 
-        public void UpdateCharacters() {
-            characters = new Character[Diplomata.characters.Count];
-            Diplomata.characters.CopyTo(characters);
+        public void SaveCharacters() {
+            characters = new CharacterProgress[0];
+            
+            foreach (Character character in Diplomata.characters) {
+                var newCharacter = new CharacterProgress(character.name, character.influence);
+                
+                foreach (Context context in character.contexts) {
+                    var newContext = new ContextProgress(context.id, context.happened);
+
+                    foreach (Column column in context.columns) {
+                        var newColumn = new ColumnProgress(column.id);
+
+                        foreach(Message message in column.messages) {
+                            newColumn.messages = ArrayHandler.Add(newColumn.messages, 
+                                new MessageProgress(message.id, message.alreadySpoked));
+                        }
+
+                        newContext.columns = ArrayHandler.Add(newContext.columns, newColumn);
+                    }
+
+                    newCharacter.contexts = ArrayHandler.Add(newCharacter.contexts, newContext);
+                }
+
+                characters = ArrayHandler.Add(characters, newCharacter);
+            }
+        }
+
+        public void LoadCharacters() {
+            foreach (CharacterProgress character in characters) {
+                var characterTemp = Character.Find(Diplomata.characters, character.name);
+                characterTemp.influence = character.influence;
+
+                foreach (ContextProgress context in character.contexts) {
+                    var contextTemp = Context.Find(characterTemp, (int) context.id);
+                    contextTemp.happened = context.happened;
+
+                    foreach (ColumnProgress column in context.columns) {
+                        var columnTemp = Column.Find(contextTemp, (int) column.id);
+
+                        foreach (MessageProgress message in column.messages) {
+                            Message.Find(columnTemp.messages, (int) message.id).alreadySpoked = message.alreadySpoked;
+                        }
+                    }
+                }
+            }
         }
 
         public string Serialize(Method method) {
@@ -58,28 +163,46 @@ namespace DiplomataLib {
         }
 
         public void Deserialize(string data, Method method) {
-            switch (method) {
-                case Method.JSON:
-                    Diplomata.gameProgress = JsonUtility.FromJson<GameProgress>(data);
-                    break;
+            try {
+                switch (method) {
+                    case Method.JSON:
+                        Diplomata.gameProgress = JsonUtility.FromJson<GameProgress>(data);
+                        break;
 
-                case Method.XML:
-                    var serializer = new XmlSerializer(typeof(GameProgress));
+                    case Method.XML:
+                        var serializer = new XmlSerializer(typeof(GameProgress));
 
-                    using (TextReader reader = new StringReader(data)) {
-                        Diplomata.gameProgress = (GameProgress) serializer.Deserialize(reader);
-                    }
+                        using (TextReader reader = new StringReader(data)) {
+                            Diplomata.gameProgress = (GameProgress)serializer.Deserialize(reader);
+                        }
 
-                    break;
+                        break;
+                }
+            }
+
+            catch (Exception e) {
+                Debug.LogError("Cannot deserialize this string data, make sure this was serialized from a gameProgress object. " + e.Message);
             }
         }
 
         public void Save(string extension = ".sav") {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+            SaveCharacters();
            
             using (FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Create)) {
                 binaryFormatter.Serialize(fileStream, Diplomata.gameProgress);
             }
+        }
+
+        public void Load(string extension = ".sav") {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+            using (FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Open)) {
+                Diplomata.gameProgress = (GameProgress)binaryFormatter.Deserialize(fileStream);
+            }
+
+            LoadCharacters();
         }
 
         public IEnumerator SaveWeb(string url, string extension = ".sav") {
@@ -108,14 +231,6 @@ namespace DiplomataLib {
 
             else {
                 Debug.Log("Error during upload: " + www.error);
-            }
-        }
-
-        public void Load(string extension = ".sav") {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            
-            using (FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Open)) {
-                Diplomata.gameProgress = (GameProgress) binaryFormatter.Deserialize(fileStream);
             }
         }
     }
