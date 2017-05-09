@@ -30,7 +30,6 @@ namespace DiplomataLib {
 
         public static void Restart() {
             preferences = new Preferences();
-
             var json = (TextAsset) Resources.Load("Diplomata/preferences");
 
             if (json != null) {
@@ -41,7 +40,11 @@ namespace DiplomataLib {
             Character.UpdateList();
 
             inventory = new Inventory();
-            Inventory.Update();
+            json = (TextAsset)Resources.Load("Diplomata/inventory");
+
+            if (json != null) {
+                inventory = JsonUtility.FromJson<Inventory>(json.text);
+            }
 
             gameProgress = new GameProgress();
             gameProgress.Start();

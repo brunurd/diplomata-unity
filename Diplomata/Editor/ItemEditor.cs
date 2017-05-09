@@ -52,8 +52,8 @@ namespace DiplomataEditor {
             switch(state) {
                 case State.None:
 
-                    if (diplomataEditor.workingItemId != -1) {
-                        item = Item.Find(diplomataEditor.inventory.items, diplomataEditor.workingItemId);
+                    if (diplomataEditor.GetWorkingItemId() != -1) {
+                        item = Item.Find(diplomataEditor.inventory.items, diplomataEditor.GetWorkingItemId());
                         DrawEditWindow();
                     }
 

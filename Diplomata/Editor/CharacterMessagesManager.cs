@@ -103,11 +103,11 @@ namespace DiplomataEditor {
             
             switch (state) {
                 case State.None:
-                    if (diplomataEditor.workingCharacter != string.Empty) {
-                        character = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+                    if (diplomataEditor.GetWorkingCharacter() != string.Empty) {
+                        character = Character.Find(diplomataEditor.characters, diplomataEditor.GetWorkingCharacter());
 
-                        if (diplomataEditor.workingContextMessagesId > -1) {
-                            context = Context.Find(character, diplomataEditor.workingContextMessagesId);
+                        if (diplomataEditor.GetWorkingContextMessagesId() > -1) {
+                            context = Context.Find(character, diplomataEditor.GetWorkingContextMessagesId());
                             MessagesEditor.Draw();
                         }
 

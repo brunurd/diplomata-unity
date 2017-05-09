@@ -9,7 +9,7 @@ namespace DiplomataEditor {
         public Vector2 scrollPos = new Vector2(0, 0);
         private Diplomata diplomataEditor;
 
-        [MenuItem("Diplomata/Character List")]
+        [MenuItem("Diplomata/Characters")]
         static public void Init() {
             Diplomata.Instantiate();
 

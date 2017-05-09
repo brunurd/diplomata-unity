@@ -45,11 +45,6 @@ namespace DiplomataLib {
     [System.Serializable]
     public class Inventory {
         public Item[] items = new Item[0];
-
-        public static void Update() {
-            var json = (TextAsset) Resources.Load("Diplomata/inventory");
-            Diplomata.inventory = JsonUtility.FromJson<Inventory>(json.text);
-        }
     }
 
 }

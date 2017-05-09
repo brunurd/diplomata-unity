@@ -82,8 +82,8 @@ namespace DiplomataEditor {
 
             switch (state) {
                 case State.None:
-                    if (diplomataEditor.workingCharacter != string.Empty) {
-                        character = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+                    if (diplomataEditor.GetWorkingCharacter() != string.Empty) {
+                        character = Character.Find(diplomataEditor.characters, diplomataEditor.GetWorkingCharacter());
                         DrawEditWindow();
                     }
                     else {

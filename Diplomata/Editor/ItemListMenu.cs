@@ -56,7 +56,7 @@ namespace DiplomataEditor {
                 if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
                     if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No")) {
 
-                        if (item.id == diplomataEditor.workingItemId) {
+                        if (item.id == diplomataEditor.GetWorkingItemId()) {
                             ItemEditor.Init(ItemEditor.State.Close);
                             diplomataEditor.SetWorkingItemId(-1);
                         }

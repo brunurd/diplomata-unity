@@ -70,11 +70,11 @@ namespace DiplomataEditor {
 
             switch (state) {
                 case State.None:
-                    if (diplomataEditor.workingCharacter != string.Empty) {
-                        character = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+                    if (diplomataEditor.GetWorkingCharacter() != string.Empty) {
+                        character = Character.Find(diplomataEditor.characters, diplomataEditor.GetWorkingCharacter());
 
-                        if (diplomataEditor.workingContextEditId > -1) {
-                            context = Context.Find(character, diplomataEditor.workingContextEditId);
+                        if (diplomataEditor.GetWorkingContextEditId() > -1) {
+                            context = Context.Find(character, diplomataEditor.GetWorkingContextEditId());
                             DrawEditWindow();
                         }
                     }

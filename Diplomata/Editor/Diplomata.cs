@@ -6,13 +6,14 @@ namespace DiplomataEditor {
 
     public class Diplomata : ScriptableObject {
         public static string resourcesFolder = "Assets/Resources/";
-        public int workingContextMessagesId;
-        public int workingContextEditId;
-        public string workingCharacter;
-        public int workingItemId;
         public List<Character> characters = new List<Character>();
         public DiplomataLib.Preferences preferences = new DiplomataLib.Preferences();
         public Inventory inventory = new Inventory();
+
+        private int workingContextMessagesId;
+        private int workingContextEditId;
+        private string workingCharacter;
+        private int workingItemId;
 
         public static void Instantiate() {
             if (DiplomataLib.Diplomata.instance == null && FindObjectsOfType<DiplomataLib.Diplomata>().Length < 1) {
@@ -121,16 +122,32 @@ namespace DiplomataEditor {
             workingCharacter = characterName;
         }
 
+        public string GetWorkingCharacter() {
+            return workingCharacter;
+        }
+
         public void SetWorkingContextMessagesId(int contextId) {
             workingContextMessagesId = contextId;
+        }
+
+        public int GetWorkingContextMessagesId() {
+            return workingContextMessagesId;
         }
 
         public void SetWorkingContextEditId(int contextId) {
             workingContextEditId = contextId;
         }
 
+        public int GetWorkingContextEditId() {
+            return workingContextEditId;
+        }
+
         public void SetWorkingItemId(int itemId) {
             workingItemId = itemId;
+        }
+
+        public int GetWorkingItemId() {
+            return workingItemId;
         }
     }
 
