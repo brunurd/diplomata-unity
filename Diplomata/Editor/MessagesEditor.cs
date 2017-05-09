@@ -12,6 +12,7 @@ namespace DiplomataEditor {
         private static string[] messageList = new string[0];
         private static string[] characterList = new string[0];
         private static string[] contextList = new string[0];
+        private static string[] itemList = new string[0];
         public static GUIStyle messagesWindowHeaderStyle = new GUIStyle(DGUI.windowStyle);
         public static GUIStyle messagesWindowMainStyle = new GUIStyle(DGUI.windowStyle);
         public static GUIStyle messagesWindowSidebarStyle = new GUIStyle(DGUI.windowStyle);
@@ -199,6 +200,14 @@ namespace DiplomataEditor {
                                     case Condition.Type.InfluenceGreaterThan:
                                     case Condition.Type.InfluenceLessThan:
                                         text += condition.DisplayCompareInfluence();
+                                        break;
+                                    case Condition.Type.HasItem:
+                                        var itemName = "";
+                                        if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null) {
+                                            itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                                                diplomataEditor.preferences.currentLanguage).value;
+                                        }
+                                        text += condition.DisplayHasItem(itemName);
                                         break;
                                 }
 
@@ -797,6 +806,34 @@ namespace DiplomataEditor {
                                     GUILayout.EndHorizontal();
 
                                     break;
+
+                                case Condition.Type.HasItem:
+                                    GUILayout.BeginHorizontal();
+                                    UpdateItemList();
+
+                                    var itemName = "";
+
+                                    if (itemList.Length > 0) {
+                                        itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                                    }
+
+                                    EditorGUI.BeginChangeCheck();
+                                    
+                                    itemName = DGUI.Popup("Has item ", itemName, itemList);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        foreach (Item item in diplomataEditor.inventory.items) {
+
+                                            if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == itemName) {
+                                                condition.itemId = item.id;
+                                                break;
+                                            }
+
+                                        }
+                                    }
+                                    
+                                    GUILayout.EndHorizontal();
+                                    break;
                             }
 
                             if (GUILayout.Button("Delete Condition", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
@@ -989,12 +1026,22 @@ namespace DiplomataEditor {
         public static void UpdateCharacterList() {
             var diplomataEditor = CharacterMessagesManager.diplomataEditor;
 
-            characterList = new string[diplomataEditor.preferences.characterList.Length - 1];
+            characterList = new string[0];
 
             foreach (string str in diplomataEditor.preferences.characterList) {
                 if (str != diplomataEditor.preferences.playerCharacterName) {
                     characterList = ArrayHandler.Add(characterList, str);
                 }
+            }
+        }
+
+        public static void UpdateItemList() {
+            var diplomataEditor = CharacterMessagesManager.diplomataEditor;
+
+            itemList = new string[0];
+
+            foreach (Item item in diplomataEditor.inventory.items) {
+                itemList = ArrayHandler.Add(itemList, DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value);
             }
         }
 

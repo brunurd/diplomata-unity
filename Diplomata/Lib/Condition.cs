@@ -7,6 +7,7 @@
         public int comparedInfluence;
         public string characterInfluencedName;
         public AfterOf afterOf;
+        public int itemId;
 
         [System.NonSerialized]
         public Events custom = new Events();
@@ -19,7 +20,8 @@
             AfterOf,
             InfluenceEqualTo,
             InfluenceGreaterThan,
-            InfluenceLessThan
+            InfluenceLessThan,
+            HasItem
         }
 
         [System.Serializable]
@@ -63,6 +65,10 @@
                 default:
                     return string.Empty;
             }
+        }
+
+        public string DisplayHasItem(string itemName) {
+            return "Has the item: " + itemName;
         }
 
         public static bool CanProceed(Condition[] conditions) {

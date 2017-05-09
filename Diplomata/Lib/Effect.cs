@@ -20,7 +20,8 @@ namespace DiplomataLib {
             None,
             EndOfContext,
             GoTo,
-            SetAnimatorAttribute
+            SetAnimatorAttribute,
+            GetItem
         }
 
         [System.Serializable]
