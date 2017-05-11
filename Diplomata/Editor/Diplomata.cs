@@ -17,7 +17,7 @@ namespace DiplomataEditor {
 
         public static void Instantiate() {
             if (DiplomataLib.Diplomata.instance == null && FindObjectsOfType<DiplomataLib.Diplomata>().Length < 1) {
-                GameObject obj = new GameObject("[ Diplomata ]");
+                GameObject obj = new GameObject("[Diplomata]");
                 obj.AddComponent<DiplomataLib.Diplomata>();
             }
 

@@ -154,6 +154,27 @@ namespace DiplomataLib {
                                                         condition.proceed = false;
                                                     }
                                                     break;
+                                                case Condition.Type.HasItem:
+                                                    var item = Item.Find(Diplomata.inventory.items, condition.itemId);
+
+                                                    if (item != null) {
+
+                                                        if (item.have) {
+                                                            condition.proceed = true;
+                                                        }
+
+                                                        else {
+                                                            condition.proceed = false;
+                                                        }
+
+                                                    }
+
+                                                    else {
+                                                        Debug.LogWarning("Cannot find the item with id " + condition.itemId + " to check.");
+                                                        condition.proceed = false;
+                                                    }
+
+                                                    break;
                                             }
 
                                             if (!condition.custom.CheckAll()) {
@@ -242,6 +263,15 @@ namespace DiplomataLib {
 
             if (talking) {
                 if (currentMessage != null) {
+                    var talkLog = TalkLog.Find(Diplomata.gameProgress.talkLog, character.name);
+
+                    if (talkLog == null) {
+                        Diplomata.gameProgress.talkLog = ArrayHandler.Add(Diplomata.gameProgress.talkLog, new TalkLog(character.name));
+                        talkLog = TalkLog.Find(Diplomata.gameProgress.talkLog, character.name);
+                    }
+
+                    talkLog.messagesIds = ArrayHandler.Add(talkLog.messagesIds, (uint) currentMessage.id);
+
                     return DictHandler.ContainsKey(currentMessage.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
                 }
 
@@ -444,6 +474,32 @@ namespace DiplomataLib {
 
                             else {
                                 Debug.LogWarning("You have a animation attributes setter effect in this message, but the game object don't have a Animator.");
+                            }
+
+                            break;
+
+                        case Effect.Type.GetItem:
+                            var getItem = Item.Find(Diplomata.inventory.items, effect.itemId);
+
+                            if (getItem != null) {
+                                getItem.have = true;
+                            }
+
+                            else {
+                                Debug.LogError("Cannot find the item with id " + effect.itemId + " to get.");
+                            }
+
+                            break;
+
+                        case Effect.Type.DiscardItem:
+                            var discardItem = Item.Find(Diplomata.inventory.items, effect.itemId);
+
+                            if (discardItem != null) {
+                                discardItem.discarded = true;
+                            }
+
+                            else {
+                                Debug.LogError("Cannot find the item with id " + effect.itemId + " to discard.");
                             }
 
                             break;

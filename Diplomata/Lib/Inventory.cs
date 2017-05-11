@@ -16,9 +16,6 @@ namespace DiplomataLib {
         public bool have;
 
         [System.NonSerialized]
-        public bool used;
-
-        [System.NonSerialized]
         public bool discarded;
 
         public Item(int id) {

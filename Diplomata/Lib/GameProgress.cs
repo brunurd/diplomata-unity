@@ -29,11 +29,33 @@ namespace DiplomataLib {
     }
 
     [Serializable]
+    public class TalkLog {
+        public string characterName;
+        public uint[] messagesIds = new uint[0];
+
+        public TalkLog() { }
+
+        public TalkLog(string characterName) {
+            this.characterName = characterName;
+        }
+
+        public static TalkLog Find(TalkLog[] array, string characterName) {
+            foreach (TalkLog talkLog in array) {
+                if (talkLog.characterName == characterName) {
+                    return talkLog;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    [Serializable]
     public class CharacterProgress {
         public string name;
         public byte influence;
         public ContextProgress[] contexts = new ContextProgress[0];
-
+        
         public CharacterProgress() { }
 
         public CharacterProgress(string name, byte influence) {
@@ -81,6 +103,21 @@ namespace DiplomataLib {
         }
     }
 
+    [Serializable]
+    public class ItemProgress {
+        public uint id;
+        public bool have;
+        public bool discarded;
+
+        public ItemProgress() { }
+
+        public ItemProgress(int id, bool have, bool discarded) {
+            this.id = (uint)id;
+            this.have = have;
+            this.discarded = discarded;
+        }
+    }
+
     public enum Method {
         XML,
         JSON
@@ -91,10 +128,13 @@ namespace DiplomataLib {
 
         public Options options;
         public CharacterProgress[] characters = new CharacterProgress[0];
+        public ItemProgress[] inventory = new ItemProgress[0];
+        public TalkLog[] talkLog = new TalkLog[0];
 
         public void Start() {
             options = new Options();
             SaveCharacters();
+            SaveInventory();
         }
 
         public void SaveCharacters() {
@@ -144,6 +184,22 @@ namespace DiplomataLib {
             }
         }
 
+        public void SaveInventory() {
+            inventory = new ItemProgress[0];
+
+            foreach (Item item in Diplomata.inventory.items) {
+                inventory = ArrayHandler.Add(inventory, new ItemProgress(item.id, item.have, item.discarded));
+            }
+        }
+
+        public void LoadInventory() {
+            foreach (ItemProgress item in inventory) {
+                var itemTemp = Item.Find(Diplomata.inventory.items, (int) item.id);
+                itemTemp.have = item.have;
+                itemTemp.discarded = item.discarded;
+            }
+        }
+
         public string Serialize(Method method) {
             switch (method) {
                 case Method.JSON:
@@ -189,6 +245,7 @@ namespace DiplomataLib {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
 
             SaveCharacters();
+            SaveInventory();
            
             using (FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Create)) {
                 binaryFormatter.Serialize(fileStream, Diplomata.gameProgress);
@@ -203,6 +260,7 @@ namespace DiplomataLib {
             }
 
             LoadCharacters();
+            LoadInventory();
         }
 
         public IEnumerator SaveWeb(string url, string extension = ".sav") {

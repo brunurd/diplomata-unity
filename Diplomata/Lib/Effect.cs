@@ -9,6 +9,7 @@ namespace DiplomataLib {
         public EndOfContext endOfContext;
         public GoTo goTo;
         public AnimatorAttributeSetter animatorAttributeSetter = new AnimatorAttributeSetter();
+        public int itemId;
 
         [System.NonSerialized]
         public Events onStart = new Events();
@@ -21,7 +22,8 @@ namespace DiplomataLib {
             EndOfContext,
             GoTo,
             SetAnimatorAttribute,
-            GetItem
+            GetItem,
+            DiscardItem
         }
 
         [System.Serializable]
@@ -103,6 +105,14 @@ namespace DiplomataLib {
             else {
                 return "Animator attribute setter not found.";
             }
+        }
+
+        public string DisplayGetItem(string itemName) {
+            return "Get the item: " + itemName;
+        }
+
+        public string DisplayDiscardItem(string itemName) {
+            return "Discard the item: " + itemName;
         }
     }
 

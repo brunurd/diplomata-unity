@@ -292,6 +292,22 @@ namespace DiplomataEditor {
                                     case Effect.Type.SetAnimatorAttribute:
                                         text += effect.DisplaySetAnimatorAttribute();
                                         break;
+                                    case Effect.Type.GetItem:
+                                        var itemName = "";
+                                        if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null) {
+                                            itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                                                diplomataEditor.preferences.currentLanguage).value;
+                                        }
+                                        text += effect.DisplayGetItem(itemName);
+                                        break;
+                                    case Effect.Type.DiscardItem:
+                                        var discardItemName = "";
+                                        if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null) {
+                                            discardItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                                                diplomataEditor.preferences.currentLanguage).value;
+                                        }
+                                        text += effect.DisplayDiscardItem(discardItemName);
+                                        break;
                                 }
 
                                 if (k < currentMessage.effects.Length - 1) {
@@ -328,10 +344,10 @@ namespace DiplomataEditor {
                         DGUI.labelStyle.alignment = TextAnchor.UpperLeft;
                     }
 
-                    if (GUI.GetNameOfFocusedControl() == "title" + currentMessage.id || 
+                    /*if (GUI.GetNameOfFocusedControl() == "title" + currentMessage.id || 
                         GUI.GetNameOfFocusedControl() == "content" + currentMessage.id) {
                         SetMessage(currentMessage);
-                    }
+                    }*/
 
                     if (GUI.Button(boxRect, "", buttonStyle)) {
                         SetMessage(currentMessage);
@@ -414,7 +430,7 @@ namespace DiplomataEditor {
                         GUILayout.Label("Message Color:");
                         message.color = EditorGUILayout.ColorField(message.color);
 
-                        EditorGUILayout.Separator(); // <- Layout bug here
+                        EditorGUILayout.Separator();
 
                         var disposable = message.disposable;
                         var isAChoice = message.isAChoice;
@@ -988,6 +1004,62 @@ namespace DiplomataEditor {
 
                                     GUILayout.EndHorizontal();
 
+                                    break;
+
+                                case Effect.Type.GetItem:
+                                    GUILayout.BeginHorizontal();
+                                    UpdateItemList();
+
+                                    var itemName = "";
+
+                                    if (itemList.Length > 0) {
+                                        itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                                    }
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    itemName = DGUI.Popup("Get item ", itemName, itemList);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        foreach (Item item in diplomataEditor.inventory.items) {
+
+                                            if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == itemName) {
+                                                effect.itemId = item.id;
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+                                    GUILayout.EndHorizontal();
+                                    break;
+
+                                case Effect.Type.DiscardItem:
+                                    GUILayout.BeginHorizontal();
+                                    UpdateItemList();
+
+                                    var discardItemName = "";
+
+                                    if (itemList.Length > 0) {
+                                        discardItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                                    }
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    discardItemName = DGUI.Popup("Discard item ", discardItemName, itemList);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        foreach (Item item in diplomataEditor.inventory.items) {
+
+                                            if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == discardItemName) {
+                                                effect.itemId = item.id;
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+                                    GUILayout.EndHorizontal();
                                     break;
                             }
 
