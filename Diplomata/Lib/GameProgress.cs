@@ -2,7 +2,6 @@
 using System.Xml.Serialization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Collections;
 using UnityEngine;
 
 namespace DiplomataLib {
@@ -130,11 +129,13 @@ namespace DiplomataLib {
         public CharacterProgress[] characters = new CharacterProgress[0];
         public ItemProgress[] inventory = new ItemProgress[0];
         public TalkLog[] talkLog = new TalkLog[0];
+        public Flag[] flags = new Flag[0];
 
         public void Start() {
             options = new Options();
             SaveCharacters();
             SaveInventory();
+            SaveFlags();
         }
 
         public void SaveCharacters() {
@@ -200,6 +201,28 @@ namespace DiplomataLib {
             }
         }
 
+        public void SaveFlags() {
+            flags = new Flag[0];
+
+            foreach (Flag flag in Diplomata.customFlags.flags) {
+                flags = ArrayHandler.Add(flags, flag);
+            }
+        }
+
+        public void LoadFlags() {
+            foreach (Flag flag in flags) {
+                var flagTemp = Diplomata.customFlags.Find(flag.name);
+
+                if (flagTemp != null) {
+                    flagTemp.value = flag.value;
+                }
+
+                else {
+                    Diplomata.customFlags.flags = ArrayHandler.Add(Diplomata.customFlags.flags, flag);
+                }
+            }
+        }
+
         public string Serialize(Method method) {
             switch (method) {
                 case Method.JSON:
@@ -246,6 +269,7 @@ namespace DiplomataLib {
 
             SaveCharacters();
             SaveInventory();
+            SaveFlags();
            
             using (FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Create)) {
                 binaryFormatter.Serialize(fileStream, Diplomata.gameProgress);
@@ -261,35 +285,7 @@ namespace DiplomataLib {
 
             LoadCharacters();
             LoadInventory();
-        }
-
-        public IEnumerator SaveWeb(string url, string extension = ".sav") {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            WWWForm form = new WWWForm();
-
-            using (MemoryStream stream = new MemoryStream()) {
-                byte[] bytes = new byte[stream.Length];
-
-                binaryFormatter.Serialize(stream, Diplomata.gameProgress);
-                stream.Position = 0;
-
-                using (StreamWriter writer = new StreamWriter(stream)) {
-                    writer.Write(bytes);
-                }
-
-                form.AddBinaryData("fileUpload", bytes, "diplomata_gameProgress" + extension, "text/plain");
-            }
-
-            WWW www = new WWW(url + "/diplomata_gameProgress" + extension, form);
-            yield return www;
-
-            if (www.error == null) {
-                Debug.Log("Upload done: " + www.text);
-            }
-
-            else {
-                Debug.Log("Error during upload: " + www.error);
-            }
+            LoadFlags();
         }
     }
 

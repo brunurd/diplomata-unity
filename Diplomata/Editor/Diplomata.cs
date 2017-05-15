@@ -9,6 +9,7 @@ namespace DiplomataEditor {
         public List<Character> characters = new List<Character>();
         public DiplomataLib.Preferences preferences = new DiplomataLib.Preferences();
         public Inventory inventory = new Inventory();
+        public CustomFlags customFlags = new CustomFlags();
 
         private int workingContextMessagesId;
         private int workingContextEditId;
@@ -31,12 +32,17 @@ namespace DiplomataEditor {
                 JSONHandler.Create(new Inventory(), "inventory", false, "Diplomata/");
             }
 
+            if (!JSONHandler.Exists("customFlags", "Diplomata/")) {
+                JSONHandler.Create(new CustomFlags(), "customFlags", false, "Diplomata/");
+            }
+
             DiplomataLib.Diplomata.Restart();
             var diplomataEditor = CreateInstance<Diplomata>();
 
             if (!AssetHandler.Exists("Diplomata.asset", "Diplomata/")) {
                 diplomataEditor.preferences = DiplomataLib.Diplomata.preferences;
                 diplomataEditor.inventory = DiplomataLib.Diplomata.inventory;
+                diplomataEditor.customFlags = DiplomataLib.Diplomata.customFlags;
                 diplomataEditor.characters = DiplomataLib.Diplomata.characters;
 
                 AssetHandler.Create(diplomataEditor, "Diplomata.asset", "Diplomata/");
@@ -46,6 +52,7 @@ namespace DiplomataEditor {
                 diplomataEditor = (Diplomata) AssetHandler.Read("Diplomata.asset", "Diplomata/");
                 diplomataEditor.preferences = JSONHandler.Read<DiplomataLib.Preferences>("preferences", "Diplomata/");
                 diplomataEditor.inventory = JSONHandler.Read<Inventory>("inventory", "Diplomata/");
+                diplomataEditor.customFlags = JSONHandler.Read<CustomFlags>("customFlags", "Diplomata/");
                 diplomataEditor.UpdateList();
             }
         }
@@ -112,6 +119,10 @@ namespace DiplomataEditor {
 
         public void SaveInventory() {
             JSONHandler.Update(inventory, "inventory", preferences.jsonPrettyPrint, "Diplomata/");
+        }
+
+        public void SaveCustomFlags() {
+            JSONHandler.Update(customFlags, "customFlags", preferences.jsonPrettyPrint, "Diplomata/");
         }
 
         public void Save(Character character) {

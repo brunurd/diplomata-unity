@@ -175,6 +175,48 @@ namespace DiplomataLib {
                                                     }
 
                                                     break;
+                                                case Condition.Type.ItemWasDiscarded:
+                                                    var discardedItem = Item.Find(Diplomata.inventory.items, condition.itemId);
+
+                                                    if (discardedItem != null) {
+
+                                                        if (discardedItem.discarded) {
+                                                            condition.proceed = true;
+                                                        }
+
+                                                        else {
+                                                            condition.proceed = false;
+                                                        }
+
+                                                    }
+
+                                                    else {
+                                                        Debug.LogWarning("Cannot find the item with id " + condition.itemId + " to check.");
+                                                        condition.proceed = false;
+                                                    }
+
+                                                    break;
+                                                case Condition.Type.CustomFlagEqualTo:
+                                                    var flag = Diplomata.customFlags.Find(condition.customFlag.name);
+
+                                                    if (flag != null) {
+
+                                                        if (flag.value == condition.customFlag.value) {
+                                                            condition.proceed = true;
+                                                        }
+
+                                                        else {
+                                                            condition.proceed = false;
+                                                        }
+
+                                                    }
+
+                                                    else {
+                                                        Debug.LogWarning("Cannot find the custom flag " + condition.customFlag.name);
+                                                        condition.proceed = false;
+                                                    }
+
+                                                    break;
                                             }
 
                                             if (!condition.custom.CheckAll()) {
@@ -500,6 +542,19 @@ namespace DiplomataLib {
 
                             else {
                                 Debug.LogError("Cannot find the item with id " + effect.itemId + " to discard.");
+                            }
+
+                            break;
+
+                        case Effect.Type.SetCustomFlag:
+                            var flag = Diplomata.customFlags.Find(effect.customFlag.name);
+
+                            if (flag != null) {
+                                flag.value = effect.customFlag.value;
+                            }
+
+                            else {
+                                Debug.LogError("Cannot find the custom flag " + effect.customFlag.name);
                             }
 
                             break;

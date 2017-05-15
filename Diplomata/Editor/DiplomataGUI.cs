@@ -183,7 +183,7 @@ namespace DiplomataEditor {
             }
         }
 
-        public static string Popup(string label, string choice, string[] array) {
+        public static string Popup(string label, string choice, string[] array, params GUILayoutOption[] options) {
             var selected = 0;
             string str = choice;
 
@@ -196,7 +196,7 @@ namespace DiplomataEditor {
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(label);
-            selected = EditorGUILayout.Popup(selected, array);
+            selected = EditorGUILayout.Popup(selected, array, options);
             GUILayout.EndHorizontal();
 
             for (int i = 0; i < array.Length; i++) {

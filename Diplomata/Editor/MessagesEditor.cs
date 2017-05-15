@@ -13,6 +13,8 @@ namespace DiplomataEditor {
         private static string[] characterList = new string[0];
         private static string[] contextList = new string[0];
         private static string[] itemList = new string[0];
+        private static string[] customFlagsList = new string[0];
+        private static string[] booleanArray = new string[] { "True", "False" };
         public static GUIStyle messagesWindowHeaderStyle = new GUIStyle(DGUI.windowStyle);
         public static GUIStyle messagesWindowMainStyle = new GUIStyle(DGUI.windowStyle);
         public static GUIStyle messagesWindowSidebarStyle = new GUIStyle(DGUI.windowStyle);
@@ -140,8 +142,7 @@ namespace DiplomataEditor {
                             break;
                         }
                     }
-
-                    #region MESSAGE CARD
+                    
                     Rect boxRect = EditorGUILayout.BeginVertical(DGUI.boxStyle);
 
                     var color = currentMessage.color;
@@ -208,6 +209,17 @@ namespace DiplomataEditor {
                                                 diplomataEditor.preferences.currentLanguage).value;
                                         }
                                         text += condition.DisplayHasItem(itemName);
+                                        break;
+                                    case Condition.Type.CustomFlagEqualTo:
+                                        text += condition.DisplayCustomFlagEqualTo();
+                                        break;
+                                    case Condition.Type.ItemWasDiscarded:
+                                        var itemNameDiscarded = "";
+                                        if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null) {
+                                            itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                                                diplomataEditor.preferences.currentLanguage).value;
+                                        }
+                                        text += condition.DisplayItemWasDiscarded(itemNameDiscarded);
                                         break;
                                 }
 
@@ -308,6 +320,9 @@ namespace DiplomataEditor {
                                         }
                                         text += effect.DisplayDiscardItem(discardItemName);
                                         break;
+                                    case Effect.Type.SetCustomFlag:
+                                        text += effect.DisplayCustomFlagEqualTo();
+                                        break;
                                 }
 
                                 if (k < currentMessage.effects.Length - 1) {
@@ -344,11 +359,6 @@ namespace DiplomataEditor {
                         DGUI.labelStyle.alignment = TextAnchor.UpperLeft;
                     }
 
-                    /*if (GUI.GetNameOfFocusedControl() == "title" + currentMessage.id || 
-                        GUI.GetNameOfFocusedControl() == "content" + currentMessage.id) {
-                        SetMessage(currentMessage);
-                    }*/
-
                     if (GUI.Button(boxRect, "", buttonStyle)) {
                         SetMessage(currentMessage);
                         EditorGUI.FocusTextInControl("");
@@ -356,7 +366,6 @@ namespace DiplomataEditor {
 
                     EditorGUILayout.EndVertical();
                     EditorGUILayout.Separator();
-                    #endregion
                 }
 
                 if (GUILayout.Button("Add Message", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
@@ -577,14 +586,20 @@ namespace DiplomataEditor {
                                 case AnimatorControllerParameterType.Bool:
                                     string selected = animatorAttribute.setBool.ToString();
 
-                                    selected = DGUI.Popup("Set boolean to ", selected, new string[] { "True", "False" });
+                                    EditorGUI.BeginChangeCheck();
 
-                                    if (selected == "True") {
-                                        animatorAttribute.setBool = true;
-                                    }
+                                    selected = DGUI.Popup("Set boolean to ", selected, booleanArray);
 
-                                    else {
-                                        animatorAttribute.setBool = false;
+                                    if (EditorGUI.EndChangeCheck()) {
+
+                                        if (selected == "True") {
+                                            animatorAttribute.setBool = true;
+                                        }
+
+                                        else {
+                                            animatorAttribute.setBool = false;
+                                        }
+
                                     }
 
                                     break;
@@ -850,6 +865,59 @@ namespace DiplomataEditor {
                                     
                                     GUILayout.EndHorizontal();
                                     break;
+
+                                case Condition.Type.ItemWasDiscarded:
+                                    GUILayout.BeginHorizontal();
+                                    UpdateItemList();
+
+                                    var discardedItemName = "";
+
+                                    if (itemList.Length > 0) {
+                                        itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                                    }
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    discardedItemName = DGUI.Popup("Item was discarded ", discardedItemName, itemList);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        foreach (Item item in diplomataEditor.inventory.items) {
+
+                                            if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == discardedItemName) {
+                                                condition.itemId = item.id;
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+                                    GUILayout.EndHorizontal();
+                                    break;
+
+                                case Condition.Type.CustomFlagEqualTo:
+                                    UpdateCustomFlagsList();
+                                    
+                                    condition.customFlag.name = DGUI.Popup("Flag: ", condition.customFlag.name, customFlagsList);
+
+                                    string selected = condition.customFlag.value.ToString();
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    selected = DGUI.Popup("is ", selected, booleanArray);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+
+                                        if (selected == "True") {
+                                            condition.customFlag.value = true;
+                                        }
+
+                                        else {
+                                            condition.customFlag.value = false;
+                                        }
+
+                                    }
+
+                                    break;
                             }
 
                             if (GUILayout.Button("Delete Condition", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
@@ -975,14 +1043,20 @@ namespace DiplomataEditor {
                                         case AnimatorControllerParameterType.Bool:
                                             string selected = effect.animatorAttributeSetter.setBool.ToString();
 
-                                            selected = DGUI.Popup("Set boolean to ", selected, new string[] { "True", "False" });
+                                            EditorGUI.BeginChangeCheck();
 
-                                            if (selected == "True") {
-                                                effect.animatorAttributeSetter.setBool = true;
-                                            }
+                                            selected = DGUI.Popup("Set boolean to ", selected, booleanArray);
 
-                                            else {
-                                                effect.animatorAttributeSetter.setBool = false;
+                                            if (EditorGUI.EndChangeCheck()) {
+
+                                                if (selected == "True") {
+                                                    effect.animatorAttributeSetter.setBool = true;
+                                                }
+
+                                                else {
+                                                    effect.animatorAttributeSetter.setBool = false;
+                                                }
+
                                             }
 
                                             break;
@@ -1060,6 +1134,31 @@ namespace DiplomataEditor {
                                     }
 
                                     GUILayout.EndHorizontal();
+                                    break;
+
+                                case Effect.Type.SetCustomFlag:
+                                    UpdateCustomFlagsList();
+
+                                    effect.customFlag.name = DGUI.Popup("Flag: ", effect.customFlag.name, customFlagsList);
+
+                                    string effectSelected = effect.customFlag.value.ToString();
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    effectSelected = DGUI.Popup(" set to ", effectSelected, booleanArray);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+
+                                        if (effectSelected == "True") {
+                                            effect.customFlag.value = true;
+                                        }
+
+                                        else {
+                                            effect.customFlag.value = false;
+                                        }
+
+                                    }
+
                                     break;
                             }
 
@@ -1152,6 +1251,14 @@ namespace DiplomataEditor {
 
                     contextList = ArrayHandler.Add(contextList, contextName.value);
                 }
+            }
+        }
+
+        public static void UpdateCustomFlagsList() {
+            customFlagsList = new string[0];
+
+            foreach(Flag flag in CharacterMessagesManager.diplomataEditor.customFlags.flags) {
+                customFlagsList = ArrayHandler.Add(customFlagsList, flag.name);
             }
         }
 

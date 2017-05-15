@@ -11,6 +11,7 @@ namespace DiplomataLib {
         public static GameProgress gameProgress = new GameProgress();
         public static List<Character> characters = new List<Character>();
         public static Inventory inventory = new Inventory();
+        public static CustomFlags customFlags = new CustomFlags();
 
         public void Awake() {
             if (instance == null) {
@@ -44,6 +45,13 @@ namespace DiplomataLib {
 
             if (json != null) {
                 inventory = JsonUtility.FromJson<Inventory>(json.text);
+            }
+
+            customFlags = new CustomFlags();
+            json = (TextAsset)Resources.Load("Diplomata/customFlags");
+
+            if (json != null) {
+                customFlags = JsonUtility.FromJson<CustomFlags>(json.text);
             }
 
             gameProgress = new GameProgress();

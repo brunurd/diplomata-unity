@@ -7,6 +7,7 @@
         public int comparedInfluence;
         public string characterInfluencedName;
         public AfterOf afterOf;
+        public Flag customFlag;
         public int itemId;
 
         [System.NonSerialized]
@@ -21,7 +22,9 @@
             InfluenceEqualTo,
             InfluenceGreaterThan,
             InfluenceLessThan,
-            HasItem
+            HasItem,
+            ItemWasDiscarded,
+            CustomFlagEqualTo
         }
 
         [System.Serializable]
@@ -57,18 +60,26 @@
         public string DisplayCompareInfluence() {
             switch (type) {
                 case Type.InfluenceEqualTo:
-                    return "Influence <i>equal</i> to \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
+                    return "Influence <i>equal</i> to <i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
                 case Type.InfluenceGreaterThan:
-                    return "Influence <i>greater</i> then \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
+                    return "Influence <i>greater</i> then <i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
                 case Type.InfluenceLessThan:
-                    return "Influence <i>less</i> then \n<i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
+                    return "Influence <i>less</i> then <i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
                 default:
                     return string.Empty;
             }
         }
 
         public string DisplayHasItem(string itemName) {
-            return "Has the item: " + itemName;
+            return "Has the item: <i>" + itemName + "</i>";
+        }
+
+        public string DisplayItemWasDiscarded(string itemName) {
+            return "item was discarded: <i>" + itemName + "</i>";
+        }
+
+        public string DisplayCustomFlagEqualTo() {
+            return "<i>\"" + customFlag.name + "\"</i> is <i>" + customFlag.value + "</i>";
         }
 
         public static bool CanProceed(Condition[] conditions) {

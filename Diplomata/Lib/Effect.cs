@@ -9,6 +9,7 @@ namespace DiplomataLib {
         public EndOfContext endOfContext;
         public GoTo goTo;
         public AnimatorAttributeSetter animatorAttributeSetter = new AnimatorAttributeSetter();
+        public Flag customFlag;
         public int itemId;
 
         [System.NonSerialized]
@@ -23,7 +24,8 @@ namespace DiplomataLib {
             GoTo,
             SetAnimatorAttribute,
             GetItem,
-            DiscardItem
+            DiscardItem,
+            SetCustomFlag
         }
 
         [System.Serializable]
@@ -73,7 +75,7 @@ namespace DiplomataLib {
         }
 
         public string DisplayEndOfContext(string contextName) {
-            return "End of the context\n<i>" + contextName + "</i>";
+            return "End of the context<i>" + contextName + "</i>";
         }
 
         public string DisplayGoTo(string messageTitle) {
@@ -108,11 +110,15 @@ namespace DiplomataLib {
         }
 
         public string DisplayGetItem(string itemName) {
-            return "Get the item: " + itemName;
+            return "Get the item: <i>" + itemName + "</i>";
         }
 
         public string DisplayDiscardItem(string itemName) {
-            return "Discard the item: " + itemName;
+            return "Discard the item: <i>" + itemName + "</i>";
+        }
+
+        public string DisplayCustomFlagEqualTo() {
+            return "<i>\"" + customFlag.name + "\"</i> set to <i>" + customFlag.value + "</i>";
         }
     }
 
