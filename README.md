@@ -1,4 +1,27 @@
-<center><img src="https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." width="115" height="115" /><br/><h2><strong>Diplomata</strong></h2><p>A Unity fully-featured solution to dialogue in games using fuzzy logic.<br/>Create, edit, translate, set audio files and print screenplay of your game dialogue, all inside Unity Editor.</p></center>
+<center>
+    <img src="https://raw.githubusercontent.com/lavaleak/diplomata/master/Diplomata/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." width="115" height="115" /><br/>
+    <h2><strong>Diplomata</strong></h2>
+</center>
+
+
+A power-up for your game dialogue! Diplomata is a Unity editor extension for screenwriters, game designers, programmers and hobbyist write, configure and apply dialogues in any type of game.
+
+
+**Features:**
+- Text edition in an organized environment split by characters and contexts.
+- Manage characters, contexts, and messages separately from the scene objects.
+- Add multiple languages for your game.
+- Fuzzy logic system to influence organically the characters with custom attributes.
+- Use colors in the message cards to organize your messages in your own way.
+- All text and preferences are saved in json files, making it easy to use external tools.
+- Export text to screenplay format for actors understand the story.
+- Use templates or create your own. (In development)
+- Internal system to save and load game progress, you can use as is or side by side with your own persistence system.
+- Choose and manage audio files to play when message show, taking into account the configured language.
+- Manage animator attributes in any message.
+- Choose and manage sprites to show in every message.
+- Inventory integration with title and description in multiple languages.
+- Create custom flags to authoring your game progress.
 
 
 ---
@@ -8,9 +31,8 @@
 
 
 Progress of project: [Diplomata - Trello Board](https://trello.com/b/Hp08JbV3/diplomata-roadmap)  
-Documentation: [Github Wiki](https://github.com/lavaleak/diplomata/wiki)  
+Documentation: [Github Wiki](https://github.com/lavaleak/diplomata/wiki) *(Absolutely out of date)*  
 Source code: [Github](https://github.com/lavaleak/diplomata)  
-Website: [diplomta.io](http://diplomata.io)  
 
 
 ---
