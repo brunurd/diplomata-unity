@@ -1,5 +1,5 @@
 <center>
-    <p style="color:#ff5500">WARNING: NO DOCUMENTATION OR EXAMPLES ARE AVAILABLE YET.</p><br/><br/>
+    <p style="color:#ff5500">WARNING: NO DOCUMENTATION OR EXAMPLES ARE NOT AVAILABLE YET.</p><br/><br/>
     <img src="https://raw.githubusercontent.com/lavaleak/diplomata/master/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." width="115" height="115" /><br/>
     <h2><strong>Diplomata</strong></h2>
     <p>A power-up for your game dialogue! Diplomata is a Unity editor extension for screenwriters, game designers, programmers and hobbyist write, configure and apply dialogues in any type of game.</p><br/>
