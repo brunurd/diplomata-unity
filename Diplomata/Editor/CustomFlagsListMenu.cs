@@ -42,11 +42,16 @@ namespace DiplomataEditor {
 
                 GUILayout.BeginHorizontal();
 
-                flag.name = EditorGUILayout.TextField(flag.name, GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL));
+                DGUI.textContent.text = flag.name;
+
+                var width = Screen.width / 2;
+                var height = DGUI.textAreaStyle.CalcHeight(DGUI.textContent, width); 
+
+                flag.name = EditorGUILayout.TextArea(flag.name, DGUI.textAreaStyle, GUILayout.Width(width), GUILayout.Height(height));
 
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(GUILayout.MaxWidth(Screen.width / 3));
+                GUILayout.BeginHorizontal();
 
                 string selected = flag.value.ToString();
 
@@ -69,7 +74,7 @@ namespace DiplomataEditor {
 
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(GUILayout.MaxWidth(Screen.width / 3));
+                GUILayout.BeginHorizontal();
 
 
                 if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
