@@ -125,11 +125,12 @@ namespace DiplomataEditor {
             }
 
             GUILayout.EndHorizontal();
-            
 
-            if (focusedWindow.ToString() == " (DiplomataEditor.CharacterEditor)") {
-                if (Event.current.keyCode == KeyCode.Return) {
-                    Create();
+            if (focusedWindow != null) {
+                if (focusedWindow.ToString() == " (DiplomataEditor.CharacterEditor)") {
+                    if (Event.current.keyCode == KeyCode.Return) {
+                        Create();
+                    }
                 }
             }
         }

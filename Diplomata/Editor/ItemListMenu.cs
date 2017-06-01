@@ -84,6 +84,10 @@ namespace DiplomataEditor {
             GUILayout.EndVertical();
             EditorGUILayout.EndScrollView();
         }
+
+        public void OnInspectorUpdate() {
+            Repaint();
+        }
     }
 
 }
