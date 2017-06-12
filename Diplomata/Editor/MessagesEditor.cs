@@ -21,6 +21,7 @@ namespace DiplomataEditor {
         public static GUIStyle textAreaStyle = new GUIStyle(DGUI.textAreaStyle);
         public static GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
         public static GUIStyle fakeButtonStyle = new GUIStyle(GUI.skin.button);
+        public static Color inactiveColor = new Color(0, 0, 0, 0.6f);
 
         private static Vector2 scrollPosMain = new Vector2(0, 0);
         private static Vector2 scrollPosSidebar = new Vector2(0, 0);
@@ -234,7 +235,7 @@ namespace DiplomataEditor {
                         }
                     }
 
-                    if (context.titleFilter && (!currentMessage.disposable || currentMessage.isAChoice)) {
+                    if (context.titleFilter) {
                         text = "<b><i>Title:</i></b>";
                         
                         DGUI.textContent.text = text;
@@ -252,9 +253,15 @@ namespace DiplomataEditor {
                         DGUI.textContent.text = title.value;
                         height = textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth);
 
+                        if (currentMessage.disposable && !currentMessage.isAChoice) {
+                            textAreaStyle.normal.textColor = DGUI.ColorSub(textAreaStyle.normal.textColor, inactiveColor); 
+                        }
+
                         GUI.SetNextControlName("title" + currentMessage.id);
                         title.value = EditorGUILayout.TextArea(title.value, textAreaStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
                         EditorGUILayout.Separator();
+
+                        textAreaStyle.normal.textColor = Color.black;
                     }
                     
                     if (context.contentFilter) {
@@ -982,7 +989,7 @@ namespace DiplomataEditor {
                                             foreach (Context ctx in tempCharacter.contexts) {
 
                                                 if (DictHandler.ContainsKey(ctx.name, diplomataEditor.preferences.currentLanguage).value == contextName) {
-                                                    effect.endOfContext.Set(ctx.characterName, ctx.id);
+                                                    effect.endOfContext.Set(tempCharacter.name, ctx.id);
                                                     break;
                                                 }
 
@@ -1171,7 +1178,7 @@ namespace DiplomataEditor {
                         }
 
                         if (GUILayout.Button("Add Effect", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                            message.effects = ArrayHandler.Add(message.effects, new Effect());
+                            message.effects = ArrayHandler.Add(message.effects, new Effect(character.name));
                             diplomataEditor.Save(character);
                         }
 

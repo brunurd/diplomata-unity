@@ -69,13 +69,17 @@ namespace DiplomataLib {
         }
 
         public Effect() { }
-        
+
+        public Effect(string characterName) {
+            endOfContext.characterName = characterName;
+        }
+
         public string DisplayNone() {
             return "None";
         }
 
         public string DisplayEndOfContext(string contextName) {
-            return "End of the context<i>" + contextName + "</i>";
+            return "End of the context <i>" + contextName + "</i>";
         }
 
         public string DisplayGoTo(string messageTitle) {
