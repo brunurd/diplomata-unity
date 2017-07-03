@@ -1,9 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using Diana.Core;
 
 namespace DiplomataLib {
-    
+
     public class Talk {
 
         public static bool canTalk;
@@ -19,14 +21,14 @@ namespace DiplomataLib {
 
         public static void End(DiplomataCharacter character, GameObject box) {
             onEnd();
-            character.EndTalk();
+            character.NextMessage();
             box.SetActive(false);
             canTalk = true;
         }
 
     }
 
-    public class ChoiceMenu {
+    public class ChoiceMenu : ScriptableObject {
 
         public static Action onStart = delegate { };
         public static Action onEnd = delegate { };
@@ -55,12 +57,18 @@ namespace DiplomataLib {
                         button.onClick.AddListener(delegate {
                             End(character, box, choiceList, text.text);
                         });
+
+                        /*
+                        if (i == 0) {
+                            EventSystem.current.SetSelectedGameObject(obj);
+                        }
+                        */
                     }
                 }
             }
         }
 
-        private static void End(DiplomataCharacter character, GameObject box, Transform choiceList, string choice) {
+        public static void End(DiplomataCharacter character, GameObject box, Transform choiceList, string choice) {
             character.ChooseMessage(choice);
             box.SetActive(false);
             onEnd();
@@ -69,15 +77,14 @@ namespace DiplomataLib {
                 GameObject.Destroy(choiceList.GetChild(i).gameObject);
             }
         }
-
     }
 
-    public class ShowMessage {
+    public class ShowMessage : ScriptableObject {
 
         public static Action onStart = delegate { };
         public static Action onEnd = delegate { };
 
-        public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter, 
+        public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter,
             GameObject emitter, Text content, Button button, Text buttonText, string nextText, string endText) {
             if (character.talking) {
                 if (!box.activeSelf && !character.choiceMenu) {
@@ -123,9 +130,14 @@ namespace DiplomataLib {
             }
         }
 
-        private static void End(DiplomataCharacter character, GameObject box) {
+        public static void End(DiplomataCharacter character, GameObject box) {
             onEnd();
             character.NextMessage();
+
+            if (!character.talking) {
+                Talk.End(character, box);
+            }
+
             box.SetActive(false);
         }
 

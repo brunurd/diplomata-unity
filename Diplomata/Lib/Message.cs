@@ -104,6 +104,11 @@ namespace DiplomataLib {
 
             return array;
         }
+
+        public Effect AddCustomEffect() {
+            effects = ArrayHandler.Add(effects, new Effect());
+            return effects[effects.Length - 1];
+        }
     }
 
 }

@@ -58,7 +58,7 @@ namespace DiplomataLib {
 
                         else if (controlIndexes["context"] == lastContext) {
                             Debug.LogWarning("No more contexts avaliable in the character " + character.name + ".");
-                            talking = false;
+                            EndTalk();
                             break;
                         }
                     }
@@ -66,7 +66,7 @@ namespace DiplomataLib {
 
                 if (currentContext == null) {
                     Debug.LogError("No context found in " + character.name + ".");
-                    talking = false;
+                    EndTalk();
                 }
 
                 else {
@@ -76,7 +76,7 @@ namespace DiplomataLib {
 
             else {
                 Debug.LogError("You don't attached a character in the Game Object!");
-                talking = false;
+                EndTalk();
             }
         }
         
@@ -278,14 +278,14 @@ namespace DiplomataLib {
 
                             else {
                                 Debug.LogWarning("The column with id " + currentColumn.id + " of context " + currentContext.id + " of " + character.name + " is empty.");
-                                talking = false;
+                                EndTalk();
                             }
                         }
                     }
 
                     else {
                         Debug.LogWarning("The current context don't have any column left.");
-                        talking = false;
+                        EndTalk();
                     }
 
                 }
@@ -297,7 +297,7 @@ namespace DiplomataLib {
 
             else {
                 Debug.LogError("Unable to found current context, this character don't have contexts or you need to use DiplomataCharacter.StartTalk() method to start the conversation.");
-                talking = false;
+                EndTalk();
             }
         }
 
@@ -320,7 +320,7 @@ namespace DiplomataLib {
                 else {
                     var errorText = "Current message to show is not setted.";
                     Debug.LogError(errorText);
-                    talking = false;
+                    EndTalk();
                     return errorText;
                 }
             }
@@ -637,13 +637,13 @@ namespace DiplomataLib {
 
                 else {
                     Debug.LogError("Unable to found the message with the title \"" + title + "\".");
-                    talking = false;
+                    EndTalk();
                 }
             }
 
             else {
                 Debug.LogError("No column setted.");
-                talking = false;
+                EndTalk();
             }
         }
 
