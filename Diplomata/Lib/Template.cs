@@ -84,8 +84,10 @@ namespace DiplomataLib {
         public static Action onStart = delegate { };
         public static Action onEnd = delegate { };
 
-        public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter,
-            GameObject emitter, Text content, Button button, Text buttonText, string nextText, string endText) {
+        public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter, 
+            GameObject emitter, Text content, Button button, Text buttonText, string nextText, string endText, 
+            Image buttonImage, Sprite nextSprite, Sprite endSprite) {
+
             if (character.talking) {
                 if (!box.activeSelf && !character.choiceMenu) {
                     onStart();
@@ -112,7 +114,13 @@ namespace DiplomataLib {
                     button.onClick.RemoveAllListeners();
 
                     if (character.IsLastMessage()) {
-                        buttonText.text = endText;
+                        if (buttonText != null) {
+                            buttonText.text = endText;
+                        }
+
+                        if (buttonImage != null && endSprite != null) {
+                            buttonImage.sprite = endSprite;
+                        }
 
                         button.onClick.AddListener(() => {
                             Talk.End(character, box);
@@ -120,7 +128,13 @@ namespace DiplomataLib {
                     }
 
                     else {
-                        buttonText.text = nextText;
+                        if (buttonText != null) {
+                            buttonText.text = nextText;
+                        }
+
+                        if (buttonImage != null && nextSprite != null) {
+                            buttonImage.sprite = nextSprite;
+                        }
 
                         button.onClick.AddListener(() => {
                             End(character, box);
@@ -128,6 +142,16 @@ namespace DiplomataLib {
                     }
                 }
             }
+        }
+
+        public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter,
+            GameObject emitter, Text content, Button button, Text buttonText, string nextText, string endText) {
+            Start(character, box, playerEmitter, emitter, content, button, buttonText, nextText, endText, null, null, null);
+        }
+
+        public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter,
+            GameObject emitter, Text content, Button button, Image buttonImage, Sprite nextSprite, Sprite endSprite) {
+            Start(character, box, playerEmitter, emitter, content, button, null, "", "", buttonImage, nextSprite, endSprite);
         }
 
         public static void End(DiplomataCharacter character, GameObject box) {

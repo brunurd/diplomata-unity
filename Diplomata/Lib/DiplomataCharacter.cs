@@ -378,52 +378,62 @@ namespace DiplomataLib {
 
         public void SetAnimatorAttributes() {
             if (currentMessage != null) {
-                if (currentMessage.animatorAttributesSetters.Length > 0) {
-                    var animator = GetComponent<Animator>();
 
-                    if (animator != null) {
+                if (currentMessage.animatorAttributesSetters.Length > 0) {
+                    var animators = FindObjectsOfType(typeof(Animator));
+
+                    foreach (Animator animator in animators) {
 
                         foreach (AnimatorAttributeSetter animatorAttribute in currentMessage.animatorAttributesSetters) {
-                            switch (animatorAttribute.type) {
 
-                                case AnimatorControllerParameterType.Bool:
-                                    animator.SetBool(animatorAttribute.name, animatorAttribute.setBool);
-                                    break;
+                            if (animator.runtimeAnimatorController.name == animatorAttribute.animator.name) {
 
-                                case AnimatorControllerParameterType.Float:
-                                    animator.SetFloat(animatorAttribute.name, animatorAttribute.setFloat);
-                                    break;
+                                switch (animatorAttribute.type) {
 
-                                case AnimatorControllerParameterType.Int:
-                                    animator.SetInteger(animatorAttribute.name, animatorAttribute.setInt);
-                                    break;
+                                    case AnimatorControllerParameterType.Bool:
+                                        animator.SetBool(animatorAttribute.name, animatorAttribute.setBool);
+                                        break;
 
-                                case AnimatorControllerParameterType.Trigger:
-                                    animator.SetTrigger(animatorAttribute.name);
-                                    break;
+                                    case AnimatorControllerParameterType.Float:
+                                        animator.SetFloat(animatorAttribute.name, animatorAttribute.setFloat);
+                                        break;
+
+                                    case AnimatorControllerParameterType.Int:
+                                        animator.SetInteger(animatorAttribute.name, animatorAttribute.setInt);
+                                        break;
+
+                                    case AnimatorControllerParameterType.Trigger:
+                                        animator.SetTrigger(animatorAttribute.name);
+                                        break;
+
+                                }
 
                             }
+
                         }
 
                     }
 
-                    else {
-                        Debug.LogWarning("You have animation attributes in this message, but the game object don't have a Animator.");
-                    }
                 }
+
             }
         }
 
-        public void ResetAnimator() {
-            var animator = GetComponent<Animator>();
+        public void ResetAnimators() {
+            var animators = FindObjectsOfType(typeof(Animator));
 
-            if (animator != null) {
-                animator.Rebind();
+            foreach (Animator animator in animators) {
+
+                foreach (AnimatorAttributeSetter animatorAttribute in currentMessage.animatorAttributesSetters) {
+
+                    if (animator.runtimeAnimatorController.name == animatorAttribute.animator.name) {
+                        animator.Rebind();
+                    }
+
+                }
+
             }
-                    
-            else {
-                Debug.LogWarning("This game object don't have a Animator.");
-            }
+
         }
 
         public void SwapStaticSprite(Vector2 pivot) {
@@ -490,32 +500,34 @@ namespace DiplomataLib {
                             break;
 
                         case Effect.Type.SetAnimatorAttribute:
-                            var animator = GetComponent<Animator>();
+                            var animators = FindObjectsOfType(typeof(Animator));
 
-                            if (animator != null) {
-                                switch (effect.animatorAttributeSetter.type) {
+                            foreach (Animator animator in animators) {
 
-                                    case AnimatorControllerParameterType.Bool:
-                                        animator.SetBool(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setBool);
-                                        break;
+                                if (animator.runtimeAnimatorController.name == effect.animatorAttributeSetter.animator.name) {
 
-                                    case AnimatorControllerParameterType.Float:
-                                        animator.SetFloat(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setFloat);
-                                        break;
+                                    switch (effect.animatorAttributeSetter.type) {
 
-                                    case AnimatorControllerParameterType.Int:
-                                        animator.SetInteger(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setInt);
-                                        break;
+                                        case AnimatorControllerParameterType.Bool:
+                                            animator.SetBool(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setBool);
+                                            break;
 
-                                    case AnimatorControllerParameterType.Trigger:
-                                        animator.SetTrigger(effect.animatorAttributeSetter.name);
-                                        break;
+                                        case AnimatorControllerParameterType.Float:
+                                            animator.SetFloat(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setFloat);
+                                            break;
+
+                                        case AnimatorControllerParameterType.Int:
+                                            animator.SetInteger(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setInt);
+                                            break;
+
+                                        case AnimatorControllerParameterType.Trigger:
+                                            animator.SetTrigger(effect.animatorAttributeSetter.name);
+                                            break;
+
+                                    }
 
                                 }
-                            }
 
-                            else {
-                                Debug.LogWarning("You have a animation attributes setter effect in this message, but the game object don't have a Animator.");
                             }
 
                             break;

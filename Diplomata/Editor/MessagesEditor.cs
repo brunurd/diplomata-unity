@@ -559,7 +559,7 @@ namespace DiplomataEditor {
 
                         EditorGUILayout.Separator();
 
-                        EditorGUILayout.HelpBox("\nMake sure to store this audio clip and texture in Resources folder.\n\n" +
+                        EditorGUILayout.HelpBox("\nMake sure to store this audio clip, texture and animator controllers in Resources folder.\n\n" +
                             "Use PlayMessageAudioContent() to play audio clip and StopMessageAudioContent() to stop.\n\n" +
                             "Use SwapStaticSprite(Vector pivot) to show static image.\n", MessageType.Info);
 
@@ -570,7 +570,31 @@ namespace DiplomataEditor {
                         foreach (AnimatorAttributeSetter animatorAttribute in message.animatorAttributesSetters) {
                             
                             EditorGUILayout.Separator();
-                            
+
+                            animatorAttribute.animator = (RuntimeAnimatorController)Resources.Load(animatorAttribute.animatorPath);
+
+                            if (animatorAttribute.animator == null && animatorAttribute.animatorPath != string.Empty) {
+                                Debug.LogWarning("Cannot find the file \"" + animatorAttribute.animatorPath + "\" in Resources folder.");
+                            }
+
+                            GUILayout.Label("Animator Controller: ");
+                            EditorGUI.BeginChangeCheck();
+
+                            animatorAttribute.animator = (RuntimeAnimatorController)EditorGUILayout.ObjectField(animatorAttribute.animator, typeof(RuntimeAnimatorController), false);
+
+                            if (EditorGUI.EndChangeCheck()) {
+                                if (animatorAttribute.animator != null) {
+                                    var str = AssetDatabase.GetAssetPath(animatorAttribute.animator).Replace("Resources/", "¬");
+                                    var strings = str.Split('¬');
+                                    str = strings[1].Replace(".controller", "");
+                                    animatorAttribute.animatorPath = str;
+                                }
+
+                                else {
+                                    animatorAttribute.animatorPath = string.Empty;
+                                }
+                            }
+
                             GUILayout.BeginHorizontal();
 
                             GUILayout.Label("Type: ");
@@ -1027,6 +1051,31 @@ namespace DiplomataEditor {
                                     break;
 
                                 case Effect.Type.SetAnimatorAttribute:
+
+                                    effect.animatorAttributeSetter.animator = (RuntimeAnimatorController)Resources.Load(effect.animatorAttributeSetter.animatorPath);
+
+                                    if (effect.animatorAttributeSetter.animator == null && effect.animatorAttributeSetter.animatorPath != string.Empty) {
+                                        Debug.LogWarning("Cannot find the file \"" + effect.animatorAttributeSetter.animatorPath + "\" in Resources folder.");
+                                    }
+
+                                    GUILayout.Label("Animator Controller: ");
+                                    EditorGUI.BeginChangeCheck();
+
+                                    effect.animatorAttributeSetter.animator = (RuntimeAnimatorController)EditorGUILayout.ObjectField(effect.animatorAttributeSetter.animator, 
+                                        typeof(RuntimeAnimatorController), false);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        if (effect.animatorAttributeSetter.animator != null) {
+                                            var str = AssetDatabase.GetAssetPath(effect.animatorAttributeSetter.animator).Replace("Resources/", "¬");
+                                            var strings = str.Split('¬');
+                                            str = strings[1].Replace(".controller", "");
+                                            effect.animatorAttributeSetter.animatorPath = str;
+                                        }
+
+                                        else {
+                                            effect.animatorAttributeSetter.animatorPath = string.Empty;
+                                        }
+                                    }
 
                                     GUILayout.BeginHorizontal();
 
