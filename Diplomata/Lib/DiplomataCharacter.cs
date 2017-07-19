@@ -384,28 +384,44 @@ namespace DiplomataLib {
 
                     foreach (Animator animator in animators) {
 
-                        foreach (AnimatorAttributeSetter animatorAttribute in currentMessage.animatorAttributesSetters) {
+                        if (animator.runtimeAnimatorController != null) {
 
-                            if (animator.runtimeAnimatorController.name == animatorAttribute.animator.name) {
+                            foreach (AnimatorAttributeSetter animatorAttribute in currentMessage.animatorAttributesSetters) {
 
-                                switch (animatorAttribute.type) {
+                                if (animatorAttribute.animator == null) {
+                                    animatorAttribute.animator = (RuntimeAnimatorController)Resources.Load(animatorAttribute.animatorPath);
+                                }
 
-                                    case AnimatorControllerParameterType.Bool:
-                                        animator.SetBool(animatorAttribute.name, animatorAttribute.setBool);
-                                        break;
+                                if (animatorAttribute.animator != null) {
 
-                                    case AnimatorControllerParameterType.Float:
-                                        animator.SetFloat(animatorAttribute.name, animatorAttribute.setFloat);
-                                        break;
+                                    if (animator.runtimeAnimatorController.Equals(animatorAttribute.animator)) {
 
-                                    case AnimatorControllerParameterType.Int:
-                                        animator.SetInteger(animatorAttribute.name, animatorAttribute.setInt);
-                                        break;
+                                        switch (animatorAttribute.type) {
 
-                                    case AnimatorControllerParameterType.Trigger:
-                                        animator.SetTrigger(animatorAttribute.name);
-                                        break;
+                                            case AnimatorControllerParameterType.Bool:
+                                                animator.SetBool(animatorAttribute.name, animatorAttribute.setBool);
+                                                break;
 
+                                            case AnimatorControllerParameterType.Float:
+                                                animator.SetFloat(animatorAttribute.name, animatorAttribute.setFloat);
+                                                break;
+
+                                            case AnimatorControllerParameterType.Int:
+                                                animator.SetInteger(animatorAttribute.name, animatorAttribute.setInt);
+                                                break;
+
+                                            case AnimatorControllerParameterType.Trigger:
+                                                animator.SetTrigger(animatorAttribute.name);
+                                                break;
+
+                                        }
+
+                                    }
+
+                                }
+
+                                else {
+                                    Debug.LogError("Animator controller is not setted in message.");
                                 }
 
                             }
@@ -424,10 +440,26 @@ namespace DiplomataLib {
 
             foreach (Animator animator in animators) {
 
-                foreach (AnimatorAttributeSetter animatorAttribute in currentMessage.animatorAttributesSetters) {
+                if (animator.runtimeAnimatorController != null) {
 
-                    if (animator.runtimeAnimatorController.name == animatorAttribute.animator.name) {
-                        animator.Rebind();
+                    foreach (AnimatorAttributeSetter animatorAttribute in currentMessage.animatorAttributesSetters) {
+
+                        if (animatorAttribute.animator == null) {
+                            animatorAttribute.animator = (RuntimeAnimatorController)Resources.Load(animatorAttribute.animatorPath);
+                        }
+
+                        if (animatorAttribute.animator != null) {
+
+                            if (animator.runtimeAnimatorController.Equals(animatorAttribute.animator)) {
+                                animator.Rebind();
+                            }
+
+                        }
+
+                        else {
+                            Debug.LogError("Animator controller is not setted in message.");
+                        }
+
                     }
 
                 }
@@ -504,26 +536,42 @@ namespace DiplomataLib {
 
                             foreach (Animator animator in animators) {
 
-                                if (animator.runtimeAnimatorController.name == effect.animatorAttributeSetter.animator.name) {
+                                if (animator.runtimeAnimatorController != null) {
 
-                                    switch (effect.animatorAttributeSetter.type) {
+                                    if (effect.animatorAttributeSetter.animator == null) {
+                                        effect.animatorAttributeSetter.animator = (RuntimeAnimatorController)Resources.Load(effect.animatorAttributeSetter.animatorPath);
+                                    }
 
-                                        case AnimatorControllerParameterType.Bool:
-                                            animator.SetBool(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setBool);
-                                            break;
+                                    if (effect.animatorAttributeSetter.animator != null) {
 
-                                        case AnimatorControllerParameterType.Float:
-                                            animator.SetFloat(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setFloat);
-                                            break;
+                                        if (animator.runtimeAnimatorController.Equals(effect.animatorAttributeSetter.animator)) {
 
-                                        case AnimatorControllerParameterType.Int:
-                                            animator.SetInteger(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setInt);
-                                            break;
+                                            switch (effect.animatorAttributeSetter.type) {
 
-                                        case AnimatorControllerParameterType.Trigger:
-                                            animator.SetTrigger(effect.animatorAttributeSetter.name);
-                                            break;
+                                                case AnimatorControllerParameterType.Bool:
+                                                    animator.SetBool(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setBool);
+                                                    break;
 
+                                                case AnimatorControllerParameterType.Float:
+                                                    animator.SetFloat(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setFloat);
+                                                    break;
+
+                                                case AnimatorControllerParameterType.Int:
+                                                    animator.SetInteger(effect.animatorAttributeSetter.name, effect.animatorAttributeSetter.setInt);
+                                                    break;
+
+                                                case AnimatorControllerParameterType.Trigger:
+                                                    animator.SetTrigger(effect.animatorAttributeSetter.name);
+                                                    break;
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                    else {
+                                        Debug.LogError("Animator controller is not setted in message effect.");
                                     }
 
                                 }

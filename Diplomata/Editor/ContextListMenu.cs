@@ -25,8 +25,11 @@ namespace DiplomataEditor {
                 DGUI.labelStyle.alignment = TextAnchor.MiddleCenter;
 
                 GUILayout.Label(character.name, DGUI.labelStyle, GUILayout.Height(50));
+                
+                for (int i = 0; i < character.contexts.Length; i++) {
 
-                foreach (Context context in character.contexts) {
+                    Context context = Context.Find(character, i);
+                    
                     Rect boxRect = EditorGUILayout.BeginVertical(DGUI.boxStyle);
                     GUI.Box(boxRect, GUIContent.none);
 
@@ -65,10 +68,31 @@ namespace DiplomataEditor {
                         if (EditorUtility.DisplayDialog("Are you sure?", "All data inside this context will be lost forever.", "Yes", "No")) {
                             ContextEditor.Reset(character.name);
                             character.contexts = ArrayHandler.Remove(character.contexts, context);
-                            Context.ResetIDs(character.contexts);
+                            character.contexts = Context.ResetIDs(character.contexts);
                             diplomataEditor.Save(character);
                         }
                     }
+
+                    if (GUILayout.Button("Move Up", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                        if (context.id > 0) {
+
+                            Context.Find(character, context.id - 1).id += 1;
+                            context.id -= 1;
+                            
+                            diplomataEditor.Save(character);
+                        }
+                    }
+
+                    if (GUILayout.Button("Move Down", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                        if (context.id < character.contexts.Length - 1) {
+
+                            Context.Find(character, context.id + 1).id -= 1;
+                            context.id += 1;
+                            
+                            diplomataEditor.Save(character);
+                        }
+                    }
+
                     GUILayout.EndHorizontal();
 
                     EditorGUILayout.EndVertical();
