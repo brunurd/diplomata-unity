@@ -262,6 +262,10 @@ namespace DiplomataEditor {
                         EditorGUILayout.Separator();
 
                         textAreaStyle.normal.textColor = Color.black;
+
+                        if (color.r * color.g * color.b < 0.07f) {
+                            textAreaStyle.normal.textColor = Color.white;
+                        }
                     }
                     
                     if (context.contentFilter) {
@@ -344,7 +348,7 @@ namespace DiplomataEditor {
                     }
 
                     if (currentMessage.disposable || currentMessage.isAChoice) {
-                        DGUI.labelStyle.fontSize = (context.columnWidth * 9) / 200;
+                        DGUI.labelStyle.fontSize = context.fontSize;
                         DGUI.labelStyle.alignment = TextAnchor.UpperRight;
                         DGUI.labelStyle.normal.textColor = DGUI.ColorSub(DGUI.labelStyle.normal.textColor, 0, 0.5f);
 
@@ -362,7 +366,7 @@ namespace DiplomataEditor {
                         height = DGUI.labelStyle.CalcHeight(DGUI.textContent, context.columnWidth);
                         GUILayout.Label(DGUI.textContent, DGUI.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
 
-                        DGUI.labelStyle.fontSize = (context.columnWidth * 11) / 200;
+                        DGUI.labelStyle.fontSize = context.fontSize;
                         DGUI.labelStyle.alignment = TextAnchor.UpperLeft;
                     }
 
@@ -705,8 +709,8 @@ namespace DiplomataEditor {
                                 leftCol.messages = ArrayHandler.Add(leftCol.messages, message);
                                 column.messages = ArrayHandler.Remove(column.messages, message);
 
-                                Message.ResetIDs(column.messages);
-                                Message.ResetIDs(leftCol.messages);
+                                column.messages = Message.ResetIDs(column.messages);
+                                column.messages = Message.ResetIDs(leftCol.messages);
 
                                 message.emitter = leftCol.emitter;
 
@@ -760,8 +764,8 @@ namespace DiplomataEditor {
                                 rightCol.messages = ArrayHandler.Add(rightCol.messages, message);
                                 column.messages = ArrayHandler.Remove(column.messages, message);
 
-                                Message.ResetIDs(column.messages);
-                                Message.ResetIDs(rightCol.messages);
+                                column.messages = Message.ResetIDs(column.messages);
+                                column.messages = Message.ResetIDs(rightCol.messages);
 
                                 message.emitter = rightCol.emitter;
 
@@ -785,7 +789,7 @@ namespace DiplomataEditor {
 
                                 SetMessage(null);
 
-                                Message.ResetIDs(column.messages);
+                                column.messages = Message.ResetIDs(column.messages);
 
                                 diplomataEditor.Save(character);
                             }

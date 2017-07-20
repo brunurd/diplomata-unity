@@ -96,13 +96,23 @@ namespace DiplomataLib {
 
         public static Message[] ResetIDs(Message[] array) {
 
-            for (int i = 0; i < array.Length; i++) {
-                if (array[i].id == i + 1) {
-                    array[i].id = i;
+            Message[] temp = new Message[0];
+
+            for (int i = 0; i < array.Length + 1; i++) {
+                Message msg = Find(array, i);
+
+                if (msg != null) {
+                    temp = ArrayHandler.Add(temp, msg);
                 }
             }
-
-            return array;
+            
+            for (int j = 0; j < temp.Length; j++) {
+                if (temp[j].id == j + 1) {
+                    temp[j].id = j;
+                }
+            }
+            
+            return temp;
         }
 
         public Effect AddCustomEffect() {

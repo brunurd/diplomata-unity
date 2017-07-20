@@ -84,15 +84,24 @@
             return null;
         }
 
-        public static Context[] ResetIDs(Context[] array) {
+        public static Context[] ResetIDs(Character character, Context[] array) {
+            Context[] temp = new Context[0];
 
-            for (int i = 0; i < array.Length; i++) {
-                if (array[i].id == i + 1) {
-                    array[i].id = i;
+            for (int i = 0; i < array.Length + 1; i++) {
+                Context ctx = Find(character, i);
+
+                if (ctx != null) {
+                    temp = ArrayHandler.Add(temp, ctx);
                 }
             }
 
-            return array;
+            for (int j = 0; j < temp.Length; j++) {
+                if (temp[j].id == j + 1) {
+                    temp[j].id = j;
+                }
+            }
+
+            return temp;
         }
     }
 

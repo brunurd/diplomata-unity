@@ -68,7 +68,7 @@ namespace DiplomataEditor {
                         if (EditorUtility.DisplayDialog("Are you sure?", "All data inside this context will be lost forever.", "Yes", "No")) {
                             ContextEditor.Reset(character.name);
                             character.contexts = ArrayHandler.Remove(character.contexts, context);
-                            character.contexts = Context.ResetIDs(character.contexts);
+                            character.contexts = Context.ResetIDs(character, character.contexts);
                             diplomataEditor.Save(character);
                         }
                     }
