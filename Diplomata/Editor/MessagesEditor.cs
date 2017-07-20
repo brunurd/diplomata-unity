@@ -781,8 +781,19 @@ namespace DiplomataEditor {
                         GUILayout.EndHorizontal();
                         
                         DGUI.Separator();
-                        
-                        if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
+
+                        GUILayout.BeginHorizontal();
+
+                        if (GUILayout.Button("Duplicate", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                            
+                            column.messages = ArrayHandler.Add(column.messages, new Message(message, column.messages.Length));
+
+                            SetMessage(null);
+
+                            diplomataEditor.Save(character);
+                        }
+
+                        if (GUILayout.Button("Delete", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
                             if (EditorUtility.DisplayDialog("Are you sure?", "If you agree all this message data will be lost forever.", "Yes", "No")) {
 
                                 column.messages = ArrayHandler.Remove(column.messages, message);
@@ -794,6 +805,8 @@ namespace DiplomataEditor {
                                 diplomataEditor.Save(character);
                             }
                         }
+
+                        GUILayout.EndHorizontal();
 
                         break;
 

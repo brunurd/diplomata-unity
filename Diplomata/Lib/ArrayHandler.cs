@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
 namespace DiplomataLib {
 
@@ -77,11 +79,20 @@ namespace DiplomataLib {
             }
         }
 
+        private static T DeepCopy<T>(T other) {
+            using (MemoryStream ms = new MemoryStream()) {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(ms, other);
+                ms.Position = 0;
+                return (T)formatter.Deserialize(ms);
+            }
+        }
+
         public static T[] Copy<T>(T[] copyOf) {
             T[] array = new T[copyOf.Length];
 
             for (int i = 0; i < copyOf.Length; i++) {
-                array[i] = copyOf[i];
+                array[i] = DeepCopy(copyOf[i]);
             }
 
             return array;

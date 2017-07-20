@@ -35,6 +35,27 @@ namespace DiplomataLib {
 
         public Message() { }
 
+        public Message(Message msg, int id) {
+            this.id = id;
+            isAChoice = msg.isAChoice;
+            disposable = msg.disposable;
+            emitter = msg.emitter;
+            columnId = msg.columnId;
+            imagePath = msg.imagePath;
+
+            color = new Color();
+            color = msg.color;
+            
+            conditions = ArrayHandler.Copy(msg.conditions);
+            title = ArrayHandler.Copy(msg.title);
+            content = ArrayHandler.Copy(msg.content);
+            screenplayNotes = ArrayHandler.Copy(msg.screenplayNotes);
+            attributes = ArrayHandler.Copy(msg.attributes);
+            effects = ArrayHandler.Copy(msg.effects);
+            animatorAttributesSetters = ArrayHandler.Copy(msg.animatorAttributesSetters);
+            audioClipPath = ArrayHandler.Copy(msg.audioClipPath);
+        }
+
         public Message(int id, string emitter, int columnId) {
             conditions = new Condition[0];
             title = new DictLang[0];
