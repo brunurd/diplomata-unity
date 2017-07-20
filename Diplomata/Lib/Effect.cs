@@ -25,7 +25,8 @@ namespace DiplomataLib {
             SetAnimatorAttribute,
             GetItem,
             DiscardItem,
-            SetCustomFlag
+            SetCustomFlag,
+            EquipItem
         }
 
         [System.Serializable]
@@ -119,6 +120,10 @@ namespace DiplomataLib {
 
         public string DisplayDiscardItem(string itemName) {
             return "Discard the item: <i>" + itemName + "</i>";
+        }
+
+        public string DisplayEquipItem(string itemName) {
+            return "Equip the item: <i>" + itemName + "</i>";
         }
 
         public string DisplayCustomFlagEqualTo() {

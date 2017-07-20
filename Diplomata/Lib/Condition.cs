@@ -24,7 +24,8 @@
             InfluenceLessThan,
             HasItem,
             ItemWasDiscarded,
-            CustomFlagEqualTo
+            CustomFlagEqualTo,
+            ItemIsEquipped
         }
 
         [System.Serializable]
@@ -76,6 +77,10 @@
 
         public string DisplayItemWasDiscarded(string itemName) {
             return "item was discarded: <i>" + itemName + "</i>";
+        }
+
+        public string DisplayItemIsEquipped(string itemName) {
+            return "item is equipped: <i>" + itemName + "</i>";
         }
 
         public string DisplayCustomFlagEqualTo() {

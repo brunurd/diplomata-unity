@@ -41,10 +41,16 @@ namespace DiplomataEditor {
                 GUILayout.BeginHorizontal();
 
                 var name = DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage);
-
+                
                 DGUI.labelStyle.alignment = TextAnchor.MiddleLeft;
                 GUILayout.Label(name.value, DGUI.labelStyle);
-                
+
+                DGUI.labelStyle.alignment = TextAnchor.MiddleRight;
+                DGUI.labelStyle.normal.textColor = DGUI.grey;
+                GUILayout.Label("id: " + item.id, DGUI.labelStyle);
+
+                DGUI.labelStyle.normal.textColor = Color.black;
+
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal(GUILayout.MaxWidth(Screen.width / 2));

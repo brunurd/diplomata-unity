@@ -175,6 +175,24 @@ namespace DiplomataLib {
                                                     }
 
                                                     break;
+                                                case Condition.Type.ItemIsEquipped:
+                                                    var equippedItem = Item.Find(Diplomata.inventory.items, condition.itemId);
+                                                    if (equippedItem != null) {
+                                                        if (Diplomata.inventory.IsEquipped(condition.itemId)) {
+                                                            condition.proceed = true;
+                                                        }
+
+                                                        else {
+                                                            condition.proceed = false;
+                                                        }
+                                                    }
+
+                                                    else {
+                                                        Debug.LogWarning("Cannot find the item with id " + condition.itemId + " to check.");
+                                                        condition.proceed = false;
+                                                    }
+
+                                                    break;
                                                 case Condition.Type.ItemWasDiscarded:
                                                     var discardedItem = Item.Find(Diplomata.inventory.items, condition.itemId);
 
@@ -589,6 +607,19 @@ namespace DiplomataLib {
 
                             else {
                                 Debug.LogError("Cannot find the item with id " + effect.itemId + " to get.");
+                            }
+
+                            break;
+
+                        case Effect.Type.EquipItem:
+                            var equipItem = Item.Find(Diplomata.inventory.items, effect.itemId);
+
+                            if (equipItem != null) {
+                                Diplomata.inventory.Equip(effect.itemId);
+                            }
+
+                            else {
+                                Debug.LogError("Cannot find the item with id " + effect.itemId + " to equip.");
                             }
 
                             break;

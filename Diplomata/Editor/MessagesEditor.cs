@@ -211,16 +211,24 @@ namespace DiplomataEditor {
                                         }
                                         text += condition.DisplayHasItem(itemName);
                                         break;
-                                    case Condition.Type.CustomFlagEqualTo:
-                                        text += condition.DisplayCustomFlagEqualTo();
-                                        break;
                                     case Condition.Type.ItemWasDiscarded:
                                         var itemNameDiscarded = "";
                                         if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null) {
-                                            itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                                            itemNameDiscarded = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
                                                 diplomataEditor.preferences.currentLanguage).value;
                                         }
                                         text += condition.DisplayItemWasDiscarded(itemNameDiscarded);
+                                        break;
+                                    case Condition.Type.ItemIsEquipped:
+                                        var itemNameEquipped = "";
+                                        if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null) {
+                                            itemNameEquipped = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                                                diplomataEditor.preferences.currentLanguage).value;
+                                        }
+                                        text += condition.DisplayItemIsEquipped(itemNameEquipped);
+                                        break;
+                                    case Condition.Type.CustomFlagEqualTo:
+                                        text += condition.DisplayCustomFlagEqualTo();
                                         break;
                                 }
 
@@ -330,6 +338,14 @@ namespace DiplomataEditor {
                                                 diplomataEditor.preferences.currentLanguage).value;
                                         }
                                         text += effect.DisplayDiscardItem(discardItemName);
+                                        break;
+                                    case Effect.Type.EquipItem:
+                                        var equipItemName = "";
+                                        if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null) {
+                                            equipItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                                                diplomataEditor.preferences.currentLanguage).value;
+                                        }
+                                        text += effect.DisplayEquipItem(equipItemName);
                                         break;
                                     case Effect.Type.SetCustomFlag:
                                         text += effect.DisplayCustomFlagEqualTo();
@@ -913,6 +929,34 @@ namespace DiplomataEditor {
                                     
                                     GUILayout.EndHorizontal();
                                     break;
+                                
+                                case Condition.Type.ItemIsEquipped:
+                                    GUILayout.BeginHorizontal();
+                                    UpdateItemList();
+
+                                    var equippedItemName = "";
+
+                                    if (itemList.Length > 0) {
+                                        equippedItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                                    }
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    equippedItemName = DGUI.Popup("Item is equipped ", equippedItemName, itemList);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        foreach (Item item in diplomataEditor.inventory.items) {
+
+                                            if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == equippedItemName) {
+                                                condition.itemId = item.id;
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+                                    GUILayout.EndHorizontal();
+                                    break;
 
                                 case Condition.Type.ItemWasDiscarded:
                                     GUILayout.BeginHorizontal();
@@ -921,7 +965,7 @@ namespace DiplomataEditor {
                                     var discardedItemName = "";
 
                                     if (itemList.Length > 0) {
-                                        itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                                        discardedItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
                                     }
 
                                     EditorGUI.BeginChangeCheck();
@@ -1199,6 +1243,34 @@ namespace DiplomataEditor {
                                         foreach (Item item in diplomataEditor.inventory.items) {
 
                                             if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == discardItemName) {
+                                                effect.itemId = item.id;
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+                                    GUILayout.EndHorizontal();
+                                    break;
+                                    
+                                case Effect.Type.EquipItem:
+                                    GUILayout.BeginHorizontal();
+                                    UpdateItemList();
+
+                                    var equipItemName = "";
+
+                                    if (itemList.Length > 0) {
+                                        equipItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                                    }
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    equipItemName = DGUI.Popup("Discard item ", equipItemName, itemList);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        foreach (Item item in diplomataEditor.inventory.items) {
+
+                                            if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == equipItemName) {
                                                 effect.itemId = item.id;
                                                 break;
                                             }

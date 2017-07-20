@@ -19,6 +19,7 @@ namespace DiplomataEditor {
         public static Color BGBoxColor = ColorAdd(BGColor, 0.1647f);
         public static Color proBGBoxColor = ColorAdd(proBGColor, 0.1647f);
         public static Color transparentColor = new Color(0, 0, 0, 0);
+        public static Color grey = new Color(0.5f, 0.5f, 0.5f);
 
         public static Texture2D transparentTexture;
         public static Texture2D softAlphaBlack;
