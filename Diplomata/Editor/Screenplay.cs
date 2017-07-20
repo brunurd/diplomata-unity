@@ -11,9 +11,10 @@ namespace DiplomataEditor {
 
         public static void Save(Character character) {
             RTFDocument doc = CreateDocument();
-            doc = AddCharacter(doc, character);
-            diplomataEditor = (Diplomata) AssetHandler.Read("Diplomata.asset", "Diplomata/");
+            diplomataEditor = (Diplomata)AssetHandler.Read("Diplomata.asset", "Diplomata/");
 
+            doc = AddCharacter(doc, character);
+            
             RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + character.name + " - " + diplomataEditor.preferences.currentLanguage + ".rtf", doc);
             AssetDatabase.Refresh();
         }
