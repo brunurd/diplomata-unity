@@ -11,6 +11,8 @@ namespace DiplomataLib {
         public DictAttr[] attributes;
         public Context[] contexts;
         public byte influence = 50;
+        
+        public static string playerInteractingWith;
 
         [System.NonSerialized]
         public bool onScene;

@@ -235,6 +235,17 @@ namespace DiplomataLib {
                                                     }
 
                                                     break;
+                                                case Condition.Type.InteractsWith:
+
+                                                    if (Character.playerInteractingWith == condition.interactWith) {
+                                                        condition.proceed = true;
+                                                    }
+
+                                                    else {
+                                                        condition.proceed = false;
+                                                    }
+
+                                                    break;
                                             }
 
                                             if (!condition.custom.CheckAll()) {

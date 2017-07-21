@@ -230,6 +230,9 @@ namespace DiplomataEditor {
                                     case Condition.Type.CustomFlagEqualTo:
                                         text += condition.DisplayCustomFlagEqualTo();
                                         break;
+                                    case Condition.Type.InteractsWith:
+                                        text += condition.DisplayInteractsWith(condition.interactWith);
+                                        break;
                                 }
 
                                 if (k < currentMessage.conditions.Length - 1) {
@@ -1009,6 +1012,16 @@ namespace DiplomataEditor {
 
                                     }
 
+                                    break;
+
+                                case Condition.Type.InteractsWith:
+                                    GUILayout.BeginHorizontal();
+
+                                    GUILayout.Label("Interacts with ");
+
+                                    condition.interactWith = EditorGUILayout.TextField(condition.interactWith);
+
+                                    GUILayout.EndHorizontal();
                                     break;
                             }
 

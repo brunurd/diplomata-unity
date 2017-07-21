@@ -49,6 +49,8 @@ namespace DiplomataEditor {
 
                 GUILayout.EndHorizontal();
 
+                GUILayout.Space(10.0f);
+
                 GUILayout.BeginHorizontal(GUILayout.MaxWidth(Screen.width / 2));
 
                 if (GUILayout.Button("Edit", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {

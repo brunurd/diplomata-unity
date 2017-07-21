@@ -9,6 +9,7 @@
         public AfterOf afterOf;
         public Flag customFlag;
         public int itemId;
+        public string interactWith;
 
         [System.NonSerialized]
         public Events custom = new Events();
@@ -25,7 +26,8 @@
             HasItem,
             ItemWasDiscarded,
             CustomFlagEqualTo,
-            ItemIsEquipped
+            ItemIsEquipped,
+            InteractsWith
         }
 
         [System.Serializable]
@@ -85,6 +87,10 @@
 
         public string DisplayCustomFlagEqualTo() {
             return "<i>\"" + customFlag.name + "\"</i> is <i>" + customFlag.value + "</i>";
+        }
+
+        public string DisplayInteractsWith(string objectName) {
+            return "Interacts with <i>\"" + objectName + "\"</i>";
         }
 
         public static bool CanProceed(Condition[] conditions) {
