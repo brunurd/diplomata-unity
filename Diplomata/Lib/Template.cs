@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using Diana.Core;
 
 namespace DiplomataLib {
 
@@ -31,9 +30,10 @@ namespace DiplomataLib {
     public class ChoiceMenu : ScriptableObject {
 
         public static Action onStart = delegate { };
+        public static Action onUpdate = delegate { };
         public static Action onEnd = delegate { };
 
-        public static void Start(DiplomataCharacter character, GameObject box, Text emitter, Transform choiceList, GameObject choiceObject) {
+        public static void Start(DiplomataCharacter character, GameObject box, Text emitter, Transform choiceList, GameObject choiceObject, bool selectFirst = true) {
             if (character.talking) {
                 if (!box.activeSelf && character.choiceMenu) {
                     box.SetActive(true);
@@ -44,7 +44,7 @@ namespace DiplomataLib {
                     var choices = character.MessageChoices();
 
                     for (int i = 0; i < choices.Count; i++) {
-                        var obj = GameObject.Instantiate(choiceObject);
+                        var obj = Instantiate(choiceObject);
                         obj.SetActive(true);
                         obj.transform.SetParent(choiceList);
                         obj.transform.localScale = new Vector3(1, 1, 1);
@@ -57,14 +57,20 @@ namespace DiplomataLib {
                         button.onClick.AddListener(delegate {
                             End(character, box, choiceList, text.text);
                         });
-
-                        /*
+                        
                         if (i == 0) {
-                            EventSystem.current.SetSelectedGameObject(obj);
+                            if (selectFirst) {
+                                EventSystem.current.SetSelectedGameObject(obj);
+                            }
                         }
-                        */
                     }
                 }
+            }
+        }
+
+        public static void Update(GameObject box) {
+            if (box.activeSelf) {
+                onUpdate();
             }
         }
 
@@ -74,7 +80,7 @@ namespace DiplomataLib {
             onEnd();
 
             for (int i = 1; i < choiceList.childCount; i++) {
-                GameObject.Destroy(choiceList.GetChild(i).gameObject);
+                Destroy(choiceList.GetChild(i).gameObject);
             }
         }
     }
@@ -82,11 +88,19 @@ namespace DiplomataLib {
     public class ShowMessage : ScriptableObject {
 
         public static Action onStart = delegate { };
+        public static Action onUpdate = delegate { };
         public static Action onEnd = delegate { };
+
+        public static int maxFrame = 1;
+        public static string messageContent = "";
+
+        private static bool letterByLetter;
+        private static int currentFrame;
+        private static int currentLenght;
 
         public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter, 
             GameObject emitter, Text content, Button button, Text buttonText, string nextText, string endText, 
-            Image buttonImage, Sprite nextSprite, Sprite endSprite) {
+            Image buttonImage, Sprite nextSprite, Sprite endSprite, bool letterByLetter = false) {
 
             if (character.talking) {
                 if (!box.activeSelf && !character.choiceMenu) {
@@ -106,10 +120,6 @@ namespace DiplomataLib {
                         var text = emitter.transform.GetChild(0).GetComponent<Text>();
                         text.text = character.Emitter();
                     }
-
-                    content.text = character.ShowMessageContentSubtitle();
-
-                    character.PlayMessageAudioContent();
 
                     button.onClick.RemoveAllListeners();
 
@@ -140,18 +150,59 @@ namespace DiplomataLib {
                             End(character, box);
                         });
                     }
+
+                    if (letterByLetter) {
+                        ShowMessage.letterByLetter = true;
+                        content.text = "";
+                        button.gameObject.SetActive(false);
+                    }
+
+                    else {
+                        content.text = character.ShowMessageContentSubtitle();
+                    }
                 }
             }
         }
 
         public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter,
-            GameObject emitter, Text content, Button button, Text buttonText, string nextText, string endText) {
-            Start(character, box, playerEmitter, emitter, content, button, buttonText, nextText, endText, null, null, null);
+            GameObject emitter, Text content, Button button, Text buttonText, string nextText, string endText, bool letterByLetter = false) {
+            Start(character, box, playerEmitter, emitter, content, button, buttonText, nextText, endText, null, null, null, letterByLetter);
         }
 
         public static void Start(DiplomataCharacter character, GameObject box, GameObject playerEmitter,
-            GameObject emitter, Text content, Button button, Image buttonImage, Sprite nextSprite, Sprite endSprite) {
-            Start(character, box, playerEmitter, emitter, content, button, null, "", "", buttonImage, nextSprite, endSprite);
+            GameObject emitter, Text content, Button button, Image buttonImage, Sprite nextSprite, Sprite endSprite, bool letterByLetter = false) {
+            Start(character, box, playerEmitter, emitter, content, button, null, "", "", buttonImage, nextSprite, endSprite, letterByLetter);
+        }
+
+        public static void Update(DiplomataCharacter character, GameObject box, Text content, Button button, bool letterByLetter = true) {
+            if (box.activeSelf) {
+                var fullContent = character.ShowMessageContentSubtitle();
+
+                if (letterByLetter && ShowMessage.letterByLetter) {
+                    if (currentFrame < maxFrame) {
+                        currentFrame += 1;
+                    }
+
+                    else {
+                        currentFrame = 0;
+
+                        messageContent += fullContent[currentLenght];
+                        currentLenght += 1;
+
+                        content.text = messageContent;
+                    }
+
+                    if (currentLenght == fullContent.Length) {
+                        currentFrame = 0;
+                        currentLenght = 0;
+                        messageContent = "";
+                        ShowMessage.letterByLetter = false;
+                        button.gameObject.SetActive(true);
+                    }
+                }
+
+                onUpdate();
+            }
         }
 
         public static void End(DiplomataCharacter character, GameObject box) {
@@ -164,7 +215,6 @@ namespace DiplomataLib {
 
             box.SetActive(false);
         }
-
     }
 
 }
