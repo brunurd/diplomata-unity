@@ -13,6 +13,9 @@ namespace DiplomataLib {
         public Texture2D image;
 
         [System.NonSerialized]
+        public Sprite sprite;
+
+        [System.NonSerialized]
         public bool have;
         
         [System.NonSerialized]
@@ -37,12 +40,36 @@ namespace DiplomataLib {
 
             return null;
         }
+
+        public static Item Find(Item[] items, string name, string language = "English") {
+
+            foreach (Item item in items) {
+                DictLang itemName = DictHandler.ContainsKey(item.name, language);
+
+                if (itemName.value == name && itemName != null) {
+                    return item;
+                }
+            }
+
+            Debug.LogWarning("This item doesn't exist.");
+            return null;
+        }
     }
 
     [System.Serializable]
     public class Inventory {
         public Item[] items = new Item[0];
         private int equipped = -1;
+
+        public bool IsEquipped() {
+            if (equipped == -1) {
+                return false;
+            }
+
+            else {
+                return true;
+            }
+        }
 
         public bool IsEquipped(int id) {
             if (id == equipped) {
@@ -84,6 +111,23 @@ namespace DiplomataLib {
             }
         }
 
+        public void UnEquip() {
+            equipped = -1;
+        }
+
+        public void SetImagesAndSprites() {
+            foreach (Item item in items) {
+                item.image = (Texture2D)Resources.Load(item.imagePath);
+
+                if (item.image != null) {
+                    item.sprite = Sprite.Create(
+                        item.image,
+                        new Rect(0, 0, item.image.width, item.image.height),
+                        new Vector2(0.5f, 0.5f)
+                    );
+                }
+            }
+        }
     }
 
 }

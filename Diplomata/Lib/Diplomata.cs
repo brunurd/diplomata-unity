@@ -47,6 +47,8 @@ namespace DiplomataLib {
                 inventory = JsonUtility.FromJson<Inventory>(json.text);
             }
 
+            inventory.SetImagesAndSprites();
+
             customFlags = new CustomFlags();
             json = (TextAsset)Resources.Load("Diplomata/customFlags");
 
