@@ -201,6 +201,21 @@ namespace DiplomataLib {
                     }
                 }
 
+                if (Input.GetMouseButtonDown(0) || Input.anyKeyDown || Input.touchCount > 0) {
+                    if (button.gameObject.activeSelf) {
+                        End(character, box);
+                    }
+
+                    else {
+                        content.text = fullContent;
+                        currentFrame = 0;
+                        currentLenght = 0;
+                        messageContent = "";
+                        ShowMessage.letterByLetter = false;
+                        button.gameObject.SetActive(true);
+                    }
+                }
+
                 onUpdate();
             }
         }

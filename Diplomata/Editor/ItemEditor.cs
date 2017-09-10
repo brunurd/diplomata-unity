@@ -19,7 +19,7 @@ namespace DiplomataEditor {
 
         public static void Init(State state = State.None) {
             ItemEditor window = (ItemEditor)GetWindow(typeof(ItemEditor), false, "Item", true);
-            window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 280);
+            window.minSize = new Vector2(DGUI.WINDOW_MIN_WIDTH, 288);
 
             ItemEditor.state = state;
 
@@ -93,31 +93,30 @@ namespace DiplomataEditor {
                 Debug.LogWarning("Cannot find the file \"" + item.imagePath + "\" in Resources folder.");
             }
 
+            item.highlightImage = (Texture2D)Resources.Load(item.highlightImagePath);
+
+            if (item.highlightImage == null && item.highlightImagePath != string.Empty) {
+                Debug.LogWarning("Cannot find the file \"" + item.highlightImagePath + "\" in Resources folder.");
+            }
+
             GUILayout.Label("Image: ");
             EditorGUI.BeginChangeCheck();
 
             item.image = (Texture2D) EditorGUILayout.ObjectField(item.image, typeof(Texture2D), false);
 
             if (EditorGUI.EndChangeCheck()) {
-                if (item.image != null) {
-                    var str = AssetDatabase.GetAssetPath(item.image).Replace("Resources/", "¬");
-                    var strings = str.Split('¬');
-                    str = strings[1].Replace(".png", "");
-                    str = str.Replace(".jpg", "");
-                    str = str.Replace(".jpeg", "");
-                    str = str.Replace(".psd", "");
-                    str = str.Replace(".tga", "");
-                    str = str.Replace(".tiff", "");
-                    str = str.Replace(".gif", "");
-                    str = str.Replace(".bmp", "");
-                    item.imagePath = str;
-                }
-
-                else {
-                    item.imagePath = string.Empty;
-                }
+                item.imagePath = FilenameExtract(item.image);
             }
-            
+
+            GUILayout.Label("Highlight Image: ");
+            EditorGUI.BeginChangeCheck();
+
+            item.highlightImage = (Texture2D)EditorGUILayout.ObjectField(item.highlightImage, typeof(Texture2D), false);
+
+            if (EditorGUI.EndChangeCheck()) {
+                item.highlightImagePath = FilenameExtract(item.highlightImage);
+            }
+
             EditorGUILayout.Separator();
 
             EditorGUILayout.HelpBox("\nMake sure to store this texture in Resources folder.\n", MessageType.Info);
@@ -137,6 +136,26 @@ namespace DiplomataEditor {
             }
 
             GUILayout.EndHorizontal();
+        }
+
+        public string FilenameExtract(Texture2D image) {
+            if (image != null) {
+                var str = AssetDatabase.GetAssetPath(image).Replace("Resources/", "¬");
+                var strings = str.Split('¬');
+                str = strings[1].Replace(".png", "");
+                str = str.Replace(".jpg", "");
+                str = str.Replace(".jpeg", "");
+                str = str.Replace(".psd", "");
+                str = str.Replace(".tga", "");
+                str = str.Replace(".tiff", "");
+                str = str.Replace(".gif", "");
+                str = str.Replace(".bmp", "");
+                return str;
+            }
+
+            else {
+                return string.Empty;
+            }
         }
 
         public void Save() {

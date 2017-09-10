@@ -6,7 +6,7 @@ namespace DiplomataLib {
 
         public string interactableLabel;
 
-        public void OnMouseDown() {
+        public void SetLabel() {
             Character.playerInteractingWith = interactableLabel;
         }
     }
