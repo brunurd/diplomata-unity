@@ -541,7 +541,7 @@ namespace DiplomataLib {
                 
                 lastColumnId = controlIndexes["column"];
                 lastMessageId = controlIndexes["message"];
-
+                
                 foreach (Effect effect in currentMessage.effects) {
 
                     switch (effect.type) {
@@ -858,6 +858,15 @@ namespace DiplomataLib {
                 Debug.LogError("This character doesn't exist. returned null.");
                 return null;
             }
+        }
+
+        public Message GetLastMessage() {
+            return Message.Find(Column.Find(currentContext, lastColumnId).messages, lastMessageId);
+        }
+
+        public string GetLastMessageContent() {
+            return DictHandler.ContainsKey(GetLastMessage().content, 
+                Diplomata.gameProgress.options.currentSubtitledLanguage).value;
         }
 
         private void OnEnable() {
