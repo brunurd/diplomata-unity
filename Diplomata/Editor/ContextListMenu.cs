@@ -20,7 +20,15 @@ namespace DiplomataEditor {
                 GUILayout.Space(listWidth);
 
                 GUILayout.BeginVertical(DGUI.windowStyle, GUILayout.Width(listWidth));
-                
+
+                if (EditorGUIUtility.isProSkin) {
+                    DGUI.labelStyle.normal.textColor = DGUI.proTextColor;
+                }
+
+                else {
+                    DGUI.labelStyle.normal.textColor = DGUI.freeTextColor;
+                }
+
                 DGUI.labelStyle.fontSize = 24;
                 DGUI.labelStyle.alignment = TextAnchor.MiddleCenter;
 

@@ -88,6 +88,15 @@ namespace DiplomataEditor {
                 if (showInfluence) {
                     DGUI.labelStyle.alignment = TextAnchor.UpperCenter;
                     EditorGUILayout.Separator();
+
+                    if (EditorGUIUtility.isProSkin) {
+                        DGUI.labelStyle.normal.textColor = DGUI.proTextColor;
+                    }
+
+                    else {
+                        DGUI.labelStyle.normal.textColor = DGUI.freeTextColor;
+                    }
+
                     GUILayout.Label("Influence: <b>" + diplomataCharacter.character.influence.ToString() + "</b>", DGUI.labelStyle);
                 }
 

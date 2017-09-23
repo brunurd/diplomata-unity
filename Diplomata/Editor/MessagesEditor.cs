@@ -450,11 +450,18 @@ namespace DiplomataEditor {
             var diplomataEditor = CharacterMessagesManager.diplomataEditor;
             var character = CharacterMessagesManager.character;
             var context = CharacterMessagesManager.context;
-            
+
+            if (EditorGUIUtility.isProSkin) {
+                DGUI.labelStyle.normal.textColor = DGUI.proTextColor;
+            }
+
+            else {
+                DGUI.labelStyle.normal.textColor = DGUI.freeTextColor;
+            }
+
             DGUI.labelStyle.fontSize = 12;
             DGUI.labelStyle.alignment = TextAnchor.UpperCenter;
-            DGUI.labelStyle.normal.textColor = Color.black;
-
+            
             if (message != null) {
 
                 switch (context.messageEditorState) {
