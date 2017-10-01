@@ -29,7 +29,7 @@
 ---
 
 
-##Licenses:
+**Licenses:**
 
 
 All files in this repository is licensed under a [MIT License](https://github.com/lavaleak/diplomata/blob/master/LICENSE.md).
@@ -44,4 +44,4 @@ All files in this repository is licensed under a [MIT License](https://github.co
 
 
 
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Licença Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />The file "Textures/DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo" is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Atribuição 4.0 Internacional</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Licença Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />The file "Textures/DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo" is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
