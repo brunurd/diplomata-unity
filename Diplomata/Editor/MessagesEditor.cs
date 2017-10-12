@@ -718,95 +718,96 @@ namespace DiplomataEditor {
                         if (column.messages.Length > 1 || context.columns.Length > 1) {
                             DGUI.Separator();
                             GUILayout.Label("Move: ");
-                        }
+                        
+                            fakeButtonStyle.richText = true;
+                            string color = "#989898";
+                            GUILayout.BeginHorizontal();
 
-                        fakeButtonStyle.richText = true;
-                        string color = "#989898";
-                        GUILayout.BeginHorizontal();
+                            if (column.id > 0) {
+                                if (GUILayout.Button("Left", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                                    message.columnId -= 1;
 
-                        if (column.id > 0) {
-                            if (GUILayout.Button("Left", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                                message.columnId -= 1;
+                                    var leftCol = Column.Find(context, message.columnId);
 
-                                var leftCol = Column.Find(context, message.columnId);
+                                    message.id = leftCol.messages.Length;
 
-                                message.id = leftCol.messages.Length;
+                                    leftCol.messages = ArrayHandler.Add(leftCol.messages, message);
+                                    column.messages = ArrayHandler.Remove(column.messages, message);
 
-                                leftCol.messages = ArrayHandler.Add(leftCol.messages, message);
-                                column.messages = ArrayHandler.Remove(column.messages, message);
+                                    column.messages = Message.ResetIDs(column.messages);
+                                    leftCol.messages = Message.ResetIDs(leftCol.messages);
 
-                                column.messages = Message.ResetIDs(column.messages);
-                                leftCol.messages = Message.ResetIDs(leftCol.messages);
+                                    message.emitter = leftCol.emitter;
 
-                                message.emitter = leftCol.emitter;
-
-                                SetMessage(message);
-                                diplomataEditor.Save(character);
+                                    SetMessage(message);
+                                    diplomataEditor.Save(character);
+                                }
                             }
-                        }
 
-                        else {
-                            GUILayout.Box("<color=" + color + ">Left</color>", fakeButtonStyle, GUILayout.Height(DGUI.BUTTON_HEIGHT));
-                        }
-
-                        if (message.id > 0) {
-                            if (GUILayout.Button("Up", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                                Message.Find(column.messages, message.id - 1).id += 1;
-
-                                message.id -= 1;
-
-                                SetMessage(message);
-                                diplomataEditor.Save(character);
+                            else {
+                                GUILayout.Box("<color=" + color + ">Left</color>", fakeButtonStyle, GUILayout.Height(DGUI.BUTTON_HEIGHT));
                             }
-                        }
 
-                        else {
-                            GUILayout.Box("<color=" + color + ">Up</color>", fakeButtonStyle, GUILayout.Height(DGUI.BUTTON_HEIGHT));
-                        }
+                            if (message.id > 0) {
+                                if (GUILayout.Button("Up", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                                    Message.Find(column.messages, message.id - 1).id += 1;
 
-                        if (message.id < column.messages.Length - 1) {
-                            if (GUILayout.Button("Down", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                                Message.Find(column.messages, message.id + 1).id -= 1;
+                                    message.id -= 1;
 
-                                message.id += 1;
-
-                                SetMessage(message);
-                                diplomataEditor.Save(character);
+                                    SetMessage(message);
+                                    diplomataEditor.Save(character);
+                                }
                             }
-                        }
 
-                        else {
-                            GUILayout.Box("<color=" + color + ">Down</color>", fakeButtonStyle, GUILayout.Height(DGUI.BUTTON_HEIGHT));
-                        }
-
-                        if (column.id < context.columns.Length - 1) {
-                            if (GUILayout.Button("Right", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
-                                message.columnId += 1;
-
-                                var rightCol = Column.Find(context, message.columnId);
-
-                                message.id = rightCol.messages.Length;
-
-                                rightCol.messages = ArrayHandler.Add(rightCol.messages, message);
-                                column.messages = ArrayHandler.Remove(column.messages, message);
-
-                                column.messages = Message.ResetIDs(column.messages);
-                                rightCol.messages = Message.ResetIDs(rightCol.messages);
-
-                                message.emitter = rightCol.emitter;
-
-                                SetMessage(message);
-                                diplomataEditor.Save(character);
+                            else {
+                                GUILayout.Box("<color=" + color + ">Up</color>", fakeButtonStyle, GUILayout.Height(DGUI.BUTTON_HEIGHT));
                             }
-                        }
 
-                        else {
-                            GUILayout.Box("<color=" + color + ">Right</color>", fakeButtonStyle, GUILayout.Height(DGUI.BUTTON_HEIGHT));
-                        }
+                            if (message.id < column.messages.Length - 1) {
+                                if (GUILayout.Button("Down", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                                    Message.Find(column.messages, message.id + 1).id -= 1;
 
-                        GUILayout.EndHorizontal();
+                                    message.id += 1;
+
+                                    SetMessage(message);
+                                    diplomataEditor.Save(character);
+                                }
+                            }
+
+                            else {
+                                GUILayout.Box("<color=" + color + ">Down</color>", fakeButtonStyle, GUILayout.Height(DGUI.BUTTON_HEIGHT));
+                            }
+
+                            if (column.id < context.columns.Length - 1) {
+                                if (GUILayout.Button("Right", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                                    message.columnId += 1;
+
+                                    var rightCol = Column.Find(context, message.columnId);
+
+                                    message.id = rightCol.messages.Length;
+
+                                    rightCol.messages = ArrayHandler.Add(rightCol.messages, message);
+                                    column.messages = ArrayHandler.Remove(column.messages, message);
+
+                                    column.messages = Message.ResetIDs(column.messages);
+                                    rightCol.messages = Message.ResetIDs(rightCol.messages);
+
+                                    message.emitter = rightCol.emitter;
+
+                                    SetMessage(message);
+                                    diplomataEditor.Save(character);
+                                }
+                            }
+
+                            else {
+                                GUILayout.Box("<color=" + color + ">Right</color>", fakeButtonStyle, GUILayout.Height(DGUI.BUTTON_HEIGHT));
+                            }
+
+                            GUILayout.EndHorizontal();
+                        }
                         
                         DGUI.Separator();
+                        GUILayout.Label("Other options: ");
 
                         GUILayout.BeginHorizontal();
 
@@ -830,6 +831,32 @@ namespace DiplomataEditor {
 
                                 diplomataEditor.Save(character);
                             }
+                        }
+
+                        GUILayout.EndHorizontal();
+
+                        DGUI.Separator();
+
+                        GUILayout.Label("Columns: ");
+
+                        GUILayout.BeginHorizontal();
+
+                        if (GUILayout.Button("New column at left", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                            context.columns = ArrayHandler.Add(context.columns, new Column(context.columns.Length));
+
+                            MoveColumnsToRight(context, column.id);
+                            
+                            SetMessage(null);
+                            diplomataEditor.Save(character);
+                        }
+
+                        if (GUILayout.Button("New column at right", GUILayout.Height(DGUI.BUTTON_HEIGHT))) {
+                            context.columns = ArrayHandler.Add(context.columns, new Column(context.columns.Length));
+
+                            MoveColumnsToRight(context, column.id + 1);
+
+                            SetMessage(null);
+                            diplomataEditor.Save(character);
                         }
 
                         GUILayout.EndHorizontal();
@@ -1345,9 +1372,7 @@ namespace DiplomataEditor {
 
             }
 
-            if (context.messageEditorState != MessageEditorState.None) {
-                DGUI.Separator();
-            }
+            GUILayout.Space(DGUI.MARGIN);
 
             if (GUILayout.Button("Remove Empty Columns", GUILayout.Height(DGUI.BUTTON_HEIGHT_SMALL))) {
                 context.columns = Column.RemoveEmptyColumns(context.columns);
@@ -1357,6 +1382,27 @@ namespace DiplomataEditor {
             }
             
             EditorGUILayout.EndScrollView();
+        }
+
+        public static void MoveColumnsToRight(Context context, int toIndex) {
+            for (int i = context.columns.Length - 1; i >= toIndex; i--) {
+                var col = Column.Find(context, i);
+                var rightCol = Column.Find(context, i + 1);
+
+                foreach (Message msg in col.messages) {
+                    msg.columnId += 1;
+
+                    msg.id = rightCol.messages.Length;
+
+                    rightCol.messages = ArrayHandler.Add(rightCol.messages, msg);
+                    col.messages = ArrayHandler.Remove(col.messages, msg);
+
+                    col.messages = Message.ResetIDs(col.messages);
+                    rightCol.messages = Message.ResetIDs(rightCol.messages);
+
+                    msg.emitter = rightCol.emitter;
+                }
+            }
         }
 
         public static void UpdateCharacterList() {
