@@ -39,6 +39,10 @@ namespace DiplomataEditor {
                 GUILayout.BeginHorizontal();
                 GUILayout.BeginHorizontal();
 
+                if (EditorGUIUtility.isProSkin) {
+                    DGUI.labelStyle.normal.textColor = Color.white;
+                }
+
                 DGUI.labelStyle.alignment = TextAnchor.MiddleLeft;
                 GUILayout.Label(name, DGUI.labelStyle);
 

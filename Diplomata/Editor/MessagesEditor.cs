@@ -736,7 +736,7 @@ namespace DiplomataEditor {
                                 column.messages = ArrayHandler.Remove(column.messages, message);
 
                                 column.messages = Message.ResetIDs(column.messages);
-                                column.messages = Message.ResetIDs(leftCol.messages);
+                                leftCol.messages = Message.ResetIDs(leftCol.messages);
 
                                 message.emitter = leftCol.emitter;
 
@@ -791,7 +791,7 @@ namespace DiplomataEditor {
                                 column.messages = ArrayHandler.Remove(column.messages, message);
 
                                 column.messages = Message.ResetIDs(column.messages);
-                                column.messages = Message.ResetIDs(rightCol.messages);
+                                rightCol.messages = Message.ResetIDs(rightCol.messages);
 
                                 message.emitter = rightCol.emitter;
 
