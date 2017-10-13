@@ -90,6 +90,10 @@ namespace DiplomataEditor {
                     diplomataEditor.SaveCustomFlags();
                 }
 
+                if (EditorGUIUtility.isProSkin) {
+                    DGUI.labelStyle.normal.textColor = Color.white;
+                }
+
                 GUILayout.Space(10.0f);
                 
                 GUILayout.Label("Move: ", DGUI.labelStyle);

@@ -907,7 +907,7 @@ namespace DiplomataEditor {
                                             foreach (Message msg in col.messages) {
 
                                                 if (DictHandler.ContainsKey(msg.title, diplomataEditor.preferences.currentLanguage).value == messageName) {
-                                                    condition.afterOf.Set(msg.columnId, msg.id);
+                                                    condition.afterOf.uniqueId = msg.GetUniqueId();
                                                     break;
                                                 }
 
@@ -1148,7 +1148,7 @@ namespace DiplomataEditor {
                                             foreach (Message msg in col.messages) {
 
                                                 if (DictHandler.ContainsKey(msg.title, diplomataEditor.preferences.currentLanguage).value == messageTitle) {
-                                                    effect.goTo.Set(msg.columnId, msg.id);
+                                                    effect.goTo.uniqueId = msg.GetUniqueId();
                                                     break;
                                                 }
 

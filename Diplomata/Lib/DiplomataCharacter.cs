@@ -17,8 +17,7 @@ namespace DiplomataLib {
         private Dictionary<string, int> controlIndexes = new Dictionary<string, int>();
         private Context currentContext;
         private Column currentColumn;
-        private int lastMessageId;
-        private int lastColumnId;
+        private string lastUniqueId;
         
         public void Start() {
             controlIndexes = new Dictionary<string, int>();
@@ -123,7 +122,7 @@ namespace DiplomataLib {
 
                                             switch (condition.type) {
                                                 case Condition.Type.AfterOf:
-                                                    if (condition.afterOf.messageId == lastMessageId && condition.afterOf.columnId == lastColumnId) {
+                                                    if (condition.afterOf.uniqueId == lastUniqueId) {
                                                         condition.proceed = true;
                                                     }
 
@@ -306,14 +305,14 @@ namespace DiplomataLib {
                             }
 
                             else {
-                                Debug.LogWarning("The column with id " + currentColumn.id + " of context " + currentContext.id + " of " + character.name + " is empty.");
-                                EndTalk();
+                                controlIndexes["column"] += 1;
+                                controlIndexes["message"] = 0;
+                                Next(false);
                             }
                         }
                     }
 
                     else {
-                        Debug.LogWarning("The current context don't have any column left.");
                         EndTalk();
                     }
 
@@ -538,9 +537,7 @@ namespace DiplomataLib {
 
                 controlIndexes["column"] = currentMessage.columnId;
                 controlIndexes["message"] = currentMessage.id;
-                
-                lastColumnId = controlIndexes["column"];
-                lastMessageId = controlIndexes["message"];
+                lastUniqueId = currentMessage.GetUniqueId();
                 
                 foreach (Effect effect in currentMessage.effects) {
 
@@ -555,8 +552,9 @@ namespace DiplomataLib {
                             break;
 
                         case Effect.Type.GoTo:
-                            controlIndexes["column"] = effect.goTo.columnId;
-                            controlIndexes["message"] = effect.goTo.messageId;
+                            Message goToMsg = effect.goTo.GetMessage(currentContext);
+                            controlIndexes["column"] = goToMsg.columnId;
+                            controlIndexes["message"] = goToMsg.id;
                             hasFate = true;
                             break;
 
@@ -690,7 +688,9 @@ namespace DiplomataLib {
 
             if (choices.Count > 0) {                
                 foreach (Message choice in choices) {
-                    choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
+                    if (!choice.alreadySpoked && choice.disposable) {
+                        choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
+                    }
                 }
             }
 
@@ -861,7 +861,13 @@ namespace DiplomataLib {
         }
 
         public Message GetLastMessage() {
-            return Message.Find(Column.Find(currentContext, lastColumnId).messages, lastMessageId);
+            foreach(Column col in currentContext.columns) {
+                if (Message.Find(col.messages, lastUniqueId) != null) {
+                    return Message.Find(col.messages, lastUniqueId);
+                }
+            }
+
+            return null;
         }
 
         public string GetLastMessageContent() {

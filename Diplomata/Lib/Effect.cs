@@ -31,21 +31,20 @@ namespace DiplomataLib {
 
         [System.Serializable]
         public struct GoTo {
-            public int columnId;
-            public int messageId;
+            public string uniqueId;
 
-            public GoTo(int columnId, int messageId) {
-                this.columnId = columnId;
-                this.messageId = messageId;
-            }
-
-            public void Set(int columnId, int messageId) {
-                this.columnId = columnId;
-                this.messageId = messageId;
+            public GoTo(string uniqueId) {
+                this.uniqueId = uniqueId;
             }
 
             public Message GetMessage(Context context) {
-                return Message.Find(Column.Find(context, columnId).messages, messageId);
+                foreach (Column col in context.columns) {
+                    if (Message.Find(col.messages, uniqueId) != null) {
+                        return Message.Find(col.messages, uniqueId);
+                    }
+                }
+
+                return null;
             }
         }
 

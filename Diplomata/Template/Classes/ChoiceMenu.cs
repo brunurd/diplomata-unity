@@ -46,19 +46,25 @@ namespace DiplomataLib {
                     choiceMenu.SetActive(true);
                     onStart();
 
+                    choiceObject.SetActive(false);
+                    currentChoice = 0;
+
                     if (type == Type.CARROUSEL) {
                         choiceListRect = choiceList.GetComponent<RectTransform>();
 
                         choiceListRect.anchoredPosition = new Vector2(0, choiceListRect.anchoredPosition.y);
 
+                        goToLeft.onClick.RemoveAllListeners();
                         goToLeft.onClick.AddListener(delegate {
                             GoToLeft();
                         });
 
+                        goToRight.onClick.RemoveAllListeners();
                         goToRight.onClick.AddListener(delegate {
                             GoToRight();
                         });
 
+                        confirm.onClick.RemoveAllListeners();
                         confirm.onClick.AddListener(delegate {
                             End();
                         });
@@ -111,18 +117,19 @@ namespace DiplomataLib {
 
         public void Update() {
             if (choiceMenu.activeSelf) {
-                goToRight.gameObject.SetActive(ShowButton(choiceList.childCount - 1));
+                goToRight.gameObject.SetActive(ShowButton(choiceList.childCount - 2));
                 goToLeft.gameObject.SetActive(ShowButton(0));
                 onUpdate();
             }
         }
 
         public void End() {
-            var text = choiceList.GetChild(currentChoice).GetComponent<Text>();
+            var text = choiceList.GetChild(currentChoice + 1).GetComponent<Text>();
             talk.character.ChooseMessage(text.text);
             choiceMenu.SetActive(false);
+            
             onEnd();
-
+            
             for (int i = 1; i < choiceList.childCount; i++) {
                 GameObject.Destroy(choiceList.GetChild(i).gameObject);
             }
@@ -139,7 +146,7 @@ namespace DiplomataLib {
         }
 
         public void GoToRight() {
-            if (currentChoice < choiceList.childCount) {
+            if (currentChoice < choiceList.childCount - 2) {
                 currentChoice += 1;
 
                 choiceListRect.anchoredPosition = new Vector2(

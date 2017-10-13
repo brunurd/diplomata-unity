@@ -41,7 +41,11 @@ namespace DiplomataEditor {
                 GUILayout.BeginHorizontal();
 
                 var name = DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage);
-                
+
+                if (EditorGUIUtility.isProSkin) {
+                    DGUI.labelStyle.normal.textColor = Color.white;
+                }
+
                 DGUI.labelStyle.alignment = TextAnchor.MiddleLeft;
                 GUILayout.Label(name.value, DGUI.labelStyle);
 

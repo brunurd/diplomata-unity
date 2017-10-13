@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,12 +8,16 @@ namespace DiplomataLib {
     [Serializable]
     public class MessageBox {
         
+        const int LOCKFRAMESLIMIT = 20;
+
         public Action onStart = delegate { };
         public Action onUpdate = delegate { };
         public Action onEnd = delegate { };
         
         private int currentFrame;
         private int currentLenght;
+        private bool nextMessageLock;
+        private int lockTime;
 
         [NonSerialized] public int maxFrame = 1;
         [NonSerialized] public string messageContent = "";
@@ -29,6 +34,7 @@ namespace DiplomataLib {
         public ScrollRect contentScrollRect;
         public Text contentText;
         public bool letterByLetter;
+        private bool letterByLetterIntern;
         public Button button;
 
         [Header("Text Button")]
@@ -122,7 +128,7 @@ namespace DiplomataLib {
                     }
 
                     if (letterByLetter) {
-                        letterByLetter = true;
+                        letterByLetterIntern = true;
                         contentText.text = "";
                         button.gameObject.SetActive(false);
                     }
@@ -138,7 +144,7 @@ namespace DiplomataLib {
             if (messageBox.activeSelf) {
                 var fullContent = talk.character.ShowMessageContentSubtitle();
 
-                if (letterByLetter) {
+                if (letterByLetterIntern) {
                     if (currentFrame < maxFrame) {
                         currentFrame += 1;
                     }
@@ -156,26 +162,37 @@ namespace DiplomataLib {
                         currentFrame = 0;
                         currentLenght = 0;
                         messageContent = "";
-                        letterByLetter = false;
+                        letterByLetterIntern = false;
                         button.gameObject.SetActive(true);
                     }
                 }
 
                 if (canFastForward) {
                     if (Input.GetMouseButtonDown(0) || Input.anyKeyDown || Input.touchCount > 0) {
-                        if (button.gameObject.activeSelf) {
+                        if (button.gameObject.activeSelf && !nextMessageLock) {
+                            button.gameObject.SetActive(false);
                             End();
                         }
 
                         else {
+                            nextMessageLock = true;
                             contentText.text = fullContent;
                             currentFrame = 0;
                             currentLenght = 0;
                             messageContent = "";
-                            letterByLetter = false;
+                            letterByLetterIntern = false;
                             button.gameObject.SetActive(true);
                         }
                     }
+                }
+
+                if (nextMessageLock && lockTime < LOCKFRAMESLIMIT) {
+                    lockTime += 1;
+                }
+
+                else {
+                    lockTime = 0;
+                    nextMessageLock = false;
                 }
 
                 onUpdate();

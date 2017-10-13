@@ -1,10 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Security.Cryptography;
+using System.Text;
+using UnityEngine;
 
 namespace DiplomataLib {
     
     [System.Serializable]
     public class Message {
         
+        [SerializeField]
+        private string uniqueId;
+
         public int id;
         public bool isAChoice;
         public bool disposable;
@@ -54,6 +59,8 @@ namespace DiplomataLib {
             effects = ArrayHandler.Copy(msg.effects);
             animatorAttributesSetters = ArrayHandler.Copy(msg.animatorAttributesSetters);
             audioClipPath = ArrayHandler.Copy(msg.audioClipPath);
+
+            uniqueId = SetUniqueId();
         }
 
         public Message(int id, string emitter, int columnId) {
@@ -94,6 +101,29 @@ namespace DiplomataLib {
             this.id = id;
             this.emitter = emitter;
             this.columnId = columnId;
+
+            uniqueId = SetUniqueId();
+        }
+
+        private string SetUniqueId() {
+            MD5 md5Hash = MD5.Create();
+
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(
+                "Diplomata" + id + columnId +
+                Random.Range(-2147483648, 2147483647)
+            ));
+
+            StringBuilder sBuilder = new StringBuilder();
+
+            for (int i = 0; i < data.Length; i++) {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            return sBuilder.ToString();
+        }
+
+        public string GetUniqueId() {
+            return uniqueId;
         }
 
         public Sprite GetSprite(Vector2 pivot) {
@@ -112,6 +142,16 @@ namespace DiplomataLib {
                 }
             }
             
+            return null;
+        }
+
+        public static Message Find(Message[] messages, string uniqueId) {
+            foreach (Message message in messages) {
+                if (message.uniqueId == uniqueId) {
+                    return message;
+                }
+            }
+
             return null;
         }
 
