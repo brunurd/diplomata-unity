@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,11 +7,12 @@ namespace DiplomataLib {
     [Serializable]
     public class MessageBox {
         
-        const int LOCKFRAMESLIMIT = 20;
+        const int LOCKFRAMESLIMIT = 25;
 
         public Action onStart = delegate { };
         public Action onUpdate = delegate { };
         public Action onEnd = delegate { };
+        public Action onEveryLetter = delegate { };
         
         private int currentFrame;
         private int currentLenght;
@@ -64,8 +64,8 @@ namespace DiplomataLib {
                     }
 
                     if (talk.character.EmitterIsPlayer()) {
-                        playerEmitterBox.SetActive(true);
                         otherEmitterBox.SetActive(false);
+                        playerEmitterBox.SetActive(true);
                         var text = playerEmitterBox.transform.GetChild(0).GetComponent<Text>();
                         text.text = talk.character.Emitter();
                     }
@@ -156,6 +156,8 @@ namespace DiplomataLib {
                         currentLenght += 1;
 
                         contentText.text = messageContent;
+
+                        onEveryLetter();
                     }
 
                     if (currentLenght == fullContent.Length) {
