@@ -30,7 +30,7 @@ namespace DiplomataLib {
     [Serializable]
     public class TalkLog {
         public string characterName;
-        public uint[] messagesIds = new uint[0];
+        public string[] messagesIds = new string[0];
 
         public TalkLog() { }
 
@@ -211,7 +211,7 @@ namespace DiplomataLib {
 
         public void LoadFlags() {
             foreach (Flag flag in flags) {
-                var flagTemp = Diplomata.customFlags.Find(flag.name);
+                var flagTemp = Diplomata.customFlags.Find(Diplomata.customFlags.flags, flag.name);
 
                 if (flagTemp != null) {
                     flagTemp.value = flag.value;

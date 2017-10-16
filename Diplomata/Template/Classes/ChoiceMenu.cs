@@ -22,6 +22,7 @@ namespace DiplomataLib {
         public GameObject choiceMenu;
         public Transform choiceList;
         [NonSerialized] RectTransform choiceListRect;
+        public GameObject lastMessageBox;
         public Text lastMessageText;
         public Text playerEmitterText;
         public GameObject choiceObject;
@@ -72,6 +73,14 @@ namespace DiplomataLib {
 
                     if (lastMessageText != null) {
                         lastMessageText.text = talk.character.GetLastMessageContent();
+
+                        if (lastMessageText.text == "") {
+                            lastMessageBox.SetActive(false);
+                        }
+
+                        else {
+                            lastMessageBox.SetActive(true);
+                        }
                     }
 
                     if (playerEmitterText != null) {

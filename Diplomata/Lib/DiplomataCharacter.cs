@@ -214,7 +214,7 @@ namespace DiplomataLib {
 
                                                     break;
                                                 case Condition.Type.CustomFlagEqualTo:
-                                                    var flag = Diplomata.customFlags.Find(condition.customFlag.name);
+                                                    var flag = Diplomata.customFlags.Find(Diplomata.customFlags.flags, condition.customFlag.name);
 
                                                     if (flag != null) {
 
@@ -340,7 +340,7 @@ namespace DiplomataLib {
                         talkLog = TalkLog.Find(Diplomata.gameProgress.talkLog, character.name);
                     }
 
-                    talkLog.messagesIds = ArrayHandler.Add(talkLog.messagesIds, (uint) currentMessage.id);
+                    talkLog.messagesIds = ArrayHandler.Add(talkLog.messagesIds, currentMessage.GetUniqueId());
 
                     return DictHandler.ContainsKey(currentMessage.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
                 }
@@ -647,7 +647,7 @@ namespace DiplomataLib {
                             break;
 
                         case Effect.Type.SetCustomFlag:
-                            var flag = Diplomata.customFlags.Find(effect.customFlag.name);
+                            var flag = Diplomata.customFlags.Find(Diplomata.customFlags.flags, effect.customFlag.name);
 
                             if (flag != null) {
                                 flag.value = effect.customFlag.value;
@@ -871,6 +871,10 @@ namespace DiplomataLib {
         }
 
         public string GetLastMessageContent() {
+            if (lastUniqueId == null || lastUniqueId == "") {
+                return "";
+            }
+
             return DictHandler.ContainsKey(GetLastMessage().content, 
                 Diplomata.gameProgress.options.currentSubtitledLanguage).value;
         }

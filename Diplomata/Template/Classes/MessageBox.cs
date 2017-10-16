@@ -7,7 +7,7 @@ namespace DiplomataLib {
     [Serializable]
     public class MessageBox {
         
-        const int LOCKFRAMESLIMIT = 25;
+        const int LOCKFRAMESLIMIT = 15;
 
         public Action onStart = delegate { };
         public Action onUpdate = delegate { };
