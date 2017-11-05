@@ -1,3 +1,5 @@
 /AssetStoreTools*
-*.meta
+Diplomata/*.meta
+Diplomata/*/*.meta
+Diplomata/*/*/*.meta
 *.unitypackage
