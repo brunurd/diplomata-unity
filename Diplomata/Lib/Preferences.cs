@@ -17,6 +17,16 @@
             subtitle = other.subtitle;
             dubbing = other.dubbing;
         }
+
+        public static Language Find(Language[] languages, string name) {
+            foreach (Language lang in languages) {
+                if (lang.name == name) {
+                    return lang;
+                }
+            }
+
+            return null;
+        }
     }
 
     [System.Serializable]

@@ -2,12 +2,12 @@
 using UnityEngine;
 
 namespace DiplomataLib {
-    
+
     [System.Serializable]
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
     public class DiplomataCharacter : MonoBehaviour {
-        
+
         public List<Message> choices = new List<Message>();
         public Message currentMessage;
         public Character character;
@@ -18,13 +18,13 @@ namespace DiplomataLib {
         private Context currentContext;
         private Column currentColumn;
         private string lastUniqueId;
-        
+
         public void Start() {
             controlIndexes = new Dictionary<string, int>();
             controlIndexes.Add("context", 0);
             controlIndexes.Add("column", 0);
             controlIndexes.Add("message", 0);
-            
+
             if (character != null && Application.isPlaying) {
                 character = Character.Find(Diplomata.characters, character.name);
             }
@@ -44,7 +44,7 @@ namespace DiplomataLib {
                 currentMessage = null;
 
                 choices = new List<Message>();
-                
+
                 for (controlIndexes["context"] = 0; controlIndexes["context"] < character.contexts.Length; controlIndexes["context"]++) {
                     var context = Context.Find(character, controlIndexes["context"]);
                     var lastContext = character.contexts.Length - 1;
@@ -78,7 +78,7 @@ namespace DiplomataLib {
                 EndTalk();
             }
         }
-        
+
         private void Next(bool hasFate) {
 
             if (character != null && currentContext != null) {
@@ -332,7 +332,7 @@ namespace DiplomataLib {
         public string ShowMessageContentSubtitle() {
 
             if (talking) {
-                if (currentMessage != null) {
+                if (currentMessage != null && Diplomata.gameProgress.options.currentSubtitledLanguage != string.Empty) {
                     var talkLog = TalkLog.Find(Diplomata.gameProgress.talkLog, character.name);
 
                     if (talkLog == null) {
@@ -358,7 +358,7 @@ namespace DiplomataLib {
         }
 
         public void PlayMessageAudioContent() {
-            if (currentMessage != null) {
+            if (currentMessage != null && Diplomata.gameProgress.options.currentDubbedLanguage != string.Empty) {
                 var audioClipPath = DictHandler.ContainsKey(currentMessage.audioClipPath, Diplomata.gameProgress.options.currentDubbedLanguage);
 
                 if (audioClipPath.value != string.Empty) {
@@ -386,7 +386,7 @@ namespace DiplomataLib {
         }
 
         public void StopMessageAudioContent() {
-            if (currentMessage != null) {
+            if (currentMessage != null && Diplomata.gameProgress.options.currentDubbedLanguage != string.Empty) {
                 var audioClipPath = DictHandler.ContainsKey(currentMessage.audioClipPath, Diplomata.gameProgress.options.currentDubbedLanguage);
 
                 if (audioClipPath.value != string.Empty) {
@@ -532,13 +532,13 @@ namespace DiplomataLib {
 
         public void NextMessage() {
             var hasFate = false;
-            
+
             if (currentMessage != null) {
 
                 controlIndexes["column"] = currentMessage.columnId;
                 controlIndexes["message"] = currentMessage.id;
                 lastUniqueId = currentMessage.GetUniqueId();
-                
+
                 foreach (Effect effect in currentMessage.effects) {
 
                     switch (effect.type) {
@@ -682,11 +682,11 @@ namespace DiplomataLib {
                 Next(false);
             }
         }
-        
+
         public List<string> MessageChoices() {
             List<string> choicesText = new List<string>();
 
-            if (choices.Count > 0) {                
+            if (choices.Count > 0 && Diplomata.gameProgress.options.currentSubtitledLanguage != string.Empty) {
                 foreach (Message choice in choices) {
                     if (!choice.alreadySpoked && choice.disposable) {
                         choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
@@ -720,10 +720,10 @@ namespace DiplomataLib {
         }
 
         public void ChooseMessage(string title) {
-            if (currentColumn != null) {
+            if (currentColumn != null && Diplomata.gameProgress.options.currentSubtitledLanguage != string.Empty) {
                 foreach (Message msg in choices) {
                     var localTitle = DictHandler.ContainsKey(msg.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
-                    
+
                     if (localTitle == title) {
                         currentMessage = msg;
                         OnStartCallbacks();
@@ -871,11 +871,11 @@ namespace DiplomataLib {
         }
 
         public string GetLastMessageContent() {
-            if (lastUniqueId == null || lastUniqueId == "") {
+            if (lastUniqueId == null || lastUniqueId == "" || Diplomata.gameProgress.options.currentSubtitledLanguage == string.Empty) {
                 return "";
             }
 
-            return DictHandler.ContainsKey(GetLastMessage().content, 
+            return DictHandler.ContainsKey(GetLastMessage().content,
                 Diplomata.gameProgress.options.currentSubtitledLanguage).value;
         }
 
