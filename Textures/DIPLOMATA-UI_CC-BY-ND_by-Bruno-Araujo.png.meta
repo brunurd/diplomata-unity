@@ -1,28 +1,35 @@
 fileFormatVersion: 2
-guid: 41d1e4d245297ec48b9a7dfb64cf8fa3
-timeCreated: 1509915976
+guid: 04458da21fc8d344f8ceade640f111df
+timeCreated: 1505603812
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_0
-    21300002: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_1
-    21300004: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_2
-    21300006: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_3
-    21300008: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_4
-    21300010: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_5
-    21300012: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_6
-    21300014: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_7
-    21300016: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_8
-    21300018: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_9
-    21300020: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_10
-    21300022: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_11
-    21300024: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_12
-    21300026: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_14
-    21300028: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_13
+    21300000: UI_0
+    21300002: UI_1
+    21300004: UI_2
+    21300006: UI_3
+    21300008: UI_4
+    21300010: UI_5
+    21300012: UI_6
+    21300014: UI_7
+    21300016: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_0
+    21300018: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_1
+    21300020: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_2
+    21300022: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_3
+    21300024: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_4
+    21300026: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_5
+    21300028: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_6
+    21300030: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_7
+    21300032: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_8
+    21300034: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_9
+    21300036: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_10
+    21300038: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_11
+    21300040: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_12
+    21300042: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_13
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -41,16 +48,16 @@ TextureImporter:
   generateCubemap: 6
   cubemapConvolution: 0
   seamlessCubemap: 0
-  textureFormat: 1
-  maxTextureSize: 2048
+  textureFormat: -1
+  maxTextureSize: 1024
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
+    filterMode: 1
+    aniso: 16
     mipBias: -1
     wrapU: 1
-    wrapV: -1
-    wrapW: -1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -71,47 +78,7 @@ TextureImporter:
   textureFormatSet: 0
   platformSettings:
   - buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Standalone
-    maxTextureSize: 512
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 512
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Android
-    maxTextureSize: 512
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: Windows Store Apps
-    maxTextureSize: 512
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-  - buildTarget: WebGL
-    maxTextureSize: 512
+    maxTextureSize: 1024
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
@@ -129,9 +96,9 @@ TextureImporter:
         y: 366
         width: 341
         height: 146
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 38, y: 36, z: 36, w: 34}
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 37, y: 35, z: 34, w: 31}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -143,9 +110,9 @@ TextureImporter:
         y: 384
         width: 154
         height: 124
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 26, y: 24, z: 24, w: 30}
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 23, y: 27, z: 21, w: 28}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -157,8 +124,8 @@ TextureImporter:
         y: 280
         width: 339
         height: 78
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 1
+      pivot: {x: 0, y: 1}
       border: {x: 28, y: 30, z: 28, w: 26}
       outline: []
       physicsShape: []
@@ -171,9 +138,9 @@ TextureImporter:
         y: 252
         width: 154
         height: 124
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 26, y: 27, z: 24, w: 26}
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 26, y: 28, z: 24, w: 29}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -185,9 +152,9 @@ TextureImporter:
         y: 142
         width: 324
         height: 130
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 29, y: 31, z: 30, w: 27}
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 24, y: 26, z: 22, w: 22}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -199,9 +166,9 @@ TextureImporter:
         y: 124
         width: 154
         height: 124
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 26, y: 22, z: 24, w: 28}
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 26, y: 29, z: 27, w: 30}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -213,8 +180,8 @@ TextureImporter:
         y: 0
         width: 132
         height: 132
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 1
+      pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -227,65 +194,9 @@ TextureImporter:
         y: 21
         width: 159
         height: 80
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 31, y: 30, z: 33, w: 26}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_9
-      rect:
-        serializedVersion: 2
-        x: 336
-        y: 67
-        width: 37
-        height: 48
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_11
-      rect:
-        serializedVersion: 2
-        x: 418
-        y: 69
-        width: 42
-        height: 42
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_14
-      rect:
-        serializedVersion: 2
-        x: 405
-        y: 14
-        width: 60
-        height: 48
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_13
-      rect:
-        serializedVersion: 2
-        x: 377
-        y: 67
-        width: 37
-        height: 48
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 29, y: 31, z: 27, w: 27}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -293,12 +204,26 @@ TextureImporter:
       name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_8
       rect:
         serializedVersion: 2
-        x: 465
-        y: 69
-        width: 42
-        height: 42
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 336
+        y: 67
+        width: 37
+        height: 48
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_9
+      rect:
+        serializedVersion: 2
+        x: 377
+        y: 67
+        width: 37
+        height: 48
+      alignment: 1
+      pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -307,12 +232,54 @@ TextureImporter:
       name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_10
       rect:
         serializedVersion: 2
+        x: 418
+        y: 69
+        width: 43
+        height: 43
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_11
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 69
+        width: 43
+        height: 43
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_12
+      rect:
+        serializedVersion: 2
         x: 342
         y: 14
         width: 60
         height: 48
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 1
+      pivot: {x: 0, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_13
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 14
+        width: 60
+        height: 48
+      alignment: 1
+      pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

@@ -211,6 +211,14 @@ namespace DiplomataEditor {
                                         }
                                         text += condition.DisplayHasItem(itemName);
                                         break;
+                                    case Condition.Type.DoesNotHaveTheItem:
+                                        var itemNameDont = "";
+                                        if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null) {
+                                            itemNameDont = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                                                diplomataEditor.preferences.currentLanguage).value;
+                                        }
+                                        text += condition.DisplayDoesNotHaveItem(itemNameDont);
+                                        break;
                                     case Condition.Type.ItemWasDiscarded:
                                         var itemNameDiscarded = "";
                                         if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null) {
@@ -966,7 +974,35 @@ namespace DiplomataEditor {
                                     
                                     GUILayout.EndHorizontal();
                                     break;
-                                
+
+                                case Condition.Type.DoesNotHaveTheItem:
+                                    GUILayout.BeginHorizontal();
+                                    UpdateItemList();
+
+                                    var itemNameDont = "";
+
+                                    if (itemList.Length > 0) {
+                                        itemNameDont = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                                    }
+
+                                    EditorGUI.BeginChangeCheck();
+
+                                    itemNameDont = DGUI.Popup("Does not have the item ", itemNameDont, itemList);
+
+                                    if (EditorGUI.EndChangeCheck()) {
+                                        foreach (Item item in diplomataEditor.inventory.items) {
+
+                                            if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == itemNameDont) {
+                                                condition.itemId = item.id;
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+                                    GUILayout.EndHorizontal();
+                                    break;
+
                                 case Condition.Type.ItemIsEquipped:
                                     GUILayout.BeginHorizontal();
                                     UpdateItemList();

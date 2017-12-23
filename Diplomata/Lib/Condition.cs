@@ -27,7 +27,8 @@
             ItemWasDiscarded,
             CustomFlagEqualTo,
             ItemIsEquipped,
-            InteractsWith
+            InteractsWith,
+            DoesNotHaveTheItem
         }
 
         [System.Serializable]
@@ -74,6 +75,10 @@
 
         public string DisplayHasItem(string itemName) {
             return "Has the item: <i>" + itemName + "</i>";
+        }
+
+        public string DisplayDoesNotHaveItem(string itemName) {
+            return "Does not have the item: <i>" + itemName + "</i>";
         }
 
         public string DisplayItemWasDiscarded(string itemName) {
