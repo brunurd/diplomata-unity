@@ -711,6 +711,9 @@ namespace DiplomataLib {
                     if (!choice.alreadySpoked && choice.disposable) {
                         choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
                     }
+                    else if (!choice.disposable) {
+                        choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
+                    }
                 }
             }
 
