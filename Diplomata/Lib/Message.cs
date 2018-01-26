@@ -3,10 +3,10 @@ using System.Text;
 using UnityEngine;
 
 namespace DiplomataLib {
-    
+
     [System.Serializable]
     public class Message {
-        
+
         [SerializeField]
         private string uniqueId;
 
@@ -16,7 +16,6 @@ namespace DiplomataLib {
         public string emitter;
         public int columnId;
         public string imagePath = string.Empty;
-        public Color color;
         public Condition[] conditions;
         public DictLang[] title;
         public DictLang[] content;
@@ -25,6 +24,7 @@ namespace DiplomataLib {
         public Effect[] effects;
         public AnimatorAttributeSetter[] animatorAttributesSetters;
         public DictLang[] audioClipPath;
+        public string labelId;
 
         [System.NonSerialized]
         public bool alreadySpoked;
@@ -47,9 +47,7 @@ namespace DiplomataLib {
             emitter = msg.emitter;
             columnId = msg.columnId;
             imagePath = msg.imagePath;
-
-            color = new Color();
-            color = msg.color;
+            labelId = msg.labelId;
             
             conditions = ArrayHandler.Copy(msg.conditions);
             title = ArrayHandler.Copy(msg.title);
@@ -63,7 +61,7 @@ namespace DiplomataLib {
             uniqueId = SetUniqueId();
         }
 
-        public Message(int id, string emitter, int columnId) {
+        public Message(int id, string emitter, int columnId, string labelId) {
             conditions = new Condition[0];
             title = new DictLang[0];
             content = new DictLang[0];
@@ -72,6 +70,7 @@ namespace DiplomataLib {
             effects = new Effect[0];
             audioClipPath = new DictLang[0];
             animatorAttributesSetters = new AnimatorAttributeSetter[0];
+            this.labelId = labelId;
 
             foreach (string str in Diplomata.preferences.attributes) {
                 attributes = ArrayHandler.Add(attributes, new DictAttr(str));
@@ -83,20 +82,6 @@ namespace DiplomataLib {
                 screenplayNotes = ArrayHandler.Add(screenplayNotes, new DictLang(lang.name, ""));
                 audioClipPath = ArrayHandler.Add(audioClipPath, new DictLang(lang.name, string.Empty));
             }
-
-            #if UNITY_EDITOR
-            
-            if (UnityEditor.EditorGUIUtility.isProSkin) {
-                color = new Color(0.2196f, 0.2196f, 0.2196f);
-            }
-
-            else {
-                color = new Color(0.9764f, 0.9764f, 0.9764f);
-            }
-
-            #else
-            color = new Color(0.9764f, 0.9764f, 0.9764f);
-            #endif
 
             this.id = id;
             this.emitter = emitter;
@@ -141,7 +126,7 @@ namespace DiplomataLib {
                     return message;
                 }
             }
-            
+
             return null;
         }
 
@@ -166,13 +151,13 @@ namespace DiplomataLib {
                     temp = ArrayHandler.Add(temp, msg);
                 }
             }
-            
+
             for (int j = 0; j < temp.Length; j++) {
                 if (temp[j].id == j + 1) {
                     temp[j].id = j;
                 }
             }
-            
+
             return temp;
         }
 

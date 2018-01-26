@@ -6,7 +6,7 @@
         Conditions,
         Effects
     }
-    
+
     [System.Serializable]
     public class Context {
         public int id;
@@ -23,6 +23,7 @@
         public DictLang[] name;
         public DictLang[] description;
         public Column[] columns;
+        public Label[] labels = new Label[] { new Label() };
 
         [System.NonSerialized]
         public bool happened;
@@ -49,6 +50,7 @@
             this.characterName = characterName;
             columns = new Column[0];
             name = new DictLang[0];
+            labels = new Label[] { new Label() };
             description = new DictLang[0];
 
             foreach (Language lang in Diplomata.preferences.languages) {
