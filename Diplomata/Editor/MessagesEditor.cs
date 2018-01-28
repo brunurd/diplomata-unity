@@ -574,15 +574,17 @@ namespace DiplomataEditor {
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Label: ");
 
-                        var labelName = Label.Find(context.labels, message.labelId).name;
+                        var label = Label.Find(context.labels, message.labelId);
                         var labelIndex = 0;
 
                         UpdateLabelsList(context);
 
-                        for (int i = 0; i < labelsList.Length; i++) {
-                            if (labelName == labelsList[i]) {
-                                labelIndex = i;
-                                break;
+                        if (label != null) {
+                            for (int labelI = 0; labelI < labelsList.Length; labelI++) {
+                                if (label.name == labelsList[labelI]) {
+                                    labelIndex = labelI;
+                                    break;
+                                }
                             }
                         }
 

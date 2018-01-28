@@ -5,7 +5,7 @@ namespace DiplomataLib {
   [Serializable]
   public class Label {
     public string id;
-    public string name;
+    public string name = String.Empty;
     public Color color;
     public bool show;
 
