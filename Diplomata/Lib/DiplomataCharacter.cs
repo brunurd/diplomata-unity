@@ -709,10 +709,10 @@ namespace DiplomataLib {
             if (choices.Count > 0) {                
                 foreach (Message choice in choices) {
                     if (!choice.alreadySpoked && choice.disposable) {
-                        choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
+                        choicesText.Add(DictHandler.ContainsKey(choice.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
                     }
                     else if (!choice.disposable) {
-                        choicesText.Add(DictHandler.ContainsKey(choice.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
+                        choicesText.Add(DictHandler.ContainsKey(choice.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
                     }
                 }
             }
@@ -742,12 +742,12 @@ namespace DiplomataLib {
             }
         }
 
-        public void ChooseMessage(string title) {
+        public void ChooseMessage(string content) {
             if (currentColumn != null) {
                 foreach (Message msg in choices) {
-                    var localTitle = DictHandler.ContainsKey(msg.title, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
+                    var localContent = DictHandler.ContainsKey(msg.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
                     
-                    if (localTitle == title) {
+                    if (localContent == content) {
                         currentMessage = msg;
                         OnStartCallbacks();
                         break;
@@ -761,7 +761,7 @@ namespace DiplomataLib {
                 }
 
                 else {
-                    Debug.LogError("Unable to found the message with the title \"" + title + "\".");
+                    Debug.LogError("Unable to found the message with the content \"" + content + "\".");
                     EndTalk();
                 }
             }
@@ -838,20 +838,20 @@ namespace DiplomataLib {
             return Message.Find(Column.Find(Context.Find(character, contextId), columnId).messages, messageId);
         }
 
-        public Message FindMessage(string messageTitle, string language = "English") {
+        public Message FindMessage(string messageContent, string language = "English") {
             if (character != null) {
                 foreach (Context context in character.contexts) {
                     foreach (Column column in context.columns) {
                         for (int i = 0; i < column.messages.Length; i++) {
-                            DictLang title = DictHandler.ContainsKey(Message.Find(column.messages, i).title, language);
-                            if (title.value == messageTitle && title != null) {
+                            DictLang content = DictHandler.ContainsKey(Message.Find(column.messages, i).content, language);
+                            if (content.value == messageContent && content != null) {
                                 return column.messages[i];
                             }
                         }
                     }
                 }
 
-                Debug.LogError("Cannot find the message \"" + messageTitle + "\" in " + language +
+                Debug.LogError("Cannot find the message \"" + messageContent + "\" in " + language +
                     " in the character " + character.name + " messages. returned null.");
                 return null;
             }

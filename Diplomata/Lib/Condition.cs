@@ -56,8 +56,8 @@
             return "None";
         }
 
-        public string DisplayAfterOf(string messageTitle) {
-            return "After of <i>" + messageTitle + "</i>";
+        public string DisplayAfterOf(string messageContent) {
+            return "After of <i>" + messageContent + "</i>";
         }
         
         public string DisplayCompareInfluence() {

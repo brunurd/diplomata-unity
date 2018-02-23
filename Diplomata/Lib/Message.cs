@@ -17,7 +17,6 @@ namespace DiplomataLib {
         public int columnId;
         public string imagePath = string.Empty;
         public Condition[] conditions;
-        public DictLang[] title;
         public DictLang[] content;
         public DictLang[] screenplayNotes;
         public DictAttr[] attributes;
@@ -50,7 +49,6 @@ namespace DiplomataLib {
             labelId = msg.labelId;
             
             conditions = ArrayHandler.Copy(msg.conditions);
-            title = ArrayHandler.Copy(msg.title);
             content = ArrayHandler.Copy(msg.content);
             screenplayNotes = ArrayHandler.Copy(msg.screenplayNotes);
             attributes = ArrayHandler.Copy(msg.attributes);
@@ -63,7 +61,6 @@ namespace DiplomataLib {
 
         public Message(int id, string emitter, int columnId, string labelId) {
             conditions = new Condition[0];
-            title = new DictLang[0];
             content = new DictLang[0];
             attributes = new DictAttr[0];
             screenplayNotes = new DictLang[0];
@@ -77,7 +74,6 @@ namespace DiplomataLib {
             }
 
             foreach (Language lang in Diplomata.preferences.languages) {
-                title = ArrayHandler.Add(title, new DictLang(lang.name, "placeholder" + columnId.ToString() + id.ToString()));
                 content = ArrayHandler.Add(content, new DictLang(lang.name, "[ Message content here ]"));
                 screenplayNotes = ArrayHandler.Add(screenplayNotes, new DictLang(lang.name, ""));
                 audioClipPath = ArrayHandler.Add(audioClipPath, new DictLang(lang.name, string.Empty));

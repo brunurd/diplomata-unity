@@ -88,7 +88,6 @@ namespace DiplomataEditor {
             GUILayout.Label("Filters: ");
             context.idFilter = GUILayout.Toggle(context.idFilter, "Id ");
             context.conditionsFilter = GUILayout.Toggle(context.conditionsFilter, "Conditions ");
-            context.titleFilter = GUILayout.Toggle(context.titleFilter, "Title ");
             context.contentFilter = GUILayout.Toggle(context.contentFilter, "Content ");
             context.effectsFilter = GUILayout.Toggle(context.effectsFilter, "Effects ");
 
@@ -254,7 +253,7 @@ namespace DiplomataEditor {
                                             break;
                                         case Condition.Type.AfterOf:
                                             if (condition.afterOf.GetMessage(context) != null) {
-                                                text += condition.DisplayAfterOf(DictHandler.ContainsKey(condition.afterOf.GetMessage(context).title,
+                                                text += condition.DisplayAfterOf(DictHandler.ContainsKey(condition.afterOf.GetMessage(context).content,
                                                     diplomataEditor.preferences.currentLanguage).value);
                                             }
                                             break;
@@ -309,47 +308,16 @@ namespace DiplomataEditor {
                                     }
                                 }
 
+                                DGUI.labelStyle.normal.textColor = DGUI.ColorSub(DGUI.labelStyle.normal.textColor, 0, 0.4f);
                                 DGUI.textContent.text = text;
                                 height = DGUI.labelStyle.CalcHeight(DGUI.textContent, context.columnWidth);
                                 GUILayout.Label(DGUI.textContent, DGUI.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
+                                DGUI.labelStyle.normal.textColor = DGUI.ColorAdd(DGUI.labelStyle.normal.textColor, 0, 0.4f);
                             }
                         }
 
                         EditorGUI.DrawRect(new Rect(boxRect.xMin, boxRect.yMin, boxRect.width, 5), label.color);
-
-                        if (context.titleFilter) {
-                            text = "<b><i>Title:</i></b>";
-
-                            DGUI.textContent.text = text;
-                            height = DGUI.labelStyle.CalcHeight(DGUI.textContent, context.columnWidth);
-                            GUILayout.Label(DGUI.textContent, DGUI.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
-
-                            var title = DictHandler.ContainsKey(currentMessage.title, diplomataEditor.preferences.currentLanguage);
-
-                            if (title == null) {
-                                currentMessage.title = ArrayHandler.Add(currentMessage.title,
-                                    new DictLang(diplomataEditor.preferences.currentLanguage, "placeholder" + currentMessage.columnId.ToString() + currentMessage.id.ToString()));
-                                title = DictHandler.ContainsKey(currentMessage.title, diplomataEditor.preferences.currentLanguage);
-                            }
-
-                            DGUI.textContent.text = title.value;
-                            height = textAreaStyle.CalcHeight(DGUI.textContent, context.columnWidth);
-
-                            if (currentMessage.disposable && !currentMessage.isAChoice) {
-                                textAreaStyle.normal.textColor = DGUI.ColorSub(textAreaStyle.normal.textColor, inactiveColor);
-                            }
-
-                            GUI.SetNextControlName("title" + currentMessage.id);
-                            title.value = EditorGUILayout.TextArea(title.value, textAreaStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
-                            EditorGUILayout.Separator();
-
-                            textAreaStyle.normal.textColor = Color.black;
-
-                            if (color.r * color.g * color.b < 0.07f) {
-                                textAreaStyle.normal.textColor = Color.white;
-                            }
-                        }
-
+                        
                         if (context.contentFilter) {
                             DGUI.textContent.text = "<b><i>Content:</i></b>";
                             height = DGUI.labelStyle.CalcHeight(DGUI.textContent, context.columnWidth);
@@ -391,7 +359,7 @@ namespace DiplomataEditor {
 
                                         case Effect.Type.GoTo:
                                             if (effect.goTo.GetMessage(context) != null) {
-                                                text += effect.DisplayGoTo(DictHandler.ContainsKey(effect.goTo.GetMessage(context).title, diplomataEditor.preferences.currentLanguage).value);
+                                                text += effect.DisplayGoTo(DictHandler.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.preferences.currentLanguage).value);
                                             }
                                             break;
                                         case Effect.Type.SetAnimatorAttribute:
@@ -431,9 +399,11 @@ namespace DiplomataEditor {
                                     }
                                 }
 
+                                DGUI.labelStyle.normal.textColor = DGUI.ColorSub(DGUI.labelStyle.normal.textColor, 0, 0.4f);
                                 DGUI.textContent.text = text;
                                 height = DGUI.labelStyle.CalcHeight(DGUI.textContent, context.columnWidth);
                                 GUILayout.Label(DGUI.textContent, DGUI.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
+                                DGUI.labelStyle.normal.textColor = DGUI.ColorAdd(DGUI.labelStyle.normal.textColor, 0, 0.4f);
                             }
                         }
 
@@ -990,7 +960,7 @@ namespace DiplomataEditor {
                                     var messageName = "";
 
                                     if (condition.afterOf.GetMessage(context) != null) {
-                                        messageName = DictHandler.ContainsKey(condition.afterOf.GetMessage(context).title, diplomataEditor.preferences.currentLanguage).value;
+                                        messageName = DictHandler.ContainsKey(condition.afterOf.GetMessage(context).content, diplomataEditor.preferences.currentLanguage).value;
                                     }
 
                                     EditorGUI.BeginChangeCheck();
@@ -1001,7 +971,7 @@ namespace DiplomataEditor {
                                         foreach (Column col in context.columns) {
                                             foreach (Message msg in col.messages) {
 
-                                                if (DictHandler.ContainsKey(msg.title, diplomataEditor.preferences.currentLanguage).value == messageName) {
+                                                if (DictHandler.ContainsKey(msg.content, diplomataEditor.preferences.currentLanguage).value == messageName) {
                                                     condition.afterOf.uniqueId = msg.GetUniqueId();
                                                     break;
                                                 }
@@ -1256,21 +1226,21 @@ namespace DiplomataEditor {
 
                                 case Effect.Type.GoTo:
                                     UpdateMessagesList(context);
-                                    var messageTitle = string.Empty;
+                                    var messageContent = string.Empty;
 
                                     if (effect.goTo.GetMessage(context) != null) {
-                                        messageTitle = DictHandler.ContainsKey(effect.goTo.GetMessage(context).title, diplomataEditor.preferences.currentLanguage).value;
+                                        messageContent = DictHandler.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.preferences.currentLanguage).value;
                                     }
 
                                     EditorGUI.BeginChangeCheck();
 
-                                    messageTitle = DGUI.Popup("Message: ", messageTitle, messageList);
+                                    messageContent = DGUI.Popup("Message: ", messageContent, messageList);
 
                                     if (EditorGUI.EndChangeCheck()) {
                                         foreach (Column col in context.columns) {
                                             foreach (Message msg in col.messages) {
 
-                                                if (DictHandler.ContainsKey(msg.title, diplomataEditor.preferences.currentLanguage).value == messageTitle) {
+                                                if (DictHandler.ContainsKey(msg.content, diplomataEditor.preferences.currentLanguage).value == messageContent) {
                                                     effect.goTo.uniqueId = msg.GetUniqueId();
                                                     break;
                                                 }
@@ -1522,8 +1492,9 @@ namespace DiplomataEditor {
 
                     col.messages = Message.ResetIDs(col.messages);
                     rightCol.messages = Message.ResetIDs(rightCol.messages);
-
+                    
                     msg.emitter = rightCol.emitter;
+                    rightCol.emitter = col.emitter;
                 }
             }
         }
@@ -1557,14 +1528,14 @@ namespace DiplomataEditor {
 
             foreach (Column col in context.columns) {
                 foreach (Message msg in col.messages) {
-                    DictLang title = DictHandler.ContainsKey(msg.title, diplomataEditor.preferences.currentLanguage);
+                    DictLang content = DictHandler.ContainsKey(msg.content, diplomataEditor.preferences.currentLanguage);
 
-                    if (title == null) {
-                        msg.title = ArrayHandler.Add(msg.title, new DictLang(diplomataEditor.preferences.currentLanguage, ""));
-                        title = DictHandler.ContainsKey(msg.title, diplomataEditor.preferences.currentLanguage);
+                    if (content == null) {
+                        msg.content = ArrayHandler.Add(msg.content, new DictLang(diplomataEditor.preferences.currentLanguage, ""));
+                        content = DictHandler.ContainsKey(msg.content, diplomataEditor.preferences.currentLanguage);
                     }
 
-                    messageList = ArrayHandler.Add(messageList, title.value);
+                    messageList = ArrayHandler.Add(messageList, content.value);
                 }
             }
         }
