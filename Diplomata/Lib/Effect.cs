@@ -79,11 +79,11 @@ namespace DiplomataLib {
         }
 
         public string DisplayEndOfContext(string contextName) {
-            return "End of the context <i>" + contextName + "</i>";
+            return "End of the context \"" + contextName + "\"";
         }
 
         public string DisplayGoTo(string messageTitle) {
-            return "Go to <i>"  + messageTitle + "</i>";
+            return "Go to \""  + messageTitle + "\"";
         }
 
         public string DisplaySetAnimatorAttribute() {
@@ -91,16 +91,16 @@ namespace DiplomataLib {
 
                 switch (animatorAttributeSetter.type) {
                     case AnimatorControllerParameterType.Bool:
-                        return "Set animator attribute <i>" + animatorAttributeSetter.name + "</i> to <i>" + animatorAttributeSetter.setBool + "</i>";
+                        return "Set animator attribute " + animatorAttributeSetter.name + " to " + animatorAttributeSetter.setBool;
 
                     case AnimatorControllerParameterType.Float:
-                        return "Set animator attribute <i>" + animatorAttributeSetter.name + "</i> to <i>" + animatorAttributeSetter.setFloat + "</i>";
+                        return "Set animator attribute " + animatorAttributeSetter.name + " to " + animatorAttributeSetter.setFloat;
 
                     case AnimatorControllerParameterType.Int:
-                        return "Set animator attribute <i>" + animatorAttributeSetter.name + "</i> to <i>" + animatorAttributeSetter.setInt + "</i>";
+                        return "Set animator attribute " + animatorAttributeSetter.name + " to " + animatorAttributeSetter.setInt;
 
                     case AnimatorControllerParameterType.Trigger:
-                        return "Pull the trigger <i>" + animatorAttributeSetter.name + "</i> of animator";
+                        return "Pull the trigger " + animatorAttributeSetter.name + " of animator";
 
                     default:
                         return "Animator attribute setter type not found.";
@@ -114,19 +114,19 @@ namespace DiplomataLib {
         }
 
         public string DisplayGetItem(string itemName) {
-            return "Get the item: <i>" + itemName + "</i>";
+            return "Get the item: \"" + itemName + "\"";
         }
 
         public string DisplayDiscardItem(string itemName) {
-            return "Discard the item: <i>" + itemName + "</i>";
+            return "Discard the item: \"" + itemName + "\"";
         }
 
         public string DisplayEquipItem(string itemName) {
-            return "Equip the item: <i>" + itemName + "</i>";
+            return "Equip the item: \"" + itemName + "\"";
         }
 
         public string DisplayCustomFlagEqualTo() {
-            return "<i>\"" + customFlag.name + "\"</i> set to <i>" + customFlag.value + "</i>";
+            return "\"" + customFlag.name + "\" set to " + customFlag.value;
         }
     }
 

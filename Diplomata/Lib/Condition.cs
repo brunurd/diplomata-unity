@@ -57,44 +57,44 @@
         }
 
         public string DisplayAfterOf(string messageContent) {
-            return "After of <i>" + messageContent + "</i>";
+            return "After of \"" + messageContent + "\"";
         }
         
         public string DisplayCompareInfluence() {
             switch (type) {
                 case Type.InfluenceEqualTo:
-                    return "Influence <i>equal</i> to <i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
+                    return "Influence equal to " + comparedInfluence + " in " + characterInfluencedName;
                 case Type.InfluenceGreaterThan:
-                    return "Influence <i>greater</i> then <i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
+                    return "Influence greater then " + comparedInfluence + " in " + characterInfluencedName;
                 case Type.InfluenceLessThan:
-                    return "Influence <i>less</i> then <i>" + comparedInfluence + "</i> in <i>" + characterInfluencedName + "</i>";
+                    return "Influence less then " + comparedInfluence + " in " + characterInfluencedName;
                 default:
                     return string.Empty;
             }
         }
 
         public string DisplayHasItem(string itemName) {
-            return "Has the item: <i>" + itemName + "</i>";
+            return "Has the item: \"" + itemName + "\"";
         }
 
         public string DisplayDoesNotHaveItem(string itemName) {
-            return "Does not have the item: <i>" + itemName + "</i>";
+            return "Does not have the item: \"" + itemName + "\"";
         }
 
         public string DisplayItemWasDiscarded(string itemName) {
-            return "item was discarded: <i>" + itemName + "</i>";
+            return "item was discarded: \"" + itemName + "\"";
         }
 
         public string DisplayItemIsEquipped(string itemName) {
-            return "item is equipped: <i>" + itemName + "</i>";
+            return "item is equipped: \"" + itemName + "\"";
         }
 
         public string DisplayCustomFlagEqualTo() {
-            return "<i>\"" + customFlag.name + "\"</i> is <i>" + customFlag.value + "</i>";
+            return "\"" + customFlag.name + "\" is " + customFlag.value;
         }
 
         public string DisplayInteractsWith(string objectName) {
-            return "Interacts with <i>\"" + objectName + "\"</i>";
+            return "Interacts with \"" + objectName + "\"";
         }
 
         public static bool CanProceed(Condition[] conditions) {
