@@ -708,11 +708,15 @@ namespace DiplomataLib {
 
             if (choices.Count > 0) {                
                 foreach (Message choice in choices) {
+                    var shortContent = DictHandler.ContainsKey(choice.shortContent, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
+                    var content = DictHandler.ContainsKey(choice.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
+                    var choiceText = (shortContent != "") ? shortContent : content;
+                    
                     if (!choice.alreadySpoked && choice.disposable) {
-                        choicesText.Add(DictHandler.ContainsKey(choice.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
+                        choicesText.Add(choiceText);
                     }
                     else if (!choice.disposable) {
-                        choicesText.Add(DictHandler.ContainsKey(choice.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value);
+                        choicesText.Add(choiceText);
                     }
                 }
             }

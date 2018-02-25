@@ -531,12 +531,24 @@ namespace DiplomataEditor {
 
                             EditorGUILayout.Separator();
 
-                            GUILayout.Label("Message attributes (most influence in): ");
+                            var shortContent = DictHandler.ContainsKey(message.shortContent, diplomataEditor.preferences.currentLanguage);
 
+                            if (shortContent == null) {
+                                message.shortContent = ArrayHandler.Add(message.shortContent, new DictLang(diplomataEditor.preferences.currentLanguage, ""));
+                                shortContent = DictHandler.ContainsKey(message.shortContent, diplomataEditor.preferences.currentLanguage);
+                            }
+
+                            DGUI.labelStyle.alignment = TextAnchor.UpperLeft;
+                            GUILayout.Label("Short content for display in choice menu\n<size=10>(<i>if empty, will display normal content</i>)</size>:", DGUI.labelStyle);
+                            shortContent.value = EditorGUILayout.TextField(shortContent.value);
+                            
+                            EditorGUILayout.Separator();
+
+                            GUILayout.Label("Message attributes (most influence in): ");
+                            
                             for (int i = 0; i < character.attributes.Length; i++) {
                                 message.attributes[i].value = (byte)EditorGUILayout.Slider(message.attributes[i].key, message.attributes[i].value, 0, 100);
                             }
-
                         }
 
                         DGUI.Separator();
