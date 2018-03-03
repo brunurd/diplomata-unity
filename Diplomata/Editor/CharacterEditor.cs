@@ -193,6 +193,17 @@ namespace DiplomataEditor {
 
                 GUILayout.Label("Character attributes (influenceable by): ");
 
+                foreach (string attrName in diplomataEditor.preferences.attributes) {
+                    for (int i = 0; i < character.attributes.Length; i++) {
+                        if (character.attributes[i].key == attrName) {
+                            break;
+                        }
+                        else if (i == character.attributes.Length - 1) {
+                            character.attributes = ArrayHandler.Add(character.attributes, new DictAttr(attrName));
+                        }
+                    }
+                }
+
                 for (int i = 0; i < character.attributes.Length; i++) {
                     character.attributes[i].value = (byte)EditorGUILayout.Slider(character.attributes[i].key, character.attributes[i].value, 0, 100);
                 }

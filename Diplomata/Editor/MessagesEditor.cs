@@ -545,8 +545,19 @@ namespace DiplomataEditor {
                             EditorGUILayout.Separator();
 
                             GUILayout.Label("Message attributes (most influence in): ");
-                            
-                            for (int i = 0; i < character.attributes.Length; i++) {
+
+                            foreach (string attrName in diplomataEditor.preferences.attributes) {
+                                for (int i = 0; i < message.attributes.Length; i++) {
+                                    if (message.attributes[i].key == attrName) {
+                                        break;
+                                    }
+                                    else if (i == message.attributes.Length - 1) {
+                                        message.attributes = ArrayHandler.Add(message.attributes, new DictAttr(attrName));
+                                    }
+                                }
+                            }
+
+                            for (int i = 0; i < message.attributes.Length; i++) {
                                 message.attributes[i].value = (byte)EditorGUILayout.Slider(message.attributes[i].key, message.attributes[i].value, 0, 100);
                             }
                         }
