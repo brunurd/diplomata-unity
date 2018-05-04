@@ -531,19 +531,6 @@ namespace DiplomataEditor {
 
                             EditorGUILayout.Separator();
 
-                            var shortContent = DictHandler.ContainsKey(message.shortContent, diplomataEditor.preferences.currentLanguage);
-
-                            if (shortContent == null) {
-                                message.shortContent = ArrayHandler.Add(message.shortContent, new DictLang(diplomataEditor.preferences.currentLanguage, ""));
-                                shortContent = DictHandler.ContainsKey(message.shortContent, diplomataEditor.preferences.currentLanguage);
-                            }
-
-                            DGUI.labelStyle.alignment = TextAnchor.UpperLeft;
-                            GUILayout.Label("Short content for display in choice menu\n<size=10>(<i>if empty, will display normal content</i>)</size>:", DGUI.labelStyle);
-                            shortContent.value = EditorGUILayout.TextField(shortContent.value);
-                            
-                            EditorGUILayout.Separator();
-
                             GUILayout.Label("Message attributes (most influence in): ");
 
                             foreach (string attrName in diplomataEditor.preferences.attributes) {

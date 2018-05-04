@@ -18,6 +18,7 @@ namespace DiplomataLib {
         public Action onStart = delegate { };
         public Action onUpdate = delegate { };
         public Action onEnd = delegate { };
+        public Action onChange = delegate { };
 
         public GameObject choiceMenu;
         public Transform choiceList;
@@ -161,6 +162,8 @@ namespace DiplomataLib {
                 choiceListRect.anchoredPosition = new Vector2(
                     choiceListRect.anchoredPosition.x - offset,
                 choiceListRect.anchoredPosition.y);
+
+                onChange();
             }
         }
 
@@ -171,6 +174,8 @@ namespace DiplomataLib {
                 choiceListRect.anchoredPosition = new Vector2(
                     choiceListRect.anchoredPosition.x + offset,
                 choiceListRect.anchoredPosition.y);
+                
+                onChange();
             }
         }
     }

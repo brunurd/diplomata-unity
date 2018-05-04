@@ -182,10 +182,6 @@ namespace DiplomataEditor {
                 diplomataEditor.preferences.playerCharacterName = character.name;
             }
 
-            else {
-                character.startOnPlay = GUILayout.Toggle(character.startOnPlay, " Start on play");
-            }
-
             EditorGUILayout.EndHorizontal();
             
             if (character.name != diplomataEditor.preferences.playerCharacterName) {

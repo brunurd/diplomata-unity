@@ -6,7 +6,6 @@ namespace DiplomataLib {
     [System.Serializable]
     public class Character {
         public string name;
-        public bool startOnPlay;
         public DictLang[] description;
         public DictAttr[] attributes;
         public Context[] contexts;

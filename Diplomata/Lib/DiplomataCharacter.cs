@@ -2,7 +2,6 @@
 using UnityEngine;
 
 namespace DiplomataLib {
-    
     [System.Serializable]
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
@@ -32,7 +31,6 @@ namespace DiplomataLib {
 
         public void StartTalk() {
             if (character != null) {
-
                 controlIndexes = new Dictionary<string, int>();
                 controlIndexes.Add("context", 0);
                 controlIndexes.Add("column", 0);
@@ -80,11 +78,8 @@ namespace DiplomataLib {
         }
         
         private void Next(bool hasFate) {
-
             if (character != null && currentContext != null) {
-
                 if (!currentContext.happened) {
-
                     currentColumn = Column.Find(currentContext, controlIndexes["column"]);
 
                     if (currentColumn == null) {
@@ -98,13 +93,10 @@ namespace DiplomataLib {
                     }
 
                     if (currentColumn != null) {
-
                         if (hasFate) {
                             currentMessage = currentColumn.messages[controlIndexes["message"]];
                             OnStartCallbacks();
-                        }
-
-                        else {
+                        } else {
                             var msg = Message.Find(currentColumn.messages, controlIndexes["message"]);
                             var proceed = true;
 
@@ -708,9 +700,8 @@ namespace DiplomataLib {
 
             if (choices.Count > 0) {                
                 foreach (Message choice in choices) {
-                    var shortContent = DictHandler.ContainsKey(choice.shortContent, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
                     var content = DictHandler.ContainsKey(choice.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
-                    var choiceText = (shortContent != "") ? shortContent : content;
+                    var choiceText = content; //(shortContent != "") ? shortContent : content;
                     
                     if (!choice.alreadySpoked && choice.disposable) {
                         choicesText.Add(choiceText);
