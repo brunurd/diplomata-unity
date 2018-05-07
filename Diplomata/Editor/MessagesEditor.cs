@@ -175,14 +175,8 @@ namespace DiplomataEditor {
 
                 GUILayout.Space(4);
 
-                EditorGUI.BeginChangeCheck();
                 column.emitter = DGUI.Popup("Emitter: ", column.emitter, diplomataEditor.preferences.characterList);
-                if (EditorGUI.EndChangeCheck()) {
-                    foreach (Message msg in column.messages) {
-                        msg.emitter = column.emitter;
-                    }
-                }
-
+                
                 EditorGUILayout.Separator();
 
                 for (int j = 0; j < column.messages.Length; j++) {
@@ -812,8 +806,6 @@ namespace DiplomataEditor {
                                     column.messages = Message.ResetIDs(column.messages);
                                     leftCol.messages = Message.ResetIDs(leftCol.messages);
 
-                                    message.emitter = leftCol.emitter;
-
                                     SetMessage(message);
                                     diplomataEditor.Save(character);
                                 }
@@ -866,8 +858,6 @@ namespace DiplomataEditor {
 
                                     column.messages = Message.ResetIDs(column.messages);
                                     rightCol.messages = Message.ResetIDs(rightCol.messages);
-
-                                    message.emitter = rightCol.emitter;
 
                                     SetMessage(message);
                                     diplomataEditor.Save(character);
@@ -1503,7 +1493,6 @@ namespace DiplomataEditor {
                     col.messages = Message.ResetIDs(col.messages);
                     rightCol.messages = Message.ResetIDs(rightCol.messages);
                     
-                    msg.emitter = rightCol.emitter;
                     rightCol.emitter = col.emitter;
                 }
             }

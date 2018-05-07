@@ -76,7 +76,7 @@ namespace DiplomataEditor {
                 foreach (Column column in context.columns) {
                     for (int i = 0; i < column.messages.Length; i++) {
                         var messagePar = document.AppendParagraph(messageContentIndent);
-                        messagePar.AppendText("\t\t" + column.messages[i].emitter + "\n", styleAllcaps);
+                        messagePar.AppendText("\t\t" + column.emitter + "\n", styleAllcaps);
 
                         var screenplayNotes = DictHandler.ContainsKey(column.messages[i].screenplayNotes, diplomataEditor.preferences.currentLanguage);
 

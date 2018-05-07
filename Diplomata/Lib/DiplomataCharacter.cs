@@ -6,16 +6,14 @@ namespace DiplomataLib {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
     public class DiplomataCharacter : MonoBehaviour {
-        
         public List<Message> choices = new List<Message>();
-        public Message currentMessage;
         public Character character;
+        private Context currentContext;
+        public Column currentColumn;
+        public Message currentMessage;
         public bool talking;
         public bool choiceMenu;
-
         private Dictionary<string, int> controlIndexes = new Dictionary<string, int>();
-        private Context currentContext;
-        private Column currentColumn;
         private string lastUniqueId;
         
         public void Start() {
@@ -805,7 +803,7 @@ namespace DiplomataLib {
 
         public bool EmitterIsPlayer() {
             if (currentMessage != null) {
-                if (currentMessage.emitter == Diplomata.preferences.playerCharacterName) {
+                if (currentColumn.emitter == Diplomata.preferences.playerCharacterName) {
                     return true;
                 }
             }
@@ -820,10 +818,6 @@ namespace DiplomataLib {
         public string Emitter() {
             if (currentColumn != null) {
                 return currentColumn.emitter;
-            }
-
-            else if (currentMessage != null) {
-                return currentMessage.emitter;
             }
 
             return null;

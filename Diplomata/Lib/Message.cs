@@ -13,7 +13,6 @@ namespace DiplomataLib {
         public int id;
         public bool isAChoice;
         public bool disposable;
-        public string emitter;
         public int columnId;
         public string imagePath = string.Empty;
         public Condition[] conditions;
@@ -43,7 +42,6 @@ namespace DiplomataLib {
             this.id = id;
             isAChoice = msg.isAChoice;
             disposable = msg.disposable;
-            emitter = msg.emitter;
             columnId = msg.columnId;
             imagePath = msg.imagePath;
             labelId = msg.labelId;
@@ -80,7 +78,6 @@ namespace DiplomataLib {
             }
 
             this.id = id;
-            this.emitter = emitter;
             this.columnId = columnId;
 
             uniqueId = SetUniqueId();
