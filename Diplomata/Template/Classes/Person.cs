@@ -1,17 +1,20 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DiplomataLib {
+namespace DiplomataLib
+{
 
-    [RequireComponent(typeof(DiplomataCharacter))]
-    public class Person : MonoBehaviour {
-        [HideInInspector] public DiplomataCharacter character;
-        public Template template;
+  [RequireComponent(typeof(DiplomataCharacter))]
+  public class Person : MonoBehaviour
+  {
+    [HideInInspector] public DiplomataCharacter character;
+    public Template template;
 
-        void Start() {
-            character = GetComponent<DiplomataCharacter>();
-        }
+    void Start()
+    {
+      character = GetComponent<DiplomataCharacter>();
     }
+  }
 
 }

@@ -1,14 +1,17 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-namespace DiplomataLib {
+namespace DiplomataLib
+{
 
-    public class DiplomataInteractable : MonoBehaviour {
+  public class DiplomataInteractable : MonoBehaviour
+  {
 
-        public string interactableLabel;
+    public string interactableLabel;
 
-        public void SetLabel() {
-            Character.playerInteractingWith = interactableLabel;
-        }
+    public void SetLabel()
+    {
+      Character.playerInteractingWith = interactableLabel;
     }
+  }
 
 }
