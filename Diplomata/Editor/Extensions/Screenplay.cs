@@ -13,14 +13,14 @@ namespace DiplomataEditor
   {
     private static DiplomataEditorData diplomataEditor;
 
-    public static void Save(Character character)
+    public static void Save(Talkable talkable)
     {
       RTFDocument doc = CreateDocument();
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
-      doc = AddCharacter(doc, character);
+      doc = AddTalkable(doc, talkable);
 
-      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + character.name + " - " + diplomataEditor.options.currentLanguage + ".rtf", doc);
+      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + talkable.name + " - " + diplomataEditor.options.currentLanguage + ".rtf", doc);
       AssetDatabase.Refresh();
     }
 
@@ -31,7 +31,7 @@ namespace DiplomataEditor
 
       foreach (Character character in diplomataEditor.characters)
       {
-        doc = AddCharacter(doc, character);
+        doc = AddTalkable(doc, character);
       }
 
       RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + diplomataEditor.options.currentLanguage + ".rtf", doc);
@@ -51,7 +51,7 @@ namespace DiplomataEditor
       return document;
     }
 
-    private static RTFDocument AddCharacter(RTFDocument document, Character character)
+    private static RTFDocument AddTalkable(RTFDocument document, Talkable character)
     {
       RTFTextStyle style = new RTFTextStyle(false, false, 12, "Courier", Color.black);
       RTFTextStyle styleAllcaps = new RTFTextStyle(false, false, false, false, true, false, 12, "Courier", Color.black, Underline.None);
@@ -121,5 +121,4 @@ namespace DiplomataEditor
       return document;
     }
   }
-
 }
