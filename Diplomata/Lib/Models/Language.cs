@@ -1,6 +1,6 @@
 using System;
 
-namespace Diplomata.Preferences
+namespace Diplomata.Models
 {
   [Serializable]
   public class Language

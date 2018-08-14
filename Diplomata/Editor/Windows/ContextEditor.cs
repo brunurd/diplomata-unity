@@ -1,18 +1,18 @@
-using DiplomataEditor.Core;
-using DiplomataEditor.Helpers;
-using Diplomata.Models;
 using Diplomata.Helpers;
+using Diplomata.Models;
+using DiplomataEditor;
+using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Editors
+namespace DiplomataEditor.Windows
 {
   public class ContextEditor : EditorWindow
   {
     public static Character character;
     public static Context context;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorManager diplomataEditor;
+    private static DiplomataEditorData diplomataEditor;
 
     public enum State
     {
@@ -44,7 +44,7 @@ namespace DiplomataEditor.Editors
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public static void Edit(Character currentCharacter, Context currentContext)
@@ -52,7 +52,7 @@ namespace DiplomataEditor.Editors
       character = currentCharacter;
       context = currentContext;
 
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataEditor.workingContextEditId = context.id;
       Init(State.Edit);
     }
@@ -66,7 +66,7 @@ namespace DiplomataEditor.Editors
           character = null;
           context = null;
 
-          diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+          diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
           diplomataEditor.workingContextEditId = -1;
 
           Init(State.Close);

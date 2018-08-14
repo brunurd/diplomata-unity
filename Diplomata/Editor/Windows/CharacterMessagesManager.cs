@@ -1,12 +1,10 @@
-using DiplomataEditor.Core;
-using DiplomataEditor.Editors;
-using DiplomataEditor.Helpers;
-using DiplomataEditor.ListMenu;
 using Diplomata.Models;
+using DiplomataEditor;
+using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Editors
+namespace DiplomataEditor.Windows
 {
   public class CharacterMessagesManager : EditorWindow
   {
@@ -18,7 +16,7 @@ namespace DiplomataEditor.Editors
     public static Texture2D sidebarBG;
     public static Texture2D textAreaBGTextureNormal;
     public static Texture2D textAreaBGTextureFocused;
-    public static DiplomataEditorManager diplomataEditor;
+    public static DiplomataEditorData diplomataEditor;
 
     public enum State
     {
@@ -50,7 +48,7 @@ namespace DiplomataEditor.Editors
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public void SetTextures()
@@ -87,7 +85,7 @@ namespace DiplomataEditor.Editors
     {
       character = currentCharacter;
 
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataEditor.workingCharacter = currentCharacter.name;
       diplomataEditor.workingContextMessagesId = -1;
       Init(State.Context);
@@ -98,7 +96,7 @@ namespace DiplomataEditor.Editors
       character = currentCharacter;
       context = currentContext;
 
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataEditor.workingCharacter = currentCharacter.name;
       diplomataEditor.workingContextMessagesId = currentContext.id;
       Init(State.Messages);

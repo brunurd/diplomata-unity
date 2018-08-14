@@ -1,5 +1,6 @@
 using System.IO;
-using DiplomataEditor.Core;
+using DiplomataEditor;
+using DiplomataEditor.Windows;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace DiplomataEditor.Helpers
   {
     public static void Create(Object obj, string name, string folder = "")
     {
-      string path = DiplomataEditorManager.resourcesFolder + folder + name;
+      string path = DiplomataEditorData.resourcesFolder + folder + name;
 
       try
       {
@@ -26,7 +27,7 @@ namespace DiplomataEditor.Helpers
 
     public static Object Read(string name, string folder = "")
     {
-      string path = DiplomataEditorManager.resourcesFolder + folder + name;
+      string path = DiplomataEditorData.resourcesFolder + folder + name;
 
       try
       {
@@ -42,7 +43,7 @@ namespace DiplomataEditor.Helpers
 
     public static void Delete(string name, string folder = "")
     {
-      string path = DiplomataEditorManager.resourcesFolder + folder + name;
+      string path = DiplomataEditorData.resourcesFolder + folder + name;
 
       try
       {
@@ -58,8 +59,8 @@ namespace DiplomataEditor.Helpers
 
     public static bool Exists(string filename, string folder = "")
     {
-      if (!File.Exists(DiplomataEditorManager.resourcesFolder + filename) &&
-        !File.Exists(DiplomataEditorManager.resourcesFolder + folder + filename))
+      if (!File.Exists(DiplomataEditorData.resourcesFolder + filename) &&
+        !File.Exists(DiplomataEditorData.resourcesFolder + folder + filename))
       {
         return false;
       }
@@ -72,7 +73,7 @@ namespace DiplomataEditor.Helpers
 
     public static void CreateFolder(string folderName)
     {
-      var path = DiplomataEditorManager.resourcesFolder + folderName;
+      var path = DiplomataEditorData.resourcesFolder + folderName;
 
       if (!Directory.Exists(path) && folderName != "")
       {

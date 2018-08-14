@@ -1,5 +1,5 @@
 using System;
-using Diplomata.Preferences;
+using Diplomata.Models;
 
 namespace Diplomata.GameProgess
 {
@@ -12,7 +12,7 @@ namespace Diplomata.GameProgess
 
     public OptionsGameProgess()
     {
-      foreach (Language lang in DiplomataManager.options.languages)
+      foreach (Language lang in DiplomataData.options.languages)
       {
         if (lang.subtitle && currentSubtitledLanguage == string.Empty)
         {

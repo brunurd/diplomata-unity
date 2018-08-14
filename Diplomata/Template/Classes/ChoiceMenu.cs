@@ -44,7 +44,7 @@ namespace Diplomata
 
     public void Start()
     {
-      if (talk.character.talking)
+      if (DiplomataData.isTalking)
       {
 
         if (!choiceMenu.activeSelf && talk.character.choiceMenu)

@@ -1,7 +1,7 @@
 using System;
-using Diplomata.Preferences;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
+using Diplomata.Models;
 using UnityEngine;
 
 namespace Diplomata.Models
@@ -37,7 +37,7 @@ namespace Diplomata.Models
     {
       this.id = id;
 
-      foreach (Language language in DiplomataManager.options.languages)
+      foreach (Language language in DiplomataData.options.languages)
       {
         name = ArrayHelper.Add(name, new LanguageDictionary(language.name, "[ Edit to change this name ]"));
         description = ArrayHelper.Add(description, new LanguageDictionary(language.name, ""));

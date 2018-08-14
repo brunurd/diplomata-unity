@@ -1,11 +1,11 @@
-using DiplomataEditor.Helpers;
-using Diplomata.Models;
-using Diplomata.Helpers;
 using Diplomata.Dictionaries;
+using Diplomata.Helpers;
+using Diplomata.Models;
+using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Editors
+namespace DiplomataEditor.Windows
 {
   public class MessagesEditor
   {

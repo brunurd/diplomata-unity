@@ -15,7 +15,7 @@ namespace Diplomata.Models
     public Column(int id)
     {
       this.id = id;
-      emitter = DiplomataManager.options.playerCharacterName;
+      emitter = DiplomataData.options.playerCharacterName;
 
       messages = new Message[0];
     }

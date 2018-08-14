@@ -15,7 +15,7 @@ namespace Diplomata
 
     public void Start()
     {
-      if (character.talking)
+      if (DiplomataData.isTalking)
       {
         canTalk = false;
         onStart();

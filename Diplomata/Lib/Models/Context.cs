@@ -1,7 +1,7 @@
 using System;
-using Diplomata.Preferences;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
+using Diplomata.Models;
 
 namespace Diplomata.Models
 {
@@ -64,7 +64,7 @@ namespace Diplomata.Models
       labels = new Label[] { new Label() };
       description = new LanguageDictionary[0];
 
-      foreach (Language lang in DiplomataManager.options.languages)
+      foreach (Language lang in DiplomataData.options.languages)
       {
         name = ArrayHelper.Add(name, new LanguageDictionary(lang.name, "Name [Change clicking on Edit]"));
         description = ArrayHelper.Add(description, new LanguageDictionary(lang.name, "Description [Change clicking on Edit]"));

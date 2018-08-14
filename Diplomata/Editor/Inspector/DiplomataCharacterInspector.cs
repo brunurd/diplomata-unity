@@ -1,7 +1,7 @@
-using DiplomataEditor.Core;
-using DiplomataEditor.Editors;
-using DiplomataEditor.Helpers;
 using Diplomata;
+using DiplomataEditor;
+using DiplomataEditor.Windows;
+using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,10 +13,10 @@ namespace DiplomataEditor.Inspector
   /// </summary>
   [CustomEditor(typeof(DiplomataCharacter))]
   [CanEditMultipleObjects]
-  public class CharacterInspector : Editor
+  public class DiplomataCharacterInspector : Editor
   {
     public DiplomataCharacter diplomataCharacter;
-    private static DiplomataEditorManager diplomataEditor;
+    private static DiplomataEditorData diplomataEditor;
 
     /// <summary>
     /// Refresh right on enable on editor (on appears in the inspector)
@@ -31,8 +31,8 @@ namespace DiplomataEditor.Inspector
     /// </summary>
     private void Refresh()
     {
-      DiplomataEditorManager.Instantiate();
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      DiplomataEditorData.Instantiate();
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataCharacter = target as DiplomataCharacter;
     }
 

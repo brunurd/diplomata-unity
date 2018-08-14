@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Diplomata;
 
-namespace Diplomata
+namespace DiplomataEditor.Inspector
 {
-  [UnityEditor.CustomEditor(typeof(DiplomataManager))]
+  [UnityEditor.CustomEditor(typeof(DiplomataData))]
   public class DiplomataManagerInspector : Editor
   {
     public override void OnInspectorGUI()

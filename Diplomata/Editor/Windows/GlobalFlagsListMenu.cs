@@ -1,23 +1,23 @@
-using UnityEditor;
-using UnityEngine;
-using DiplomataEditor.Core;
-using DiplomataEditor.Helpers;
 using Diplomata;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using DiplomataEditor;
+using DiplomataEditor.Helpers;
+using UnityEditor;
+using UnityEngine;
 
-namespace DiplomataEditor.ListMenu
+namespace DiplomataEditor.Windows
 {
   public class GlobalFlagsListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private DiplomataEditorManager diplomataEditor;
+    private DiplomataEditorData diplomataEditor;
     private string[] booleanArray = new string[] { "True", "False" };
 
     [MenuItem("Diplomata/Custom Flags")]
     static public void Init()
     {
-      DiplomataEditorManager.Instantiate();
+      DiplomataEditorData.Instantiate();
 
       GlobalFlagsListMenu window = (GlobalFlagsListMenu) GetWindow(typeof(GlobalFlagsListMenu), false, "Custom Flags");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 150, 300);
@@ -27,7 +27,7 @@ namespace DiplomataEditor.ListMenu
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public void OnGUI()

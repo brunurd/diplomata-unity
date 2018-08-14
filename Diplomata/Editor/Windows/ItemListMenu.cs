@@ -1,23 +1,22 @@
-using DiplomataEditor.Core;
-using DiplomataEditor.Editors;
-using DiplomataEditor.Helpers;
 using Diplomata;
-using Diplomata.Models;
 using Diplomata.Helpers;
+using Diplomata.Models;
+using DiplomataEditor;
+using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.ListMenu
+namespace DiplomataEditor.Windows
 {
   public class ItemListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private DiplomataEditorManager diplomataEditor;
+    private DiplomataEditorData diplomataEditor;
 
     [MenuItem("Diplomata/Inventory")]
     static public void Init()
     {
-      DiplomataEditorManager.Instantiate();
+      DiplomataEditorData.Instantiate();
 
       ItemListMenu window = (ItemListMenu) GetWindow(typeof(ItemListMenu), false, "Inventory");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
@@ -27,7 +26,7 @@ namespace DiplomataEditor.ListMenu
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public void OnGUI()

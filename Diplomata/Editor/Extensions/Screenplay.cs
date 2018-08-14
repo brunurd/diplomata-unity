@@ -1,8 +1,9 @@
 using System;
-using DiplomataEditor.Core;
-using DiplomataEditor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using DiplomataEditor;
+using DiplomataEditor.Windows;
+using DiplomataEditor.Helpers;
 using RTFExporter;
 using UnityEditor;
 
@@ -10,12 +11,12 @@ namespace DiplomataEditor
 {
   public class Screenplay
   {
-    private static DiplomataEditorManager diplomataEditor;
+    private static DiplomataEditorData diplomataEditor;
 
     public static void Save(Character character)
     {
       RTFDocument doc = CreateDocument();
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
       doc = AddCharacter(doc, character);
 
@@ -26,7 +27,7 @@ namespace DiplomataEditor
     public static void SaveAll()
     {
       RTFDocument doc = CreateDocument();
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
       foreach (Character character in diplomataEditor.characters)
       {

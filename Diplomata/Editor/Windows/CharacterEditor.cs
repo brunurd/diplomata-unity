@@ -1,19 +1,20 @@
-using DiplomataEditor.Core;
-using DiplomataEditor.Helpers;
-using Diplomata.Models;
+using System;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
+using Diplomata.Models;
+using DiplomataEditor;
+using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Editors
+namespace DiplomataEditor.Windows
 {
   public class CharacterEditor : EditorWindow
   {
     public static Character character;
     private string characterName = "";
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorManager diplomataEditor;
+    private static DiplomataEditorData diplomataEditor;
 
     public enum State
     {
@@ -55,14 +56,14 @@ namespace DiplomataEditor.Editors
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public static void OpenCreate()
     {
       character = null;
 
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataEditor.workingCharacter = string.Empty;
       Init(State.Create);
     }
@@ -71,7 +72,7 @@ namespace DiplomataEditor.Editors
     {
       character = currentCharacter;
 
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataEditor.workingCharacter = currentCharacter.name;
       Init(State.Edit);
     }
@@ -82,7 +83,7 @@ namespace DiplomataEditor.Editors
       {
         if (character.name == characterName)
         {
-          diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+          diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
           diplomataEditor.workingCharacter = string.Empty;
           character = null;
           Init(State.Close);
@@ -225,22 +226,32 @@ namespace DiplomataEditor.Editors
 
         foreach (string attrName in diplomataEditor.options.attributes)
         {
-          for (int i = 0; i < character.attributes.Length; i++)
+          if (character.attributes.Length == 0)
           {
-            if (character.attributes[i].key == attrName)
+            character.attributes = ArrayHelper.Add(character.attributes, new AttributeDictionary(attrName));
+          }
+          else
+          {
+            for (int i = 0; i < character.attributes.Length; i++)
             {
-              break;
-            }
-            else if (i == character.attributes.Length - 1)
-            {
-              character.attributes = ArrayHelper.Add(character.attributes, new AttributeDictionary(attrName));
+              if (character.attributes[i].key == attrName)
+              {
+                break;
+              }
+              else if (i == character.attributes.Length - 1)
+              {
+                character.attributes = ArrayHelper.Add(character.attributes, new AttributeDictionary(attrName));
+              }
             }
           }
         }
 
         for (int i = 0; i < character.attributes.Length; i++)
         {
-          character.attributes[i].value = (byte) EditorGUILayout.Slider(character.attributes[i].key, character.attributes[i].value, 0, 100);
+          if (ArrayHelper.Contains(diplomataEditor.options.attributes, character.attributes[i].key))
+          {
+            character.attributes[i].value = (byte) EditorGUILayout.Slider(character.attributes[i].key, character.attributes[i].value, 0, 100);
+          }
         }
 
         GUIHelper.Separator();

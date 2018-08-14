@@ -134,5 +134,24 @@ namespace Diplomata.Helpers
       Debug.LogWarning("Cannot find this index. returned: -1");
       return -1;
     }
+
+    public static bool Contains<T>(T[] array, T element) {
+      bool response = false;
+      for (int i = 0; i < array.Length; i++)
+      {
+        if (array[i].Equals(element))
+        {
+          response = true;
+          break;
+        }
+      }
+      return response;
+    }
+
+    public static T[] Empty<T>()
+    {
+      T[] array = new T[0];
+      return array;
+    }
   }
 }

@@ -51,7 +51,7 @@ namespace Diplomata
 
     public void Start()
     {
-      if (talk.character.talking)
+      if (DiplomataData.isTalking)
       {
         if (!messageBox.activeSelf && !talk.character.choiceMenu)
         {
@@ -235,7 +235,7 @@ namespace Diplomata
       onEnd();
       talk.character.NextMessage();
 
-      if (!talk.character.talking)
+      if (!DiplomataData.isTalking)
       {
         talk.End();
       }

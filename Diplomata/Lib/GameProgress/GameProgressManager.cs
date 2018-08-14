@@ -35,7 +35,7 @@ namespace Diplomata.GameProgess
     {
       characters = new CharacterProgress[0];
 
-      foreach (Character character in DiplomataManager.characters)
+      foreach (Character character in DiplomataData.characters)
       {
         var newCharacter = new CharacterProgress(character.name, character.influence);
 
@@ -67,7 +67,7 @@ namespace Diplomata.GameProgess
     {
       foreach (CharacterProgress character in characters)
       {
-        var characterTemp = Character.Find(DiplomataManager.characters, character.name);
+        var characterTemp = Character.Find(DiplomataData.characters, character.name);
         characterTemp.influence = character.influence;
 
         foreach (ContextProgress context in character.contexts)
@@ -92,7 +92,7 @@ namespace Diplomata.GameProgess
     {
       inventory = new ItemProgress[0];
 
-      foreach (Item item in DiplomataManager.inventory.items)
+      foreach (Item item in DiplomataData.inventory.items)
       {
         inventory = ArrayHelper.Add(inventory, new ItemProgress(item.id, item.have, item.discarded));
       }
@@ -102,7 +102,7 @@ namespace Diplomata.GameProgess
     {
       foreach (ItemProgress item in inventory)
       {
-        var itemTemp = Item.Find(DiplomataManager.inventory.items, (int) item.id);
+        var itemTemp = Item.Find(DiplomataData.inventory.items, (int) item.id);
         itemTemp.have = item.have;
         itemTemp.discarded = item.discarded;
       }
@@ -112,7 +112,7 @@ namespace Diplomata.GameProgess
     {
       flags = new Flag[0];
 
-      foreach (Flag flag in DiplomataManager.globalFlags.flags)
+      foreach (Flag flag in DiplomataData.globalFlags.flags)
       {
         flags = ArrayHelper.Add(flags, flag);
       }
@@ -122,7 +122,7 @@ namespace Diplomata.GameProgess
     {
       foreach (Flag flag in flags)
       {
-        var flagTemp = DiplomataManager.globalFlags.Find(DiplomataManager.globalFlags.flags, flag.name);
+        var flagTemp = DiplomataData.globalFlags.Find(DiplomataData.globalFlags.flags, flag.name);
 
         if (flagTemp != null)
         {
@@ -131,7 +131,7 @@ namespace Diplomata.GameProgess
 
         else
         {
-          DiplomataManager.globalFlags.flags = ArrayHelper.Add(DiplomataManager.globalFlags.flags, flag);
+          DiplomataData.globalFlags.flags = ArrayHelper.Add(DiplomataData.globalFlags.flags, flag);
         }
       }
     }
@@ -141,14 +141,14 @@ namespace Diplomata.GameProgess
       switch (method)
       {
         case Method.JSON:
-          return JsonUtility.ToJson(DiplomataManager.gameProgress);
+          return JsonUtility.ToJson(DiplomataData.gameProgress);
 
         case Method.XML:
           XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameProgressManager));
 
           using(StringWriter textWriter = new StringWriter())
           {
-            xmlSerializer.Serialize(textWriter, DiplomataManager.gameProgress);
+            xmlSerializer.Serialize(textWriter, DiplomataData.gameProgress);
             return textWriter.GetStringBuilder().ToString();
           }
 
@@ -164,7 +164,7 @@ namespace Diplomata.GameProgess
         switch (method)
         {
           case Method.JSON:
-            DiplomataManager.gameProgress = JsonUtility.FromJson<GameProgressManager>(data);
+            DiplomataData.gameProgress = JsonUtility.FromJson<GameProgressManager>(data);
             break;
 
           case Method.XML:
@@ -172,7 +172,7 @@ namespace Diplomata.GameProgess
 
             using(TextReader reader = new StringReader(data))
             {
-              DiplomataManager.gameProgress = (GameProgressManager) serializer.Deserialize(reader);
+              DiplomataData.gameProgress = (GameProgressManager) serializer.Deserialize(reader);
             }
 
             break;
@@ -195,7 +195,7 @@ namespace Diplomata.GameProgess
 
       using(FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Create))
       {
-        binaryFormatter.Serialize(fileStream, DiplomataManager.gameProgress);
+        binaryFormatter.Serialize(fileStream, DiplomataData.gameProgress);
       }
     }
 
@@ -205,7 +205,7 @@ namespace Diplomata.GameProgess
 
       using(FileStream fileStream = new FileStream(Application.persistentDataPath + "/diplomata_gameProgress" + extension, FileMode.Open))
       {
-        DiplomataManager.gameProgress = (GameProgressManager) binaryFormatter.Deserialize(fileStream);
+        DiplomataData.gameProgress = (GameProgressManager) binaryFormatter.Deserialize(fileStream);
       }
 
       LoadCharacters();

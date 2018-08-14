@@ -1,17 +1,17 @@
-using DiplomataEditor.Core;
-using DiplomataEditor.Helpers;
-using Diplomata.Models;
 using Diplomata.Helpers;
+using Diplomata.Models;
+using DiplomataEditor;
+using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Editors
+namespace DiplomataEditor.Windows
 {
   public class ItemEditor : EditorWindow
   {
     public static Item item;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorManager diplomataEditor;
+    private static DiplomataEditorData diplomataEditor;
     private static State state;
 
     public enum State
@@ -41,12 +41,12 @@ namespace DiplomataEditor.Editors
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public static void OpenEdit(Item item)
     {
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       ItemEditor.item = item;
       diplomataEditor.workingItemId = item.id;
       Init(State.Edit);

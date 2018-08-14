@@ -1,32 +1,32 @@
-using DiplomataEditor.Helpers;
-using Diplomata.Preferences;
 using Diplomata.Helpers;
+using Diplomata.Models;
+using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Core
+namespace DiplomataEditor.Windows
 {
-  public class EditorPreferences : EditorWindow
+  public class PreferencesEditor : EditorWindow
   {
     public static string[] attributesTemp = new string[0];
     public static Language[] languagesTemp = new Language[0];
     public static bool jsonPrettyPrintTemp = false;
     public static string currentLanguageTemp;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorManager diplomataEditor;
+    private static DiplomataEditorData diplomataEditor;
 
     [MenuItem("Diplomata/Preferences")]
     static public void Init()
     {
-      DiplomataEditorManager.Instantiate();
-      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      DiplomataEditorData.Instantiate();
+      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
       attributesTemp = ArrayHelper.Copy(diplomataEditor.options.attributes);
       languagesTemp = ArrayHelper.Copy(diplomataEditor.options.languages);
       jsonPrettyPrintTemp = diplomataEditor.options.jsonPrettyPrint;
       currentLanguageTemp = string.Copy(diplomataEditor.options.currentLanguage);
 
-      EditorPreferences window = (EditorPreferences) GetWindow(typeof(EditorPreferences), false, "Preferences");
+      PreferencesEditor window = (PreferencesEditor) GetWindow(typeof(PreferencesEditor), false, "Preferences");
       window.minSize = new Vector2(600, 325);
       window.Show();
     }

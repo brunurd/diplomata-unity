@@ -1,13 +1,12 @@
-using UnityEditor;
-using UnityEngine;
-using DiplomataEditor.Editors;
-using DiplomataEditor.Helpers;
 using Diplomata;
+using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using Diplomata.Dictionaries;
+using DiplomataEditor.Helpers;
+using UnityEditor;
+using UnityEngine;
 
-namespace DiplomataEditor.ListMenu
+namespace DiplomataEditor.Windows
 {
   public class ContextListMenu
   {

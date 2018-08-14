@@ -1,9 +1,9 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using Diplomata.Preferences;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
+using Diplomata.Models;
 using UnityEngine;
 
 namespace Diplomata.Models
@@ -73,12 +73,12 @@ namespace Diplomata.Models
       animatorAttributesSetters = new AnimatorAttributeSetter[0];
       this.labelId = labelId;
 
-      foreach (string str in DiplomataManager.options.attributes)
+      foreach (string str in DiplomataData.options.attributes)
       {
         attributes = ArrayHelper.Add(attributes, new AttributeDictionary(str));
       }
 
-      foreach (Language lang in DiplomataManager.options.languages)
+      foreach (Language lang in DiplomataData.options.languages)
       {
         content = ArrayHelper.Add(content, new LanguageDictionary(lang.name, "[ Message content here ]"));
         screenplayNotes = ArrayHelper.Add(screenplayNotes, new LanguageDictionary(lang.name, ""));

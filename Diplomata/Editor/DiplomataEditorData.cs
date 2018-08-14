@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using DiplomataEditor.Helpers;
 using Diplomata;
-using Diplomata.Preferences;
-using Diplomata.Models;
 using Diplomata.Helpers;
+using Diplomata.Models;
+using DiplomataEditor.Helpers;
 using UnityEngine;
 
-namespace DiplomataEditor.Core
+namespace DiplomataEditor
 {
-  public class DiplomataEditorManager : ScriptableObject
+  public class DiplomataEditorData : ScriptableObject
   {
     public static string resourcesFolder = "Assets/Resources/";
     public List<Character> characters = new List<Character>();
@@ -23,11 +22,7 @@ namespace DiplomataEditor.Core
 
     public static void Instantiate()
     {
-      if (DiplomataManager.instance == null && FindObjectsOfType<DiplomataManager>().Length < 1)
-      {
-        GameObject obj = new GameObject("[Diplomata]");
-        obj.AddComponent<DiplomataManager>();
-      }
+      DiplomataData.SetData();
 
       JSONHelper.CreateFolder("Diplomata/Characters/");
 
@@ -46,22 +41,22 @@ namespace DiplomataEditor.Core
         JSONHelper.Create(new GlobalFlags(), "globalFlags", false, "Diplomata/");
       }
 
-      DiplomataManager.Restart();
-      var diplomataEditor = CreateInstance<DiplomataEditorManager>();
+      DiplomataData.Restart();
+      var diplomataEditor = CreateInstance<DiplomataEditorData>();
 
       if (!AssetHelper.Exists("Diplomata.asset", "Diplomata/"))
       {
-        diplomataEditor.options = DiplomataManager.options;
-        diplomataEditor.inventory = DiplomataManager.inventory;
-        diplomataEditor.globalFlags = DiplomataManager.globalFlags;
-        diplomataEditor.characters = DiplomataManager.characters;
+        diplomataEditor.options = DiplomataData.options;
+        diplomataEditor.inventory = DiplomataData.inventory;
+        diplomataEditor.globalFlags = DiplomataData.globalFlags;
+        diplomataEditor.characters = DiplomataData.characters;
 
         AssetHelper.Create(diplomataEditor, "Diplomata.asset", "Diplomata/");
       }
 
       else
       {
-        diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+        diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
         diplomataEditor.options = JSONHelper.Read<Options>("preferences", "Diplomata/");
         diplomataEditor.inventory = JSONHelper.Read<Inventory>("inventory", "Diplomata/");
         diplomataEditor.globalFlags = JSONHelper.Read<GlobalFlags>("globalFlags", "Diplomata/");

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using Diplomata.Preferences;
+using System.Linq;
 using Diplomata.GameProgess;
+using Diplomata.Interfaces;
 using Diplomata.Models;
 using UnityEngine;
 
@@ -8,14 +9,18 @@ namespace Diplomata
 {
   [AddComponentMenu("")]
   [ExecuteInEditMode]
-  public class DiplomataManager : MonoBehaviour
+  public class DiplomataData : MonoBehaviour
   {
-    public static DiplomataManager instance = null;
+    private static DiplomataData instance = null;
     public static Options options = new Options();
     public static GameProgressManager gameProgress = new GameProgressManager();
     public static List<Character> characters = new List<Character>();
     public static Inventory inventory = new Inventory();
     public static GlobalFlags globalFlags = new GlobalFlags();
+    public static IEnumerable<ITalk> iTalks;
+    public static IEnumerable<IChoice> iChoices;
+    public static IEnumerable<IMessage> iMessages;
+    public static bool isTalking;
 
     private void Awake()
     {
@@ -34,6 +39,15 @@ namespace Diplomata
       else
       {
         DestroyImmediate(gameObject);
+      }
+    }
+
+    public static void SetData()
+    {
+      if (instance == null && FindObjectsOfType<DiplomataData>().Length < 1)
+      {
+        GameObject obj = new GameObject("[Diplomata]");
+        obj.AddComponent<DiplomataData>();
       }
     }
 
@@ -70,6 +84,10 @@ namespace Diplomata
 
       gameProgress = new GameProgressManager();
       gameProgress.Start();
+
+      iTalks = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>().OfType<ITalk>();
+      iChoices = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>().OfType<IChoice>();
+      iMessages = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>().OfType<IMessage>();
     }
   }
 }
