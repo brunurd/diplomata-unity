@@ -6,7 +6,7 @@ using DiplomataLib;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor
+namespace DiplomataEditor.Editors
 {
   public class CharacterMessagesManager : EditorWindow
   {

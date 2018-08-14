@@ -6,138 +6,6 @@ using UnityEngine;
 
 namespace DiplomataLib
 {
-
-  [Serializable]
-  public class Options
-  {
-    public string currentSubtitledLanguage = string.Empty;
-    public string currentDubbedLanguage = string.Empty;
-    public float volumeScale = 1.0f;
-
-    public Options()
-    {
-      foreach (Language lang in Diplomata.preferences.languages)
-      {
-
-        if (lang.subtitle && currentSubtitledLanguage == string.Empty)
-        {
-          currentSubtitledLanguage = lang.name;
-        }
-
-        if (lang.dubbing && currentDubbedLanguage == string.Empty)
-        {
-          currentDubbedLanguage = lang.name;
-        }
-
-      }
-    }
-  }
-
-  [Serializable]
-  public class TalkLog
-  {
-    public string characterName;
-    public string[] messagesIds = new string[0];
-
-    public TalkLog() {}
-
-    public TalkLog(string characterName)
-    {
-      this.characterName = characterName;
-    }
-
-    public static TalkLog Find(TalkLog[] array, string characterName)
-    {
-      foreach (TalkLog talkLog in array)
-      {
-        if (talkLog.characterName == characterName)
-        {
-          return talkLog;
-        }
-      }
-
-      return null;
-    }
-  }
-
-  [Serializable]
-  public class CharacterProgress
-  {
-    public string name;
-    public byte influence;
-    public ContextProgress[] contexts = new ContextProgress[0];
-
-    public CharacterProgress() {}
-
-    public CharacterProgress(string name, byte influence)
-    {
-      this.name = name;
-      this.influence = influence;
-    }
-  }
-
-  [Serializable]
-  public class ContextProgress
-  {
-    public uint id;
-    public bool happened;
-    public ColumnProgress[] columns = new ColumnProgress[0];
-
-    public ContextProgress() {}
-
-    public ContextProgress(int id, bool happened)
-    {
-      this.id = (uint) id;
-      this.happened = happened;
-    }
-  }
-
-  [Serializable]
-  public class ColumnProgress
-  {
-    public uint id;
-    public MessageProgress[] messages = new MessageProgress[0];
-
-    public ColumnProgress() {}
-
-    public ColumnProgress(int id)
-    {
-      this.id = (uint) id;
-    }
-  }
-
-  [Serializable]
-  public class MessageProgress
-  {
-    public uint id;
-    public bool alreadySpoked;
-
-    public MessageProgress() {}
-
-    public MessageProgress(int id, bool alreadySpoked)
-    {
-      this.id = (uint) id;
-      this.alreadySpoked = alreadySpoked;
-    }
-  }
-
-  [Serializable]
-  public class ItemProgress
-  {
-    public uint id;
-    public bool have;
-    public bool discarded;
-
-    public ItemProgress() {}
-
-    public ItemProgress(int id, bool have, bool discarded)
-    {
-      this.id = (uint) id;
-      this.have = have;
-      this.discarded = discarded;
-    }
-  }
-
   public enum Method
   {
     XML,
@@ -147,7 +15,6 @@ namespace DiplomataLib
   [Serializable]
   public class GameProgress
   {
-
     public Options options;
     public CharacterProgress[] characters = new CharacterProgress[0];
     public ItemProgress[] inventory = new ItemProgress[0];
@@ -344,5 +211,4 @@ namespace DiplomataLib
       LoadFlags();
     }
   }
-
 }

@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace DiplomataLib
 {
-
   [AddComponentMenu("")]
   [ExecuteInEditMode]
   public class Diplomata : MonoBehaviour
@@ -15,7 +14,7 @@ namespace DiplomataLib
     public static Inventory inventory = new Inventory();
     public static CustomFlags customFlags = new CustomFlags();
 
-    public void Awake()
+    private void Awake()
     {
       if (instance == null)
       {
@@ -70,18 +69,4 @@ namespace DiplomataLib
       gameProgress.Start();
     }
   }
-
-#if UNITY_EDITOR
-  [UnityEditor.CustomEditor(typeof(Diplomata))]
-  public class DiplomataWarning : UnityEditor.Editor
-  {
-    public override void OnInspectorGUI()
-    {
-      UnityEditor.EditorGUILayout.HelpBox("\nthis auto-generated file is a object to store all Diplomata data.\n\n" +
-        "The object instantiate just one time in the game build in the first scene it's appear. (It's a Singleton)\n\n" +
-        "The real data are stored in the resources folder, so don't worry if you need to delete this object during development.\n", UnityEditor.MessageType.Info);
-    }
-  }
-#endif
-
 }
