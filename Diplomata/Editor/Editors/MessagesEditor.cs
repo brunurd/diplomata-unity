@@ -1,5 +1,7 @@
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata.Models;
+using Diplomata.Helpers;
+using Diplomata.Dictionaries;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +17,7 @@ namespace DiplomataEditor.Editors
     private static string[] characterList = new string[0];
     private static string[] contextList = new string[0];
     private static string[] itemList = new string[0];
-    private static string[] customFlagsList = new string[0];
+    private static string[] globalFlagsList = new string[0];
     private static string[] labelsList = new string[0];
     private static string[] booleanArray = new string[] { "True", "False" };
     public static GUIStyle messagesWindowHeaderStyle = new GUIStyle(GUIHelper.windowStyle);
@@ -135,7 +137,7 @@ namespace DiplomataEditor.Editors
         {
           if (GUILayout.Button("X", GUILayout.Width(20), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
           {
-            context.labels = ArrayHandler.Remove(context.labels, label);
+            context.labels = ArrayHelper.Remove(context.labels, label);
             foreach (Column col in context.columns)
             {
               foreach (Message msg in col.messages)
@@ -158,7 +160,7 @@ namespace DiplomataEditor.Editors
 
       if (GUILayout.Button("Add label", GUILayout.Width(100), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
       {
-        context.labels = ArrayHandler.Add(context.labels, new Label());
+        context.labels = ArrayHelper.Add(context.labels, new Label());
         context.labels[context.labels.Length - 1].name += " (" + (context.labels.Length - 1) + ")";
         diplomataEditor.Save(character);
       }
@@ -197,7 +199,7 @@ namespace DiplomataEditor.Editors
 
         GUILayout.Space(4);
 
-        column.emitter = GUIHelper.Popup("Emitter: ", column.emitter, diplomataEditor.preferences.characterList);
+        column.emitter = GUIHelper.Popup("Emitter: ", column.emitter, diplomataEditor.options.characterList);
 
         EditorGUILayout.Separator();
 
@@ -283,8 +285,8 @@ namespace DiplomataEditor.Editors
                     case Condition.Type.AfterOf:
                       if (condition.afterOf.GetMessage(context) != null)
                       {
-                        text += condition.DisplayAfterOf(DictHandler.ContainsKey(condition.afterOf.GetMessage(context).content,
-                          diplomataEditor.preferences.currentLanguage).value);
+                        text += condition.DisplayAfterOf(DictionariesHelper.ContainsKey(condition.afterOf.GetMessage(context).content,
+                          diplomataEditor.options.currentLanguage).value);
                       }
                       break;
 
@@ -297,8 +299,8 @@ namespace DiplomataEditor.Editors
                       var itemName = "";
                       if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null)
                       {
-                        itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
-                          diplomataEditor.preferences.currentLanguage).value;
+                        itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
                       }
                       text += condition.DisplayHasItem(itemName);
                       break;
@@ -306,8 +308,8 @@ namespace DiplomataEditor.Editors
                       var itemNameDont = "";
                       if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null)
                       {
-                        itemNameDont = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
-                          diplomataEditor.preferences.currentLanguage).value;
+                        itemNameDont = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
                       }
                       text += condition.DisplayDoesNotHaveItem(itemNameDont);
                       break;
@@ -315,8 +317,8 @@ namespace DiplomataEditor.Editors
                       var itemNameDiscarded = "";
                       if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null)
                       {
-                        itemNameDiscarded = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
-                          diplomataEditor.preferences.currentLanguage).value;
+                        itemNameDiscarded = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
                       }
                       text += condition.DisplayItemWasDiscarded(itemNameDiscarded);
                       break;
@@ -324,8 +326,8 @@ namespace DiplomataEditor.Editors
                       var itemNameEquipped = "";
                       if (Item.Find(diplomataEditor.inventory.items, condition.itemId) != null)
                       {
-                        itemNameEquipped = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
-                          diplomataEditor.preferences.currentLanguage).value;
+                        itemNameEquipped = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
                       }
                       text += condition.DisplayItemIsEquipped(itemNameEquipped);
                       break;
@@ -359,12 +361,12 @@ namespace DiplomataEditor.Editors
               height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
               GUILayout.Label(GUIHelper.textContent, GUIHelper.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
 
-              var content = DictHandler.ContainsKey(currentMessage.content, diplomataEditor.preferences.currentLanguage);
+              var content = DictionariesHelper.ContainsKey(currentMessage.content, diplomataEditor.options.currentLanguage);
 
               if (content == null)
               {
-                currentMessage.content = ArrayHandler.Add(currentMessage.content, new DictLang(diplomataEditor.preferences.currentLanguage, "[ Message content here ]"));
-                content = DictHandler.ContainsKey(currentMessage.content, diplomataEditor.preferences.currentLanguage);
+                currentMessage.content = ArrayHelper.Add(currentMessage.content, new LanguageDictionary(diplomataEditor.options.currentLanguage, "[ Message content here ]"));
+                content = DictionariesHelper.ContainsKey(currentMessage.content, diplomataEditor.options.currentLanguage);
               }
 
               GUIHelper.textContent.text = content.value;
@@ -394,15 +396,15 @@ namespace DiplomataEditor.Editors
                     case Effect.Type.EndOfContext:
                       if (effect.endOfContext.characterName != null)
                       {
-                        text += effect.DisplayEndOfContext(DictHandler.ContainsKey(effect.endOfContext.GetContext(diplomataEditor.characters).name,
-                          diplomataEditor.preferences.currentLanguage).value);
+                        text += effect.DisplayEndOfContext(DictionariesHelper.ContainsKey(effect.endOfContext.GetContext(diplomataEditor.characters).name,
+                          diplomataEditor.options.currentLanguage).value);
                       }
                       break;
 
                     case Effect.Type.GoTo:
                       if (effect.goTo.GetMessage(context) != null)
                       {
-                        text += effect.DisplayGoTo(DictHandler.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.preferences.currentLanguage).value);
+                        text += effect.DisplayGoTo(DictionariesHelper.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.options.currentLanguage).value);
                       }
                       break;
                     case Effect.Type.SetAnimatorAttribute:
@@ -412,8 +414,8 @@ namespace DiplomataEditor.Editors
                       var itemName = "";
                       if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
                       {
-                        itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
-                          diplomataEditor.preferences.currentLanguage).value;
+                        itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
                       }
                       text += effect.DisplayGetItem(itemName);
                       break;
@@ -421,8 +423,8 @@ namespace DiplomataEditor.Editors
                       var discardItemName = "";
                       if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
                       {
-                        discardItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
-                          diplomataEditor.preferences.currentLanguage).value;
+                        discardItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
                       }
                       text += effect.DisplayDiscardItem(discardItemName);
                       break;
@@ -430,8 +432,8 @@ namespace DiplomataEditor.Editors
                       var equipItemName = "";
                       if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
                       {
-                        equipItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
-                          diplomataEditor.preferences.currentLanguage).value;
+                        equipItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
                       }
                       text += effect.DisplayEquipItem(equipItemName);
                       break;
@@ -493,7 +495,7 @@ namespace DiplomataEditor.Editors
 
         if (GUILayout.Button("Add Message", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          column.messages = ArrayHandler.Add(column.messages, new Message(column.messages.Length, column.emitter, column.id, context.labels[0].id));
+          column.messages = ArrayHelper.Add(column.messages, new Message(column.messages.Length, column.emitter, column.id, context.labels[0].id));
 
           SetMessage(null);
 
@@ -508,7 +510,7 @@ namespace DiplomataEditor.Editors
 
       if (GUILayout.Button("Add Column", GUILayout.Height(GUIHelper.BUTTON_HEIGHT), GUILayout.Width(context.columnWidth)))
       {
-        context.columns = ArrayHandler.Add(context.columns, new Column(context.columns.Length));
+        context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
         diplomataEditor.Save(character);
       }
 
@@ -597,7 +599,7 @@ namespace DiplomataEditor.Editors
 
               GUILayout.Label("Message attributes (most influence in): ");
 
-              foreach (string attrName in diplomataEditor.preferences.attributes)
+              foreach (string attrName in diplomataEditor.options.attributes)
               {
                 for (int i = 0; i < message.attributes.Length; i++)
                 {
@@ -607,7 +609,7 @@ namespace DiplomataEditor.Editors
                   }
                   else if (i == message.attributes.Length - 1)
                   {
-                    message.attributes = ArrayHandler.Add(message.attributes, new DictAttr(attrName));
+                    message.attributes = ArrayHelper.Add(message.attributes, new AttributeDictionary(attrName));
                   }
                 }
               }
@@ -652,12 +654,12 @@ namespace DiplomataEditor.Editors
             GUILayout.EndHorizontal();
             GUIHelper.Separator();
 
-            var screenplayNotes = DictHandler.ContainsKey(message.screenplayNotes, diplomataEditor.preferences.currentLanguage);
+            var screenplayNotes = DictionariesHelper.ContainsKey(message.screenplayNotes, diplomataEditor.options.currentLanguage);
 
             if (screenplayNotes == null)
             {
-              message.screenplayNotes = ArrayHandler.Add(message.screenplayNotes, new DictLang(diplomataEditor.preferences.currentLanguage, ""));
-              screenplayNotes = DictHandler.ContainsKey(message.screenplayNotes, diplomataEditor.preferences.currentLanguage);
+              message.screenplayNotes = ArrayHelper.Add(message.screenplayNotes, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
+              screenplayNotes = DictionariesHelper.ContainsKey(message.screenplayNotes, diplomataEditor.options.currentLanguage);
             }
 
             GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
@@ -668,12 +670,12 @@ namespace DiplomataEditor.Editors
 
             EditorGUILayout.Separator();
 
-            var audioClipPath = DictHandler.ContainsKey(message.audioClipPath, diplomataEditor.preferences.currentLanguage);
+            var audioClipPath = DictionariesHelper.ContainsKey(message.audioClipPath, diplomataEditor.options.currentLanguage);
 
             if (audioClipPath == null)
             {
-              message.audioClipPath = ArrayHandler.Add(message.audioClipPath, new DictLang(diplomataEditor.preferences.currentLanguage, string.Empty));
-              audioClipPath = DictHandler.ContainsKey(message.audioClipPath, diplomataEditor.preferences.currentLanguage);
+              message.audioClipPath = ArrayHelper.Add(message.audioClipPath, new LanguageDictionary(diplomataEditor.options.currentLanguage, string.Empty));
+              audioClipPath = DictionariesHelper.ContainsKey(message.audioClipPath, diplomataEditor.options.currentLanguage);
             }
 
             message.audioClip = (AudioClip) Resources.Load(audioClipPath.value);
@@ -853,7 +855,7 @@ namespace DiplomataEditor.Editors
 
               if (GUILayout.Button("Delete Animator Attribute Setter", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
               {
-                message.animatorAttributesSetters = ArrayHandler.Remove(message.animatorAttributesSetters, animatorAttribute);
+                message.animatorAttributesSetters = ArrayHelper.Remove(message.animatorAttributesSetters, animatorAttribute);
                 diplomataEditor.Save(character);
               }
 
@@ -862,7 +864,7 @@ namespace DiplomataEditor.Editors
 
             if (GUILayout.Button("Add Animator Attribute Setter", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              message.animatorAttributesSetters = ArrayHandler.Add(message.animatorAttributesSetters, new AnimatorAttributeSetter());
+              message.animatorAttributesSetters = ArrayHelper.Add(message.animatorAttributesSetters, new AnimatorAttributeSetter());
               diplomataEditor.Save(character);
             }
 
@@ -905,8 +907,8 @@ namespace DiplomataEditor.Editors
 
                   message.id = leftCol.messages.Length;
 
-                  leftCol.messages = ArrayHandler.Add(leftCol.messages, message);
-                  column.messages = ArrayHandler.Remove(column.messages, message);
+                  leftCol.messages = ArrayHelper.Add(leftCol.messages, message);
+                  column.messages = ArrayHelper.Remove(column.messages, message);
 
                   column.messages = Message.ResetIDs(column.messages);
                   leftCol.messages = Message.ResetIDs(leftCol.messages);
@@ -967,8 +969,8 @@ namespace DiplomataEditor.Editors
 
                   message.id = rightCol.messages.Length;
 
-                  rightCol.messages = ArrayHandler.Add(rightCol.messages, message);
-                  column.messages = ArrayHandler.Remove(column.messages, message);
+                  rightCol.messages = ArrayHelper.Add(rightCol.messages, message);
+                  column.messages = ArrayHelper.Remove(column.messages, message);
 
                   column.messages = Message.ResetIDs(column.messages);
                   rightCol.messages = Message.ResetIDs(rightCol.messages);
@@ -994,7 +996,7 @@ namespace DiplomataEditor.Editors
             if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
 
-              column.messages = ArrayHandler.Add(column.messages, new Message(message, column.messages.Length));
+              column.messages = ArrayHelper.Add(column.messages, new Message(message, column.messages.Length));
 
               SetMessage(null);
 
@@ -1006,7 +1008,7 @@ namespace DiplomataEditor.Editors
               if (EditorUtility.DisplayDialog("Are you sure?", "If you agree all this message data will be lost forever.", "Yes", "No"))
               {
 
-                column.messages = ArrayHandler.Remove(column.messages, message);
+                column.messages = ArrayHelper.Remove(column.messages, message);
 
                 SetMessage(null);
 
@@ -1026,7 +1028,7 @@ namespace DiplomataEditor.Editors
 
             if (GUILayout.Button("New column at left", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              context.columns = ArrayHandler.Add(context.columns, new Column(context.columns.Length));
+              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
 
               MoveColumnsToRight(context, column.id);
 
@@ -1036,7 +1038,7 @@ namespace DiplomataEditor.Editors
 
             if (GUILayout.Button("New column at right", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              context.columns = ArrayHandler.Add(context.columns, new Column(context.columns.Length));
+              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
 
               MoveColumnsToRight(context, column.id + 1);
 
@@ -1084,7 +1086,7 @@ namespace DiplomataEditor.Editors
 
                   if (condition.afterOf.GetMessage(context) != null)
                   {
-                    messageName = DictHandler.ContainsKey(condition.afterOf.GetMessage(context).content, diplomataEditor.preferences.currentLanguage).value;
+                    messageName = DictionariesHelper.ContainsKey(condition.afterOf.GetMessage(context).content, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1098,7 +1100,7 @@ namespace DiplomataEditor.Editors
                       foreach (Message msg in col.messages)
                       {
 
-                        if (DictHandler.ContainsKey(msg.content, diplomataEditor.preferences.currentLanguage).value == messageName)
+                        if (DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage).value == messageName)
                         {
                           condition.afterOf.uniqueId = msg.GetUniqueId();
                           break;
@@ -1142,7 +1144,7 @@ namespace DiplomataEditor.Editors
 
                   if (itemList.Length > 0)
                   {
-                    itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                    itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1154,7 +1156,7 @@ namespace DiplomataEditor.Editors
                     foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == itemName)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemName)
                       {
                         condition.itemId = item.id;
                         break;
@@ -1174,7 +1176,7 @@ namespace DiplomataEditor.Editors
 
                   if (itemList.Length > 0)
                   {
-                    itemNameDont = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                    itemNameDont = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1186,7 +1188,7 @@ namespace DiplomataEditor.Editors
                     foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == itemNameDont)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemNameDont)
                       {
                         condition.itemId = item.id;
                         break;
@@ -1206,7 +1208,7 @@ namespace DiplomataEditor.Editors
 
                   if (itemList.Length > 0)
                   {
-                    equippedItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                    equippedItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1218,7 +1220,7 @@ namespace DiplomataEditor.Editors
                     foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == equippedItemName)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == equippedItemName)
                       {
                         condition.itemId = item.id;
                         break;
@@ -1238,7 +1240,7 @@ namespace DiplomataEditor.Editors
 
                   if (itemList.Length > 0)
                   {
-                    discardedItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                    discardedItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1250,7 +1252,7 @@ namespace DiplomataEditor.Editors
                     foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == discardedItemName)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == discardedItemName)
                       {
                         condition.itemId = item.id;
                         break;
@@ -1263,9 +1265,9 @@ namespace DiplomataEditor.Editors
                   break;
 
                 case Condition.Type.CustomFlagEqualTo:
-                  UpdateCustomFlagsList();
+                  UpdateGlobalFlagsList();
 
-                  condition.customFlag.name = GUIHelper.Popup("Flag: ", condition.customFlag.name, customFlagsList);
+                  condition.customFlag.name = GUIHelper.Popup("Flag: ", condition.customFlag.name, globalFlagsList);
 
                   string selected = condition.customFlag.value.ToString();
 
@@ -1303,7 +1305,7 @@ namespace DiplomataEditor.Editors
 
               if (GUILayout.Button("Delete Condition", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
               {
-                message.conditions = ArrayHandler.Remove(message.conditions, condition);
+                message.conditions = ArrayHelper.Remove(message.conditions, condition);
                 diplomataEditor.Save(character);
               }
 
@@ -1312,7 +1314,7 @@ namespace DiplomataEditor.Editors
 
             if (GUILayout.Button("Add Condition", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              message.conditions = ArrayHandler.Add(message.conditions, new Condition());
+              message.conditions = ArrayHelper.Add(message.conditions, new Condition());
               diplomataEditor.Save(character);
             }
 
@@ -1356,8 +1358,8 @@ namespace DiplomataEditor.Editors
                   {
                     if (effect.endOfContext.GetContext(diplomataEditor.characters) != null)
                     {
-                      contextName = DictHandler.ContainsKey(effect.endOfContext.GetContext(diplomataEditor.characters).name,
-                        diplomataEditor.preferences.currentLanguage).value;
+                      contextName = DictionariesHelper.ContainsKey(effect.endOfContext.GetContext(diplomataEditor.characters).name,
+                        diplomataEditor.options.currentLanguage).value;
                     }
                   }
 
@@ -1372,7 +1374,7 @@ namespace DiplomataEditor.Editors
                       foreach (Context ctx in tempCharacter.contexts)
                       {
 
-                        if (DictHandler.ContainsKey(ctx.name, diplomataEditor.preferences.currentLanguage).value == contextName)
+                        if (DictionariesHelper.ContainsKey(ctx.name, diplomataEditor.options.currentLanguage).value == contextName)
                         {
                           effect.endOfContext.Set(tempCharacter.name, ctx.id);
                           break;
@@ -1390,7 +1392,7 @@ namespace DiplomataEditor.Editors
 
                   if (effect.goTo.GetMessage(context) != null)
                   {
-                    messageContent = DictHandler.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.preferences.currentLanguage).value;
+                    messageContent = DictionariesHelper.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1404,7 +1406,7 @@ namespace DiplomataEditor.Editors
                       foreach (Message msg in col.messages)
                       {
 
-                        if (DictHandler.ContainsKey(msg.content, diplomataEditor.preferences.currentLanguage).value == messageContent)
+                        if (DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage).value == messageContent)
                         {
                           effect.goTo.uniqueId = msg.GetUniqueId();
                           break;
@@ -1519,7 +1521,7 @@ namespace DiplomataEditor.Editors
 
                   if (itemList.Length > 0)
                   {
-                    itemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                    itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1531,7 +1533,7 @@ namespace DiplomataEditor.Editors
                     foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == itemName)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemName)
                       {
                         effect.itemId = item.id;
                         break;
@@ -1551,7 +1553,7 @@ namespace DiplomataEditor.Editors
 
                   if (itemList.Length > 0)
                   {
-                    discardItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                    discardItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1563,7 +1565,7 @@ namespace DiplomataEditor.Editors
                     foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == discardItemName)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == discardItemName)
                       {
                         effect.itemId = item.id;
                         break;
@@ -1583,7 +1585,7 @@ namespace DiplomataEditor.Editors
 
                   if (itemList.Length > 0)
                   {
-                    equipItemName = DictHandler.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.preferences.currentLanguage).value;
+                    equipItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1595,7 +1597,7 @@ namespace DiplomataEditor.Editors
                     foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value == equipItemName)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == equipItemName)
                       {
                         effect.itemId = item.id;
                         break;
@@ -1608,9 +1610,9 @@ namespace DiplomataEditor.Editors
                   break;
 
                 case Effect.Type.SetCustomFlag:
-                  UpdateCustomFlagsList();
+                  UpdateGlobalFlagsList();
 
-                  effect.customFlag.name = GUIHelper.Popup("Flag: ", effect.customFlag.name, customFlagsList);
+                  effect.customFlag.name = GUIHelper.Popup("Flag: ", effect.customFlag.name, globalFlagsList);
 
                   string effectSelected = effect.customFlag.value.ToString();
 
@@ -1638,7 +1640,7 @@ namespace DiplomataEditor.Editors
 
               if (GUILayout.Button("Delete Effect", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
               {
-                message.effects = ArrayHandler.Remove(message.effects, effect);
+                message.effects = ArrayHelper.Remove(message.effects, effect);
                 diplomataEditor.Save(character);
               }
 
@@ -1647,7 +1649,7 @@ namespace DiplomataEditor.Editors
 
             if (GUILayout.Button("Add Effect", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              message.effects = ArrayHandler.Add(message.effects, new Effect(character.name));
+              message.effects = ArrayHelper.Add(message.effects, new Effect(character.name));
               diplomataEditor.Save(character);
             }
 
@@ -1682,8 +1684,8 @@ namespace DiplomataEditor.Editors
 
           msg.id = rightCol.messages.Length;
 
-          rightCol.messages = ArrayHandler.Add(rightCol.messages, msg);
-          col.messages = ArrayHandler.Remove(col.messages, msg);
+          rightCol.messages = ArrayHelper.Add(rightCol.messages, msg);
+          col.messages = ArrayHelper.Remove(col.messages, msg);
 
           col.messages = Message.ResetIDs(col.messages);
           rightCol.messages = Message.ResetIDs(rightCol.messages);
@@ -1699,11 +1701,11 @@ namespace DiplomataEditor.Editors
 
       characterList = new string[0];
 
-      foreach (string str in diplomataEditor.preferences.characterList)
+      foreach (string str in diplomataEditor.options.characterList)
       {
-        if (str != diplomataEditor.preferences.playerCharacterName)
+        if (str != diplomataEditor.options.playerCharacterName)
         {
-          characterList = ArrayHandler.Add(characterList, str);
+          characterList = ArrayHelper.Add(characterList, str);
         }
       }
     }
@@ -1716,7 +1718,7 @@ namespace DiplomataEditor.Editors
 
       foreach (Item item in diplomataEditor.inventory.items)
       {
-        itemList = ArrayHandler.Add(itemList, DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage).value);
+        itemList = ArrayHelper.Add(itemList, DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value);
       }
     }
 
@@ -1730,15 +1732,15 @@ namespace DiplomataEditor.Editors
       {
         foreach (Message msg in col.messages)
         {
-          DictLang content = DictHandler.ContainsKey(msg.content, diplomataEditor.preferences.currentLanguage);
+          LanguageDictionary content = DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage);
 
           if (content == null)
           {
-            msg.content = ArrayHandler.Add(msg.content, new DictLang(diplomataEditor.preferences.currentLanguage, ""));
-            content = DictHandler.ContainsKey(msg.content, diplomataEditor.preferences.currentLanguage);
+            msg.content = ArrayHelper.Add(msg.content, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
+            content = DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage);
           }
 
-          messageList = ArrayHandler.Add(messageList, content.value);
+          messageList = ArrayHelper.Add(messageList, content.value);
         }
       }
     }
@@ -1753,26 +1755,26 @@ namespace DiplomataEditor.Editors
       {
         foreach (Context context in character.contexts)
         {
-          DictLang contextName = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
+          LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
 
           if (contextName == null)
           {
-            context.name = ArrayHandler.Add(context.name, new DictLang(diplomataEditor.preferences.currentLanguage, "Name [Change clicking on Edit]"));
-            contextName = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
+            context.name = ArrayHelper.Add(context.name, new LanguageDictionary(diplomataEditor.options.currentLanguage, "Name [Change clicking on Edit]"));
+            contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
           }
 
-          contextList = ArrayHandler.Add(contextList, contextName.value);
+          contextList = ArrayHelper.Add(contextList, contextName.value);
         }
       }
     }
 
-    public static void UpdateCustomFlagsList()
+    public static void UpdateGlobalFlagsList()
     {
-      customFlagsList = new string[0];
+      globalFlagsList = new string[0];
 
-      foreach (Flag flag in CharacterMessagesManager.diplomataEditor.customFlags.flags)
+      foreach (Flag flag in CharacterMessagesManager.diplomataEditor.globalFlags.flags)
       {
-        customFlagsList = ArrayHandler.Add(customFlagsList, flag.name);
+        globalFlagsList = ArrayHelper.Add(globalFlagsList, flag.name);
       }
     }
 
@@ -1782,7 +1784,7 @@ namespace DiplomataEditor.Editors
 
       foreach (Label label in context.labels)
       {
-        labelsList = ArrayHandler.Add(labelsList, label.name);
+        labelsList = ArrayHelper.Add(labelsList, label.name);
       }
     }
   }

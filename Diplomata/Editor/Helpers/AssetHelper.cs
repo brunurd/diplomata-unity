@@ -9,7 +9,7 @@ namespace DiplomataEditor.Helpers
   {
     public static void Create(Object obj, string name, string folder = "")
     {
-      string path = Diplomata.resourcesFolder + folder + name;
+      string path = DiplomataEditorManager.resourcesFolder + folder + name;
 
       try
       {
@@ -26,7 +26,7 @@ namespace DiplomataEditor.Helpers
 
     public static Object Read(string name, string folder = "")
     {
-      string path = Diplomata.resourcesFolder + folder + name;
+      string path = DiplomataEditorManager.resourcesFolder + folder + name;
 
       try
       {
@@ -42,7 +42,7 @@ namespace DiplomataEditor.Helpers
 
     public static void Delete(string name, string folder = "")
     {
-      string path = Diplomata.resourcesFolder + folder + name;
+      string path = DiplomataEditorManager.resourcesFolder + folder + name;
 
       try
       {
@@ -58,8 +58,8 @@ namespace DiplomataEditor.Helpers
 
     public static bool Exists(string filename, string folder = "")
     {
-      if (!File.Exists(Diplomata.resourcesFolder + filename) &&
-        !File.Exists(Diplomata.resourcesFolder + folder + filename))
+      if (!File.Exists(DiplomataEditorManager.resourcesFolder + filename) &&
+        !File.Exists(DiplomataEditorManager.resourcesFolder + folder + filename))
       {
         return false;
       }
@@ -72,7 +72,7 @@ namespace DiplomataEditor.Helpers
 
     public static void CreateFolder(string folderName)
     {
-      var path = Diplomata.resourcesFolder + folderName;
+      var path = DiplomataEditorManager.resourcesFolder + folderName;
 
       if (!Directory.Exists(path) && folderName != "")
       {

@@ -14,7 +14,7 @@ namespace DiplomataEditor.Helpers
       {
         CreateFolder(folder);
 
-        var file = File.Create(Diplomata.resourcesFolder + folder + filename + ".json");
+        var file = File.Create(DiplomataEditorManager.resourcesFolder + folder + filename + ".json");
         file.Close();
 
         AssetDatabase.Refresh();
@@ -24,7 +24,7 @@ namespace DiplomataEditor.Helpers
 
       catch (Exception e)
       {
-        Debug.LogError("Cannot create " + folder + filename + ".json in " + Diplomata.resourcesFolder + ". " + e.Message);
+        Debug.LogError("Cannot create " + folder + filename + ".json in " + DiplomataEditorManager.resourcesFolder + ". " + e.Message);
       }
     }
 
@@ -55,7 +55,7 @@ namespace DiplomataEditor.Helpers
       {
         string json = JsonUtility.ToJson(obj, prettyPrint);
 
-        using(FileStream fs = new FileStream(Diplomata.resourcesFolder + folder + filename + ".json", FileMode.Create))
+        using(FileStream fs = new FileStream(DiplomataEditorManager.resourcesFolder + folder + filename + ".json", FileMode.Create))
         {
           using(StreamWriter writer = new StreamWriter(fs))
           {
@@ -74,7 +74,7 @@ namespace DiplomataEditor.Helpers
 
     public static void Delete(string filename, string folder = "")
     {
-      var path = Diplomata.resourcesFolder + folder + filename;
+      var path = DiplomataEditorManager.resourcesFolder + folder + filename;
 
       try
       {
@@ -92,8 +92,8 @@ namespace DiplomataEditor.Helpers
 
     public static bool Exists(string filename, string folder = "")
     {
-      if (!File.Exists(Diplomata.resourcesFolder + filename + ".json") &&
-        !File.Exists(Diplomata.resourcesFolder + folder + filename + ".json"))
+      if (!File.Exists(DiplomataEditorManager.resourcesFolder + filename + ".json") &&
+        !File.Exists(DiplomataEditorManager.resourcesFolder + folder + filename + ".json"))
       {
         return false;
       }
@@ -106,7 +106,7 @@ namespace DiplomataEditor.Helpers
 
     public static void CreateFolder(string folderName)
     {
-      var path = Diplomata.resourcesFolder + folderName;
+      var path = DiplomataEditorManager.resourcesFolder + folderName;
 
       if (!Directory.Exists(path) && folderName != "")
       {

@@ -1,7 +1,9 @@
 using DiplomataEditor.Core;
 using DiplomataEditor.Editors;
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata;
+using Diplomata.Models;
+using Diplomata.Helpers;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,12 +12,12 @@ namespace DiplomataEditor.ListMenu
   public class ItemListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private Core.Diplomata diplomataEditor;
+    private DiplomataEditorManager diplomataEditor;
 
     [MenuItem("Diplomata/Inventory")]
     static public void Init()
     {
-      Core.Diplomata.Instantiate();
+      DiplomataEditorManager.Instantiate();
 
       ItemListMenu window = (ItemListMenu) GetWindow(typeof(ItemListMenu), false, "Inventory");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
@@ -25,7 +27,7 @@ namespace DiplomataEditor.ListMenu
 
     public void OnEnable()
     {
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public void OnGUI()
@@ -48,7 +50,7 @@ namespace DiplomataEditor.ListMenu
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();
 
-        var name = DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage);
+        var name = DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage);
 
         if (EditorGUIUtility.isProSkin)
         {
@@ -84,7 +86,7 @@ namespace DiplomataEditor.ListMenu
               diplomataEditor.workingItemId = -1;
             }
 
-            diplomataEditor.inventory.items = ArrayHandler.Remove(diplomataEditor.inventory.items, item);
+            diplomataEditor.inventory.items = ArrayHelper.Remove(diplomataEditor.inventory.items, item);
             diplomataEditor.SaveInventory();
           }
         }
@@ -102,7 +104,7 @@ namespace DiplomataEditor.ListMenu
 
       if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
-        diplomataEditor.inventory.items = ArrayHandler.Add(diplomataEditor.inventory.items, new Item(diplomataEditor.inventory.items.Length));
+        diplomataEditor.inventory.items = ArrayHelper.Add(diplomataEditor.inventory.items, new Item(diplomataEditor.inventory.items.Length));
         diplomataEditor.SaveInventory();
       }
 

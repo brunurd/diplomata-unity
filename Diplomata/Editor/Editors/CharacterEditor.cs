@@ -1,6 +1,8 @@
 using DiplomataEditor.Core;
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata.Models;
+using Diplomata.Dictionaries;
+using Diplomata.Helpers;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +13,7 @@ namespace DiplomataEditor.Editors
     public static Character character;
     private string characterName = "";
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static Core.Diplomata diplomataEditor;
+    private static DiplomataEditorManager diplomataEditor;
 
     public enum State
     {
@@ -53,14 +55,14 @@ namespace DiplomataEditor.Editors
 
     public void OnEnable()
     {
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public static void OpenCreate()
     {
       character = null;
 
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataEditor.workingCharacter = string.Empty;
       Init(State.Create);
     }
@@ -69,7 +71,7 @@ namespace DiplomataEditor.Editors
     {
       character = currentCharacter;
 
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataEditor.workingCharacter = currentCharacter.name;
       Init(State.Edit);
     }
@@ -80,7 +82,7 @@ namespace DiplomataEditor.Editors
       {
         if (character.name == characterName)
         {
-          diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+          diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
           diplomataEditor.workingCharacter = string.Empty;
           character = null;
           Init(State.Close);
@@ -181,12 +183,12 @@ namespace DiplomataEditor.Editors
 
       GUIHelper.Separator();
 
-      var description = DictHandler.ContainsKey(character.description, diplomataEditor.preferences.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(character.description, diplomataEditor.options.currentLanguage);
 
       if (description == null)
       {
-        character.description = ArrayHandler.Add(character.description, new DictLang(diplomataEditor.preferences.currentLanguage, ""));
-        description = DictHandler.ContainsKey(character.description, diplomataEditor.preferences.currentLanguage);
+        character.description = ArrayHelper.Add(character.description, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
+        description = DictionariesHelper.ContainsKey(character.description, diplomataEditor.options.currentLanguage);
       }
 
       GUIHelper.textContent.text = description.value;
@@ -201,7 +203,7 @@ namespace DiplomataEditor.Editors
 
       var player = false;
 
-      if (diplomataEditor.preferences.playerCharacterName == character.name)
+      if (diplomataEditor.options.playerCharacterName == character.name)
       {
         player = true;
       }
@@ -210,18 +212,18 @@ namespace DiplomataEditor.Editors
 
       if (player)
       {
-        diplomataEditor.preferences.playerCharacterName = character.name;
+        diplomataEditor.options.playerCharacterName = character.name;
       }
 
       EditorGUILayout.EndHorizontal();
 
-      if (character.name != diplomataEditor.preferences.playerCharacterName)
+      if (character.name != diplomataEditor.options.playerCharacterName)
       {
         GUIHelper.Separator();
 
         GUILayout.Label("Character attributes (influenceable by): ");
 
-        foreach (string attrName in diplomataEditor.preferences.attributes)
+        foreach (string attrName in diplomataEditor.options.attributes)
         {
           for (int i = 0; i < character.attributes.Length; i++)
           {
@@ -231,7 +233,7 @@ namespace DiplomataEditor.Editors
             }
             else if (i == character.attributes.Length - 1)
             {
-              character.attributes = ArrayHandler.Add(character.attributes, new DictAttr(attrName));
+              character.attributes = ArrayHelper.Add(character.attributes, new AttributeDictionary(attrName));
             }
           }
         }

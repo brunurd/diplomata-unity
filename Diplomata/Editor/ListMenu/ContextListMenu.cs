@@ -1,8 +1,11 @@
-using DiplomataEditor.Editors;
-using DiplomataEditor.Helpers;
-using DiplomataLib;
 using UnityEditor;
 using UnityEngine;
+using DiplomataEditor.Editors;
+using DiplomataEditor.Helpers;
+using Diplomata;
+using Diplomata.Helpers;
+using Diplomata.Models;
+using Diplomata.Dictionaries;
 
 namespace DiplomataEditor.ListMenu
 {
@@ -48,20 +51,20 @@ namespace DiplomataEditor.ListMenu
           Rect boxRect = EditorGUILayout.BeginVertical(GUIHelper.boxStyle);
           GUI.Box(boxRect, GUIContent.none);
 
-          var name = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
+          var name = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
 
           if (name == null)
           {
-            context.name = ArrayHandler.Add(context.name, new DictLang(diplomataEditor.preferences.currentLanguage, "Name [Change clicking on Edit]"));
-            name = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
+            context.name = ArrayHelper.Add(context.name, new LanguageDictionary(diplomataEditor.options.currentLanguage, "Name [Change clicking on Edit]"));
+            name = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
           }
 
-          var description = DictHandler.ContainsKey(context.description, diplomataEditor.preferences.currentLanguage);
+          var description = DictionariesHelper.ContainsKey(context.description, diplomataEditor.options.currentLanguage);
 
           if (description == null)
           {
-            context.description = ArrayHandler.Add(context.description, new DictLang(diplomataEditor.preferences.currentLanguage, "Description [Change clicking on Edit]"));
-            description = DictHandler.ContainsKey(context.description, diplomataEditor.preferences.currentLanguage);
+            context.description = ArrayHelper.Add(context.description, new LanguageDictionary(diplomataEditor.options.currentLanguage, "Description [Change clicking on Edit]"));
+            description = DictionariesHelper.ContainsKey(context.description, diplomataEditor.options.currentLanguage);
           }
 
           GUIHelper.labelStyle.fontSize = 11;
@@ -88,7 +91,7 @@ namespace DiplomataEditor.ListMenu
             if (EditorUtility.DisplayDialog("Are you sure?", "All data inside this context will be lost forever.", "Yes", "No"))
             {
               ContextEditor.Reset(character.name);
-              character.contexts = ArrayHandler.Remove(character.contexts, context);
+              character.contexts = ArrayHelper.Remove(character.contexts, context);
               character.contexts = Context.ResetIDs(character, character.contexts);
               diplomataEditor.Save(character);
             }
@@ -161,7 +164,7 @@ namespace DiplomataEditor.ListMenu
     {
       var character = CharacterMessagesManager.character;
 
-      character.contexts = ArrayHandler.Add(character.contexts, new Context(character.contexts.Length, character.name));
+      character.contexts = ArrayHelper.Add(character.contexts, new Context(character.contexts.Length, character.name));
       CharacterMessagesManager.diplomataEditor.Save(character);
     }
 

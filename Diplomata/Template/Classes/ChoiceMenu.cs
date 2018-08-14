@@ -3,13 +3,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace DiplomataLib
+namespace Diplomata
 {
-
   [Serializable]
   public class ChoiceMenu
   {
-
     public enum Type
     {
       LIST,
@@ -209,5 +207,4 @@ namespace DiplomataLib
       }
     }
   }
-
 }

@@ -1,14 +1,16 @@
+using System;
 using System.Security.Cryptography;
 using System.Text;
+using Diplomata.Preferences;
+using Diplomata.Dictionaries;
+using Diplomata.Helpers;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata.Models
 {
-
-  [System.Serializable]
+  [Serializable]
   public class Message
   {
-
     [SerializeField]
     private string uniqueId;
 
@@ -18,24 +20,24 @@ namespace DiplomataLib
     public int columnId;
     public string imagePath = string.Empty;
     public Condition[] conditions;
-    public DictLang[] content;
-    public DictLang[] screenplayNotes;
-    public DictAttr[] attributes;
+    public LanguageDictionary[] content;
+    public LanguageDictionary[] screenplayNotes;
+    public AttributeDictionary[] attributes;
     public Effect[] effects;
     public AnimatorAttributeSetter[] animatorAttributesSetters;
-    public DictLang[] audioClipPath;
+    public LanguageDictionary[] audioClipPath;
     public string labelId;
 
-    [System.NonSerialized]
+    [NonSerialized]
     public bool alreadySpoked;
 
-    [System.NonSerialized]
+    [NonSerialized]
     public AudioClip audioClip;
 
-    [System.NonSerialized]
+    [NonSerialized]
     public Texture2D image;
 
-    [System.NonSerialized]
+    [NonSerialized]
     public Sprite sprite;
 
     public Message() {}
@@ -49,13 +51,13 @@ namespace DiplomataLib
       imagePath = msg.imagePath;
       labelId = msg.labelId;
 
-      conditions = ArrayHandler.Copy(msg.conditions);
-      content = ArrayHandler.Copy(msg.content);
-      screenplayNotes = ArrayHandler.Copy(msg.screenplayNotes);
-      attributes = ArrayHandler.Copy(msg.attributes);
-      effects = ArrayHandler.Copy(msg.effects);
-      animatorAttributesSetters = ArrayHandler.Copy(msg.animatorAttributesSetters);
-      audioClipPath = ArrayHandler.Copy(msg.audioClipPath);
+      conditions = ArrayHelper.Copy(msg.conditions);
+      content = ArrayHelper.Copy(msg.content);
+      screenplayNotes = ArrayHelper.Copy(msg.screenplayNotes);
+      attributes = ArrayHelper.Copy(msg.attributes);
+      effects = ArrayHelper.Copy(msg.effects);
+      animatorAttributesSetters = ArrayHelper.Copy(msg.animatorAttributesSetters);
+      audioClipPath = ArrayHelper.Copy(msg.audioClipPath);
 
       uniqueId = SetUniqueId();
     }
@@ -63,24 +65,24 @@ namespace DiplomataLib
     public Message(int id, string emitter, int columnId, string labelId)
     {
       conditions = new Condition[0];
-      content = new DictLang[0];
-      attributes = new DictAttr[0];
-      screenplayNotes = new DictLang[0];
+      content = new LanguageDictionary[0];
+      attributes = new AttributeDictionary[0];
+      screenplayNotes = new LanguageDictionary[0];
       effects = new Effect[0];
-      audioClipPath = new DictLang[0];
+      audioClipPath = new LanguageDictionary[0];
       animatorAttributesSetters = new AnimatorAttributeSetter[0];
       this.labelId = labelId;
 
-      foreach (string str in Diplomata.preferences.attributes)
+      foreach (string str in DiplomataManager.options.attributes)
       {
-        attributes = ArrayHandler.Add(attributes, new DictAttr(str));
+        attributes = ArrayHelper.Add(attributes, new AttributeDictionary(str));
       }
 
-      foreach (Language lang in Diplomata.preferences.languages)
+      foreach (Language lang in DiplomataManager.options.languages)
       {
-        content = ArrayHandler.Add(content, new DictLang(lang.name, "[ Message content here ]"));
-        screenplayNotes = ArrayHandler.Add(screenplayNotes, new DictLang(lang.name, ""));
-        audioClipPath = ArrayHandler.Add(audioClipPath, new DictLang(lang.name, string.Empty));
+        content = ArrayHelper.Add(content, new LanguageDictionary(lang.name, "[ Message content here ]"));
+        screenplayNotes = ArrayHelper.Add(screenplayNotes, new LanguageDictionary(lang.name, ""));
+        audioClipPath = ArrayHelper.Add(audioClipPath, new LanguageDictionary(lang.name, string.Empty));
       }
 
       this.id = id;
@@ -95,7 +97,7 @@ namespace DiplomataLib
 
       byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(
         "Diplomata" + id + columnId +
-        Random.Range(-2147483648, 2147483647)
+        UnityEngine.Random.Range(-2147483648, 2147483647)
       ));
 
       StringBuilder sBuilder = new StringBuilder();
@@ -161,7 +163,7 @@ namespace DiplomataLib
 
         if (msg != null)
         {
-          temp = ArrayHandler.Add(temp, msg);
+          temp = ArrayHelper.Add(temp, msg);
         }
       }
 
@@ -178,7 +180,7 @@ namespace DiplomataLib
 
     public Effect AddCustomEffect()
     {
-      effects = ArrayHandler.Add(effects, new Effect());
+      effects = ArrayHelper.Add(effects, new Effect());
       return effects[effects.Length - 1];
     }
   }

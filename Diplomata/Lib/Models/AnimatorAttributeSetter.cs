@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata.Models
 {
-
-  [System.Serializable]
+  [Serializable]
   public class AnimatorAttributeSetter
   {
     public AnimatorControllerParameterType type = AnimatorControllerParameterType.Float;
@@ -14,8 +14,7 @@ namespace DiplomataLib
     public int setTrigger;
     public string animatorPath = string.Empty;
 
-    [System.NonSerialized]
+    [NonSerialized]
     public RuntimeAnimatorController animator;
   }
-
 }

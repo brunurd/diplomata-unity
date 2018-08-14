@@ -1,12 +1,10 @@
 using System;
 
-namespace DiplomataLib
+namespace Diplomata
 {
-
   [Serializable]
   public class Talk
   {
-
     public Action onStart;
     public Action onEnd;
 
@@ -33,5 +31,4 @@ namespace DiplomataLib
     }
 
   }
-
 }

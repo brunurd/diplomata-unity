@@ -1,79 +1,11 @@
+using System;
+using Diplomata.Dictionaries;
+using Diplomata.Helpers;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata.Models
 {
-
-  [System.Serializable]
-  public class Item
-  {
-    public int id;
-    public DictLang[] name;
-    public DictLang[] description;
-    public string imagePath = string.Empty;
-    public string highlightImagePath = string.Empty;
-
-    [System.NonSerialized]
-    public Texture2D image;
-
-    [System.NonSerialized]
-    public Sprite sprite;
-
-    [System.NonSerialized]
-    public Texture2D highlightImage;
-
-    [System.NonSerialized]
-    public Sprite highlightSprite;
-
-    [System.NonSerialized]
-    public bool have;
-
-    [System.NonSerialized]
-    public bool discarded;
-
-    public Item(int id)
-    {
-      this.id = id;
-
-      foreach (Language language in Diplomata.preferences.languages)
-      {
-        name = ArrayHandler.Add(name, new DictLang(language.name, "[ Edit to change this name ]"));
-        description = ArrayHandler.Add(description, new DictLang(language.name, ""));
-      }
-    }
-
-    public static Item Find(Item[] items, int itemId)
-    {
-
-      foreach (Item item in items)
-      {
-        if (item.id == itemId)
-        {
-          return item;
-        }
-      }
-
-      return null;
-    }
-
-    public static Item Find(Item[] items, string name, string language = "English")
-    {
-
-      foreach (Item item in items)
-      {
-        DictLang itemName = DictHandler.ContainsKey(item.name, language);
-
-        if (itemName.value == name && itemName != null)
-        {
-          return item;
-        }
-      }
-
-      Debug.LogWarning("This item doesn't exist.");
-      return null;
-    }
-  }
-
-  [System.Serializable]
+  [Serializable]
   public class Inventory
   {
     public Item[] items = new Item[0];
@@ -132,7 +64,7 @@ namespace DiplomataLib
 
       foreach (Item item in items)
       {
-        DictLang itemName = DictHandler.ContainsKey(item.name, language);
+        LanguageDictionary itemName = DictionariesHelper.ContainsKey(item.name, language);
 
         if (itemName.value == name && itemName != null)
         {
@@ -180,5 +112,4 @@ namespace DiplomataLib
       }
     }
   }
-
 }

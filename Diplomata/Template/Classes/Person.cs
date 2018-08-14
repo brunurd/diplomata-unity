@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata
 {
-
   [RequireComponent(typeof(DiplomataCharacter))]
   public class Person : MonoBehaviour
   {
@@ -16,5 +15,4 @@ namespace DiplomataLib
       character = GetComponent<DiplomataCharacter>();
     }
   }
-
 }

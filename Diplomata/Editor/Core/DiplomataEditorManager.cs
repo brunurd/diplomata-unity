@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata;
+using Diplomata.Preferences;
+using Diplomata.Models;
+using Diplomata.Helpers;
 using UnityEngine;
 
 namespace DiplomataEditor.Core
 {
-  public class Diplomata : ScriptableObject
+  public class DiplomataEditorManager : ScriptableObject
   {
     public static string resourcesFolder = "Assets/Resources/";
     public List<Character> characters = new List<Character>();
-    public DiplomataLib.Preferences preferences = new DiplomataLib.Preferences();
+    public Options options = new Options();
     public Inventory inventory = new Inventory();
-    public CustomFlags customFlags = new CustomFlags();
+    public GlobalFlags globalFlags = new GlobalFlags();
 
     public int workingContextMessagesId;
     public int workingContextEditId;
@@ -20,17 +23,17 @@ namespace DiplomataEditor.Core
 
     public static void Instantiate()
     {
-      if (DiplomataLib.Diplomata.instance == null && FindObjectsOfType<DiplomataLib.Diplomata>().Length < 1)
+      if (DiplomataManager.instance == null && FindObjectsOfType<DiplomataManager>().Length < 1)
       {
         GameObject obj = new GameObject("[Diplomata]");
-        obj.AddComponent<DiplomataLib.Diplomata>();
+        obj.AddComponent<DiplomataManager>();
       }
 
       JSONHelper.CreateFolder("Diplomata/Characters/");
 
       if (!JSONHelper.Exists("preferences", "Diplomata/"))
       {
-        JSONHelper.Create(new DiplomataLib.Preferences(), "preferences", false, "Diplomata/");
+        JSONHelper.Create(new Options(), "preferences", false, "Diplomata/");
       }
 
       if (!JSONHelper.Exists("inventory", "Diplomata/"))
@@ -38,30 +41,30 @@ namespace DiplomataEditor.Core
         JSONHelper.Create(new Inventory(), "inventory", false, "Diplomata/");
       }
 
-      if (!JSONHelper.Exists("customFlags", "Diplomata/"))
+      if (!JSONHelper.Exists("globalFlags", "Diplomata/"))
       {
-        JSONHelper.Create(new CustomFlags(), "customFlags", false, "Diplomata/");
+        JSONHelper.Create(new GlobalFlags(), "globalFlags", false, "Diplomata/");
       }
 
-      DiplomataLib.Diplomata.Restart();
-      var diplomataEditor = CreateInstance<Diplomata>();
+      DiplomataManager.Restart();
+      var diplomataEditor = CreateInstance<DiplomataEditorManager>();
 
       if (!AssetHelper.Exists("Diplomata.asset", "Diplomata/"))
       {
-        diplomataEditor.preferences = DiplomataLib.Diplomata.preferences;
-        diplomataEditor.inventory = DiplomataLib.Diplomata.inventory;
-        diplomataEditor.customFlags = DiplomataLib.Diplomata.customFlags;
-        diplomataEditor.characters = DiplomataLib.Diplomata.characters;
+        diplomataEditor.options = DiplomataManager.options;
+        diplomataEditor.inventory = DiplomataManager.inventory;
+        diplomataEditor.globalFlags = DiplomataManager.globalFlags;
+        diplomataEditor.characters = DiplomataManager.characters;
 
         AssetHelper.Create(diplomataEditor, "Diplomata.asset", "Diplomata/");
       }
 
       else
       {
-        diplomataEditor = (Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-        diplomataEditor.preferences = JSONHelper.Read<DiplomataLib.Preferences>("preferences", "Diplomata/");
+        diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+        diplomataEditor.options = JSONHelper.Read<Options>("preferences", "Diplomata/");
         diplomataEditor.inventory = JSONHelper.Read<Inventory>("inventory", "Diplomata/");
-        diplomataEditor.customFlags = JSONHelper.Read<CustomFlags>("customFlags", "Diplomata/");
+        diplomataEditor.globalFlags = JSONHelper.Read<GlobalFlags>("globalFlags", "Diplomata/");
         diplomataEditor.UpdateList();
       }
     }
@@ -79,7 +82,7 @@ namespace DiplomataEditor.Core
       var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
 
       characters = new List<Character>();
-      preferences.characterList = new string[0];
+      options.characterList = new string[0];
 
       foreach (Object obj in charactersFiles)
       {
@@ -87,7 +90,7 @@ namespace DiplomataEditor.Core
         var character = JsonUtility.FromJson<Character>(json.text);
 
         characters.Add(character);
-        preferences.characterList = ArrayHandler.Add(preferences.characterList, obj.name);
+        options.characterList = ArrayHelper.Add(options.characterList, obj.name);
       }
     }
 
@@ -102,7 +105,7 @@ namespace DiplomataEditor.Core
     {
       bool canAdd = true;
 
-      foreach (string characterName in preferences.characterList)
+      foreach (string characterName in options.characterList)
       {
         if (characterName == character.name)
         {
@@ -117,13 +120,13 @@ namespace DiplomataEditor.Core
 
         if (characters.Count == 1)
         {
-          preferences.playerCharacterName = character.name;
+          options.playerCharacterName = character.name;
         }
 
-        preferences.characterList = ArrayHandler.Add(preferences.characterList, character.name);
+        options.characterList = ArrayHelper.Add(options.characterList, character.name);
         SavePreferences();
 
-        JSONHelper.Create(character, character.name, preferences.jsonPrettyPrint, "Diplomata/Characters/");
+        JSONHelper.Create(character, character.name, options.jsonPrettyPrint, "Diplomata/Characters/");
       }
 
       else
@@ -134,22 +137,22 @@ namespace DiplomataEditor.Core
 
     public void SavePreferences()
     {
-      JSONHelper.Update(preferences, "preferences", preferences.jsonPrettyPrint, "Diplomata/");
+      JSONHelper.Update(options, "preferences", options.jsonPrettyPrint, "Diplomata/");
     }
 
     public void SaveInventory()
     {
-      JSONHelper.Update(inventory, "inventory", preferences.jsonPrettyPrint, "Diplomata/");
+      JSONHelper.Update(inventory, "inventory", options.jsonPrettyPrint, "Diplomata/");
     }
 
-    public void SaveCustomFlags()
+    public void SaveGlobalFlags()
     {
-      JSONHelper.Update(customFlags, "customFlags", preferences.jsonPrettyPrint, "Diplomata/");
+      JSONHelper.Update(globalFlags, "globalFlags", options.jsonPrettyPrint, "Diplomata/");
     }
 
     public void Save(Character character)
     {
-      JSONHelper.Update(character, character.name, preferences.jsonPrettyPrint, "Diplomata/Characters/");
+      JSONHelper.Update(character, character.name, options.jsonPrettyPrint, "Diplomata/Characters/");
     }
   }
 }

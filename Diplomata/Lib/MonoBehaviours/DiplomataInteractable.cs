@@ -1,6 +1,7 @@
+using Diplomata.Models;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata
 {
 
   public class DiplomataInteractable : MonoBehaviour

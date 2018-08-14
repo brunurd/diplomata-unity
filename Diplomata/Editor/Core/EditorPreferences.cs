@@ -1,33 +1,32 @@
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata.Preferences;
+using Diplomata.Helpers;
 using UnityEditor;
 using UnityEngine;
 
 namespace DiplomataEditor.Core
 {
-
-  public class Preferences : EditorWindow
+  public class EditorPreferences : EditorWindow
   {
-
     public static string[] attributesTemp = new string[0];
     public static Language[] languagesTemp = new Language[0];
     public static bool jsonPrettyPrintTemp = false;
     public static string currentLanguageTemp;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static Diplomata diplomataEditor;
+    private static DiplomataEditorManager diplomataEditor;
 
     [MenuItem("Diplomata/Preferences")]
     static public void Init()
     {
-      Diplomata.Instantiate();
-      diplomataEditor = (Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      DiplomataEditorManager.Instantiate();
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
-      attributesTemp = ArrayHandler.Copy(diplomataEditor.preferences.attributes);
-      languagesTemp = ArrayHandler.Copy(diplomataEditor.preferences.languages);
-      jsonPrettyPrintTemp = diplomataEditor.preferences.jsonPrettyPrint;
-      currentLanguageTemp = string.Copy(diplomataEditor.preferences.currentLanguage);
+      attributesTemp = ArrayHelper.Copy(diplomataEditor.options.attributes);
+      languagesTemp = ArrayHelper.Copy(diplomataEditor.options.languages);
+      jsonPrettyPrintTemp = diplomataEditor.options.jsonPrettyPrint;
+      currentLanguageTemp = string.Copy(diplomataEditor.options.currentLanguage);
 
-      Preferences window = (Preferences) GetWindow(typeof(Preferences), false, "Preferences");
+      EditorPreferences window = (EditorPreferences) GetWindow(typeof(EditorPreferences), false, "Preferences");
       window.minSize = new Vector2(600, 325);
       window.Show();
     }
@@ -48,7 +47,7 @@ namespace DiplomataEditor.Core
 
       GUILayout.BeginHorizontal();
       jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
-      currentLanguageTemp = GUIHelper.Popup("Current Language", currentLanguageTemp, diplomataEditor.preferences.languagesList);
+      currentLanguageTemp = GUIHelper.Popup("Current Language", currentLanguageTemp, diplomataEditor.options.languagesList);
       GUILayout.EndHorizontal();
 
       EditorGUILayout.Separator();
@@ -77,7 +76,7 @@ namespace DiplomataEditor.Core
 
         if (GUILayout.Button("X", GUILayout.Width(20)))
         {
-          attributesTemp = ArrayHandler.Remove(attributesTemp, attributesTemp[i]);
+          attributesTemp = ArrayHelper.Remove(attributesTemp, attributesTemp[i]);
         }
 
         GUILayout.EndHorizontal();
@@ -87,7 +86,7 @@ namespace DiplomataEditor.Core
 
       if (GUILayout.Button("Add attribute"))
       {
-        attributesTemp = ArrayHandler.Add(attributesTemp, "");
+        attributesTemp = ArrayHelper.Add(attributesTemp, "");
       }
 
       GUILayout.EndVertical();
@@ -109,7 +108,7 @@ namespace DiplomataEditor.Core
 
         if (GUILayout.Button("X", GUILayout.Width(20)))
         {
-          languagesTemp = ArrayHandler.Remove(languagesTemp, languagesTemp[i]);
+          languagesTemp = ArrayHelper.Remove(languagesTemp, languagesTemp[i]);
         }
 
         GUILayout.EndHorizontal();
@@ -119,7 +118,7 @@ namespace DiplomataEditor.Core
 
       if (GUILayout.Button("Add language"))
       {
-        languagesTemp = ArrayHandler.Add(languagesTemp, new Language(""));
+        languagesTemp = ArrayHelper.Add(languagesTemp, new Language(""));
       }
 
       GUILayout.EndVertical();
@@ -127,15 +126,14 @@ namespace DiplomataEditor.Core
 
     public void Save()
     {
-      diplomataEditor.preferences.attributes = ArrayHandler.Copy(attributesTemp);
-      diplomataEditor.preferences.languages = ArrayHandler.Copy(languagesTemp);
-      diplomataEditor.preferences.jsonPrettyPrint = jsonPrettyPrintTemp;
-      diplomataEditor.preferences.currentLanguage = string.Copy(currentLanguageTemp);
-      diplomataEditor.preferences.SetLanguageList();
+      diplomataEditor.options.attributes = ArrayHelper.Copy(attributesTemp);
+      diplomataEditor.options.languages = ArrayHelper.Copy(languagesTemp);
+      diplomataEditor.options.jsonPrettyPrint = jsonPrettyPrintTemp;
+      diplomataEditor.options.currentLanguage = string.Copy(currentLanguageTemp);
+      diplomataEditor.options.SetLanguageList();
 
       diplomataEditor.SavePreferences();
       Close();
     }
   }
-
 }

@@ -1,4 +1,4 @@
-using DiplomataLib;
+using Diplomata;
 
 public class Default : Template
 {

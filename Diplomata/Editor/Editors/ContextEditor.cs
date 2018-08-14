@@ -1,6 +1,7 @@
 using DiplomataEditor.Core;
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata.Models;
+using Diplomata.Helpers;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,10 +9,10 @@ namespace DiplomataEditor.Editors
 {
   public class ContextEditor : EditorWindow
   {
-    public static DiplomataLib.Character character;
+    public static Character character;
     public static Context context;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static Core.Diplomata diplomataEditor;
+    private static DiplomataEditorManager diplomataEditor;
 
     public enum State
     {
@@ -43,7 +44,7 @@ namespace DiplomataEditor.Editors
 
     public void OnEnable()
     {
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public static void Edit(Character currentCharacter, Context currentContext)
@@ -51,7 +52,7 @@ namespace DiplomataEditor.Editors
       character = currentCharacter;
       context = currentContext;
 
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataEditor.workingContextEditId = context.id;
       Init(State.Edit);
     }
@@ -65,7 +66,7 @@ namespace DiplomataEditor.Editors
           character = null;
           context = null;
 
-          diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+          diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
           diplomataEditor.workingContextEditId = -1;
 
           Init(State.Close);
@@ -106,8 +107,8 @@ namespace DiplomataEditor.Editors
 
     public void DrawEditWindow()
     {
-      var name = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
-      var description = DictHandler.ContainsKey(context.description, diplomataEditor.preferences.currentLanguage);
+      var name = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(context.description, diplomataEditor.options.currentLanguage);
 
       if (name != null && description != null)
       {

@@ -1,10 +1,11 @@
-namespace DiplomataLib
-{
+using System;
+using Diplomata.Helpers;
 
-  [System.Serializable]
+namespace Diplomata.Models
+{
+  [Serializable]
   public class Column
   {
-
     public int id;
     public string emitter;
     public Message[] messages;
@@ -14,14 +15,13 @@ namespace DiplomataLib
     public Column(int id)
     {
       this.id = id;
-      emitter = Diplomata.preferences.playerCharacterName;
+      emitter = DiplomataManager.options.playerCharacterName;
 
       messages = new Message[0];
     }
 
     public static Column Find(Context context, int columnId)
     {
-
       foreach (Column column in context.columns)
       {
         if (column.id == columnId)
@@ -41,7 +41,7 @@ namespace DiplomataLib
       {
         if (columns[i].messages.Length > 0)
         {
-          newArray = ArrayHandler.Add(newArray, columns[i]);
+          newArray = ArrayHelper.Add(newArray, columns[i]);
         }
       }
 
@@ -61,5 +61,4 @@ namespace DiplomataLib
       return newArray;
     }
   }
-
 }

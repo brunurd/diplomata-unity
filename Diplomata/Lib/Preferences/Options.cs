@@ -1,30 +1,9 @@
-namespace DiplomataLib
+using System;
+
+namespace Diplomata.Preferences
 {
-
-  [System.Serializable]
-  public class Language
-  {
-    public string name;
-    public bool subtitle;
-    public bool dubbing;
-
-    public Language(string name)
-    {
-      this.name = name;
-      subtitle = true;
-      dubbing = true;
-    }
-
-    public Language(Language other)
-    {
-      name = other.name;
-      subtitle = other.subtitle;
-      dubbing = other.dubbing;
-    }
-  }
-
-  [System.Serializable]
-  public class Preferences
+  [Serializable]
+  public class Options
   {
     public Language[] languages = new Language[] { new Language("English") };
     public string[] languagesList = new string[] { "English" };
@@ -51,5 +30,4 @@ namespace DiplomataLib
       }
     }
   }
-
 }

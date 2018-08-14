@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata
 {
   public class Template : MonoBehaviour
   {

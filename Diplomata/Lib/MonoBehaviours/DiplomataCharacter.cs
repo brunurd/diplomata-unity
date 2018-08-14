@@ -1,7 +1,11 @@
 using System.Collections.Generic;
+using Diplomata.Dictionaries;
+using Diplomata.GameProgess;
+using Diplomata.Helpers;
+using Diplomata.Models;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata
 {
   /// <summary>
   /// The main class of the character
@@ -32,7 +36,7 @@ namespace DiplomataLib
 
       if (character != null && Application.isPlaying)
       {
-        character = Character.Find(Diplomata.characters, character.name);
+        character = Character.Find(DiplomataManager.characters, character.name);
       }
     }
 
@@ -208,7 +212,7 @@ namespace DiplomataLib
                           }
                           break;
                         case Condition.Type.HasItem:
-                          var item = Item.Find(Diplomata.inventory.items, condition.itemId);
+                          var item = Item.Find(DiplomataManager.inventory.items, condition.itemId);
 
                           if (item != null)
                           {
@@ -233,7 +237,7 @@ namespace DiplomataLib
 
                           break;
                         case Condition.Type.DoesNotHaveTheItem:
-                          var itemDont = Item.Find(Diplomata.inventory.items, condition.itemId);
+                          var itemDont = Item.Find(DiplomataManager.inventory.items, condition.itemId);
 
                           if (itemDont != null)
                           {
@@ -258,10 +262,10 @@ namespace DiplomataLib
 
                           break;
                         case Condition.Type.ItemIsEquipped:
-                          var equippedItem = Item.Find(Diplomata.inventory.items, condition.itemId);
+                          var equippedItem = Item.Find(DiplomataManager.inventory.items, condition.itemId);
                           if (equippedItem != null)
                           {
-                            if (Diplomata.inventory.IsEquipped(condition.itemId))
+                            if (DiplomataManager.inventory.IsEquipped(condition.itemId))
                             {
                               condition.proceed = true;
                             }
@@ -280,7 +284,7 @@ namespace DiplomataLib
 
                           break;
                         case Condition.Type.ItemWasDiscarded:
-                          var discardedItem = Item.Find(Diplomata.inventory.items, condition.itemId);
+                          var discardedItem = Item.Find(DiplomataManager.inventory.items, condition.itemId);
 
                           if (discardedItem != null)
                           {
@@ -305,7 +309,7 @@ namespace DiplomataLib
 
                           break;
                         case Condition.Type.CustomFlagEqualTo:
-                          var flag = Diplomata.customFlags.Find(Diplomata.customFlags.flags, condition.customFlag.name);
+                          var flag = DiplomataManager.globalFlags.Find(DiplomataManager.globalFlags.flags, condition.customFlag.name);
 
                           if (flag != null)
                           {
@@ -447,17 +451,17 @@ namespace DiplomataLib
       {
         if (currentMessage != null)
         {
-          var talkLog = TalkLog.Find(Diplomata.gameProgress.talkLog, character.name);
+          var talkLog = TalkLog.Find(DiplomataManager.gameProgress.talkLog, character.name);
 
           if (talkLog == null)
           {
-            Diplomata.gameProgress.talkLog = ArrayHandler.Add(Diplomata.gameProgress.talkLog, new TalkLog(character.name));
-            talkLog = TalkLog.Find(Diplomata.gameProgress.talkLog, character.name);
+            DiplomataManager.gameProgress.talkLog = ArrayHelper.Add(DiplomataManager.gameProgress.talkLog, new TalkLog(character.name));
+            talkLog = TalkLog.Find(DiplomataManager.gameProgress.talkLog, character.name);
           }
 
-          talkLog.messagesIds = ArrayHandler.Add(talkLog.messagesIds, currentMessage.GetUniqueId());
+          talkLog.messagesIds = ArrayHelper.Add(talkLog.messagesIds, currentMessage.GetUniqueId());
 
-          return DictHandler.ContainsKey(currentMessage.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
+          return DictionariesHelper.ContainsKey(currentMessage.content, DiplomataManager.gameProgress.options.currentSubtitledLanguage).value;
         }
 
         else
@@ -477,7 +481,7 @@ namespace DiplomataLib
     {
       if (currentMessage != null)
       {
-        var audioClipPath = DictHandler.ContainsKey(currentMessage.audioClipPath, Diplomata.gameProgress.options.currentDubbedLanguage);
+        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, DiplomataManager.gameProgress.options.currentDubbedLanguage);
 
         if (audioClipPath.value != string.Empty)
         {
@@ -497,7 +501,7 @@ namespace DiplomataLib
 
             if (audioSource != null)
             {
-              audioSource.PlayOneShot(currentMessage.audioClip, Diplomata.gameProgress.options.volumeScale);
+              audioSource.PlayOneShot(currentMessage.audioClip, DiplomataManager.gameProgress.options.volumeScale);
             }
 
             else
@@ -513,7 +517,7 @@ namespace DiplomataLib
     {
       if (currentMessage != null)
       {
-        var audioClipPath = DictHandler.ContainsKey(currentMessage.audioClipPath, Diplomata.gameProgress.options.currentDubbedLanguage);
+        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, DiplomataManager.gameProgress.options.currentDubbedLanguage);
 
         if (audioClipPath.value != string.Empty)
         {
@@ -703,7 +707,7 @@ namespace DiplomataLib
           switch (effect.type)
           {
             case Effect.Type.EndOfContext:
-              effect.endOfContext.GetContext(Diplomata.characters).happened = true;
+              effect.endOfContext.GetContext(DiplomataManager.characters).happened = true;
 
               if (currentContext.characterName == effect.endOfContext.characterName && currentContext.id == effect.endOfContext.contextId)
               {
@@ -776,7 +780,7 @@ namespace DiplomataLib
               break;
 
             case Effect.Type.GetItem:
-              var getItem = Item.Find(Diplomata.inventory.items, effect.itemId);
+              var getItem = Item.Find(DiplomataManager.inventory.items, effect.itemId);
 
               if (getItem != null)
               {
@@ -791,11 +795,11 @@ namespace DiplomataLib
               break;
 
             case Effect.Type.EquipItem:
-              var equipItem = Item.Find(Diplomata.inventory.items, effect.itemId);
+              var equipItem = Item.Find(DiplomataManager.inventory.items, effect.itemId);
 
               if (equipItem != null)
               {
-                Diplomata.inventory.Equip(effect.itemId);
+                DiplomataManager.inventory.Equip(effect.itemId);
               }
 
               else
@@ -806,7 +810,7 @@ namespace DiplomataLib
               break;
 
             case Effect.Type.DiscardItem:
-              var discardItem = Item.Find(Diplomata.inventory.items, effect.itemId);
+              var discardItem = Item.Find(DiplomataManager.inventory.items, effect.itemId);
 
               if (discardItem != null)
               {
@@ -821,7 +825,7 @@ namespace DiplomataLib
               break;
 
             case Effect.Type.SetCustomFlag:
-              var flag = Diplomata.customFlags.Find(Diplomata.customFlags.flags, effect.customFlag.name);
+              var flag = DiplomataManager.globalFlags.Find(DiplomataManager.globalFlags.flags, effect.customFlag.name);
 
               if (flag != null)
               {
@@ -871,7 +875,7 @@ namespace DiplomataLib
       {
         foreach (Message choice in choices)
         {
-          var content = DictHandler.ContainsKey(choice.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
+          var content = DictionariesHelper.ContainsKey(choice.content, DiplomataManager.gameProgress.options.currentSubtitledLanguage).value;
           var choiceText = content; //(shortContent != "") ? shortContent : content;
 
           if (!choice.alreadySpoked && choice.disposable)
@@ -922,7 +926,7 @@ namespace DiplomataLib
       {
         foreach (Message msg in choices)
         {
-          var localContent = DictHandler.ContainsKey(msg.content, Diplomata.gameProgress.options.currentSubtitledLanguage).value;
+          var localContent = DictionariesHelper.ContainsKey(msg.content, DiplomataManager.gameProgress.options.currentSubtitledLanguage).value;
 
           if (localContent == content)
           {
@@ -960,9 +964,9 @@ namespace DiplomataLib
         byte max = 0;
         List<byte> min = new List<byte>();
 
-        foreach (DictAttr attrMsg in currentMessage.attributes)
+        foreach (AttributeDictionary attrMsg in currentMessage.attributes)
         {
-          foreach (DictAttr attrChar in character.attributes)
+          foreach (AttributeDictionary attrChar in character.attributes)
           {
             if (attrMsg.key == attrChar.key)
             {
@@ -1003,7 +1007,7 @@ namespace DiplomataLib
     {
       if (currentMessage != null)
       {
-        if (currentColumn.emitter == Diplomata.preferences.playerCharacterName)
+        if (currentColumn.emitter == DiplomataManager.options.playerCharacterName)
         {
           return true;
         }
@@ -1014,7 +1018,7 @@ namespace DiplomataLib
 
     public string PlayerName()
     {
-      return Diplomata.preferences.playerCharacterName;
+      return DiplomataManager.options.playerCharacterName;
     }
 
     public string Emitter()
@@ -1042,7 +1046,7 @@ namespace DiplomataLib
           {
             for (int i = 0; i < column.messages.Length; i++)
             {
-              DictLang content = DictHandler.ContainsKey(Message.Find(column.messages, i).content, language);
+              LanguageDictionary content = DictionariesHelper.ContainsKey(Message.Find(column.messages, i).content, language);
               if (content.value == messageContent && content != null)
               {
                 return column.messages[i];
@@ -1109,8 +1113,8 @@ namespace DiplomataLib
         return "";
       }
 
-      return DictHandler.ContainsKey(GetLastMessage().content,
-        Diplomata.gameProgress.options.currentSubtitledLanguage).value;
+      return DictionariesHelper.ContainsKey(GetLastMessage().content,
+        DiplomataManager.gameProgress.options.currentSubtitledLanguage).value;
     }
   }
 }

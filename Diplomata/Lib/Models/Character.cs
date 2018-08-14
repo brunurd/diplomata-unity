@@ -1,21 +1,24 @@
+using System;
 using System.Collections.Generic;
+using Diplomata.Preferences;
+using Diplomata.Dictionaries;
+using Diplomata.Helpers;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata.Models
 {
-
-  [System.Serializable]
+  [Serializable]
   public class Character
   {
     public string name;
-    public DictLang[] description;
-    public DictAttr[] attributes;
+    public LanguageDictionary[] description;
+    public AttributeDictionary[] attributes;
     public Context[] contexts;
     public byte influence = 50;
 
     public static string playerInteractingWith;
 
-    [System.NonSerialized]
+    [NonSerialized]
     public bool onScene;
 
     public Character() {}
@@ -24,11 +27,11 @@ namespace DiplomataLib
     {
       this.name = name;
       contexts = new Context[0];
-      description = new DictLang[0];
+      description = new LanguageDictionary[0];
 
-      foreach (Language lang in Diplomata.preferences.languages)
+      foreach (Language lang in DiplomataManager.options.languages)
       {
-        description = ArrayHandler.Add(description, new DictLang(lang.name, ""));
+        description = ArrayHelper.Add(description, new LanguageDictionary(lang.name, ""));
       }
 
       SetAttributes();
@@ -36,11 +39,11 @@ namespace DiplomataLib
 
     public void SetAttributes()
     {
-      attributes = new DictAttr[0];
+      attributes = new AttributeDictionary[0];
 
-      foreach (string attrName in Diplomata.preferences.attributes)
+      foreach (string attrName in DiplomataManager.options.attributes)
       {
-        attributes = ArrayHandler.Add(attributes, new DictAttr(attrName));
+        attributes = ArrayHelper.Add(attributes, new AttributeDictionary(attrName));
       }
     }
 
@@ -48,16 +51,16 @@ namespace DiplomataLib
     {
       var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
 
-      Diplomata.characters = new List<Character>();
-      Diplomata.preferences.characterList = new string[0];
+      DiplomataManager.characters = new List<Character>();
+      DiplomataManager.options.characterList = new string[0];
 
-      foreach (Object obj in charactersFiles)
+      foreach (UnityEngine.Object obj in charactersFiles)
       {
         var json = (TextAsset) obj;
         var character = JsonUtility.FromJson<Character>(json.text);
 
-        Diplomata.characters.Add(character);
-        Diplomata.preferences.characterList = ArrayHandler.Add(Diplomata.preferences.characterList, obj.name);
+        DiplomataManager.characters.Add(character);
+        DiplomataManager.options.characterList = ArrayHelper.Add(DiplomataManager.options.characterList, obj.name);
       }
 
       SetOnScene();
@@ -65,9 +68,9 @@ namespace DiplomataLib
 
     public static void SetOnScene()
     {
-      var charactersOnScene = Object.FindObjectsOfType<DiplomataCharacter>();
+      var charactersOnScene = UnityEngine.Object.FindObjectsOfType<DiplomataCharacter>();
 
-      foreach (Character character in Diplomata.characters)
+      foreach (Character character in DiplomataManager.characters)
       {
         foreach (DiplomataCharacter diplomataCharacter in charactersOnScene)
         {
@@ -94,7 +97,5 @@ namespace DiplomataLib
 
       return null;
     }
-
   }
-
 }

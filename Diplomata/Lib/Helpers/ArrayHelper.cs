@@ -2,10 +2,9 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata.Helpers
 {
-
-  public class ArrayHandler
+  public class ArrayHelper
   {
     public static T[] Add<T>(T[] array, T element)
     {
@@ -136,5 +135,4 @@ namespace DiplomataLib
       return -1;
     }
   }
-
 }

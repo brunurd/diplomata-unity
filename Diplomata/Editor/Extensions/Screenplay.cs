@@ -1,7 +1,8 @@
 using System;
 using DiplomataEditor.Core;
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata.Helpers;
+using Diplomata.Models;
 using RTFExporter;
 using UnityEditor;
 
@@ -9,30 +10,30 @@ namespace DiplomataEditor
 {
   public class Screenplay
   {
-    private static Core.Diplomata diplomataEditor;
+    private static DiplomataEditorManager diplomataEditor;
 
     public static void Save(Character character)
     {
       RTFDocument doc = CreateDocument();
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
       doc = AddCharacter(doc, character);
 
-      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + character.name + " - " + diplomataEditor.preferences.currentLanguage + ".rtf", doc);
+      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + character.name + " - " + diplomataEditor.options.currentLanguage + ".rtf", doc);
       AssetDatabase.Refresh();
     }
 
     public static void SaveAll()
     {
       RTFDocument doc = CreateDocument();
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
       foreach (Character character in diplomataEditor.characters)
       {
         doc = AddCharacter(doc, character);
       }
 
-      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + diplomataEditor.preferences.currentLanguage + ".rtf", doc);
+      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + diplomataEditor.options.currentLanguage + ".rtf", doc);
       AssetDatabase.Refresh();
     }
 
@@ -60,7 +61,7 @@ namespace DiplomataEditor
       var presentation = document.AppendParagraph(noIndent);
       presentation.AppendText(character.name, styleAllcaps);
 
-      var characterDescription = DictHandler.ContainsKey(character.description, diplomataEditor.preferences.currentLanguage);
+      var characterDescription = DictionariesHelper.ContainsKey(character.description, diplomataEditor.options.currentLanguage);
       var text = string.Empty;
 
       text = ", " + characterDescription.value;
@@ -77,8 +78,8 @@ namespace DiplomataEditor
 
         var contextPar = document.AppendParagraph(noIndent);
 
-        var name = DictHandler.ContainsKey(context.name, diplomataEditor.preferences.currentLanguage);
-        var contextDescription = DictHandler.ContainsKey(context.description, diplomataEditor.preferences.currentLanguage);
+        var name = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
+        var contextDescription = DictionariesHelper.ContainsKey(context.description, diplomataEditor.options.currentLanguage);
 
         contextPar.AppendText(name.value + "\n", styleAllcaps);
         contextPar.AppendText(contextDescription.value, style);
@@ -90,7 +91,7 @@ namespace DiplomataEditor
             var messagePar = document.AppendParagraph(messageContentIndent);
             messagePar.AppendText("\t\t" + column.emitter + "\n", styleAllcaps);
 
-            var screenplayNotes = DictHandler.ContainsKey(column.messages[i].screenplayNotes, diplomataEditor.preferences.currentLanguage);
+            var screenplayNotes = DictionariesHelper.ContainsKey(column.messages[i].screenplayNotes, diplomataEditor.options.currentLanguage);
 
             if (screenplayNotes != null)
             {
@@ -100,7 +101,7 @@ namespace DiplomataEditor
               }
             }
 
-            var content = DictHandler.ContainsKey(column.messages[i].content, diplomataEditor.preferences.currentLanguage);
+            var content = DictionariesHelper.ContainsKey(column.messages[i].content, diplomataEditor.options.currentLanguage);
 
             if (column.messages.Length > 1)
             {

@@ -1,12 +1,11 @@
+using System;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata.Models
 {
-
-  [System.Serializable]
+  [Serializable]
   public class Effect
   {
-
     public Type type;
     public EndOfContext endOfContext;
     public GoTo goTo;
@@ -14,10 +13,10 @@ namespace DiplomataLib
     public Flag customFlag;
     public int itemId;
 
-    [System.NonSerialized]
+    [NonSerialized]
     public Events onStart = new Events();
 
-    [System.NonSerialized]
+    [NonSerialized]
     public Events onComplete = new Events();
 
     public enum Type
@@ -32,7 +31,7 @@ namespace DiplomataLib
       EquipItem
     }
 
-    [System.Serializable]
+    [Serializable]
     public struct GoTo
     {
       public string uniqueId;
@@ -56,7 +55,7 @@ namespace DiplomataLib
       }
     }
 
-    [System.Serializable]
+    [Serializable]
     public struct EndOfContext
     {
       public string characterName;
@@ -106,7 +105,6 @@ namespace DiplomataLib
     {
       if (animatorAttributeSetter != null)
       {
-
         switch (animatorAttributeSetter.type)
         {
           case AnimatorControllerParameterType.Bool:
@@ -124,7 +122,6 @@ namespace DiplomataLib
           default:
             return "Animator attribute setter type not found.";
         }
-
       }
 
       else
@@ -153,5 +150,4 @@ namespace DiplomataLib
       return "\"" + customFlag.name + "\" set to " + customFlag.value;
     }
   }
-
 }

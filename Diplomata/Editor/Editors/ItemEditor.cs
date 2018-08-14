@@ -1,6 +1,7 @@
 using DiplomataEditor.Core;
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata.Models;
+using Diplomata.Helpers;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace DiplomataEditor.Editors
   {
     public static Item item;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static Core.Diplomata diplomataEditor;
+    private static DiplomataEditorManager diplomataEditor;
     private static State state;
 
     public enum State
@@ -40,12 +41,12 @@ namespace DiplomataEditor.Editors
 
     public void OnEnable()
     {
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public static void OpenEdit(Item item)
     {
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       ItemEditor.item = item;
       diplomataEditor.workingItemId = item.id;
       Init(State.Edit);
@@ -82,14 +83,14 @@ namespace DiplomataEditor.Editors
     public void DrawEditWindow()
     {
 
-      var name = DictHandler.ContainsKey(item.name, diplomataEditor.preferences.currentLanguage);
+      var name = DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage);
 
       GUILayout.Label("Name: ");
       name.value = EditorGUILayout.TextField(name.value);
 
       EditorGUILayout.Separator();
 
-      var description = DictHandler.ContainsKey(item.description, diplomataEditor.preferences.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(item.description, diplomataEditor.options.currentLanguage);
 
       GUIHelper.textContent.text = description.value;
       var height = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));

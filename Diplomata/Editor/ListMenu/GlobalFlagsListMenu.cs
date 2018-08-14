@@ -1,21 +1,23 @@
-using DiplomataEditor.Core;
-using DiplomataEditor.Helpers;
-using DiplomataLib;
 using UnityEditor;
 using UnityEngine;
+using DiplomataEditor.Core;
+using DiplomataEditor.Helpers;
+using Diplomata;
+using Diplomata.Helpers;
+using Diplomata.Models;
 
 namespace DiplomataEditor.ListMenu
 {
   public class GlobalFlagsListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private Core.Diplomata diplomataEditor;
+    private DiplomataEditorManager diplomataEditor;
     private string[] booleanArray = new string[] { "True", "False" };
 
     [MenuItem("Diplomata/Custom Flags")]
     static public void Init()
     {
-      Core.Diplomata.Instantiate();
+      DiplomataEditorManager.Instantiate();
 
       GlobalFlagsListMenu window = (GlobalFlagsListMenu) GetWindow(typeof(GlobalFlagsListMenu), false, "Custom Flags");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 150, 300);
@@ -25,7 +27,7 @@ namespace DiplomataEditor.ListMenu
 
     public void OnEnable()
     {
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public void OnGUI()
@@ -35,17 +37,17 @@ namespace DiplomataEditor.ListMenu
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataEditor.customFlags.flags.Length <= 0)
+      if (diplomataEditor.globalFlags.flags.Length <= 0)
       {
         EditorGUILayout.HelpBox("No flags yet.", MessageType.Info);
       }
 
       var width = Screen.width - (2 * GUIHelper.MARGIN);
 
-      for (int i = 0; i < diplomataEditor.customFlags.flags.Length; i++)
+      for (int i = 0; i < diplomataEditor.globalFlags.flags.Length; i++)
       {
 
-        var flag = diplomataEditor.customFlags.flags[i];
+        var flag = diplomataEditor.globalFlags.flags[i];
 
         GUILayout.BeginHorizontal();
 
@@ -97,7 +99,7 @@ namespace DiplomataEditor.ListMenu
             flag.value = false;
           }
 
-          diplomataEditor.SaveCustomFlags();
+          diplomataEditor.SaveGlobalFlags();
         }
 
         if (EditorGUIUtility.isProSkin)
@@ -113,17 +115,17 @@ namespace DiplomataEditor.ListMenu
         {
           if (i > 0)
           {
-            diplomataEditor.customFlags.flags = ArrayHandler.Swap(diplomataEditor.customFlags.flags, i, i - 1);
-            diplomataEditor.SaveCustomFlags();
+            diplomataEditor.globalFlags.flags = ArrayHelper.Swap(diplomataEditor.globalFlags.flags, i, i - 1);
+            diplomataEditor.SaveGlobalFlags();
           }
         }
 
         if (GUILayout.Button("Down", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          if (i < diplomataEditor.customFlags.flags.Length - 1)
+          if (i < diplomataEditor.globalFlags.flags.Length - 1)
           {
-            diplomataEditor.customFlags.flags = ArrayHandler.Swap(diplomataEditor.customFlags.flags, i, i + 1);
-            diplomataEditor.SaveCustomFlags();
+            diplomataEditor.globalFlags.flags = ArrayHelper.Swap(diplomataEditor.globalFlags.flags, i, i + 1);
+            diplomataEditor.SaveGlobalFlags();
           }
         }
 
@@ -132,14 +134,14 @@ namespace DiplomataEditor.ListMenu
         if (GUILayout.Button("Add Next", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
 
-          diplomataEditor.customFlags.flags = ArrayHandler.Add(diplomataEditor.customFlags.flags, new Flag("", false));
+          diplomataEditor.globalFlags.flags = ArrayHelper.Add(diplomataEditor.globalFlags.flags, new Flag("", false));
 
-          for (int j = 1; j < (diplomataEditor.customFlags.flags.Length - 1) - i; j++)
+          for (int j = 1; j < (diplomataEditor.globalFlags.flags.Length - 1) - i; j++)
           {
-            diplomataEditor.customFlags.flags = ArrayHandler.Swap(diplomataEditor.customFlags.flags, diplomataEditor.customFlags.flags.Length - 1, i + j);
+            diplomataEditor.globalFlags.flags = ArrayHelper.Swap(diplomataEditor.globalFlags.flags, diplomataEditor.globalFlags.flags.Length - 1, i + j);
           }
 
-          diplomataEditor.SaveCustomFlags();
+          diplomataEditor.SaveGlobalFlags();
         }
 
         if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
@@ -147,8 +149,8 @@ namespace DiplomataEditor.ListMenu
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
 
-            diplomataEditor.customFlags.flags = ArrayHandler.Remove(diplomataEditor.customFlags.flags, flag);
-            diplomataEditor.SaveCustomFlags();
+            diplomataEditor.globalFlags.flags = ArrayHelper.Remove(diplomataEditor.globalFlags.flags, flag);
+            diplomataEditor.SaveGlobalFlags();
           }
         }
 
@@ -158,7 +160,7 @@ namespace DiplomataEditor.ListMenu
 
         GUILayout.EndHorizontal();
 
-        if (i < diplomataEditor.customFlags.flags.Length - 1)
+        if (i < diplomataEditor.globalFlags.flags.Length - 1)
         {
           GUIHelper.Separator();
         }
@@ -168,8 +170,8 @@ namespace DiplomataEditor.ListMenu
 
       if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
-        diplomataEditor.customFlags.flags = ArrayHandler.Add(diplomataEditor.customFlags.flags, new Flag("", false));
-        diplomataEditor.SaveCustomFlags();
+        diplomataEditor.globalFlags.flags = ArrayHelper.Add(diplomataEditor.globalFlags.flags, new Flag("", false));
+        diplomataEditor.SaveGlobalFlags();
       }
 
       GUILayout.EndVertical();
@@ -180,7 +182,7 @@ namespace DiplomataEditor.ListMenu
 
     public void OnDisable()
     {
-      diplomataEditor.SaveCustomFlags();
+      diplomataEditor.SaveGlobalFlags();
     }
   }
 

@@ -1,6 +1,10 @@
-namespace DiplomataLib
-{
+using System;
+using Diplomata.Preferences;
+using Diplomata.Dictionaries;
+using Diplomata.Helpers;
 
+namespace Diplomata.Models
+{
   public enum MessageEditorState
   {
     None,
@@ -9,7 +13,7 @@ namespace DiplomataLib
     Effects
   }
 
-  [System.Serializable]
+  [Serializable]
   public class Context
   {
     public int id;
@@ -23,12 +27,12 @@ namespace DiplomataLib
     public MessageEditorState messageEditorState = MessageEditorState.None;
     public ushort columnWidth = 200;
     public ushort fontSize = 11;
-    public DictLang[] name;
-    public DictLang[] description;
+    public LanguageDictionary[] name;
+    public LanguageDictionary[] description;
     public Column[] columns;
     public Label[] labels = new Label[] { new Label() };
 
-    [System.NonSerialized]
+    [NonSerialized]
     public bool happened;
 
     public struct CurrentMessage
@@ -56,14 +60,14 @@ namespace DiplomataLib
       this.id = id;
       this.characterName = characterName;
       columns = new Column[0];
-      name = new DictLang[0];
+      name = new LanguageDictionary[0];
       labels = new Label[] { new Label() };
-      description = new DictLang[0];
+      description = new LanguageDictionary[0];
 
-      foreach (Language lang in Diplomata.preferences.languages)
+      foreach (Language lang in DiplomataManager.options.languages)
       {
-        name = ArrayHandler.Add(name, new DictLang(lang.name, "Name [Change clicking on Edit]"));
-        description = ArrayHandler.Add(description, new DictLang(lang.name, "Description [Change clicking on Edit]"));
+        name = ArrayHelper.Add(name, new LanguageDictionary(lang.name, "Name [Change clicking on Edit]"));
+        description = ArrayHelper.Add(description, new LanguageDictionary(lang.name, "Description [Change clicking on Edit]"));
       }
     }
 
@@ -90,7 +94,7 @@ namespace DiplomataLib
 
         foreach (Context context in character.contexts)
         {
-          DictLang contextName = DictHandler.ContainsKey(context.name, language);
+          LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, language);
 
           if (name == contextName.value)
           {
@@ -112,7 +116,7 @@ namespace DiplomataLib
 
         if (ctx != null)
         {
-          temp = ArrayHandler.Add(temp, ctx);
+          temp = ArrayHelper.Add(temp, ctx);
         }
       }
 
@@ -127,5 +131,4 @@ namespace DiplomataLib
       return temp;
     }
   }
-
 }

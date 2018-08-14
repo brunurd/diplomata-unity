@@ -1,7 +1,7 @@
 using DiplomataEditor.Core;
 using DiplomataEditor.Editors;
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,7 +16,7 @@ namespace DiplomataEditor.Inspector
   public class CharacterInspector : Editor
   {
     public DiplomataCharacter diplomataCharacter;
-    private static Core.Diplomata diplomataEditor;
+    private static DiplomataEditorManager diplomataEditor;
 
     /// <summary>
     /// Refresh right on enable on editor (on appears in the inspector)
@@ -31,8 +31,8 @@ namespace DiplomataEditor.Inspector
     /// </summary>
     private void Refresh()
     {
-      Core.Diplomata.Instantiate();
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      DiplomataEditorManager.Instantiate();
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       diplomataCharacter = target as DiplomataCharacter;
     }
 
@@ -64,7 +64,7 @@ namespace DiplomataEditor.Inspector
           }
 
           var selectedBefore = selected;
-          selected = EditorGUILayout.Popup(selected, diplomataEditor.preferences.characterList);
+          selected = EditorGUILayout.Popup(selected, diplomataEditor.options.characterList);
 
           for (var i = 0; i < diplomataEditor.characters.Count; i++)
           {
@@ -94,7 +94,7 @@ namespace DiplomataEditor.Inspector
 
         var showInfluence = true;
 
-        if (diplomataCharacter.character.name == diplomataEditor.preferences.playerCharacterName)
+        if (diplomataCharacter.character.name == diplomataEditor.options.playerCharacterName)
         {
           EditorGUILayout.HelpBox("\nThis character is the player, he doesn't influence himself, use his messages only in the case he speaks with himself.\n", MessageType.Info);
           showInfluence = false;

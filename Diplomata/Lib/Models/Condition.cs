@@ -1,10 +1,10 @@
-namespace DiplomataLib
-{
+using System;
 
-  [System.Serializable]
+namespace Diplomata.Models
+{
+  [Serializable]
   public class Condition
   {
-
     public Type type;
     public int comparedInfluence;
     public string characterInfluencedName;
@@ -13,10 +13,10 @@ namespace DiplomataLib
     public int itemId;
     public string interactWith;
 
-    [System.NonSerialized]
+    [NonSerialized]
     public Events custom = new Events();
 
-    [System.NonSerialized]
+    [NonSerialized]
     public bool proceed = true;
 
     public enum Type
@@ -34,7 +34,7 @@ namespace DiplomataLib
       DoesNotHaveTheItem
     }
 
-    [System.Serializable]
+    [Serializable]
     public struct AfterOf
     {
       public string uniqueId;
@@ -128,5 +128,4 @@ namespace DiplomataLib
       return true;
     }
   }
-
 }

@@ -1,7 +1,9 @@
 using DiplomataEditor.Core;
 using DiplomataEditor.Editors;
 using DiplomataEditor.Helpers;
-using DiplomataLib;
+using Diplomata;
+using Diplomata.Helpers;
+using Diplomata.Models;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,12 +12,12 @@ namespace DiplomataEditor.ListMenu
   public class CharacterListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private Core.Diplomata diplomataEditor;
+    private DiplomataEditorManager diplomataEditor;
 
     [MenuItem("Diplomata/Characters")]
     static public void Init()
     {
-      Core.Diplomata.Instantiate();
+      DiplomataEditorManager.Instantiate();
 
       CharacterListMenu window = (CharacterListMenu) GetWindow(typeof(CharacterListMenu), false, "Character List");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
@@ -25,7 +27,7 @@ namespace DiplomataEditor.ListMenu
 
     public void OnEnable()
     {
-      diplomataEditor = (Core.Diplomata) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      diplomataEditor = (DiplomataEditorManager) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
     public void OnGUI()
@@ -35,14 +37,14 @@ namespace DiplomataEditor.ListMenu
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataEditor.preferences.characterList.Length <= 0)
+      if (diplomataEditor.options.characterList.Length <= 0)
       {
         EditorGUILayout.HelpBox("No characters yet.", MessageType.Info);
       }
 
-      for (int i = 0; i < diplomataEditor.preferences.characterList.Length; i++)
+      for (int i = 0; i < diplomataEditor.options.characterList.Length; i++)
       {
-        var name = diplomataEditor.preferences.characterList[i];
+        var name = diplomataEditor.options.characterList[i];
 
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();
@@ -56,7 +58,7 @@ namespace DiplomataEditor.ListMenu
         GUILayout.Label(name, GUIHelper.labelStyle);
 
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleRight;
-        if (diplomataEditor.preferences.playerCharacterName == name)
+        if (diplomataEditor.options.playerCharacterName == name)
         {
           GUILayout.Label("<b>[Player]</b>", GUIHelper.labelStyle);
         }
@@ -84,19 +86,19 @@ namespace DiplomataEditor.ListMenu
           {
             var isPlayer = false;
 
-            if (name == diplomataEditor.preferences.playerCharacterName)
+            if (name == diplomataEditor.options.playerCharacterName)
             {
               isPlayer = true;
             }
 
             diplomataEditor.characters.Remove(Character.Find(diplomataEditor.characters, name));
-            diplomataEditor.preferences.characterList = ArrayHandler.Remove(diplomataEditor.preferences.characterList, name);
+            diplomataEditor.options.characterList = ArrayHelper.Remove(diplomataEditor.options.characterList, name);
 
             JSONHelper.Delete(name, "Diplomata/Characters/");
 
-            if (isPlayer && diplomataEditor.preferences.characterList.Length > 0)
+            if (isPlayer && diplomataEditor.options.characterList.Length > 0)
             {
-              diplomataEditor.preferences.playerCharacterName = diplomataEditor.preferences.characterList[0];
+              diplomataEditor.options.playerCharacterName = diplomataEditor.options.characterList[0];
             }
 
             diplomataEditor.SavePreferences();
@@ -110,7 +112,7 @@ namespace DiplomataEditor.ListMenu
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();
 
-        if (i < diplomataEditor.preferences.characterList.Length - 1)
+        if (i < diplomataEditor.options.characterList.Length - 1)
         {
           GUIHelper.Separator();
         }

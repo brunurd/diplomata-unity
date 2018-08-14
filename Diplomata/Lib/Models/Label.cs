@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace DiplomataLib
+namespace Diplomata.Models
 {
   [Serializable]
   public class Label

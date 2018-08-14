@@ -2,13 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DiplomataLib
+namespace Diplomata
 {
-
   [Serializable]
   public class MessageBox
   {
-
     const int LOCKFRAMESLIMIT = 15;
 
     public Action onStart = delegate {};
@@ -245,5 +243,4 @@ namespace DiplomataLib
       messageBox.SetActive(false);
     }
   }
-
 }
