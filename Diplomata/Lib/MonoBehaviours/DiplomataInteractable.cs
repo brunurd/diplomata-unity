@@ -3,10 +3,8 @@ using UnityEngine;
 
 namespace Diplomata
 {
-
   public class DiplomataInteractable : MonoBehaviour
   {
-
     public string interactableLabel;
 
     public void SetLabel()
@@ -14,5 +12,4 @@ namespace Diplomata
       Character.playerInteractingWith = interactableLabel;
     }
   }
-
 }

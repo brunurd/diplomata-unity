@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Diplomata.Models
 {
-
   public class Events
   {
     protected List<Event> events = new List<Event>();
@@ -72,5 +71,4 @@ namespace Diplomata.Models
       return true;
     }
   }
-
 }

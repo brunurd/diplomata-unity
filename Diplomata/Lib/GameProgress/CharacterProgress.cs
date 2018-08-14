@@ -1,6 +1,7 @@
 using System;
 
 namespace Diplomata.GameProgess
+
 {
   [Serializable]
   public class CharacterProgress

@@ -1,3 +1,4 @@
+
 using System;
 
 namespace Diplomata.GameProgess
@@ -17,5 +18,4 @@ namespace Diplomata.GameProgess
       this.happened = happened;
     }
   }
-
 }
