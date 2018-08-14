@@ -54,9 +54,9 @@ namespace Diplomata.Models
       {
         foreach (DiplomataCharacter diplomataCharacter in charactersOnScene)
         {
-          if (diplomataCharacter.character != null)
+          if (diplomataCharacter.talkable != null)
           {
-            if (character.name == diplomataCharacter.character.name)
+            if (character.name == diplomataCharacter.talkable.name)
             {
               character.onScene = true;
             }

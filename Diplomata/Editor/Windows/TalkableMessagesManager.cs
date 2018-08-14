@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace DiplomataEditor.Windows
 {
-  public class CharacterMessagesManager : EditorWindow
+  public class TalkableMessagesManager : EditorWindow
   {
     private ushort iteractions = 0;
-    public static Character character;
+    public static Talkable talkable;
     public static Context context;
     public static Texture2D headerBG;
     public static Texture2D mainBG;
@@ -30,10 +30,10 @@ namespace DiplomataEditor.Windows
 
     public static void Init(State state = State.None)
     {
-      CharacterMessagesManager window = (CharacterMessagesManager) GetWindow(typeof(CharacterMessagesManager), false, "Messages", true);
+      TalkableMessagesManager window = (TalkableMessagesManager) GetWindow(typeof(TalkableMessagesManager), false, "Messages", true);
       window.minSize = new Vector2(1100, 300);
 
-      CharacterMessagesManager.state = state;
+      TalkableMessagesManager.state = state;
 
       if (state == State.Close)
       {
@@ -81,35 +81,35 @@ namespace DiplomataEditor.Windows
       }
     }
 
-    public static void OpenContextMenu(Character currentCharacter)
+    public static void OpenContextMenu(Talkable currentTalkable)
     {
-      character = currentCharacter;
+      talkable = currentTalkable;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingCharacter = currentCharacter.name;
+      diplomataEditor.workingCharacter = currentTalkable.name;
       diplomataEditor.workingContextMessagesId = -1;
       Init(State.Context);
     }
 
-    public static void OpenMessagesMenu(Character currentCharacter, Context currentContext)
+    public static void OpenMessagesMenu(Talkable currentTalkable, Context currentContext)
     {
-      character = currentCharacter;
+      talkable = currentTalkable;
       context = currentContext;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingCharacter = currentCharacter.name;
+      diplomataEditor.workingCharacter = currentTalkable.name;
       diplomataEditor.workingContextMessagesId = currentContext.id;
       Init(State.Messages);
     }
 
-    public static void Reset(string characterName)
+    public static void Reset(string talkableName)
     {
-      if (character != null)
+      if (talkable != null)
       {
-        if (character.name == characterName)
+        if (talkable.name == talkableName)
         {
           diplomataEditor.workingCharacter = string.Empty;
-          character = null;
+          talkable = null;
           Init(State.Close);
         }
       }
@@ -125,11 +125,12 @@ namespace DiplomataEditor.Windows
         case State.None:
           if (diplomataEditor.workingCharacter != string.Empty)
           {
-            character = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+            talkable = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+            if (talkable == null) talkable = Interactable.Find(diplomataEditor.interactables, diplomataEditor.workingInteractable);
 
             if (diplomataEditor.workingContextMessagesId > -1)
             {
-              context = Context.Find(character, diplomataEditor.workingContextMessagesId);
+              context = Context.Find(talkable, diplomataEditor.workingContextMessagesId);
               MessagesEditor.Draw();
             }
 
@@ -155,9 +156,10 @@ namespace DiplomataEditor.Windows
     private void AutoSave()
     {
 
-      if (iteractions == 100 && character != null)
+      if (iteractions == 100 && talkable != null)
       {
-        diplomataEditor.Save(character);
+        string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
+        diplomataEditor.Save(talkable, folderName);
         iteractions = 0;
       }
 
@@ -167,9 +169,10 @@ namespace DiplomataEditor.Windows
 
     public void OnDisable()
     {
-      if (character != null)
+      if (talkable != null)
       {
-        diplomataEditor.Save(character);
+        string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
+        diplomataEditor.Save(talkable, folderName);
       }
     }
   }

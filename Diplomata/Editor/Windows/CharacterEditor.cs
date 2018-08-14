@@ -281,7 +281,7 @@ namespace DiplomataEditor.Windows
 
     public void Save()
     {
-      diplomataEditor.Save(character);
+      diplomataEditor.Save(character, "Characters");
       diplomataEditor.SavePreferences();
     }
 

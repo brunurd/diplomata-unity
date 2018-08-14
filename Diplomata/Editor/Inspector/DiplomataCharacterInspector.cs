@@ -1,4 +1,5 @@
 using Diplomata;
+using Diplomata.Models;
 using DiplomataEditor;
 using DiplomataEditor.Windows;
 using DiplomataEditor.Helpers;
@@ -45,7 +46,7 @@ namespace DiplomataEditor.Inspector
       serializedObject.Update();
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataCharacter.character != null && diplomataEditor.characters.Count > 0)
+      if (diplomataCharacter.talkable != null && diplomataEditor.characters.Count > 0)
       {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Character: ");
@@ -56,7 +57,7 @@ namespace DiplomataEditor.Inspector
 
           for (var i = 0; i < diplomataEditor.characters.Count; i++)
           {
-            if (diplomataEditor.characters[i].name == diplomataCharacter.character.name)
+            if (diplomataEditor.characters[i].name == diplomataCharacter.talkable.name)
             {
               selected = i;
               break;
@@ -70,9 +71,9 @@ namespace DiplomataEditor.Inspector
           {
             if (selected == i)
             {
-              diplomataCharacter.character = diplomataEditor.characters[i];
+              diplomataCharacter.talkable = diplomataEditor.characters[i];
               diplomataEditor.characters[selectedBefore].onScene = false;
-              diplomataCharacter.character.onScene = true;
+              diplomataCharacter.talkable.onScene = true;
               break;
             }
           }
@@ -80,7 +81,7 @@ namespace DiplomataEditor.Inspector
 
         else
         {
-          GUILayout.Label(diplomataCharacter.character.name);
+          GUILayout.Label(diplomataCharacter.talkable.name);
         }
 
         GUILayout.EndHorizontal();
@@ -94,7 +95,7 @@ namespace DiplomataEditor.Inspector
 
         var showInfluence = true;
 
-        if (diplomataCharacter.character.name == diplomataEditor.options.playerCharacterName)
+        if (diplomataCharacter.talkable.name == diplomataEditor.options.playerCharacterName)
         {
           EditorGUILayout.HelpBox("\nThis character is the player, he doesn't influence himself, use his messages only in the case he speaks with himself.\n", MessageType.Info);
           showInfluence = false;
@@ -102,12 +103,12 @@ namespace DiplomataEditor.Inspector
 
         if (GUILayout.Button("Edit Character", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          CharacterEditor.Edit(diplomataCharacter.character);
+          CharacterEditor.Edit((Character) diplomataCharacter.talkable);
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          CharacterMessagesManager.OpenContextMenu(diplomataCharacter.character);
+          TalkableMessagesManager.OpenContextMenu((Character) diplomataCharacter.talkable);
         }
 
         if (showInfluence)
@@ -125,7 +126,10 @@ namespace DiplomataEditor.Inspector
             GUIHelper.labelStyle.normal.textColor = GUIHelper.freeTextColor;
           }
 
-          GUILayout.Label("Influence: <b>" + diplomataCharacter.character.influence.ToString() + "</b>", GUIHelper.labelStyle);
+          if (diplomataCharacter.talkable.GetType() == typeof(Character)) {
+            Character character = (Character) diplomataCharacter.talkable;
+            GUILayout.Label("Influence: <b>" + character.influence.ToString() + "</b>", GUIHelper.labelStyle);
+          }
         }
 
         GUIHelper.Separator();

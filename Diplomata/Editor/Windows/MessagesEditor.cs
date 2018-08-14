@@ -37,11 +37,11 @@ namespace DiplomataEditor.Windows
 
     public static void Draw()
     {
-      if (CharacterMessagesManager.context != null)
+      if (TalkableMessagesManager.context != null)
       {
-        messagesWindowHeaderStyle.normal.background = CharacterMessagesManager.headerBG;
-        messagesWindowMainStyle.normal.background = CharacterMessagesManager.mainBG;
-        messagesWindowSidebarStyle.normal.background = CharacterMessagesManager.sidebarBG;
+        messagesWindowHeaderStyle.normal.background = TalkableMessagesManager.headerBG;
+        messagesWindowMainStyle.normal.background = TalkableMessagesManager.mainBG;
+        messagesWindowSidebarStyle.normal.background = TalkableMessagesManager.sidebarBG;
 
         messagesWindowMainStyle.alignment = TextAnchor.UpperLeft;
         messagesWindowSidebarStyle.alignment = TextAnchor.UpperLeft;
@@ -56,27 +56,32 @@ namespace DiplomataEditor.Windows
 
       else
       {
-        CharacterMessagesManager.Init();
+        TalkableMessagesManager.Init();
       }
     }
 
     public static void Header()
     {
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
-      var character = CharacterMessagesManager.character;
-      var context = CharacterMessagesManager.context;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+      var talkable = TalkableMessagesManager.talkable;
+      var context = TalkableMessagesManager.context;
+      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
 
       GUILayout.BeginHorizontal(messagesWindowHeaderStyle, GUILayout.Height(HEADER_HEIGHT));
 
       if (GUILayout.Button("< Back", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
       {
-        diplomataEditor.Save(character);
-        CharacterMessagesManager.OpenContextMenu(character);
+        diplomataEditor.Save(talkable, folderName);
+        TalkableMessagesManager.OpenContextMenu(talkable);
       }
 
       EditorGUILayout.Separator();
 
-      GUILayout.Label("Character: " + character.name);
+      if (talkable.GetType() == typeof(Character))
+        GUILayout.Label("Character: " + talkable.name);
+      
+      if (talkable.GetType() == typeof(Interactable))
+        GUILayout.Label("Interactable: " + talkable.name);
 
       EditorGUILayout.Separator();
 
@@ -104,7 +109,7 @@ namespace DiplomataEditor.Windows
 
       if (GUILayout.Button("Save", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
       {
-        diplomataEditor.Save(character);
+        diplomataEditor.Save(talkable, folderName);
       }
 
       GUILayout.EndHorizontal();
@@ -112,10 +117,11 @@ namespace DiplomataEditor.Windows
 
     public static void LabelManager()
     {
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
-      var character = CharacterMessagesManager.character;
-      var context = CharacterMessagesManager.context;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+      var talkable = TalkableMessagesManager.talkable;
+      var context = TalkableMessagesManager.context;
       var height = ((180 + (context.labels.Length * 240)) >= Screen.width) ? LABEL_HEIGHT : HEADER_HEIGHT;
+      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
 
       scrollPosLabelManager = EditorGUILayout.BeginScrollView(scrollPosLabelManager,
         messagesWindowHeaderStyle, GUILayout.Width(Screen.width), GUILayout.Height(height));
@@ -148,7 +154,7 @@ namespace DiplomataEditor.Windows
                 }
               }
             }
-            diplomataEditor.Save(character);
+            diplomataEditor.Save(talkable, folderName);
           }
           GUILayout.Space(20);
         }
@@ -162,7 +168,7 @@ namespace DiplomataEditor.Windows
       {
         context.labels = ArrayHelper.Add(context.labels, new Label());
         context.labels[context.labels.Length - 1].name += " (" + (context.labels.Length - 1) + ")";
-        diplomataEditor.Save(character);
+        diplomataEditor.Save(talkable, folderName);
       }
 
       GUILayout.EndHorizontal();
@@ -171,10 +177,11 @@ namespace DiplomataEditor.Windows
 
     public static void Main()
     {
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
-      var character = CharacterMessagesManager.character;
-      var context = CharacterMessagesManager.context;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+      var talkable = TalkableMessagesManager.talkable;
+      var context = TalkableMessagesManager.context;
       var width = Screen.width - SIDEBAR_WIDTH;
+      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
 
       ResetStyle();
 
@@ -394,7 +401,7 @@ namespace DiplomataEditor.Windows
                       break;
 
                     case Effect.Type.EndOfContext:
-                      if (effect.endOfContext.characterName != null)
+                      if (effect.endOfContext.talkableName != null)
                       {
                         text += effect.DisplayEndOfContext(DictionariesHelper.ContainsKey(effect.endOfContext.GetContext(diplomataEditor.characters).name,
                           diplomataEditor.options.currentLanguage).value);
@@ -499,7 +506,7 @@ namespace DiplomataEditor.Windows
 
           SetMessage(null);
 
-          diplomataEditor.Save(character);
+          diplomataEditor.Save(talkable, folderName);
         }
 
         EditorGUILayout.Separator();
@@ -511,7 +518,7 @@ namespace DiplomataEditor.Windows
       if (GUILayout.Button("Add Column", GUILayout.Height(GUIHelper.BUTTON_HEIGHT), GUILayout.Width(context.columnWidth)))
       {
         context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
-        diplomataEditor.Save(character);
+        diplomataEditor.Save(talkable, folderName);
       }
 
       GUILayout.EndHorizontal();
@@ -524,22 +531,22 @@ namespace DiplomataEditor.Windows
     {
       if (msg == null)
       {
-        CharacterMessagesManager.context.messageEditorState = MessageEditorState.None;
-        CharacterMessagesManager.context.currentMessage.Set(-1, -1);
+        TalkableMessagesManager.context.messageEditorState = MessageEditorState.None;
+        TalkableMessagesManager.context.currentMessage.Set(-1, -1);
       }
 
       else
       {
-        CharacterMessagesManager.context.messageEditorState = MessageEditorState.Normal;
-        CharacterMessagesManager.context.currentMessage.Set(msg.columnId, msg.id);
+        TalkableMessagesManager.context.messageEditorState = MessageEditorState.Normal;
+        TalkableMessagesManager.context.currentMessage.Set(msg.columnId, msg.id);
         message = msg;
       }
     }
 
     public static void ResetStyle()
     {
-      textAreaStyle.normal.background = CharacterMessagesManager.textAreaBGTextureNormal;
-      textAreaStyle.focused.background = CharacterMessagesManager.textAreaBGTextureFocused;
+      textAreaStyle.normal.background = TalkableMessagesManager.textAreaBGTextureNormal;
+      textAreaStyle.focused.background = TalkableMessagesManager.textAreaBGTextureFocused;
       buttonStyle.normal.background = GUIHelper.transparentTexture;
       buttonStyle.active.background = GUIHelper.transparentTexture;
       GUIHelper.labelStyle.padding = GUIHelper.padding;
@@ -549,9 +556,10 @@ namespace DiplomataEditor.Windows
     {
       scrollPosSidebar = EditorGUILayout.BeginScrollView(scrollPosSidebar, messagesWindowSidebarStyle, GUILayout.Width(SIDEBAR_WIDTH), GUILayout.ExpandHeight(true));
 
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
-      var character = CharacterMessagesManager.character;
-      var context = CharacterMessagesManager.context;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+      var talkable = TalkableMessagesManager.talkable;
+      var context = TalkableMessagesManager.context;
+      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
 
       if (EditorGUIUtility.isProSkin)
       {
@@ -856,7 +864,7 @@ namespace DiplomataEditor.Windows
               if (GUILayout.Button("Delete Animator Attribute Setter", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
               {
                 message.animatorAttributesSetters = ArrayHelper.Remove(message.animatorAttributesSetters, animatorAttribute);
-                diplomataEditor.Save(character);
+                diplomataEditor.Save(talkable, folderName);
               }
 
               GUIHelper.Separator();
@@ -865,7 +873,7 @@ namespace DiplomataEditor.Windows
             if (GUILayout.Button("Add Animator Attribute Setter", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
               message.animatorAttributesSetters = ArrayHelper.Add(message.animatorAttributesSetters, new AnimatorAttributeSetter());
-              diplomataEditor.Save(character);
+              diplomataEditor.Save(talkable, folderName);
             }
 
             GUIHelper.Separator();
@@ -914,7 +922,7 @@ namespace DiplomataEditor.Windows
                   leftCol.messages = Message.ResetIDs(leftCol.messages);
 
                   SetMessage(message);
-                  diplomataEditor.Save(character);
+                  diplomataEditor.Save(talkable, folderName);
                 }
               }
 
@@ -932,7 +940,7 @@ namespace DiplomataEditor.Windows
                   message.id -= 1;
 
                   SetMessage(message);
-                  diplomataEditor.Save(character);
+                  diplomataEditor.Save(talkable, folderName);
                 }
               }
 
@@ -950,7 +958,7 @@ namespace DiplomataEditor.Windows
                   message.id += 1;
 
                   SetMessage(message);
-                  diplomataEditor.Save(character);
+                  diplomataEditor.Save(talkable, folderName);
                 }
               }
 
@@ -976,7 +984,7 @@ namespace DiplomataEditor.Windows
                   rightCol.messages = Message.ResetIDs(rightCol.messages);
 
                   SetMessage(message);
-                  diplomataEditor.Save(character);
+                  diplomataEditor.Save(talkable, folderName);
                 }
               }
 
@@ -1000,7 +1008,7 @@ namespace DiplomataEditor.Windows
 
               SetMessage(null);
 
-              diplomataEditor.Save(character);
+              diplomataEditor.Save(talkable, folderName);
             }
 
             if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
@@ -1014,7 +1022,7 @@ namespace DiplomataEditor.Windows
 
                 column.messages = Message.ResetIDs(column.messages);
 
-                diplomataEditor.Save(character);
+                diplomataEditor.Save(talkable, folderName);
               }
             }
 
@@ -1033,7 +1041,7 @@ namespace DiplomataEditor.Windows
               MoveColumnsToRight(context, column.id);
 
               SetMessage(null);
-              diplomataEditor.Save(character);
+              diplomataEditor.Save(talkable, folderName);
             }
 
             if (GUILayout.Button("New column at right", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
@@ -1043,7 +1051,7 @@ namespace DiplomataEditor.Windows
               MoveColumnsToRight(context, column.id + 1);
 
               SetMessage(null);
-              diplomataEditor.Save(character);
+              diplomataEditor.Save(talkable, folderName);
             }
 
             GUILayout.EndHorizontal();
@@ -1306,7 +1314,7 @@ namespace DiplomataEditor.Windows
               if (GUILayout.Button("Delete Condition", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
               {
                 message.conditions = ArrayHelper.Remove(message.conditions, condition);
-                diplomataEditor.Save(character);
+                diplomataEditor.Save(talkable, folderName);
               }
 
               GUIHelper.Separator();
@@ -1315,7 +1323,7 @@ namespace DiplomataEditor.Windows
             if (GUILayout.Button("Add Condition", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
               message.conditions = ArrayHelper.Add(message.conditions, new Condition());
-              diplomataEditor.Save(character);
+              diplomataEditor.Save(talkable, folderName);
             }
 
             break;
@@ -1354,7 +1362,7 @@ namespace DiplomataEditor.Windows
                   UpdateContextList();
                   var contextName = string.Empty;
 
-                  if (effect.endOfContext.characterName != null)
+                  if (effect.endOfContext.talkableName != null)
                   {
                     if (effect.endOfContext.GetContext(diplomataEditor.characters) != null)
                     {
@@ -1641,7 +1649,7 @@ namespace DiplomataEditor.Windows
               if (GUILayout.Button("Delete Effect", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
               {
                 message.effects = ArrayHelper.Remove(message.effects, effect);
-                diplomataEditor.Save(character);
+                diplomataEditor.Save(talkable, folderName);
               }
 
               GUIHelper.Separator();
@@ -1649,8 +1657,8 @@ namespace DiplomataEditor.Windows
 
             if (GUILayout.Button("Add Effect", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              message.effects = ArrayHelper.Add(message.effects, new Effect(character.name));
-              diplomataEditor.Save(character);
+              message.effects = ArrayHelper.Add(message.effects, new Effect(talkable.name));
+              diplomataEditor.Save(talkable, folderName);
             }
 
             break;
@@ -1665,7 +1673,7 @@ namespace DiplomataEditor.Windows
         context.columns = Column.RemoveEmptyColumns(context.columns);
         context.messageEditorState = MessageEditorState.None;
 
-        diplomataEditor.Save(character);
+        diplomataEditor.Save(talkable, folderName);
       }
 
       EditorGUILayout.EndScrollView();
@@ -1697,7 +1705,7 @@ namespace DiplomataEditor.Windows
 
     public static void UpdateCharacterList()
     {
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
 
       characterList = new string[0];
 
@@ -1712,7 +1720,7 @@ namespace DiplomataEditor.Windows
 
     public static void UpdateItemList()
     {
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
 
       itemList = new string[0];
 
@@ -1724,7 +1732,7 @@ namespace DiplomataEditor.Windows
 
     public static void UpdateMessagesList(Context context)
     {
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
 
       messageList = new string[0];
 
@@ -1747,7 +1755,7 @@ namespace DiplomataEditor.Windows
 
     public static void UpdateContextList()
     {
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
 
       contextList = new string[0];
 
@@ -1772,7 +1780,7 @@ namespace DiplomataEditor.Windows
     {
       globalFlagsList = new string[0];
 
-      foreach (Flag flag in CharacterMessagesManager.diplomataEditor.globalFlags.flags)
+      foreach (Flag flag in TalkableMessagesManager.diplomataEditor.globalFlags.flags)
       {
         globalFlagsList = ArrayHelper.Add(globalFlagsList, flag.name);
       }

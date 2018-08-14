@@ -5,21 +5,21 @@ namespace Diplomata.GameProgress
   [Serializable]
   public class TalkLog
   {
-    public string characterName;
+    public string talkableName;
     public string[] messagesIds = new string[0];
 
     public TalkLog() {}
 
-    public TalkLog(string characterName)
+    public TalkLog(string talkableName)
     {
-      this.characterName = characterName;
+      this.talkableName = talkableName;
     }
 
-    public static TalkLog Find(TalkLog[] array, string characterName)
+    public static TalkLog Find(TalkLog[] array, string talkableName)
     {
       foreach (TalkLog talkLog in array)
       {
-        if (talkLog.characterName == characterName)
+        if (talkLog.talkableName == talkableName)
         {
           return talkLog;
         }

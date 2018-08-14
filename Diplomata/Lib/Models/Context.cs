@@ -17,7 +17,7 @@ namespace Diplomata.Models
   public class Context
   {
     public int id;
-    public string characterName;
+    public string talkableName;
     public bool idFilter = false;
     public bool conditionsFilter = true;
     public bool titleFilter = true;
@@ -55,10 +55,10 @@ namespace Diplomata.Models
 
     public Context() {}
 
-    public Context(int id, string characterName)
+    public Context(int id, string talkableName)
     {
       this.id = id;
-      this.characterName = characterName;
+      this.talkableName = talkableName;
       columns = new Column[0];
       name = new LanguageDictionary[0];
       labels = new Label[] { new Label() };

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Diplomata.Models
 {
@@ -58,32 +59,37 @@ namespace Diplomata.Models
     [Serializable]
     public struct EndOfContext
     {
-      public string characterName;
+      public string talkableName;
       public int contextId;
 
-      public EndOfContext(string characterName, int contextId)
+      public EndOfContext(string talkableName, int contextId)
       {
-        this.characterName = characterName;
+        this.talkableName = talkableName;
         this.contextId = contextId;
       }
 
-      public void Set(string characterName, int contextId)
+      public void Set(string talkableName, int contextId)
       {
-        this.characterName = characterName;
+        this.talkableName = talkableName;
         this.contextId = contextId;
       }
 
-      public Context GetContext(System.Collections.Generic.List<Character> characters)
+      public Context GetContext(List<Character> characters)
       {
-        return Context.Find(Character.Find(characters, characterName), contextId);
+        return Context.Find(Character.Find(characters, talkableName), contextId);
+      }
+
+      public Context GetContext(List<Interactable> interactables)
+      {
+        return Context.Find(Interactable.Find(interactables, talkableName), contextId);
       }
     }
 
     public Effect() {}
 
-    public Effect(string characterName)
+    public Effect(string talkableName)
     {
-      endOfContext.characterName = characterName;
+      endOfContext.talkableName = talkableName;
     }
 
     public string DisplayNone()

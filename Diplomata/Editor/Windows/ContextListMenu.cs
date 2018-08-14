@@ -2,6 +2,7 @@ using Diplomata;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using DiplomataEditor;
 using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
@@ -14,11 +15,12 @@ namespace DiplomataEditor.Windows
 
     public static void Draw()
     {
-      var diplomataEditor = CharacterMessagesManager.diplomataEditor;
-      var character = CharacterMessagesManager.character;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+      var talkable = TalkableMessagesManager.talkable;
       var listWidth = Screen.width / 3;
+      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
 
-      if (character != null)
+      if (talkable != null)
       {
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 
@@ -40,12 +42,12 @@ namespace DiplomataEditor.Windows
         GUIHelper.labelStyle.fontSize = 24;
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleCenter;
 
-        GUILayout.Label(character.name, GUIHelper.labelStyle, GUILayout.Height(50));
+        GUILayout.Label(talkable.name, GUIHelper.labelStyle, GUILayout.Height(50));
 
-        for (int i = 0; i < character.contexts.Length; i++)
+        for (int i = 0; i < talkable.contexts.Length; i++)
         {
 
-          Context context = Context.Find(character, i);
+          Context context = Context.Find(talkable, i);
 
           Rect boxRect = EditorGUILayout.BeginVertical(GUIHelper.boxStyle);
           GUI.Box(boxRect, GUIContent.none);
@@ -77,22 +79,22 @@ namespace DiplomataEditor.Windows
           GUILayout.BeginHorizontal();
           if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
           {
-            ContextEditor.Edit(character, context);
+            ContextEditor.Edit(talkable, context);
           }
 
           if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
           {
-            CharacterMessagesManager.OpenMessagesMenu(character, context);
+            TalkableMessagesManager.OpenMessagesMenu(talkable, context);
           }
 
           if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
           {
             if (EditorUtility.DisplayDialog("Are you sure?", "All data inside this context will be lost forever.", "Yes", "No"))
             {
-              ContextEditor.Reset(character.name);
-              character.contexts = ArrayHelper.Remove(character.contexts, context);
-              character.contexts = Context.ResetIDs(character, character.contexts);
-              diplomataEditor.Save(character);
+              ContextEditor.Reset(talkable.name);
+              talkable.contexts = ArrayHelper.Remove(talkable.contexts, context);
+              talkable.contexts = Context.ResetIDs(talkable, talkable.contexts);
+              diplomataEditor.Save(talkable, folderName);
             }
           }
 
@@ -101,22 +103,22 @@ namespace DiplomataEditor.Windows
             if (context.id > 0)
             {
 
-              Context.Find(character, context.id - 1).id += 1;
+              Context.Find(talkable, context.id - 1).id += 1;
               context.id -= 1;
 
-              diplomataEditor.Save(character);
+              diplomataEditor.Save(talkable, folderName);
             }
           }
 
           if (GUILayout.Button("Move Down", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
           {
-            if (context.id < character.contexts.Length - 1)
+            if (context.id < talkable.contexts.Length - 1)
             {
 
-              Context.Find(character, context.id + 1).id -= 1;
+              Context.Find(talkable, context.id + 1).id -= 1;
               context.id += 1;
 
-              diplomataEditor.Save(character);
+              diplomataEditor.Save(talkable, folderName);
             }
           }
 
@@ -137,7 +139,7 @@ namespace DiplomataEditor.Windows
         {
           if (EditorUtility.DisplayDialog("This character only?", "This character only or all characters?", "Only this character", "All characters"))
           {
-            Screenplay.Save(character);
+            Screenplay.Save(talkable);
           }
           else
           {
@@ -161,10 +163,11 @@ namespace DiplomataEditor.Windows
 
     public static void CreateContext()
     {
-      var character = CharacterMessagesManager.character;
+      var talkable = TalkableMessagesManager.talkable;
 
-      character.contexts = ArrayHelper.Add(character.contexts, new Context(character.contexts.Length, character.name));
-      CharacterMessagesManager.diplomataEditor.Save(character);
+      talkable.contexts = ArrayHelper.Add(talkable.contexts, new Context(talkable.contexts.Length, talkable.name));
+      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
+      TalkableMessagesManager.diplomataEditor.Save(talkable, folderName);
     }
 
   }

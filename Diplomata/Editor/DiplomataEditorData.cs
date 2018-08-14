@@ -199,7 +199,7 @@ namespace DiplomataEditor
       JSONHelper.Update(globalFlags, "globalFlags", options.jsonPrettyPrint, "Diplomata/");
     }
 
-    public void Save(Talkable character, string folderName = "Characters")
+    public void Save(Talkable character, string folderName)
     {
       JSONHelper.Update(character, character.name, options.jsonPrettyPrint, "Diplomata/" + folderName + "/");
     }

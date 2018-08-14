@@ -1,5 +1,5 @@
-using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Helpers;
 using DiplomataEditor;
 using DiplomataEditor.Helpers;
 using UnityEditor;
@@ -9,7 +9,7 @@ namespace DiplomataEditor.Windows
 {
   public class ContextEditor : EditorWindow
   {
-    public static Character character;
+    public static Talkable talkable;
     public static Context context;
     private Vector2 scrollPos = new Vector2(0, 0);
     private static DiplomataEditorData diplomataEditor;
@@ -31,7 +31,7 @@ namespace DiplomataEditor.Windows
       ContextEditor window = (ContextEditor) GetWindow(typeof(ContextEditor), false, "Context Editor", true);
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH, 170);
 
-      if (state == State.Close || character == null)
+      if (state == State.Close || talkable == null)
       {
         window.Close();
       }
@@ -47,9 +47,9 @@ namespace DiplomataEditor.Windows
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
     }
 
-    public static void Edit(Character currentCharacter, Context currentContext)
+    public static void Edit(Talkable currentTalkable, Context currentContext)
     {
-      character = currentCharacter;
+      talkable = currentTalkable;
       context = currentContext;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
@@ -57,13 +57,13 @@ namespace DiplomataEditor.Windows
       Init(State.Edit);
     }
 
-    public static void Reset(string characterName)
+    public static void Reset(string talkableName)
     {
-      if (character != null)
+      if (talkable != null)
       {
-        if (character.name == characterName)
+        if (talkable.name == talkableName)
         {
-          character = null;
+          talkable = null;
           context = null;
 
           diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
@@ -86,11 +86,12 @@ namespace DiplomataEditor.Windows
         case State.None:
           if (diplomataEditor.workingCharacter != string.Empty)
           {
-            character = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+            talkable = (Character) Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+            if (talkable == null) talkable = (Interactable) Interactable.Find(diplomataEditor.interactables, diplomataEditor.workingInteractable);
 
             if (diplomataEditor.workingContextEditId > -1)
             {
-              context = Context.Find(character, diplomataEditor.workingContextEditId);
+              context = Context.Find(talkable, diplomataEditor.workingContextEditId);
               DrawEditWindow();
             }
           }
@@ -145,15 +146,17 @@ namespace DiplomataEditor.Windows
 
     public void UpdateContext()
     {
-      diplomataEditor.Save(character);
+      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
+      diplomataEditor.Save(talkable, folderName);
       Close();
     }
 
     public void OnDisable()
     {
-      if (character != null)
+      if (talkable != null)
       {
-        diplomataEditor.Save(character);
+        string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
+        diplomataEditor.Save(talkable, folderName);
       }
     }
   }
