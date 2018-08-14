@@ -11,7 +11,7 @@ namespace Diplomata.Models
     public EndOfContext endOfContext;
     public GoTo goTo;
     public AnimatorAttributeSetter animatorAttributeSetter = new AnimatorAttributeSetter();
-    public Flag customFlag;
+    public Flag globalFlag;
     public int itemId;
 
     [NonSerialized]
@@ -28,7 +28,7 @@ namespace Diplomata.Models
       SetAnimatorAttribute,
       GetItem,
       DiscardItem,
-      SetCustomFlag,
+      SetGlobalFlag,
       EquipItem
     }
 
@@ -151,9 +151,9 @@ namespace Diplomata.Models
       return "Equip the item: \"" + itemName + "\"";
     }
 
-    public string DisplayCustomFlagEqualTo()
+    public string DisplayGlobalFlagEqualTo()
     {
-      return "\"" + customFlag.name + "\" set to " + customFlag.value;
+      return "\"" + globalFlag.name + "\" set to " + globalFlag.value;
     }
   }
 }

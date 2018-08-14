@@ -9,7 +9,7 @@ namespace Diplomata.Models
     public int comparedInfluence;
     public string characterInfluencedName;
     public AfterOf afterOf;
-    public Flag customFlag;
+    public Flag globalFlag;
     public int itemId;
     public string interactWith;
 
@@ -28,9 +28,8 @@ namespace Diplomata.Models
       InfluenceLessThan,
       HasItem,
       ItemWasDiscarded,
-      CustomFlagEqualTo,
+      GlobalFlagEqualTo,
       ItemIsEquipped,
-      InteractsWith,
       DoesNotHaveTheItem
     }
 
@@ -105,14 +104,9 @@ namespace Diplomata.Models
       return "item is equipped: \"" + itemName + "\"";
     }
 
-    public string DisplayCustomFlagEqualTo()
+    public string DisplayGlobalFlagEqualTo()
     {
-      return "\"" + customFlag.name + "\" is " + customFlag.value;
-    }
-
-    public string DisplayInteractsWith(string objectName)
-    {
-      return "Interacts with \"" + objectName + "\"";
+      return "\"" + globalFlag.name + "\" is " + globalFlag.value;
     }
 
     public static bool CanProceed(Condition[] conditions)

@@ -320,13 +320,13 @@ namespace Diplomata
                           }
 
                           break;
-                        case Condition.Type.CustomFlagEqualTo:
-                          var flag = DiplomataData.globalFlags.Find(DiplomataData.globalFlags.flags, condition.customFlag.name);
+                        case Condition.Type.GlobalFlagEqualTo:
+                          var flag = DiplomataData.globalFlags.Find(DiplomataData.globalFlags.flags, condition.globalFlag.name);
 
                           if (flag != null)
                           {
 
-                            if (flag.value == condition.customFlag.value)
+                            if (flag.value == condition.globalFlag.value)
                             {
                               condition.proceed = true;
                             }
@@ -340,7 +340,7 @@ namespace Diplomata
 
                           else
                           {
-                            Debug.LogWarning("Cannot find the custom flag " + condition.customFlag.name);
+                            Debug.LogWarning("Cannot find the custom flag " + condition.globalFlag.name);
                             condition.proceed = false;
                           }
 
@@ -826,17 +826,17 @@ namespace Diplomata
 
               break;
 
-            case Effect.Type.SetCustomFlag:
-              var flag = DiplomataData.globalFlags.Find(DiplomataData.globalFlags.flags, effect.customFlag.name);
+            case Effect.Type.SetGlobalFlag:
+              var flag = DiplomataData.globalFlags.Find(DiplomataData.globalFlags.flags, effect.globalFlag.name);
 
               if (flag != null)
               {
-                flag.value = effect.customFlag.value;
+                flag.value = effect.globalFlag.value;
               }
 
               else
               {
-                Debug.LogError("Cannot find the custom flag " + effect.customFlag.name);
+                Debug.LogError("Cannot find the custom flag " + effect.globalFlag.name);
               }
 
               break;
