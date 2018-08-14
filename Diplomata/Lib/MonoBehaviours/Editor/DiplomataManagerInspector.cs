@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Diplomata
 {
   [UnityEditor.CustomEditor(typeof(DiplomataManager))]
-  public class DiplomataInspector : Editor
+  public class DiplomataManagerInspector : Editor
   {
     public override void OnInspectorGUI()
     {
