@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Diplomata.GameProgess;
+using Diplomata.GameProgress;
 using Diplomata.Interfaces;
 using Diplomata.Models;
 using UnityEngine;
@@ -15,6 +15,7 @@ namespace Diplomata
     public static Options options = new Options();
     public static GameProgressManager gameProgress = new GameProgressManager();
     public static List<Character> characters = new List<Character>();
+    public static List<Interactable> interactables = new List<Interactable>();
     public static Inventory inventory = new Inventory();
     public static GlobalFlags globalFlags = new GlobalFlags();
     public static IEnumerable<ITalk> iTalks;
@@ -62,6 +63,7 @@ namespace Diplomata
       }
 
       characters = new List<Character>();
+      interactables = new List<Interactable>();
       Character.UpdateList();
 
       inventory = new Inventory();

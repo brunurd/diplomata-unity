@@ -3,18 +3,16 @@ using System;
 namespace Diplomata.GameProgress
 {
   [Serializable]
-  public class CharacterProgress
+  public class InteractableProgress
   {
     public string name;
-    public byte influence;
     public ContextProgress[] contexts = new ContextProgress[0];
 
-    public CharacterProgress() {}
+    public InteractableProgress() {}
 
-    public CharacterProgress(string name, byte influence)
+    public InteractableProgress(string name)
     {
       this.name = name;
-      this.influence = influence;
     }
   }
 }

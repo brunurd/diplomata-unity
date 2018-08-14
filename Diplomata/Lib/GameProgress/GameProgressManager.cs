@@ -6,7 +6,7 @@ using Diplomata.Helpers;
 using Diplomata.Models;
 using UnityEngine;
 
-namespace Diplomata.GameProgess
+namespace Diplomata.GameProgress
 {
   public enum Method
   {
@@ -17,16 +17,18 @@ namespace Diplomata.GameProgess
   [Serializable]
   public class GameProgressManager
   {
-    public OptionsGameProgess options;
+    public OptionsGameProgress options;
     public CharacterProgress[] characters = new CharacterProgress[0];
+    public InteractableProgress[] interactables = new InteractableProgress[0];
     public ItemProgress[] inventory = new ItemProgress[0];
     public TalkLog[] talkLog = new TalkLog[0];
     public Flag[] flags = new Flag[0];
 
     public void Start()
     {
-      options = new OptionsGameProgess();
+      options = new OptionsGameProgress();
       SaveCharacters();
+      SaveInteractables();
       SaveInventory();
       SaveFlags();
     }
@@ -34,7 +36,7 @@ namespace Diplomata.GameProgess
     public void SaveCharacters()
     {
       characters = new CharacterProgress[0];
-
+      
       foreach (Character character in DiplomataData.characters)
       {
         var newCharacter = new CharacterProgress(character.name, character.influence);
@@ -63,6 +65,38 @@ namespace Diplomata.GameProgess
       }
     }
 
+    public void SaveInteractables()
+    {
+      interactables = new InteractableProgress[0];
+
+      foreach (Interactable interactable in DiplomataData.interactables)
+      {
+        var newInteractable = new InteractableProgress(interactable.name);
+
+        foreach (Context context in interactable.contexts)
+        {
+          var newContext = new ContextProgress(context.id, context.happened);
+
+          foreach (Column column in context.columns)
+          {
+            var newColumn = new ColumnProgress(column.id);
+
+            foreach (Message message in column.messages)
+            {
+              newColumn.messages = ArrayHelper.Add(newColumn.messages,
+                new MessageProgress(message.id, message.alreadySpoked));
+            }
+
+            newContext.columns = ArrayHelper.Add(newContext.columns, newColumn);
+          }
+
+          newInteractable.contexts = ArrayHelper.Add(newInteractable.contexts, newContext);
+        }
+
+        interactables = ArrayHelper.Add(interactables, newInteractable);
+      }
+    }
+
     public void LoadCharacters()
     {
       foreach (CharacterProgress character in characters)
@@ -73,6 +107,30 @@ namespace Diplomata.GameProgess
         foreach (ContextProgress context in character.contexts)
         {
           var contextTemp = Context.Find(characterTemp, (int) context.id);
+          contextTemp.happened = context.happened;
+
+          foreach (ColumnProgress column in context.columns)
+          {
+            var columnTemp = Column.Find(contextTemp, (int) column.id);
+
+            foreach (MessageProgress message in column.messages)
+            {
+              Message.Find(columnTemp.messages, (int) message.id).alreadySpoked = message.alreadySpoked;
+            }
+          }
+        }
+      }
+    }
+
+    public void LoadInteractables()
+    {
+      foreach (InteractableProgress interactable in interactables)
+      {
+        var interactableTemp = Interactable.Find(DiplomataData.interactables, interactable.name);
+
+        foreach (ContextProgress context in interactable.contexts)
+        {
+          var contextTemp = Context.Find(interactableTemp, (int) context.id);
           contextTemp.happened = context.happened;
 
           foreach (ColumnProgress column in context.columns)
@@ -190,6 +248,7 @@ namespace Diplomata.GameProgess
       BinaryFormatter binaryFormatter = new BinaryFormatter();
 
       SaveCharacters();
+      SaveInteractables();
       SaveInventory();
       SaveFlags();
 
@@ -209,6 +268,7 @@ namespace Diplomata.GameProgess
       }
 
       LoadCharacters();
+      LoadInteractables();
       LoadInventory();
       LoadFlags();
     }

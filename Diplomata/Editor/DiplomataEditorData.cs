@@ -11,6 +11,7 @@ namespace DiplomataEditor
   {
     public static string resourcesFolder = "Assets/Resources/";
     public List<Character> characters = new List<Character>();
+    public List<Interactable> interactables = new List<Interactable>();
     public Options options = new Options();
     public Inventory inventory = new Inventory();
     public GlobalFlags globalFlags = new GlobalFlags();
@@ -18,6 +19,7 @@ namespace DiplomataEditor
     public int workingContextMessagesId;
     public int workingContextEditId;
     public string workingCharacter;
+    public string workingInteractable;
     public int workingItemId;
 
     public static void Instantiate()
@@ -25,6 +27,7 @@ namespace DiplomataEditor
       DiplomataData.SetData();
 
       JSONHelper.CreateFolder("Diplomata/Characters/");
+      JSONHelper.CreateFolder("Diplomata/Interactables/");
 
       if (!JSONHelper.Exists("preferences", "Diplomata/"))
       {
@@ -50,6 +53,7 @@ namespace DiplomataEditor
         diplomataEditor.inventory = DiplomataData.inventory;
         diplomataEditor.globalFlags = DiplomataData.globalFlags;
         diplomataEditor.characters = DiplomataData.characters;
+        diplomataEditor.interactables = DiplomataData.interactables;
 
         AssetHelper.Create(diplomataEditor, "Diplomata.asset", "Diplomata/");
       }
@@ -67,6 +71,7 @@ namespace DiplomataEditor
     private void Awake()
     {
       workingCharacter = string.Empty;
+      workingInteractable = string.Empty;
       workingContextMessagesId = -1;
       workingContextEditId = -1;
       workingItemId = -1;
@@ -75,9 +80,13 @@ namespace DiplomataEditor
     public void UpdateList()
     {
       var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
+      var interactablesFiles = Resources.LoadAll("Diplomata/Interactables/");
 
       characters = new List<Character>();
+      interactables = new List<Interactable>();
+
       options.characterList = new string[0];
+      options.interactableList = new string[0];
 
       foreach (Object obj in charactersFiles)
       {
@@ -87,6 +96,15 @@ namespace DiplomataEditor
         characters.Add(character);
         options.characterList = ArrayHelper.Add(options.characterList, obj.name);
       }
+
+      foreach (Object obj in interactablesFiles)
+      {
+        var json = (TextAsset) obj;
+        var interactable = JsonUtility.FromJson<Interactable>(json.text);
+
+        interactables.Add(interactable);
+        options.interactableList = ArrayHelper.Add(options.interactableList, obj.name);
+      }
     }
 
     public void AddCharacter(string name)
@@ -94,6 +112,13 @@ namespace DiplomataEditor
       Character character = new Character(name);
 
       CheckRepeatedCharacter(character);
+    }
+
+    public void AddInteractable(string name)
+    {
+      Interactable interactable = new Interactable(name);
+
+      CheckRepeatedInteractable(interactable);
     }
 
     public void CheckRepeatedCharacter(Character character)
@@ -130,6 +155,35 @@ namespace DiplomataEditor
       }
     }
 
+    public void CheckRepeatedInteractable(Interactable interactable)
+    {
+      bool canAdd = true;
+
+      foreach (string interactableName in options.interactableList)
+      {
+        if (interactableName == interactable.name)
+        {
+          canAdd = false;
+          break;
+        }
+      }
+
+      if (canAdd)
+      {
+        interactables.Add(interactable);
+
+        options.interactableList = ArrayHelper.Add(options.interactableList, interactable.name);
+        SavePreferences();
+
+        JSONHelper.Create(interactable, interactable.name, options.jsonPrettyPrint, "Diplomata/Interactables/");
+      }
+
+      else
+      {
+        Debug.LogError("This name already exists!");
+      }
+    }
+
     public void SavePreferences()
     {
       JSONHelper.Update(options, "preferences", options.jsonPrettyPrint, "Diplomata/");
@@ -145,9 +199,9 @@ namespace DiplomataEditor
       JSONHelper.Update(globalFlags, "globalFlags", options.jsonPrettyPrint, "Diplomata/");
     }
 
-    public void Save(Character character)
+    public void Save(Talkable character, string folderName = "Characters")
     {
-      JSONHelper.Update(character, character.name, options.jsonPrettyPrint, "Diplomata/Characters/");
+      JSONHelper.Update(character, character.name, options.jsonPrettyPrint, "Diplomata/" + folderName + "/");
     }
   }
 }

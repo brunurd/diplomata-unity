@@ -71,11 +71,11 @@ namespace Diplomata.Models
       }
     }
 
-    public static Context Find(Character character, int id)
+    public static Context Find(Talkable talkable, int id)
     {
-      if (character != null)
+      if (talkable != null)
       {
-        foreach (Context context in character.contexts)
+        foreach (Context context in talkable.contexts)
         {
           if (context.id == id)
           {
@@ -87,12 +87,12 @@ namespace Diplomata.Models
       return null;
     }
 
-    public static Context Find(Character character, string name, string language)
+    public static Context Find(Talkable talkable, string name, string language)
     {
-      if (character != null)
+      if (talkable != null)
       {
 
-        foreach (Context context in character.contexts)
+        foreach (Context context in talkable.contexts)
         {
           LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, language);
 
@@ -106,13 +106,13 @@ namespace Diplomata.Models
       return null;
     }
 
-    public static Context[] ResetIDs(Character character, Context[] array)
+    public static Context[] ResetIDs(Talkable talkable, Context[] array)
     {
       Context[] temp = new Context[0];
 
       for (int i = 0; i < array.Length + 1; i++)
       {
-        Context ctx = Find(character, i);
+        Context ctx = Find(talkable, i);
 
         if (ctx != null)
         {

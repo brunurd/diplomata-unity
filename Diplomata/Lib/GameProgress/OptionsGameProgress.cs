@@ -1,16 +1,16 @@
 using System;
 using Diplomata.Models;
 
-namespace Diplomata.GameProgess
+namespace Diplomata.GameProgress
 {
   [Serializable]
-  public class OptionsGameProgess
+  public class OptionsGameProgress
   {
     public string currentSubtitledLanguage = string.Empty;
     public string currentDubbedLanguage = string.Empty;
     public float volumeScale = 1.0f;
 
-    public OptionsGameProgess()
+    public OptionsGameProgress()
     {
       foreach (Language lang in DiplomataData.options.languages)
       {

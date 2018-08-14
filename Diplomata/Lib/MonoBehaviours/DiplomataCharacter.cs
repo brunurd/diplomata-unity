@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Diplomata.Dictionaries;
-using Diplomata.GameProgess;
+using Diplomata.GameProgress;
 using Diplomata.Helpers;
 using Diplomata.Interfaces;
 using Diplomata.Models;

@@ -8,6 +8,7 @@ namespace Diplomata.Models
     public Language[] languages = new Language[] { new Language("English") };
     public string[] languagesList = new string[] { "English" };
     public string[] characterList = new string[0];
+    public string[] interactableList = new string[0];
     public string[] attributes = new string[] { "fear", "politeness", "argumentation", "insistence", "charm", "confidence" };
     public string currentLanguage = "English";
     public string playerCharacterName;

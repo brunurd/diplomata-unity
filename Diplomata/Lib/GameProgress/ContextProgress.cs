@@ -1,6 +1,6 @@
 using System;
 
-namespace Diplomata.GameProgess
+namespace Diplomata.GameProgress
 {
   [Serializable]
   public class ContextProgress
