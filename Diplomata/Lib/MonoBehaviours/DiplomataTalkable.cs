@@ -190,7 +190,7 @@ namespace Diplomata
                           break;
 
                         case Condition.Type.InfluenceEqualTo:
-                          if (talkable.GetType() == typeof(Talkable))
+                          if (talkable.GetType() == typeof(Character))
                           {
                             Character character = (Character) talkable;
                             if (character.influence == condition.comparedInfluence)
@@ -206,7 +206,7 @@ namespace Diplomata
                           break;
 
                         case Condition.Type.InfluenceGreaterThan:
-                          if (talkable.GetType() == typeof(Talkable))
+                          if (talkable.GetType() == typeof(Character))
                           {
                             Character character = (Character) talkable;
                             if (character.influence <= condition.comparedInfluence)
@@ -217,7 +217,7 @@ namespace Diplomata
                           break;
 
                         case Condition.Type.InfluenceLessThan:
-                          if (talkable.GetType() == typeof(Talkable))
+                          if (talkable.GetType() == typeof(Character))
                           {
                             Character character = (Character) talkable;
                             if (character.influence >= condition.comparedInfluence)

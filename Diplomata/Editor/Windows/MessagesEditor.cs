@@ -300,7 +300,12 @@ namespace DiplomataEditor.Windows
                     case Condition.Type.InfluenceEqualTo:
                     case Condition.Type.InfluenceGreaterThan:
                     case Condition.Type.InfluenceLessThan:
-                      text += condition.DisplayCompareInfluence();
+                      if (talkable.GetType() == typeof(Character))
+                      {
+                        text += condition.DisplayCompareInfluence();
+                      } else {
+                        text += "Invalid condition.";
+                      }
                       break;
                     case Condition.Type.HasItem:
                       var itemName = "";
@@ -1117,25 +1122,30 @@ namespace DiplomataEditor.Windows
                 case Condition.Type.InfluenceEqualTo:
                 case Condition.Type.InfluenceGreaterThan:
                 case Condition.Type.InfluenceLessThan:
-                  UpdateCharacterList();
-
-                  GUILayout.BeginHorizontal();
-                  EditorGUI.BeginChangeCheck();
-
-                  if (condition.characterInfluencedName == string.Empty && characterList.Length > 0)
+                  if (talkable.GetType() == typeof(Character))
                   {
-                    condition.characterInfluencedName = characterList[0];
+                    UpdateCharacterList();
+                    GUILayout.BeginHorizontal();
+                    EditorGUI.BeginChangeCheck();
+
+                    if (condition.characterInfluencedName == string.Empty && characterList.Length > 0)
+                    {
+                      condition.characterInfluencedName = characterList[0];
+                    }
+
+                    condition.comparedInfluence = EditorGUILayout.IntField(condition.comparedInfluence);
+                    condition.characterInfluencedName = GUIHelper.Popup(" in ", condition.characterInfluencedName, characterList);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                      condition.DisplayCompareInfluence();
+                    }
+                    GUILayout.EndHorizontal();
                   }
-
-                  condition.comparedInfluence = EditorGUILayout.IntField(condition.comparedInfluence);
-                  condition.characterInfluencedName = GUIHelper.Popup(" in ", condition.characterInfluencedName, characterList);
-
-                  if (EditorGUI.EndChangeCheck())
+                  else
                   {
-                    condition.DisplayCompareInfluence();
+                    EditorGUILayout.HelpBox("This condition is only valid to a character.", MessageType.Warning);
                   }
-                  GUILayout.EndHorizontal();
-
                   break;
 
                 case Condition.Type.HasItem:
