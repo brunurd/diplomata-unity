@@ -1,8 +1,8 @@
 using Diplomata;
 using Diplomata.Models;
 using DiplomataEditor;
-using DiplomataEditor.Windows;
 using DiplomataEditor.Helpers;
+using DiplomataEditor.Windows;
 using UnityEditor;
 using UnityEngine;
 
@@ -83,7 +83,6 @@ namespace DiplomataEditor.Inspector
         }
 
         GUIHelper.Separator();
-
 
         if (GUILayout.Button("Edit Interactable", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {

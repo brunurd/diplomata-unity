@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Diplomata;
 using UnityEditor;
 using UnityEngine;
-using Diplomata;
 
 namespace DiplomataEditor.Inspector
 {

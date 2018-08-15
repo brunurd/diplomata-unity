@@ -135,7 +135,8 @@ namespace Diplomata.Helpers
       return -1;
     }
 
-    public static bool Contains<T>(T[] array, T element) {
+    public static bool Contains<T>(T[] array, T element)
+    {
       bool response = false;
       for (int i = 0; i < array.Length; i++)
       {

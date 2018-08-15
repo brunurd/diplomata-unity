@@ -1,8 +1,8 @@
 using Diplomata;
 using Diplomata.Models;
 using DiplomataEditor;
-using DiplomataEditor.Windows;
 using DiplomataEditor.Helpers;
+using DiplomataEditor.Windows;
 using UnityEditor;
 using UnityEngine;
 
@@ -126,7 +126,8 @@ namespace DiplomataEditor.Inspector
             GUIHelper.labelStyle.normal.textColor = GUIHelper.freeTextColor;
           }
 
-          if (diplomataCharacter.talkable.GetType() == typeof(Character)) {
+          if (diplomataCharacter.talkable.GetType() == typeof(Character))
+          {
             Character character = (Character) diplomataCharacter.talkable;
             GUILayout.Label("Influence: <b>" + character.influence.ToString() + "</b>", GUIHelper.labelStyle);
           }

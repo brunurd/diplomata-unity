@@ -67,7 +67,7 @@ namespace DiplomataEditor.Windows
 
       if (sidebarBG == null)
       {
-        sidebarBG = GUIHelper.UniformColorTexture(1, 1, ColorHelper.ColorAdd(baseColor, -0.1f, -0.1f, -0.1f));
+        sidebarBG = GUIHelper.UniformColorTexture(1, 1, ColorHelper.ColorAdd(baseColor, -0.03333f));
       }
 
       if (textAreaBGTextureNormal == null)

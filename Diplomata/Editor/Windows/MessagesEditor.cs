@@ -400,1403 +400,1400 @@ namespace DiplomataEditor.Windows
                     case Effect.Type.EndOfContext:
                       if (effect.endOfContext.talkableName != null)
                       {
-                        Context contextToEnd = (talkable.GetType() == typeof(Character)) ? effect.endOfContext.GetContext(diplomataEditor.characters) : effect.endOfContext.GetContext(diplomataEditor.interactables);
-                  text += effect.DisplayEndOfContext(DictionariesHelper.ContainsKey(contextToEnd.name, diplomataEditor.options.currentLanguage).value);
+                        text += effect.DisplayEndOfContext(DictionariesHelper.ContainsKey(effect.endOfContext.GetContext(diplomataEditor.characters, diplomataEditor.interactables).name, diplomataEditor.options.currentLanguage).value);
+                      }
+                      break;
+
+                    case Effect.Type.GoTo:
+                      if (effect.goTo.GetMessage(context) != null)
+                      {
+                        text += effect.DisplayGoTo(DictionariesHelper.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.options.currentLanguage).value);
+                      }
+                      break;
+                    case Effect.Type.SetAnimatorAttribute:
+                      text += effect.DisplaySetAnimatorAttribute();
+                      break;
+                    case Effect.Type.GetItem:
+                      var itemName = "";
+                      if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
+                      {
+                        itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
+                      }
+                      text += effect.DisplayGetItem(itemName);
+                      break;
+                    case Effect.Type.DiscardItem:
+                      var discardItemName = "";
+                      if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
+                      {
+                        discardItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
+                      }
+                      text += effect.DisplayDiscardItem(discardItemName);
+                      break;
+                    case Effect.Type.EquipItem:
+                      var equipItemName = "";
+                      if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
+                      {
+                        equipItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
+                          diplomataEditor.options.currentLanguage).value;
+                      }
+                      text += effect.DisplayEquipItem(equipItemName);
+                      break;
+                    case Effect.Type.SetGlobalFlag:
+                      text += effect.DisplayGlobalFlagEqualTo();
+                      break;
                   }
-                  break;
 
-                  case Effect.Type.GoTo:
-                    if (effect.goTo.GetMessage(context) != null)
-                    {
-                      text += effect.DisplayGoTo(DictionariesHelper.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.options.currentLanguage).value);
-                    }
-                    break;
-                  case Effect.Type.SetAnimatorAttribute:
-                    text += effect.DisplaySetAnimatorAttribute();
-                    break;
-                  case Effect.Type.GetItem:
-                    var itemName = "";
-                    if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
-                    {
-                      itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
-                        diplomataEditor.options.currentLanguage).value;
-                    }
-                    text += effect.DisplayGetItem(itemName);
-                    break;
-                  case Effect.Type.DiscardItem:
-                    var discardItemName = "";
-                    if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
-                    {
-                      discardItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
-                        diplomataEditor.options.currentLanguage).value;
-                    }
-                    text += effect.DisplayDiscardItem(discardItemName);
-                    break;
-                  case Effect.Type.EquipItem:
-                    var equipItemName = "";
-                    if (Item.Find(diplomataEditor.inventory.items, effect.itemId) != null)
-                    {
-                      equipItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name,
-                        diplomataEditor.options.currentLanguage).value;
-                    }
-                    text += effect.DisplayEquipItem(equipItemName);
-                    break;
-                  case Effect.Type.SetGlobalFlag:
-                    text += effect.DisplayGlobalFlagEqualTo();
-                    break;
+                  if (k < currentMessage.effects.Length - 1)
+                  {
+                    text += "\n\n";
+                  }
                 }
 
-                if (k < currentMessage.effects.Length - 1)
-                {
-                  text += "\n\n";
-                }
+                GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorSub(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
+                GUIHelper.textContent.text = text;
+                height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
+                GUILayout.Label(GUIHelper.textContent, GUIHelper.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
+                GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorAdd(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
+              }
+            }
+
+            if (currentMessage.disposable || currentMessage.isAChoice)
+            {
+              GUIHelper.labelStyle.fontSize = context.fontSize;
+              GUIHelper.labelStyle.alignment = TextAnchor.UpperRight;
+              GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorSub(GUIHelper.labelStyle.normal.textColor, 0, 0.5f);
+
+              text = string.Empty;
+
+              if (currentMessage.disposable)
+              {
+                text += "[ disposable ] ";
               }
 
-              GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorSub(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
+              if (currentMessage.isAChoice)
+              {
+                text += "[ is a choice ]";
+              }
+
               GUIHelper.textContent.text = text;
               height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
               GUILayout.Label(GUIHelper.textContent, GUIHelper.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
-              GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorAdd(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
+
+              GUIHelper.labelStyle.fontSize = context.fontSize;
+              GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
             }
-          }
 
-          if (currentMessage.disposable || currentMessage.isAChoice)
-          {
-            GUIHelper.labelStyle.fontSize = context.fontSize;
-            GUIHelper.labelStyle.alignment = TextAnchor.UpperRight;
-            GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorSub(GUIHelper.labelStyle.normal.textColor, 0, 0.5f);
-
-            text = string.Empty;
-
-            if (currentMessage.disposable)
+            if (GUI.Button(boxRect, "", buttonStyle))
             {
-              text += "[ disposable ] ";
+              SetMessage(currentMessage);
+              EditorGUI.FocusTextInControl("");
             }
 
-            if (currentMessage.isAChoice)
-            {
-              text += "[ is a choice ]";
-            }
-
-            GUIHelper.textContent.text = text;
-            height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
-            GUILayout.Label(GUIHelper.textContent, GUIHelper.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
-
-            GUIHelper.labelStyle.fontSize = context.fontSize;
-            GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Separator();
           }
-
-          if (GUI.Button(boxRect, "", buttonStyle))
-          {
-            SetMessage(currentMessage);
-            EditorGUI.FocusTextInControl("");
-          }
-
-          EditorGUILayout.EndVertical();
-          EditorGUILayout.Separator();
         }
+
+        if (GUILayout.Button("Add Message", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+        {
+          column.messages = ArrayHelper.Add(column.messages, new Message(column.messages.Length, column.emitter, column.id, context.labels[0].id));
+
+          SetMessage(null);
+
+          diplomataEditor.Save(talkable, folderName);
+        }
+
+        EditorGUILayout.Separator();
+        GUILayout.EndVertical();
+
+        GUILayout.Space(GUIHelper.MARGIN);
       }
 
-      if (GUILayout.Button("Add Message", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+      if (GUILayout.Button("Add Column", GUILayout.Height(GUIHelper.BUTTON_HEIGHT), GUILayout.Width(context.columnWidth)))
       {
-        column.messages = ArrayHelper.Add(column.messages, new Message(column.messages.Length, column.emitter, column.id, context.labels[0].id));
-
-        SetMessage(null);
-
+        context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
         diplomataEditor.Save(talkable, folderName);
       }
 
-      EditorGUILayout.Separator();
-      GUILayout.EndVertical();
+      GUILayout.EndHorizontal();
+      EditorGUILayout.EndScrollView();
 
-      GUILayout.Space(GUIHelper.MARGIN);
+      GUIHelper.labelStyle.padding = GUIHelper.zeroPadding;
     }
 
-    if (GUILayout.Button("Add Column", GUILayout.Height(GUIHelper.BUTTON_HEIGHT), GUILayout.Width(context.columnWidth)))
+    public static void SetMessage(Message msg)
     {
-      context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
-      diplomataEditor.Save(talkable, folderName);
-    }
-
-    GUILayout.EndHorizontal();
-    EditorGUILayout.EndScrollView();
-
-    GUIHelper.labelStyle.padding = GUIHelper.zeroPadding;
-  }
-
-  public static void SetMessage(Message msg)
-  {
-    if (msg == null)
-    {
-      TalkableMessagesManager.context.messageEditorState = MessageEditorState.None;
-      TalkableMessagesManager.context.currentMessage.Set(-1, -1);
-    }
-
-    else
-    {
-      TalkableMessagesManager.context.messageEditorState = MessageEditorState.Normal;
-      TalkableMessagesManager.context.currentMessage.Set(msg.columnId, msg.id);
-      message = msg;
-    }
-  }
-
-  public static void ResetStyle()
-  {
-    textAreaStyle.normal.background = TalkableMessagesManager.textAreaBGTextureNormal;
-    textAreaStyle.focused.background = TalkableMessagesManager.textAreaBGTextureFocused;
-    buttonStyle.normal.background = GUIHelper.transparentTexture;
-    buttonStyle.active.background = GUIHelper.transparentTexture;
-    GUIHelper.labelStyle.padding = GUIHelper.padding;
-  }
-
-  public static void Sidebar()
-  {
-    scrollPosSidebar = EditorGUILayout.BeginScrollView(scrollPosSidebar, messagesWindowSidebarStyle, GUILayout.Width(SIDEBAR_WIDTH), GUILayout.ExpandHeight(true));
-
-    var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-    var talkable = TalkableMessagesManager.talkable;
-    var context = TalkableMessagesManager.context;
-    string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
-
-    if (EditorGUIUtility.isProSkin)
-    {
-      GUIHelper.labelStyle.normal.textColor = GUIHelper.proTextColor;
-    }
-
-    else
-    {
-      GUIHelper.labelStyle.normal.textColor = GUIHelper.freeTextColor;
-    }
-
-    GUIHelper.labelStyle.fontSize = 12;
-    GUIHelper.labelStyle.alignment = TextAnchor.UpperCenter;
-
-    if (message != null)
-    {
-
-      switch (context.messageEditorState)
+      if (msg == null)
       {
+        TalkableMessagesManager.context.messageEditorState = MessageEditorState.None;
+        TalkableMessagesManager.context.currentMessage.Set(-1, -1);
+      }
 
-        case MessageEditorState.Normal:
+      else
+      {
+        TalkableMessagesManager.context.messageEditorState = MessageEditorState.Normal;
+        TalkableMessagesManager.context.currentMessage.Set(msg.columnId, msg.id);
+        message = msg;
+      }
+    }
 
-          GUILayout.Label("<b>Properties</b>", GUIHelper.labelStyle);
-          EditorGUILayout.Separator();
+    public static void ResetStyle()
+    {
+      textAreaStyle.normal.background = TalkableMessagesManager.textAreaBGTextureNormal;
+      textAreaStyle.focused.background = TalkableMessagesManager.textAreaBGTextureFocused;
+      buttonStyle.normal.background = GUIHelper.transparentTexture;
+      buttonStyle.active.background = GUIHelper.transparentTexture;
+      GUIHelper.labelStyle.padding = GUIHelper.padding;
+    }
 
-          var column = Column.Find(context, message.columnId);
+    public static void Sidebar()
+    {
+      scrollPosSidebar = EditorGUILayout.BeginScrollView(scrollPosSidebar, messagesWindowSidebarStyle, GUILayout.Width(SIDEBAR_WIDTH), GUILayout.ExpandHeight(true));
 
-          var disposable = message.disposable;
-          var isAChoice = message.isAChoice;
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+      var talkable = TalkableMessagesManager.talkable;
+      var context = TalkableMessagesManager.context;
+      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
 
-          GUILayout.BeginHorizontal();
-          message.disposable = GUILayout.Toggle(message.disposable, "Disposable");
-          message.isAChoice = GUILayout.Toggle(message.isAChoice, "Is a choice");
-          GUILayout.EndHorizontal();
+      if (EditorGUIUtility.isProSkin)
+      {
+        GUIHelper.labelStyle.normal.textColor = GUIHelper.proTextColor;
+      }
 
-          if (message.disposable != disposable || message.isAChoice != isAChoice)
-          {
-            EditorGUI.FocusTextInControl("");
-          }
+      else
+      {
+        GUIHelper.labelStyle.normal.textColor = GUIHelper.freeTextColor;
+      }
 
-          if (message.isAChoice)
-          {
+      GUIHelper.labelStyle.fontSize = 12;
+      GUIHelper.labelStyle.alignment = TextAnchor.UpperCenter;
 
+      if (message != null)
+      {
+        switch (context.messageEditorState)
+        {
+          case MessageEditorState.Normal:
+
+            GUILayout.Label("<b>Properties</b>", GUIHelper.labelStyle);
             EditorGUILayout.Separator();
 
-            GUILayout.Label("Message attributes (most influence in): ");
+            var column = Column.Find(context, message.columnId);
 
-            foreach (string attrName in diplomataEditor.options.attributes)
+            var disposable = message.disposable;
+            var isAChoice = message.isAChoice;
+
+            GUILayout.BeginHorizontal();
+            message.disposable = GUILayout.Toggle(message.disposable, "Disposable");
+            message.isAChoice = GUILayout.Toggle(message.isAChoice, "Is a choice");
+            GUILayout.EndHorizontal();
+
+            if (message.disposable != disposable || message.isAChoice != isAChoice)
             {
+              EditorGUI.FocusTextInControl("");
+            }
+
+            if (message.isAChoice)
+            {
+
+              EditorGUILayout.Separator();
+
+              GUILayout.Label("Message attributes (most influence in): ");
+
+              foreach (string attrName in diplomataEditor.options.attributes)
+              {
+                for (int i = 0; i < message.attributes.Length; i++)
+                {
+                  if (message.attributes[i].key == attrName)
+                  {
+                    break;
+                  }
+                  else if (i == message.attributes.Length - 1)
+                  {
+                    message.attributes = ArrayHelper.Add(message.attributes, new AttributeDictionary(attrName));
+                  }
+                }
+              }
+
               for (int i = 0; i < message.attributes.Length; i++)
               {
-                if (message.attributes[i].key == attrName)
+                message.attributes[i].value = (byte) EditorGUILayout.Slider(message.attributes[i].key, message.attributes[i].value, 0, 100);
+              }
+            }
+
+            GUIHelper.Separator();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Label: ");
+
+            var label = Label.Find(context.labels, message.labelId);
+            var labelIndex = 0;
+
+            UpdateLabelsList(context);
+
+            if (label != null)
+            {
+              for (int labelI = 0; labelI < labelsList.Length; labelI++)
+              {
+                if (label.name == labelsList[labelI])
                 {
+                  labelIndex = labelI;
                   break;
                 }
-                else if (i == message.attributes.Length - 1)
-                {
-                  message.attributes = ArrayHelper.Add(message.attributes, new AttributeDictionary(attrName));
-                }
               }
             }
 
-            for (int i = 0; i < message.attributes.Length; i++)
-            {
-              message.attributes[i].value = (byte) EditorGUILayout.Slider(message.attributes[i].key, message.attributes[i].value, 0, 100);
-            }
-          }
-
-          GUIHelper.Separator();
-
-          GUILayout.BeginHorizontal();
-          GUILayout.Label("Label: ");
-
-          var label = Label.Find(context.labels, message.labelId);
-          var labelIndex = 0;
-
-          UpdateLabelsList(context);
-
-          if (label != null)
-          {
-            for (int labelI = 0; labelI < labelsList.Length; labelI++)
-            {
-              if (label.name == labelsList[labelI])
-              {
-                labelIndex = labelI;
-                break;
-              }
-            }
-          }
-
-          EditorGUI.BeginChangeCheck();
-
-          labelIndex = EditorGUILayout.Popup(labelIndex, labelsList);
-
-          if (EditorGUI.EndChangeCheck())
-          {
-            message.labelId = context.labels[labelIndex].id;
-          }
-
-          GUILayout.EndHorizontal();
-          GUIHelper.Separator();
-
-          var screenplayNotes = DictionariesHelper.ContainsKey(message.screenplayNotes, diplomataEditor.options.currentLanguage);
-
-          if (screenplayNotes == null)
-          {
-            message.screenplayNotes = ArrayHelper.Add(message.screenplayNotes, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
-            screenplayNotes = DictionariesHelper.ContainsKey(message.screenplayNotes, diplomataEditor.options.currentLanguage);
-          }
-
-          GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
-          GUILayout.Label("Screenplay notes:\n<size=10>(Example: <i>whispering and gasping</i>)</size>", GUIHelper.labelStyle);
-          screenplayNotes.value = EditorGUILayout.TextField(screenplayNotes.value);
-
-          GUIHelper.Separator();
-
-          EditorGUILayout.Separator();
-
-          var audioClipPath = DictionariesHelper.ContainsKey(message.audioClipPath, diplomataEditor.options.currentLanguage);
-
-          if (audioClipPath == null)
-          {
-            message.audioClipPath = ArrayHelper.Add(message.audioClipPath, new LanguageDictionary(diplomataEditor.options.currentLanguage, string.Empty));
-            audioClipPath = DictionariesHelper.ContainsKey(message.audioClipPath, diplomataEditor.options.currentLanguage);
-          }
-
-          message.audioClip = (AudioClip) Resources.Load(audioClipPath.value);
-
-          if (message.audioClip == null && audioClipPath.value != string.Empty)
-          {
-            Debug.LogWarning("Cannot find the file \"" + audioClipPath.value + "\" in Resources folder.");
-          }
-
-          GUILayout.Label("Audio to play: ");
-          EditorGUI.BeginChangeCheck();
-
-          message.audioClip = (AudioClip) EditorGUILayout.ObjectField(message.audioClip, typeof(AudioClip), false);
-
-          if (EditorGUI.EndChangeCheck())
-          {
-            if (message.audioClip != null)
-            {
-              var str = AssetDatabase.GetAssetPath(message.audioClip).Replace("Resources/", "¬");
-              var strings = str.Split('¬');
-              str = strings[1].Replace(".mp3", "");
-              str = str.Replace(".aif", "");
-              str = str.Replace(".aiff", "");
-              str = str.Replace(".ogg", "");
-              str = str.Replace(".wav", "");
-              audioClipPath.value = str;
-            }
-
-            else
-            {
-              audioClipPath.value = string.Empty;
-            }
-          }
-
-          EditorGUILayout.Separator();
-
-          message.image = (Texture2D) Resources.Load(message.imagePath);
-
-          if (message.image == null && message.imagePath != string.Empty)
-          {
-            Debug.LogWarning("Cannot find the file \"" + message.imagePath + "\" in Resources folder.");
-          }
-
-          GUILayout.Label("Static image: ");
-          EditorGUI.BeginChangeCheck();
-
-          message.image = (Texture2D) EditorGUILayout.ObjectField(message.image, typeof(Texture2D), false);
-
-          if (EditorGUI.EndChangeCheck())
-          {
-            if (message.image != null)
-            {
-              var str = AssetDatabase.GetAssetPath(message.image).Replace("Resources/", "¬");
-              var strings = str.Split('¬');
-              str = strings[1].Replace(".png", "");
-              str = str.Replace(".jpg", "");
-              str = str.Replace(".jpeg", "");
-              str = str.Replace(".psd", "");
-              str = str.Replace(".tga", "");
-              str = str.Replace(".tiff", "");
-              str = str.Replace(".gif", "");
-              str = str.Replace(".bmp", "");
-              message.imagePath = str;
-            }
-
-            else
-            {
-              message.imagePath = string.Empty;
-            }
-          }
-
-          EditorGUILayout.Separator();
-
-          EditorGUILayout.HelpBox("\nMake sure to store this audio clip, texture and animator controllers in Resources folder.\n\n" +
-            "Use PlayMessageAudioContent() to play audio clip and StopMessageAudioContent() to stop.\n\n" +
-            "Use SwapStaticSprite(Vector pivot) to show static image.\n", MessageType.Info);
-
-          GUIHelper.Separator();
-
-          GUILayout.Label("Animator Attributes Setters");
-
-          foreach (AnimatorAttributeSetter animatorAttribute in message.animatorAttributesSetters)
-          {
-
-            EditorGUILayout.Separator();
-
-            animatorAttribute.animator = (RuntimeAnimatorController) Resources.Load(animatorAttribute.animatorPath);
-
-            if (animatorAttribute.animator == null && animatorAttribute.animatorPath != string.Empty)
-            {
-              Debug.LogWarning("Cannot find the file \"" + animatorAttribute.animatorPath + "\" in Resources folder.");
-            }
-
-            GUILayout.Label("Animator Controller: ");
             EditorGUI.BeginChangeCheck();
 
-            animatorAttribute.animator = (RuntimeAnimatorController) EditorGUILayout.ObjectField(animatorAttribute.animator, typeof(RuntimeAnimatorController), false);
+            labelIndex = EditorGUILayout.Popup(labelIndex, labelsList);
 
             if (EditorGUI.EndChangeCheck())
             {
-              if (animatorAttribute.animator != null)
+              message.labelId = context.labels[labelIndex].id;
+            }
+
+            GUILayout.EndHorizontal();
+            GUIHelper.Separator();
+
+            var screenplayNotes = DictionariesHelper.ContainsKey(message.screenplayNotes, diplomataEditor.options.currentLanguage);
+
+            if (screenplayNotes == null)
+            {
+              message.screenplayNotes = ArrayHelper.Add(message.screenplayNotes, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
+              screenplayNotes = DictionariesHelper.ContainsKey(message.screenplayNotes, diplomataEditor.options.currentLanguage);
+            }
+
+            GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
+            GUILayout.Label("Screenplay notes:\n<size=10>(Example: <i>whispering and gasping</i>)</size>", GUIHelper.labelStyle);
+            screenplayNotes.value = EditorGUILayout.TextField(screenplayNotes.value);
+
+            GUIHelper.Separator();
+
+            EditorGUILayout.Separator();
+
+            var audioClipPath = DictionariesHelper.ContainsKey(message.audioClipPath, diplomataEditor.options.currentLanguage);
+
+            if (audioClipPath == null)
+            {
+              message.audioClipPath = ArrayHelper.Add(message.audioClipPath, new LanguageDictionary(diplomataEditor.options.currentLanguage, string.Empty));
+              audioClipPath = DictionariesHelper.ContainsKey(message.audioClipPath, diplomataEditor.options.currentLanguage);
+            }
+
+            message.audioClip = (AudioClip) Resources.Load(audioClipPath.value);
+
+            if (message.audioClip == null && audioClipPath.value != string.Empty)
+            {
+              Debug.LogWarning("Cannot find the file \"" + audioClipPath.value + "\" in Resources folder.");
+            }
+
+            GUILayout.Label("Audio to play: ");
+            EditorGUI.BeginChangeCheck();
+
+            message.audioClip = (AudioClip) EditorGUILayout.ObjectField(message.audioClip, typeof(AudioClip), false);
+
+            if (EditorGUI.EndChangeCheck())
+            {
+              if (message.audioClip != null)
               {
-                var str = AssetDatabase.GetAssetPath(animatorAttribute.animator).Replace("Resources/", "¬");
+                var str = AssetDatabase.GetAssetPath(message.audioClip).Replace("Resources/", "¬");
                 var strings = str.Split('¬');
-                str = strings[1].Replace(".controller", "");
-                animatorAttribute.animatorPath = str;
+                str = strings[1].Replace(".mp3", "");
+                str = str.Replace(".aif", "");
+                str = str.Replace(".aiff", "");
+                str = str.Replace(".ogg", "");
+                str = str.Replace(".wav", "");
+                audioClipPath.value = str;
               }
 
               else
               {
-                animatorAttribute.animatorPath = string.Empty;
+                audioClipPath.value = string.Empty;
               }
             }
 
-            GUILayout.BeginHorizontal();
+            EditorGUILayout.Separator();
 
-            GUILayout.Label("Type: ");
-            animatorAttribute.type = (AnimatorControllerParameterType) EditorGUILayout.EnumPopup(animatorAttribute.type);
+            message.image = (Texture2D) Resources.Load(message.imagePath);
 
+            if (message.image == null && message.imagePath != string.Empty)
+            {
+              Debug.LogWarning("Cannot find the file \"" + message.imagePath + "\" in Resources folder.");
+            }
+
+            GUILayout.Label("Static image: ");
             EditorGUI.BeginChangeCheck();
 
-            GUILayout.Label("Name: ");
-            animatorAttribute.name = EditorGUILayout.TextField(animatorAttribute.name);
+            message.image = (Texture2D) EditorGUILayout.ObjectField(message.image, typeof(Texture2D), false);
 
             if (EditorGUI.EndChangeCheck())
             {
-              animatorAttribute.setTrigger = Animator.StringToHash(animatorAttribute.name);
+              if (message.image != null)
+              {
+                var str = AssetDatabase.GetAssetPath(message.image).Replace("Resources/", "¬");
+                var strings = str.Split('¬');
+                str = strings[1].Replace(".png", "");
+                str = str.Replace(".jpg", "");
+                str = str.Replace(".jpeg", "");
+                str = str.Replace(".psd", "");
+                str = str.Replace(".tga", "");
+                str = str.Replace(".tiff", "");
+                str = str.Replace(".gif", "");
+                str = str.Replace(".bmp", "");
+                message.imagePath = str;
+              }
+
+              else
+              {
+                message.imagePath = string.Empty;
+              }
             }
 
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-
-            switch (animatorAttribute.type)
-            {
-              case AnimatorControllerParameterType.Bool:
-                string selected = animatorAttribute.setBool.ToString();
-
-                EditorGUI.BeginChangeCheck();
-
-                selected = GUIHelper.Popup("Set boolean to ", selected, booleanArray);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-
-                  if (selected == "True")
-                  {
-                    animatorAttribute.setBool = true;
-                  }
-
-                  else
-                  {
-                    animatorAttribute.setBool = false;
-                  }
-
-                }
-
-                break;
-
-              case AnimatorControllerParameterType.Float:
-                GUILayout.Label("Set float to ");
-                animatorAttribute.setFloat = EditorGUILayout.FloatField(animatorAttribute.setFloat);
-                break;
-
-              case AnimatorControllerParameterType.Int:
-                GUILayout.Label("Set integer to ");
-                animatorAttribute.setInt = EditorGUILayout.IntField(animatorAttribute.setInt);
-                break;
-
-              case AnimatorControllerParameterType.Trigger:
-                GUILayout.Label("Pull the trigger of [ " + animatorAttribute.name + " ]");
-                break;
-            }
-
-            GUILayout.EndHorizontal();
             EditorGUILayout.Separator();
 
-            if (GUILayout.Button("Delete Animator Attribute Setter", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            EditorGUILayout.HelpBox("\nMake sure to store this audio clip, texture and animator controllers in Resources folder.\n\n" +
+              "Use PlayMessageAudioContent() to play audio clip and StopMessageAudioContent() to stop.\n\n" +
+              "Use SwapStaticSprite(Vector pivot) to show static image.\n", MessageType.Info);
+
+            GUIHelper.Separator();
+
+            GUILayout.Label("Animator Attributes Setters");
+
+            foreach (AnimatorAttributeSetter animatorAttribute in message.animatorAttributesSetters)
             {
-              message.animatorAttributesSetters = ArrayHelper.Remove(message.animatorAttributesSetters, animatorAttribute);
+
+              EditorGUILayout.Separator();
+
+              animatorAttribute.animator = (RuntimeAnimatorController) Resources.Load(animatorAttribute.animatorPath);
+
+              if (animatorAttribute.animator == null && animatorAttribute.animatorPath != string.Empty)
+              {
+                Debug.LogWarning("Cannot find the file \"" + animatorAttribute.animatorPath + "\" in Resources folder.");
+              }
+
+              GUILayout.Label("Animator Controller: ");
+              EditorGUI.BeginChangeCheck();
+
+              animatorAttribute.animator = (RuntimeAnimatorController) EditorGUILayout.ObjectField(animatorAttribute.animator, typeof(RuntimeAnimatorController), false);
+
+              if (EditorGUI.EndChangeCheck())
+              {
+                if (animatorAttribute.animator != null)
+                {
+                  var str = AssetDatabase.GetAssetPath(animatorAttribute.animator).Replace("Resources/", "¬");
+                  var strings = str.Split('¬');
+                  str = strings[1].Replace(".controller", "");
+                  animatorAttribute.animatorPath = str;
+                }
+
+                else
+                {
+                  animatorAttribute.animatorPath = string.Empty;
+                }
+              }
+
+              GUILayout.BeginHorizontal();
+
+              GUILayout.Label("Type: ");
+              animatorAttribute.type = (AnimatorControllerParameterType) EditorGUILayout.EnumPopup(animatorAttribute.type);
+
+              EditorGUI.BeginChangeCheck();
+
+              GUILayout.Label("Name: ");
+              animatorAttribute.name = EditorGUILayout.TextField(animatorAttribute.name);
+
+              if (EditorGUI.EndChangeCheck())
+              {
+                animatorAttribute.setTrigger = Animator.StringToHash(animatorAttribute.name);
+              }
+
+              GUILayout.EndHorizontal();
+
+              GUILayout.BeginHorizontal();
+
+              switch (animatorAttribute.type)
+              {
+                case AnimatorControllerParameterType.Bool:
+                  string selected = animatorAttribute.setBool.ToString();
+
+                  EditorGUI.BeginChangeCheck();
+
+                  selected = GUIHelper.Popup("Set boolean to ", selected, booleanArray);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+
+                    if (selected == "True")
+                    {
+                      animatorAttribute.setBool = true;
+                    }
+
+                    else
+                    {
+                      animatorAttribute.setBool = false;
+                    }
+
+                  }
+
+                  break;
+
+                case AnimatorControllerParameterType.Float:
+                  GUILayout.Label("Set float to ");
+                  animatorAttribute.setFloat = EditorGUILayout.FloatField(animatorAttribute.setFloat);
+                  break;
+
+                case AnimatorControllerParameterType.Int:
+                  GUILayout.Label("Set integer to ");
+                  animatorAttribute.setInt = EditorGUILayout.IntField(animatorAttribute.setInt);
+                  break;
+
+                case AnimatorControllerParameterType.Trigger:
+                  GUILayout.Label("Pull the trigger of [ " + animatorAttribute.name + " ]");
+                  break;
+              }
+
+              GUILayout.EndHorizontal();
+              EditorGUILayout.Separator();
+
+              if (GUILayout.Button("Delete Animator Attribute Setter", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+              {
+                message.animatorAttributesSetters = ArrayHelper.Remove(message.animatorAttributesSetters, animatorAttribute);
+                diplomataEditor.Save(talkable, folderName);
+              }
+
+              GUIHelper.Separator();
+            }
+
+            if (GUILayout.Button("Add Animator Attribute Setter", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+            {
+              message.animatorAttributesSetters = ArrayHelper.Add(message.animatorAttributesSetters, new AnimatorAttributeSetter());
               diplomataEditor.Save(talkable, folderName);
             }
 
             GUIHelper.Separator();
-          }
 
-          if (GUILayout.Button("Add Animator Attribute Setter", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            message.animatorAttributesSetters = ArrayHelper.Add(message.animatorAttributesSetters, new AnimatorAttributeSetter());
-            diplomataEditor.Save(talkable, folderName);
-          }
+            GUILayout.Label("Edit: ");
 
-          GUIHelper.Separator();
-
-          GUILayout.Label("Edit: ");
-
-          GUILayout.BeginHorizontal();
-
-          if (GUILayout.Button("Conditions", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            context.messageEditorState = MessageEditorState.Conditions;
-          }
-
-          if (GUILayout.Button("Effects", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            context.messageEditorState = MessageEditorState.Effects;
-          }
-
-          GUILayout.EndHorizontal();
-
-          EditorGUILayout.Separator();
-
-          if (column.messages.Length > 1 || context.columns.Length > 1)
-          {
-            GUIHelper.Separator();
-            GUILayout.Label("Move: ");
-
-            fakeButtonStyle.richText = true;
-            string color = "#989898";
             GUILayout.BeginHorizontal();
 
-            if (column.id > 0)
+            if (GUILayout.Button("Conditions", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              if (GUILayout.Button("Left", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-              {
-                message.columnId -= 1;
-
-                var leftCol = Column.Find(context, message.columnId);
-
-                message.id = leftCol.messages.Length;
-
-                leftCol.messages = ArrayHelper.Add(leftCol.messages, message);
-                column.messages = ArrayHelper.Remove(column.messages, message);
-
-                column.messages = Message.ResetIDs(column.messages);
-                leftCol.messages = Message.ResetIDs(leftCol.messages);
-
-                SetMessage(message);
-                diplomataEditor.Save(talkable, folderName);
-              }
+              context.messageEditorState = MessageEditorState.Conditions;
             }
 
-            else
+            if (GUILayout.Button("Effects", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              GUILayout.Box("<color=" + color + ">Left</color>", fakeButtonStyle, GUILayout.Height(GUIHelper.BUTTON_HEIGHT));
-            }
-
-            if (message.id > 0)
-            {
-              if (GUILayout.Button("Up", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-              {
-                Message.Find(column.messages, message.id - 1).id += 1;
-
-                message.id -= 1;
-
-                SetMessage(message);
-                diplomataEditor.Save(talkable, folderName);
-              }
-            }
-
-            else
-            {
-              GUILayout.Box("<color=" + color + ">Up</color>", fakeButtonStyle, GUILayout.Height(GUIHelper.BUTTON_HEIGHT));
-            }
-
-            if (message.id < column.messages.Length - 1)
-            {
-              if (GUILayout.Button("Down", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-              {
-                Message.Find(column.messages, message.id + 1).id -= 1;
-
-                message.id += 1;
-
-                SetMessage(message);
-                diplomataEditor.Save(talkable, folderName);
-              }
-            }
-
-            else
-            {
-              GUILayout.Box("<color=" + color + ">Down</color>", fakeButtonStyle, GUILayout.Height(GUIHelper.BUTTON_HEIGHT));
-            }
-
-            if (column.id < context.columns.Length - 1)
-            {
-              if (GUILayout.Button("Right", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-              {
-                message.columnId += 1;
-
-                var rightCol = Column.Find(context, message.columnId);
-
-                message.id = rightCol.messages.Length;
-
-                rightCol.messages = ArrayHelper.Add(rightCol.messages, message);
-                column.messages = ArrayHelper.Remove(column.messages, message);
-
-                column.messages = Message.ResetIDs(column.messages);
-                rightCol.messages = Message.ResetIDs(rightCol.messages);
-
-                SetMessage(message);
-                diplomataEditor.Save(talkable, folderName);
-              }
-            }
-
-            else
-            {
-              GUILayout.Box("<color=" + color + ">Right</color>", fakeButtonStyle, GUILayout.Height(GUIHelper.BUTTON_HEIGHT));
+              context.messageEditorState = MessageEditorState.Effects;
             }
 
             GUILayout.EndHorizontal();
-          }
 
-          GUIHelper.Separator();
-          GUILayout.Label("Other options: ");
+            EditorGUILayout.Separator();
 
-          GUILayout.BeginHorizontal();
+            if (column.messages.Length > 1 || context.columns.Length > 1)
+            {
+              GUIHelper.Separator();
+              GUILayout.Label("Move: ");
 
-          if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
+              fakeButtonStyle.richText = true;
+              string color = "#989898";
+              GUILayout.BeginHorizontal();
 
-            column.messages = ArrayHelper.Add(column.messages, new Message(message, column.messages.Length));
+              if (column.id > 0)
+              {
+                if (GUILayout.Button("Left", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+                {
+                  message.columnId -= 1;
 
-            SetMessage(null);
+                  var leftCol = Column.Find(context, message.columnId);
 
-            diplomataEditor.Save(talkable, folderName);
-          }
+                  message.id = leftCol.messages.Length;
 
-          if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            if (EditorUtility.DisplayDialog("Are you sure?", "If you agree all this message data will be lost forever.", "Yes", "No"))
+                  leftCol.messages = ArrayHelper.Add(leftCol.messages, message);
+                  column.messages = ArrayHelper.Remove(column.messages, message);
+
+                  column.messages = Message.ResetIDs(column.messages);
+                  leftCol.messages = Message.ResetIDs(leftCol.messages);
+
+                  SetMessage(message);
+                  diplomataEditor.Save(talkable, folderName);
+                }
+              }
+
+              else
+              {
+                GUILayout.Box("<color=" + color + ">Left</color>", fakeButtonStyle, GUILayout.Height(GUIHelper.BUTTON_HEIGHT));
+              }
+
+              if (message.id > 0)
+              {
+                if (GUILayout.Button("Up", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+                {
+                  Message.Find(column.messages, message.id - 1).id += 1;
+
+                  message.id -= 1;
+
+                  SetMessage(message);
+                  diplomataEditor.Save(talkable, folderName);
+                }
+              }
+
+              else
+              {
+                GUILayout.Box("<color=" + color + ">Up</color>", fakeButtonStyle, GUILayout.Height(GUIHelper.BUTTON_HEIGHT));
+              }
+
+              if (message.id < column.messages.Length - 1)
+              {
+                if (GUILayout.Button("Down", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+                {
+                  Message.Find(column.messages, message.id + 1).id -= 1;
+
+                  message.id += 1;
+
+                  SetMessage(message);
+                  diplomataEditor.Save(talkable, folderName);
+                }
+              }
+
+              else
+              {
+                GUILayout.Box("<color=" + color + ">Down</color>", fakeButtonStyle, GUILayout.Height(GUIHelper.BUTTON_HEIGHT));
+              }
+
+              if (column.id < context.columns.Length - 1)
+              {
+                if (GUILayout.Button("Right", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+                {
+                  message.columnId += 1;
+
+                  var rightCol = Column.Find(context, message.columnId);
+
+                  message.id = rightCol.messages.Length;
+
+                  rightCol.messages = ArrayHelper.Add(rightCol.messages, message);
+                  column.messages = ArrayHelper.Remove(column.messages, message);
+
+                  column.messages = Message.ResetIDs(column.messages);
+                  rightCol.messages = Message.ResetIDs(rightCol.messages);
+
+                  SetMessage(message);
+                  diplomataEditor.Save(talkable, folderName);
+                }
+              }
+
+              else
+              {
+                GUILayout.Box("<color=" + color + ">Right</color>", fakeButtonStyle, GUILayout.Height(GUIHelper.BUTTON_HEIGHT));
+              }
+
+              GUILayout.EndHorizontal();
+            }
+
+            GUIHelper.Separator();
+            GUILayout.Label("Other options: ");
+
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
 
-              column.messages = ArrayHelper.Remove(column.messages, message);
+              column.messages = ArrayHelper.Add(column.messages, new Message(message, column.messages.Length));
 
               SetMessage(null);
 
-              column.messages = Message.ResetIDs(column.messages);
-
               diplomataEditor.Save(talkable, folderName);
             }
-          }
 
-          GUILayout.EndHorizontal();
+            if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+            {
+              if (EditorUtility.DisplayDialog("Are you sure?", "If you agree all this message data will be lost forever.", "Yes", "No"))
+              {
 
-          GUIHelper.Separator();
+                column.messages = ArrayHelper.Remove(column.messages, message);
 
-          GUILayout.Label("Columns: ");
+                SetMessage(null);
 
-          GUILayout.BeginHorizontal();
+                column.messages = Message.ResetIDs(column.messages);
 
-          if (GUILayout.Button("New column at left", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
+                diplomataEditor.Save(talkable, folderName);
+              }
+            }
 
-            MoveColumnsToRight(context, column.id);
-
-            SetMessage(null);
-            diplomataEditor.Save(talkable, folderName);
-          }
-
-          if (GUILayout.Button("New column at right", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
-
-            MoveColumnsToRight(context, column.id + 1);
-
-            SetMessage(null);
-            diplomataEditor.Save(talkable, folderName);
-          }
-
-          GUILayout.EndHorizontal();
-
-          break;
-
-        case MessageEditorState.Conditions:
-
-          GUILayout.Label("<b>Conditions</b>", GUIHelper.labelStyle);
-          EditorGUILayout.Separator();
-
-          if (GUILayout.Button("< Back", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            context.messageEditorState = MessageEditorState.Normal;
-          }
-
-          GUIHelper.Separator();
-
-          var j = 0;
-
-          foreach (Condition condition in message.conditions)
-          {
-
-            GUIHelper.labelStyle.fontSize = 11;
-            GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
-            GUILayout.Label("<i>Condition " + j + "</i>\n", GUIHelper.labelStyle);
-            j++;
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Type: ");
-            condition.type = (Condition.Type) EditorGUILayout.EnumPopup(condition.type);
             GUILayout.EndHorizontal();
 
-            switch (condition.type)
+            GUIHelper.Separator();
+
+            GUILayout.Label("Columns: ");
+
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("New column at left", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              case Condition.Type.AfterOf:
-                UpdateMessagesList(context);
+              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
 
-                var messageName = "";
+              MoveColumnsToRight(context, column.id);
 
-                if (condition.afterOf.GetMessage(context) != null)
-                {
-                  messageName = DictionariesHelper.ContainsKey(condition.afterOf.GetMessage(context).content, diplomataEditor.options.currentLanguage).value;
-                }
-
-                EditorGUI.BeginChangeCheck();
-
-                messageName = GUIHelper.Popup("Message: ", messageName, messageList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Column col in context.columns)
-                  {
-                    foreach (Message msg in col.messages)
-                    {
-
-                      if (DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage).value == messageName)
-                      {
-                        condition.afterOf.uniqueId = msg.GetUniqueId();
-                        break;
-                      }
-
-                    }
-                  }
-                }
-
-                break;
-
-              case Condition.Type.InfluenceEqualTo:
-              case Condition.Type.InfluenceGreaterThan:
-              case Condition.Type.InfluenceLessThan:
-                UpdateCharacterList();
-
-                GUILayout.BeginHorizontal();
-                EditorGUI.BeginChangeCheck();
-
-                if (condition.characterInfluencedName == string.Empty && characterList.Length > 0)
-                {
-                  condition.characterInfluencedName = characterList[0];
-                }
-
-                condition.comparedInfluence = EditorGUILayout.IntField(condition.comparedInfluence);
-                condition.characterInfluencedName = GUIHelper.Popup(" in ", condition.characterInfluencedName, characterList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  condition.DisplayCompareInfluence();
-                }
-                GUILayout.EndHorizontal();
-
-                break;
-
-              case Condition.Type.HasItem:
-                GUILayout.BeginHorizontal();
-                UpdateItemList();
-
-                var itemName = "";
-
-                if (itemList.Length > 0)
-                {
-                  itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
-                }
-
-                EditorGUI.BeginChangeCheck();
-
-                itemName = GUIHelper.Popup("Has item ", itemName, itemList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Item item in diplomataEditor.inventory.items)
-                  {
-
-                    if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemName)
-                    {
-                      condition.itemId = item.id;
-                      break;
-                    }
-
-                  }
-                }
-
-                GUILayout.EndHorizontal();
-                break;
-
-              case Condition.Type.DoesNotHaveTheItem:
-                GUILayout.BeginHorizontal();
-                UpdateItemList();
-
-                var itemNameDont = "";
-
-                if (itemList.Length > 0)
-                {
-                  itemNameDont = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
-                }
-
-                EditorGUI.BeginChangeCheck();
-
-                itemNameDont = GUIHelper.Popup("Does not have the item ", itemNameDont, itemList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Item item in diplomataEditor.inventory.items)
-                  {
-
-                    if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemNameDont)
-                    {
-                      condition.itemId = item.id;
-                      break;
-                    }
-
-                  }
-                }
-
-                GUILayout.EndHorizontal();
-                break;
-
-              case Condition.Type.ItemIsEquipped:
-                GUILayout.BeginHorizontal();
-                UpdateItemList();
-
-                var equippedItemName = "";
-
-                if (itemList.Length > 0)
-                {
-                  equippedItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
-                }
-
-                EditorGUI.BeginChangeCheck();
-
-                equippedItemName = GUIHelper.Popup("Item is equipped ", equippedItemName, itemList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Item item in diplomataEditor.inventory.items)
-                  {
-
-                    if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == equippedItemName)
-                    {
-                      condition.itemId = item.id;
-                      break;
-                    }
-
-                  }
-                }
-
-                GUILayout.EndHorizontal();
-                break;
-
-              case Condition.Type.ItemWasDiscarded:
-                GUILayout.BeginHorizontal();
-                UpdateItemList();
-
-                var discardedItemName = "";
-
-                if (itemList.Length > 0)
-                {
-                  discardedItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
-                }
-
-                EditorGUI.BeginChangeCheck();
-
-                discardedItemName = GUIHelper.Popup("Item was discarded ", discardedItemName, itemList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Item item in diplomataEditor.inventory.items)
-                  {
-
-                    if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == discardedItemName)
-                    {
-                      condition.itemId = item.id;
-                      break;
-                    }
-
-                  }
-                }
-
-                GUILayout.EndHorizontal();
-                break;
-
-              case Condition.Type.GlobalFlagEqualTo:
-                UpdateGlobalFlagsList();
-
-                condition.globalFlag.name = GUIHelper.Popup("Flag: ", condition.globalFlag.name, globalFlagsList);
-
-                string selected = condition.globalFlag.value.ToString();
-
-                EditorGUI.BeginChangeCheck();
-
-                selected = GUIHelper.Popup("is ", selected, booleanArray);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-
-                  if (selected == "True")
-                  {
-                    condition.globalFlag.value = true;
-                  }
-
-                  else
-                  {
-                    condition.globalFlag.value = false;
-                  }
-
-                }
-
-                break;
+              SetMessage(null);
+              diplomataEditor.Save(talkable, folderName);
             }
 
-            if (GUILayout.Button("Delete Condition", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            if (GUILayout.Button("New column at right", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              message.conditions = ArrayHelper.Remove(message.conditions, condition);
+              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
+
+              MoveColumnsToRight(context, column.id + 1);
+
+              SetMessage(null);
               diplomataEditor.Save(talkable, folderName);
+            }
+
+            GUILayout.EndHorizontal();
+
+            break;
+
+          case MessageEditorState.Conditions:
+
+            GUILayout.Label("<b>Conditions</b>", GUIHelper.labelStyle);
+            EditorGUILayout.Separator();
+
+            if (GUILayout.Button("< Back", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+            {
+              context.messageEditorState = MessageEditorState.Normal;
             }
 
             GUIHelper.Separator();
-          }
 
-          if (GUILayout.Button("Add Condition", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            message.conditions = ArrayHelper.Add(message.conditions, new Condition());
-            diplomataEditor.Save(talkable, folderName);
-          }
+            var j = 0;
 
-          break;
-
-        case MessageEditorState.Effects:
-
-          GUILayout.Label("<b>Effects</b>", GUIHelper.labelStyle);
-          EditorGUILayout.Separator();
-
-          if (GUILayout.Button("< Back", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-          {
-            context.messageEditorState = MessageEditorState.Normal;
-          }
-
-          GUIHelper.Separator();
-
-          var k = 0;
-
-          foreach (Effect effect in message.effects)
-          {
-
-            GUIHelper.labelStyle.fontSize = 11;
-            GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
-            GUILayout.Label("<i>Effect " + k + "</i>\n", GUIHelper.labelStyle);
-            k++;
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Type: ");
-            effect.type = (Effect.Type) EditorGUILayout.EnumPopup(effect.type);
-            GUILayout.EndHorizontal();
-
-            switch (effect.type)
+            foreach (Condition condition in message.conditions)
             {
-              case Effect.Type.EndOfContext:
 
-                UpdateContextList();
-                var contextName = string.Empty;
+              GUIHelper.labelStyle.fontSize = 11;
+              GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
+              GUILayout.Label("<i>Condition " + j + "</i>\n", GUIHelper.labelStyle);
+              j++;
 
-                if (effect.endOfContext.talkableName != null)
-                {
-                  if (effect.endOfContext.GetContext(diplomataEditor.characters) != null)
+              GUILayout.BeginHorizontal();
+              GUILayout.Label("Type: ");
+              condition.type = (Condition.Type) EditorGUILayout.EnumPopup(condition.type);
+              GUILayout.EndHorizontal();
+
+              switch (condition.type)
+              {
+                case Condition.Type.AfterOf:
+                  UpdateMessagesList(context);
+
+                  var messageName = "";
+
+                  if (condition.afterOf.GetMessage(context) != null)
                   {
-                    Context contextToEnd = (talkable.GetType() == typeof(Character)) ? effect.endOfContext.GetContext(diplomataEditor.characters) : effect.endOfContext.GetContext(diplomataEditor.interactables);
-                    contextName = DictionariesHelper.ContainsKey(contextToEnd.name, diplomataEditor.options.currentLanguage).value;
+                    messageName = DictionariesHelper.ContainsKey(condition.afterOf.GetMessage(context).content, diplomataEditor.options.currentLanguage).value;
                   }
-                }
 
-                EditorGUI.BeginChangeCheck();
+                  EditorGUI.BeginChangeCheck();
 
-                contextName = GUIHelper.Popup("Context: ", contextName, contextList);
+                  messageName = GUIHelper.Popup("Message: ", messageName, messageList);
 
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Character tempCharacter in diplomataEditor.characters)
+                  if (EditorGUI.EndChangeCheck())
                   {
-                    foreach (Context ctx in tempCharacter.contexts)
+                    foreach (Column col in context.columns)
+                    {
+                      foreach (Message msg in col.messages)
+                      {
+
+                        if (DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage).value == messageName)
+                        {
+                          condition.afterOf.uniqueId = msg.GetUniqueId();
+                          break;
+                        }
+
+                      }
+                    }
+                  }
+
+                  break;
+
+                case Condition.Type.InfluenceEqualTo:
+                case Condition.Type.InfluenceGreaterThan:
+                case Condition.Type.InfluenceLessThan:
+                  UpdateCharacterList();
+
+                  GUILayout.BeginHorizontal();
+                  EditorGUI.BeginChangeCheck();
+
+                  if (condition.characterInfluencedName == string.Empty && characterList.Length > 0)
+                  {
+                    condition.characterInfluencedName = characterList[0];
+                  }
+
+                  condition.comparedInfluence = EditorGUILayout.IntField(condition.comparedInfluence);
+                  condition.characterInfluencedName = GUIHelper.Popup(" in ", condition.characterInfluencedName, characterList);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    condition.DisplayCompareInfluence();
+                  }
+                  GUILayout.EndHorizontal();
+
+                  break;
+
+                case Condition.Type.HasItem:
+                  GUILayout.BeginHorizontal();
+                  UpdateItemList();
+
+                  var itemName = "";
+
+                  if (itemList.Length > 0)
+                  {
+                    itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
+                  }
+
+                  EditorGUI.BeginChangeCheck();
+
+                  itemName = GUIHelper.Popup("Has item ", itemName, itemList);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictionariesHelper.ContainsKey(ctx.name, diplomataEditor.options.currentLanguage).value == contextName)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemName)
                       {
-                        effect.endOfContext.Set(tempCharacter.name, ctx.id);
+                        condition.itemId = item.id;
                         break;
                       }
 
                     }
                   }
-                }
 
-                break;
+                  GUILayout.EndHorizontal();
+                  break;
 
-              case Effect.Type.GoTo:
-                UpdateMessagesList(context);
-                var messageContent = string.Empty;
+                case Condition.Type.DoesNotHaveTheItem:
+                  GUILayout.BeginHorizontal();
+                  UpdateItemList();
 
-                if (effect.goTo.GetMessage(context) != null)
-                {
-                  messageContent = DictionariesHelper.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.options.currentLanguage).value;
-                }
+                  var itemNameDont = "";
 
-                EditorGUI.BeginChangeCheck();
-
-                messageContent = GUIHelper.Popup("Message: ", messageContent, messageList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Column col in context.columns)
+                  if (itemList.Length > 0)
                   {
-                    foreach (Message msg in col.messages)
+                    itemNameDont = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
+                  }
+
+                  EditorGUI.BeginChangeCheck();
+
+                  itemNameDont = GUIHelper.Popup("Does not have the item ", itemNameDont, itemList);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage).value == messageContent)
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemNameDont)
                       {
-                        effect.goTo.uniqueId = msg.GetUniqueId();
+                        condition.itemId = item.id;
                         break;
                       }
 
                     }
                   }
-                }
 
-                break;
+                  GUILayout.EndHorizontal();
+                  break;
 
-              case Effect.Type.SetAnimatorAttribute:
+                case Condition.Type.ItemIsEquipped:
+                  GUILayout.BeginHorizontal();
+                  UpdateItemList();
 
-                effect.animatorAttributeSetter.animator = (RuntimeAnimatorController) Resources.Load(effect.animatorAttributeSetter.animatorPath);
+                  var equippedItemName = "";
 
-                if (effect.animatorAttributeSetter.animator == null && effect.animatorAttributeSetter.animatorPath != string.Empty)
-                {
-                  Debug.LogWarning("Cannot find the file \"" + effect.animatorAttributeSetter.animatorPath + "\" in Resources folder.");
-                }
-
-                GUILayout.Label("Animator Controller: ");
-                EditorGUI.BeginChangeCheck();
-
-                effect.animatorAttributeSetter.animator = (RuntimeAnimatorController) EditorGUILayout.ObjectField(effect.animatorAttributeSetter.animator,
-                  typeof(RuntimeAnimatorController), false);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  if (effect.animatorAttributeSetter.animator != null)
+                  if (itemList.Length > 0)
                   {
-                    var str = AssetDatabase.GetAssetPath(effect.animatorAttributeSetter.animator).Replace("Resources/", "¬");
-                    var strings = str.Split('¬');
-                    str = strings[1].Replace(".controller", "");
-                    effect.animatorAttributeSetter.animatorPath = str;
+                    equippedItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
                   }
 
-                  else
+                  EditorGUI.BeginChangeCheck();
+
+                  equippedItemName = GUIHelper.Popup("Item is equipped ", equippedItemName, itemList);
+
+                  if (EditorGUI.EndChangeCheck())
                   {
-                    effect.animatorAttributeSetter.animatorPath = string.Empty;
-                  }
-                }
-
-                GUILayout.BeginHorizontal();
-
-                GUILayout.Label("Type: ");
-                effect.animatorAttributeSetter.type = (AnimatorControllerParameterType) EditorGUILayout.EnumPopup(effect.animatorAttributeSetter.type);
-
-                EditorGUI.BeginChangeCheck();
-
-                GUILayout.Label("Name: ");
-                effect.animatorAttributeSetter.name = EditorGUILayout.TextField(effect.animatorAttributeSetter.name);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  effect.animatorAttributeSetter.setTrigger = Animator.StringToHash(effect.animatorAttributeSetter.name);
-                }
-
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-
-                switch (effect.animatorAttributeSetter.type)
-                {
-                  case AnimatorControllerParameterType.Bool:
-                    string selected = effect.animatorAttributeSetter.setBool.ToString();
-
-                    EditorGUI.BeginChangeCheck();
-
-                    selected = GUIHelper.Popup("Set boolean to ", selected, booleanArray);
-
-                    if (EditorGUI.EndChangeCheck())
+                    foreach (Item item in diplomataEditor.inventory.items)
                     {
 
-                      if (selected == "True")
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == equippedItemName)
                       {
-                        effect.animatorAttributeSetter.setBool = true;
-                      }
-
-                      else
-                      {
-                        effect.animatorAttributeSetter.setBool = false;
+                        condition.itemId = item.id;
+                        break;
                       }
 
                     }
+                  }
 
-                    break;
+                  GUILayout.EndHorizontal();
+                  break;
 
-                  case AnimatorControllerParameterType.Float:
-                    GUILayout.Label("Set float to ");
-                    effect.animatorAttributeSetter.setFloat = EditorGUILayout.FloatField(effect.animatorAttributeSetter.setFloat);
-                    break;
+                case Condition.Type.ItemWasDiscarded:
+                  GUILayout.BeginHorizontal();
+                  UpdateItemList();
 
-                  case AnimatorControllerParameterType.Int:
-                    GUILayout.Label("Set integer to ");
-                    effect.animatorAttributeSetter.setInt = EditorGUILayout.IntField(effect.animatorAttributeSetter.setInt);
-                    break;
+                  var discardedItemName = "";
 
-                  case AnimatorControllerParameterType.Trigger:
-                    GUILayout.Label("Pull the trigger of [ " + effect.animatorAttributeSetter.name + " ]");
-                    break;
-                }
+                  if (itemList.Length > 0)
+                  {
+                    discardedItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, condition.itemId).name, diplomataEditor.options.currentLanguage).value;
+                  }
 
-                GUILayout.EndHorizontal();
+                  EditorGUI.BeginChangeCheck();
 
-                break;
+                  discardedItemName = GUIHelper.Popup("Item was discarded ", discardedItemName, itemList);
 
-              case Effect.Type.GetItem:
-                GUILayout.BeginHorizontal();
-                UpdateItemList();
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    foreach (Item item in diplomataEditor.inventory.items)
+                    {
 
-                var itemName = "";
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == discardedItemName)
+                      {
+                        condition.itemId = item.id;
+                        break;
+                      }
 
-                if (itemList.Length > 0)
-                {
-                  itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
-                }
+                    }
+                  }
 
-                EditorGUI.BeginChangeCheck();
+                  GUILayout.EndHorizontal();
+                  break;
 
-                itemName = GUIHelper.Popup("Get item ", itemName, itemList);
+                case Condition.Type.GlobalFlagEqualTo:
+                  UpdateGlobalFlagsList();
 
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Item item in diplomataEditor.inventory.items)
+                  condition.globalFlag.name = GUIHelper.Popup("Flag: ", condition.globalFlag.name, globalFlagsList);
+
+                  string selected = condition.globalFlag.value.ToString();
+
+                  EditorGUI.BeginChangeCheck();
+
+                  selected = GUIHelper.Popup("is ", selected, booleanArray);
+
+                  if (EditorGUI.EndChangeCheck())
                   {
 
-                    if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemName)
+                    if (selected == "True")
                     {
-                      effect.itemId = item.id;
-                      break;
+                      condition.globalFlag.value = true;
+                    }
+
+                    else
+                    {
+                      condition.globalFlag.value = false;
                     }
 
                   }
-                }
 
-                GUILayout.EndHorizontal();
-                break;
+                  break;
+              }
 
-              case Effect.Type.DiscardItem:
-                GUILayout.BeginHorizontal();
-                UpdateItemList();
+              if (GUILayout.Button("Delete Condition", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+              {
+                message.conditions = ArrayHelper.Remove(message.conditions, condition);
+                diplomataEditor.Save(talkable, folderName);
+              }
 
-                var discardItemName = "";
-
-                if (itemList.Length > 0)
-                {
-                  discardItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
-                }
-
-                EditorGUI.BeginChangeCheck();
-
-                discardItemName = GUIHelper.Popup("Discard item ", discardItemName, itemList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Item item in diplomataEditor.inventory.items)
-                  {
-
-                    if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == discardItemName)
-                    {
-                      effect.itemId = item.id;
-                      break;
-                    }
-
-                  }
-                }
-
-                GUILayout.EndHorizontal();
-                break;
-
-              case Effect.Type.EquipItem:
-                GUILayout.BeginHorizontal();
-                UpdateItemList();
-
-                var equipItemName = "";
-
-                if (itemList.Length > 0)
-                {
-                  equipItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
-                }
-
-                EditorGUI.BeginChangeCheck();
-
-                equipItemName = GUIHelper.Popup("Discard item ", equipItemName, itemList);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                  foreach (Item item in diplomataEditor.inventory.items)
-                  {
-
-                    if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == equipItemName)
-                    {
-                      effect.itemId = item.id;
-                      break;
-                    }
-
-                  }
-                }
-
-                GUILayout.EndHorizontal();
-                break;
-
-              case Effect.Type.SetGlobalFlag:
-                UpdateGlobalFlagsList();
-
-                effect.globalFlag.name = GUIHelper.Popup("Flag: ", effect.globalFlag.name, globalFlagsList);
-
-                string effectSelected = effect.globalFlag.value.ToString();
-
-                EditorGUI.BeginChangeCheck();
-
-                effectSelected = GUIHelper.Popup(" set to ", effectSelected, booleanArray);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-
-                  if (effectSelected == "True")
-                  {
-                    effect.globalFlag.value = true;
-                  }
-
-                  else
-                  {
-                    effect.globalFlag.value = false;
-                  }
-
-                }
-
-                break;
+              GUIHelper.Separator();
             }
 
-            if (GUILayout.Button("Delete Effect", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            if (GUILayout.Button("Add Condition", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              message.effects = ArrayHelper.Remove(message.effects, effect);
+              message.conditions = ArrayHelper.Add(message.conditions, new Condition());
               diplomataEditor.Save(talkable, folderName);
             }
 
+            break;
+
+          case MessageEditorState.Effects:
+
+            GUILayout.Label("<b>Effects</b>", GUIHelper.labelStyle);
+            EditorGUILayout.Separator();
+
+            if (GUILayout.Button("< Back", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+            {
+              context.messageEditorState = MessageEditorState.Normal;
+            }
+
             GUIHelper.Separator();
-          }
 
-          if (GUILayout.Button("Add Effect", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+            var k = 0;
+
+            foreach (Effect effect in message.effects)
+            {
+
+              GUIHelper.labelStyle.fontSize = 11;
+              GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
+              GUILayout.Label("<i>Effect " + k + "</i>\n", GUIHelper.labelStyle);
+              k++;
+
+              GUILayout.BeginHorizontal();
+              GUILayout.Label("Type: ");
+              effect.type = (Effect.Type) EditorGUILayout.EnumPopup(effect.type);
+              GUILayout.EndHorizontal();
+
+              switch (effect.type)
+              {
+                case Effect.Type.EndOfContext:
+
+                  UpdateContextList();
+                  var contextName = string.Empty;
+
+                  if (effect.endOfContext.talkableName != null)
+                  {
+                    Context contextToEnd = effect.endOfContext.GetContext(diplomataEditor.characters, diplomataEditor.interactables);
+                    if (contextToEnd != null)
+                    {
+                      contextName = DictionariesHelper.ContainsKey(contextToEnd.name, diplomataEditor.options.currentLanguage).value;
+                    }
+                  }
+
+                  EditorGUI.BeginChangeCheck();
+
+                  contextName = GUIHelper.Popup("Context: ", contextName, contextList);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    foreach (Character tempCharacter in diplomataEditor.characters)
+                    {
+                      foreach (Context ctx in tempCharacter.contexts)
+                      {
+
+                        if (DictionariesHelper.ContainsKey(ctx.name, diplomataEditor.options.currentLanguage).value == contextName)
+                        {
+                          effect.endOfContext.Set(tempCharacter.name, ctx.id);
+                          break;
+                        }
+
+                      }
+                    }
+                  }
+
+                  break;
+
+                case Effect.Type.GoTo:
+                  UpdateMessagesList(context);
+                  var messageContent = string.Empty;
+
+                  if (effect.goTo.GetMessage(context) != null)
+                  {
+                    messageContent = DictionariesHelper.ContainsKey(effect.goTo.GetMessage(context).content, diplomataEditor.options.currentLanguage).value;
+                  }
+
+                  EditorGUI.BeginChangeCheck();
+
+                  messageContent = GUIHelper.Popup("Message: ", messageContent, messageList);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    foreach (Column col in context.columns)
+                    {
+                      foreach (Message msg in col.messages)
+                      {
+
+                        if (DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage).value == messageContent)
+                        {
+                          effect.goTo.uniqueId = msg.GetUniqueId();
+                          break;
+                        }
+
+                      }
+                    }
+                  }
+
+                  break;
+
+                case Effect.Type.SetAnimatorAttribute:
+
+                  effect.animatorAttributeSetter.animator = (RuntimeAnimatorController) Resources.Load(effect.animatorAttributeSetter.animatorPath);
+
+                  if (effect.animatorAttributeSetter.animator == null && effect.animatorAttributeSetter.animatorPath != string.Empty)
+                  {
+                    Debug.LogWarning("Cannot find the file \"" + effect.animatorAttributeSetter.animatorPath + "\" in Resources folder.");
+                  }
+
+                  GUILayout.Label("Animator Controller: ");
+                  EditorGUI.BeginChangeCheck();
+
+                  effect.animatorAttributeSetter.animator = (RuntimeAnimatorController) EditorGUILayout.ObjectField(effect.animatorAttributeSetter.animator,
+                    typeof(RuntimeAnimatorController), false);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    if (effect.animatorAttributeSetter.animator != null)
+                    {
+                      var str = AssetDatabase.GetAssetPath(effect.animatorAttributeSetter.animator).Replace("Resources/", "¬");
+                      var strings = str.Split('¬');
+                      str = strings[1].Replace(".controller", "");
+                      effect.animatorAttributeSetter.animatorPath = str;
+                    }
+
+                    else
+                    {
+                      effect.animatorAttributeSetter.animatorPath = string.Empty;
+                    }
+                  }
+
+                  GUILayout.BeginHorizontal();
+
+                  GUILayout.Label("Type: ");
+                  effect.animatorAttributeSetter.type = (AnimatorControllerParameterType) EditorGUILayout.EnumPopup(effect.animatorAttributeSetter.type);
+
+                  EditorGUI.BeginChangeCheck();
+
+                  GUILayout.Label("Name: ");
+                  effect.animatorAttributeSetter.name = EditorGUILayout.TextField(effect.animatorAttributeSetter.name);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    effect.animatorAttributeSetter.setTrigger = Animator.StringToHash(effect.animatorAttributeSetter.name);
+                  }
+
+                  GUILayout.EndHorizontal();
+
+                  GUILayout.BeginHorizontal();
+
+                  switch (effect.animatorAttributeSetter.type)
+                  {
+                    case AnimatorControllerParameterType.Bool:
+                      string selected = effect.animatorAttributeSetter.setBool.ToString();
+
+                      EditorGUI.BeginChangeCheck();
+
+                      selected = GUIHelper.Popup("Set boolean to ", selected, booleanArray);
+
+                      if (EditorGUI.EndChangeCheck())
+                      {
+
+                        if (selected == "True")
+                        {
+                          effect.animatorAttributeSetter.setBool = true;
+                        }
+
+                        else
+                        {
+                          effect.animatorAttributeSetter.setBool = false;
+                        }
+
+                      }
+
+                      break;
+
+                    case AnimatorControllerParameterType.Float:
+                      GUILayout.Label("Set float to ");
+                      effect.animatorAttributeSetter.setFloat = EditorGUILayout.FloatField(effect.animatorAttributeSetter.setFloat);
+                      break;
+
+                    case AnimatorControllerParameterType.Int:
+                      GUILayout.Label("Set integer to ");
+                      effect.animatorAttributeSetter.setInt = EditorGUILayout.IntField(effect.animatorAttributeSetter.setInt);
+                      break;
+
+                    case AnimatorControllerParameterType.Trigger:
+                      GUILayout.Label("Pull the trigger of [ " + effect.animatorAttributeSetter.name + " ]");
+                      break;
+                  }
+
+                  GUILayout.EndHorizontal();
+
+                  break;
+
+                case Effect.Type.GetItem:
+                  GUILayout.BeginHorizontal();
+                  UpdateItemList();
+
+                  var itemName = "";
+
+                  if (itemList.Length > 0)
+                  {
+                    itemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
+                  }
+
+                  EditorGUI.BeginChangeCheck();
+
+                  itemName = GUIHelper.Popup("Get item ", itemName, itemList);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    foreach (Item item in diplomataEditor.inventory.items)
+                    {
+
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == itemName)
+                      {
+                        effect.itemId = item.id;
+                        break;
+                      }
+
+                    }
+                  }
+
+                  GUILayout.EndHorizontal();
+                  break;
+
+                case Effect.Type.DiscardItem:
+                  GUILayout.BeginHorizontal();
+                  UpdateItemList();
+
+                  var discardItemName = "";
+
+                  if (itemList.Length > 0)
+                  {
+                    discardItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
+                  }
+
+                  EditorGUI.BeginChangeCheck();
+
+                  discardItemName = GUIHelper.Popup("Discard item ", discardItemName, itemList);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    foreach (Item item in diplomataEditor.inventory.items)
+                    {
+
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == discardItemName)
+                      {
+                        effect.itemId = item.id;
+                        break;
+                      }
+
+                    }
+                  }
+
+                  GUILayout.EndHorizontal();
+                  break;
+
+                case Effect.Type.EquipItem:
+                  GUILayout.BeginHorizontal();
+                  UpdateItemList();
+
+                  var equipItemName = "";
+
+                  if (itemList.Length > 0)
+                  {
+                    equipItemName = DictionariesHelper.ContainsKey(Item.Find(diplomataEditor.inventory.items, effect.itemId).name, diplomataEditor.options.currentLanguage).value;
+                  }
+
+                  EditorGUI.BeginChangeCheck();
+
+                  equipItemName = GUIHelper.Popup("Discard item ", equipItemName, itemList);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    foreach (Item item in diplomataEditor.inventory.items)
+                    {
+
+                      if (DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value == equipItemName)
+                      {
+                        effect.itemId = item.id;
+                        break;
+                      }
+
+                    }
+                  }
+
+                  GUILayout.EndHorizontal();
+                  break;
+
+                case Effect.Type.SetGlobalFlag:
+                  UpdateGlobalFlagsList();
+
+                  effect.globalFlag.name = GUIHelper.Popup("Flag: ", effect.globalFlag.name, globalFlagsList);
+
+                  string effectSelected = effect.globalFlag.value.ToString();
+
+                  EditorGUI.BeginChangeCheck();
+
+                  effectSelected = GUIHelper.Popup(" set to ", effectSelected, booleanArray);
+
+                  if (EditorGUI.EndChangeCheck())
+                  {
+
+                    if (effectSelected == "True")
+                    {
+                      effect.globalFlag.value = true;
+                    }
+
+                    else
+                    {
+                      effect.globalFlag.value = false;
+                    }
+
+                  }
+
+                  break;
+              }
+
+              if (GUILayout.Button("Delete Effect", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+              {
+                message.effects = ArrayHelper.Remove(message.effects, effect);
+                diplomataEditor.Save(talkable, folderName);
+              }
+
+              GUIHelper.Separator();
+            }
+
+            if (GUILayout.Button("Add Effect", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+            {
+              message.effects = ArrayHelper.Add(message.effects, new Effect(talkable.name));
+              diplomataEditor.Save(talkable, folderName);
+            }
+
+            break;
+        }
+
+      }
+
+      GUILayout.Space(GUIHelper.MARGIN);
+
+      if (GUILayout.Button("Remove Empty Columns", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+      {
+        context.columns = Column.RemoveEmptyColumns(context.columns);
+        context.messageEditorState = MessageEditorState.None;
+
+        diplomataEditor.Save(talkable, folderName);
+      }
+
+      EditorGUILayout.EndScrollView();
+    }
+
+    public static void MoveColumnsToRight(Context context, int toIndex)
+    {
+      for (int i = context.columns.Length - 1; i >= toIndex; i--)
+      {
+        var col = Column.Find(context, i);
+        var rightCol = Column.Find(context, i + 1);
+
+        foreach (Message msg in col.messages)
+        {
+          msg.columnId += 1;
+
+          msg.id = rightCol.messages.Length;
+
+          rightCol.messages = ArrayHelper.Add(rightCol.messages, msg);
+          col.messages = ArrayHelper.Remove(col.messages, msg);
+
+          col.messages = Message.ResetIDs(col.messages);
+          rightCol.messages = Message.ResetIDs(rightCol.messages);
+
+          rightCol.emitter = col.emitter;
+        }
+      }
+    }
+
+    public static void UpdateCharacterList()
+    {
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+
+      characterList = new string[0];
+
+      foreach (string str in diplomataEditor.options.characterList)
+      {
+        if (str != diplomataEditor.options.playerCharacterName)
+        {
+          characterList = ArrayHelper.Add(characterList, str);
+        }
+      }
+    }
+
+    public static void UpdateItemList()
+    {
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+
+      itemList = new string[0];
+
+      foreach (Item item in diplomataEditor.inventory.items)
+      {
+        itemList = ArrayHelper.Add(itemList, DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value);
+      }
+    }
+
+    public static void UpdateMessagesList(Context context)
+    {
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+
+      messageList = new string[0];
+
+      foreach (Column col in context.columns)
+      {
+        foreach (Message msg in col.messages)
+        {
+          LanguageDictionary content = DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage);
+
+          if (content == null)
           {
-            message.effects = ArrayHelper.Add(message.effects, new Effect(talkable.name));
-            diplomataEditor.Save(talkable, folderName);
+            msg.content = ArrayHelper.Add(msg.content, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
+            content = DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage);
           }
 
-          break;
-      }
-
-    }
-
-    GUILayout.Space(GUIHelper.MARGIN);
-
-    if (GUILayout.Button("Remove Empty Columns", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-    {
-      context.columns = Column.RemoveEmptyColumns(context.columns);
-      context.messageEditorState = MessageEditorState.None;
-
-      diplomataEditor.Save(talkable, folderName);
-    }
-
-    EditorGUILayout.EndScrollView();
-  }
-
-  public static void MoveColumnsToRight(Context context, int toIndex)
-  {
-    for (int i = context.columns.Length - 1; i >= toIndex; i--)
-    {
-      var col = Column.Find(context, i);
-      var rightCol = Column.Find(context, i + 1);
-
-      foreach (Message msg in col.messages)
-      {
-        msg.columnId += 1;
-
-        msg.id = rightCol.messages.Length;
-
-        rightCol.messages = ArrayHelper.Add(rightCol.messages, msg);
-        col.messages = ArrayHelper.Remove(col.messages, msg);
-
-        col.messages = Message.ResetIDs(col.messages);
-        rightCol.messages = Message.ResetIDs(rightCol.messages);
-
-        rightCol.emitter = col.emitter;
-      }
-    }
-  }
-
-  public static void UpdateCharacterList()
-  {
-    var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-
-    characterList = new string[0];
-
-    foreach (string str in diplomataEditor.options.characterList)
-    {
-      if (str != diplomataEditor.options.playerCharacterName)
-      {
-        characterList = ArrayHelper.Add(characterList, str);
-      }
-    }
-  }
-
-  public static void UpdateItemList()
-  {
-    var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-
-    itemList = new string[0];
-
-    foreach (Item item in diplomataEditor.inventory.items)
-    {
-      itemList = ArrayHelper.Add(itemList, DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage).value);
-    }
-  }
-
-  public static void UpdateMessagesList(Context context)
-  {
-    var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-
-    messageList = new string[0];
-
-    foreach (Column col in context.columns)
-    {
-      foreach (Message msg in col.messages)
-      {
-        LanguageDictionary content = DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage);
-
-        if (content == null)
-        {
-          msg.content = ArrayHelper.Add(msg.content, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
-          content = DictionariesHelper.ContainsKey(msg.content, diplomataEditor.options.currentLanguage);
+          messageList = ArrayHelper.Add(messageList, content.value);
         }
-
-        messageList = ArrayHelper.Add(messageList, content.value);
       }
     }
-  }
 
-  public static void UpdateContextList()
-  {
-    var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-
-    contextList = new string[0];
-
-    foreach (Character character in diplomataEditor.characters)
+    public static void UpdateContextList()
     {
-      foreach (Context context in character.contexts)
+      var diplomataEditor = TalkableMessagesManager.diplomataEditor;
+
+      contextList = new string[0];
+
+      foreach (Character character in diplomataEditor.characters)
       {
-        LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
-
-        if (contextName == null)
+        foreach (Context context in character.contexts)
         {
-          context.name = ArrayHelper.Add(context.name, new LanguageDictionary(diplomataEditor.options.currentLanguage, "Name [Change clicking on Edit]"));
-          contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
+          LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
+
+          if (contextName == null)
+          {
+            context.name = ArrayHelper.Add(context.name, new LanguageDictionary(diplomataEditor.options.currentLanguage, "Name [Change clicking on Edit]"));
+            contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
+          }
+
+          contextList = ArrayHelper.Add(contextList, contextName.value);
         }
-
-        contextList = ArrayHelper.Add(contextList, contextName.value);
       }
-    }
 
-    foreach (Interactable interactable in diplomataEditor.interactables)
-    {
-      foreach (Context context in interactable.contexts)
+      foreach (Interactable interactable in diplomataEditor.interactables)
       {
-        LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
-
-        if (contextName == null)
+        foreach (Context context in interactable.contexts)
         {
-          context.name = ArrayHelper.Add(context.name, new LanguageDictionary(diplomataEditor.options.currentLanguage, "Name [Change clicking on Edit]"));
-          contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
-        }
+          LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
 
-        contextList = ArrayHelper.Add(contextList, contextName.value);
+          if (contextName == null)
+          {
+            context.name = ArrayHelper.Add(context.name, new LanguageDictionary(diplomataEditor.options.currentLanguage, "Name [Change clicking on Edit]"));
+            contextName = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
+          }
+
+          contextList = ArrayHelper.Add(contextList, contextName.value);
+        }
+      }
+    }
+
+    public static void UpdateGlobalFlagsList()
+    {
+      globalFlagsList = new string[0];
+
+      foreach (Flag flag in TalkableMessagesManager.diplomataEditor.globalFlags.flags)
+      {
+        globalFlagsList = ArrayHelper.Add(globalFlagsList, flag.name);
+      }
+    }
+
+    public static void UpdateLabelsList(Context context)
+    {
+      labelsList = new string[0];
+
+      foreach (Label label in context.labels)
+      {
+        labelsList = ArrayHelper.Add(labelsList, label.name);
       }
     }
   }
-
-  public static void UpdateGlobalFlagsList()
-  {
-    globalFlagsList = new string[0];
-
-    foreach (Flag flag in TalkableMessagesManager.diplomataEditor.globalFlags.flags)
-    {
-      globalFlagsList = ArrayHelper.Add(globalFlagsList, flag.name);
-    }
-  }
-
-  public static void UpdateLabelsList(Context context)
-  {
-    labelsList = new string[0];
-
-    foreach (Label label in context.labels)
-    {
-      labelsList = ArrayHelper.Add(labelsList, label.name);
-    }
-  }
-}
 }

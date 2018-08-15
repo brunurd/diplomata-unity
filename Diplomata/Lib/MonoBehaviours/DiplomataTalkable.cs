@@ -190,7 +190,8 @@ namespace Diplomata
                           break;
 
                         case Condition.Type.InfluenceEqualTo:
-                          if (talkable.GetType() == typeof(Talkable)) {
+                          if (talkable.GetType() == typeof(Talkable))
+                          {
                             Character character = (Character) talkable;
                             if (character.influence == condition.comparedInfluence)
                             {
@@ -205,7 +206,8 @@ namespace Diplomata
                           break;
 
                         case Condition.Type.InfluenceGreaterThan:
-                          if (talkable.GetType() == typeof(Talkable)) {
+                          if (talkable.GetType() == typeof(Talkable))
+                          {
                             Character character = (Character) talkable;
                             if (character.influence <= condition.comparedInfluence)
                             {
@@ -215,7 +217,8 @@ namespace Diplomata
                           break;
 
                         case Condition.Type.InfluenceLessThan:
-                          if (talkable.GetType() == typeof(Talkable)) {
+                          if (talkable.GetType() == typeof(Talkable))
+                          {
                             Character character = (Character) talkable;
                             if (character.influence >= condition.comparedInfluence)
                             {
@@ -705,11 +708,8 @@ namespace Diplomata
           switch (effect.type)
           {
             case Effect.Type.EndOfContext:
-              if (effect.endOfContext.GetContext(DiplomataData.characters) != null)
-                effect.endOfContext.GetContext(DiplomataData.characters).happened = true;
-              
-              if (effect.endOfContext.GetContext(DiplomataData.interactables) != null)
-                effect.endOfContext.GetContext(DiplomataData.interactables).happened = true;
+              if (effect.endOfContext.GetContext(DiplomataData.characters, DiplomataData.interactables) != null)
+                effect.endOfContext.GetContext(DiplomataData.characters, DiplomataData.interactables).happened = true;
 
               if (currentContext.talkableName == effect.endOfContext.talkableName && currentContext.id == effect.endOfContext.contextId)
               {

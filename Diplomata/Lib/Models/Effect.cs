@@ -1,6 +1,6 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Diplomata.Models
 {
@@ -74,14 +74,13 @@ namespace Diplomata.Models
         this.contextId = contextId;
       }
 
-      public Context GetContext(List<Character> characters)
+      public Context GetContext(List<Character> characters, List<Interactable> interactables)
       {
-        return Context.Find(Character.Find(characters, talkableName), contextId);
-      }
-
-      public Context GetContext(List<Interactable> interactables)
-      {
-        return Context.Find(Interactable.Find(interactables, talkableName), contextId);
+        if (Context.Find(Character.Find(characters, talkableName), contextId) != null)
+          return Context.Find(Character.Find(characters, talkableName), contextId);
+        if (Context.Find(Interactable.Find(interactables, talkableName), contextId) != null)
+          return Context.Find(Interactable.Find(interactables, talkableName), contextId);
+        return null;
       }
     }
 

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
+using UnityEngine;
 
 namespace Diplomata.Models
 {
@@ -11,7 +11,7 @@ namespace Diplomata.Models
   {
     public AttributeDictionary[] attributes;
     public byte influence = 50;
-    
+
     public Character(string name) : base(name)
     {
       SetAttributes();

@@ -36,7 +36,7 @@ namespace Diplomata.GameProgress
     public void SaveCharacters()
     {
       characters = new CharacterProgress[0];
-      
+
       foreach (Character character in DiplomataData.characters)
       {
         var newCharacter = new CharacterProgress(character.name, character.influence);

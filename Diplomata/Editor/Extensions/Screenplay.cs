@@ -2,8 +2,8 @@ using System;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using DiplomataEditor;
-using DiplomataEditor.Windows;
 using DiplomataEditor.Helpers;
+using DiplomataEditor.Windows;
 using RTFExporter;
 using UnityEditor;
 
