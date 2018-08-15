@@ -8,15 +8,19 @@ namespace Diplomata
 {
   public class DiplomataCharacter : DiplomataTalkable
   {
-    private void Awake()
+    private void Start()
     {
-      onStart = () =>
+      choices = new List<Message>();
+      controlIndexes = new Dictionary<string, int>();
+
+      controlIndexes.Add("context", 0);
+      controlIndexes.Add("column", 0);
+      controlIndexes.Add("message", 0);
+
+      if (talkable != null && Application.isPlaying)
       {
-        if (talkable != null && Application.isPlaying)
-        {
-          talkable = (Character) Character.Find(DiplomataData.characters, talkable.name);
-        }
-      };
+        talkable = (Character) Character.Find(DiplomataData.characters, talkable.name);
+      }
     }
 
     public void ChooseMessage(string content)

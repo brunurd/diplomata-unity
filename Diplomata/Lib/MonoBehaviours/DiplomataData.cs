@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Diplomata.GameProgress;
-using Diplomata.Interfaces;
 using Diplomata.Models;
 using UnityEngine;
 
@@ -18,9 +17,6 @@ namespace Diplomata
     public static List<Interactable> interactables = new List<Interactable>();
     public static Inventory inventory = new Inventory();
     public static GlobalFlags globalFlags = new GlobalFlags();
-    public static IEnumerable<ITalk> iTalks;
-    public static IEnumerable<IChoice> iChoices;
-    public static IEnumerable<IMessage> iMessages;
     public static bool isTalking;
 
     private void Awake()
@@ -86,10 +82,6 @@ namespace Diplomata
 
       gameProgress = new GameProgressManager();
       gameProgress.Start();
-
-      iTalks = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>().OfType<ITalk>();
-      iChoices = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>().OfType<IChoice>();
-      iMessages = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>().OfType<IMessage>();
     }
   }
 }

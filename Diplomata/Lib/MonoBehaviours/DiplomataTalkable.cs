@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Diplomata.Dictionaries;
 using Diplomata.GameProgress;
 using Diplomata.Helpers;
-using Diplomata.Interfaces;
 using Diplomata.Models;
 using UnityEngine;
 
@@ -17,7 +16,7 @@ namespace Diplomata
   [DisallowMultipleComponent]
   public class DiplomataTalkable : MonoBehaviour
   {
-    protected Action onStart;
+    // protected Action onStart;
 
     public List<Message> choices;
     public Talkable talkable;
@@ -25,20 +24,8 @@ namespace Diplomata
     public Message currentMessage;
     public bool choiceMenu;
     private Context currentContext;
-    private Dictionary<string, int> controlIndexes;
+    protected Dictionary<string, int> controlIndexes;
     private string lastUniqueId;
-
-    protected void Start()
-    {
-      choices = new List<Message>();
-      controlIndexes = new Dictionary<string, int>();
-
-      controlIndexes.Add("context", 0);
-      controlIndexes.Add("column", 0);
-      controlIndexes.Add("message", 0);
-
-      onStart();
-    }
 
     private void OnEnable()
     {
@@ -80,8 +67,6 @@ namespace Diplomata
         currentMessage = null;
 
         choices = new List<Message>();
-
-        foreach (ITalk iTalk in DiplomataData.iTalks) iTalk.OnStart();
 
         for (controlIndexes["context"] = 0; controlIndexes["context"] < talkable.contexts.Length; controlIndexes["context"]++)
         {
@@ -453,7 +438,6 @@ namespace Diplomata
       {
         if (currentMessage != null)
         {
-          foreach (IMessage iMessage in DiplomataData.iMessages) iMessage.OnSubStart();
           var talkLog = TalkLog.Find(DiplomataData.gameProgress.talkLog, talkable.name);
 
           if (talkLog == null)
@@ -504,7 +488,6 @@ namespace Diplomata
 
             if (audioSource != null)
             {
-              foreach (IMessage iMessage in DiplomataData.iMessages) iMessage.OnDubStart();
               audioSource.PlayOneShot(currentMessage.audioClip, DiplomataData.gameProgress.options.volumeScale);
             }
 
@@ -691,7 +674,6 @@ namespace Diplomata
 
     public void EndTalk()
     {
-      foreach (ITalk iTalk in DiplomataData.iTalks) iTalk.OnEnd();
       DiplomataData.isTalking = false;
     }
 
@@ -849,8 +831,6 @@ namespace Diplomata
           currentMessage.alreadySpoked = true;
         }
       }
-
-      foreach (IMessage iMessage in DiplomataData.iMessages) iMessage.OnEnd();
 
       if (hasFate)
       {
