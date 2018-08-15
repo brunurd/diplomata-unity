@@ -2,4 +2,9 @@
 *.unitypackage
 
 # Unity metas
+Demo.meta
+Diplomata.meta
+Textures.meta
+LICENSE.md.meta
+README.md.meta
 /[Dd]iplomata/**/*.meta
