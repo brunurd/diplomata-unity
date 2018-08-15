@@ -453,6 +453,7 @@ namespace Diplomata
       {
         if (currentMessage != null)
         {
+          foreach (IMessage iMessage in DiplomataData.iMessages) iMessage.OnSubStart();
           var talkLog = TalkLog.Find(DiplomataData.gameProgress.talkLog, talkable.name);
 
           if (talkLog == null)
@@ -503,6 +504,7 @@ namespace Diplomata
 
             if (audioSource != null)
             {
+              foreach (IMessage iMessage in DiplomataData.iMessages) iMessage.OnDubStart();
               audioSource.PlayOneShot(currentMessage.audioClip, DiplomataData.gameProgress.options.volumeScale);
             }
 
@@ -763,11 +765,8 @@ namespace Diplomata
                         case AnimatorControllerParameterType.Trigger:
                           animator.SetTrigger(effect.animatorAttributeSetter.name);
                           break;
-
                       }
-
                     }
-
                   }
 
                   else
@@ -850,6 +849,8 @@ namespace Diplomata
           currentMessage.alreadySpoked = true;
         }
       }
+
+      foreach (IMessage iMessage in DiplomataData.iMessages) iMessage.OnEnd();
 
       if (hasFate)
       {

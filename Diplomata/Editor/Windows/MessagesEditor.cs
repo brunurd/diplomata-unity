@@ -303,7 +303,9 @@ namespace DiplomataEditor.Windows
                       if (talkable.GetType() == typeof(Character))
                       {
                         text += condition.DisplayCompareInfluence();
-                      } else {
+                      }
+                      else
+                      {
                         text += "Invalid condition.";
                       }
                       break;

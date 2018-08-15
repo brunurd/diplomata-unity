@@ -6,9 +6,9 @@ namespace Diplomata.Interfaces
   public interface IChoice
   {
     void OnStart();
-    void OnUpdate();
-    void OnEnd();
-    void OnChange();
+    // void OnUpdate();
+    // void OnEnd();
+    // void OnChange();
     void OnChoose();
   }
 }

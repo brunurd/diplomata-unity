@@ -5,9 +5,8 @@ namespace Diplomata.Interfaces
   /// </summary>
   public interface IMessage
   {
-    void OnStart();
-    void OnUpdate();
+    void OnSubStart();
+    void OnDubStart();
     void OnEnd();
-    void OnEveryLetter();
   }
 }
