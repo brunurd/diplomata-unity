@@ -51,6 +51,9 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Start the talk
+    /// </summary>
     public void StartTalk()
     {
       if (talkable != null)
@@ -109,6 +112,10 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Internal method to go the next message
+    /// </summary>
+    /// <param name="hasFate">is true if use GoTo effect</param>
     private void Next(bool hasFate)
     {
       if (talkable != null && currentContext != null)
@@ -432,6 +439,10 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Returns the text of the current message
+    /// </summary>
+    /// <returns>The current message</returns>
     public string ShowMessageContentSubtitle()
     {
       if (DiplomataData.isTalking)
@@ -464,6 +475,9 @@ namespace Diplomata
       return string.Empty;
     }
 
+    /// <summary>
+    /// Play the current audio of the current message
+    /// </summary>
     public void PlayMessageAudioContent()
     {
       if (currentMessage != null)
@@ -500,6 +514,9 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Stop the current audio of the current message
+    /// </summary>
     public void StopMessageAudioContent()
     {
       if (currentMessage != null)
@@ -524,6 +541,9 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Apply the current message animator attributes
+    /// </summary>
     public void SetAnimatorAttributes()
     {
       if (currentMessage != null)
@@ -593,6 +613,9 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Reset the animator attributes
+    /// </summary>
     public void ResetAnimators()
     {
       var animators = FindObjectsOfType(typeof(Animator));
@@ -633,6 +656,10 @@ namespace Diplomata
 
     }
 
+    /// <summary>
+    /// Change the sprite of the current message
+    /// </summary>
+    /// <param name="pivot"></param>
     public void SwapStaticSprite(Vector2 pivot)
     {
       if (currentMessage != null)
@@ -654,11 +681,18 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Change the sprite of the current message
+    /// </summary>
     public void SwapStaticSprite()
     {
       SwapStaticSprite(new Vector2(0.5f, 0.5f));
     }
 
+    /// <summary>
+    /// Return if the current message is the last
+    /// </summary>
+    /// <returns></returns>
     public bool IsLastMessage()
     {
       if (controlIndexes["column"] < currentContext.columns.Length - 1)
@@ -672,11 +706,17 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Internally end the talk
+    /// </summary>
     public void EndTalk()
     {
       DiplomataData.isTalking = false;
     }
 
+    /// <summary>
+    /// The method need to go the next message
+    /// </summary>
     public void NextMessage()
     {
       var hasFate = false;
@@ -850,6 +890,10 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Get all the choices in a list
+    /// </summary>
+    /// <returns>A list with all the choices of the current column</returns>
     public List<string> MessageChoices()
     {
       List<string> choicesText = new List<string>();
@@ -892,6 +936,9 @@ namespace Diplomata
       return choicesText;
     }
 
+    /// <summary>
+    /// Execute the onStart events of the effect
+    /// </summary>
     public void OnStartCallbacks()
     {
       if (currentMessage != null)
@@ -903,6 +950,10 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Check if the emitter is the player character
+    /// </summary>
+    /// <returns>The response flag</returns>
     public bool EmitterIsPlayer()
     {
       if (currentMessage != null)
@@ -916,11 +967,19 @@ namespace Diplomata
       return false;
     }
 
+    /// <summary>
+    /// Get the player name
+    /// </summary>
+    /// <returns>the player name</returns>
     public string PlayerName()
     {
       return DiplomataData.options.playerCharacterName;
     }
 
+    /// <summary>
+    /// Get the current message emitter
+    /// </summary>
+    /// <returns>The name of the emitter</returns>
     public string Emitter()
     {
       if (currentColumn != null)
