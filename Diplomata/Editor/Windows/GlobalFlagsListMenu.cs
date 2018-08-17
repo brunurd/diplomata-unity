@@ -14,7 +14,7 @@ namespace DiplomataEditor.Windows
     private DiplomataEditorData diplomataEditor;
     private string[] booleanArray = new string[] { "True", "False" };
 
-    [MenuItem("Diplomata/Custom Flags")]
+    [MenuItem("Diplomata/Global Flags")]
     static public void Init()
     {
       DiplomataEditorData.Instantiate();

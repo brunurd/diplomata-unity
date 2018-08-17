@@ -105,7 +105,7 @@ namespace Diplomata
       return null;
     }
 
-    public static List<Message> GetMessageByLabel(Context context, string labelName)
+    public static List<Message> GetMessagesByLabel(Context context, string labelName)
     {
       string labelId = null;
       List<Message> messages = new List<Message>();
