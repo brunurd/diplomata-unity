@@ -269,7 +269,7 @@ namespace DiplomataEditor.Windows
             if (context.idFilter)
             {
               text = "<b><i>Id:</i></b>\n\n";
-              text += currentMessage.uniqueId;
+              text += currentMessage.GetUniqueId();
               GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorSub(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
               GUIHelper.textContent.text = text;
               height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);

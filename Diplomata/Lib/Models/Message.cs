@@ -12,7 +12,8 @@ namespace Diplomata.Models
   public class Message
   {
     [SerializeField]
-    public string uniqueId { get; private set; }
+    private string uniqueId;
+    
     public int id;
     public bool isAChoice;
     public bool disposable;

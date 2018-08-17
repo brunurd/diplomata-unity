@@ -94,7 +94,7 @@ namespace Diplomata
           {
             foreach (Message message in column.messages)
             {
-              if (message.uniqueId == uniqueId)
+              if (message.GetUniqueId() == uniqueId)
               {
                 return message;
               }
