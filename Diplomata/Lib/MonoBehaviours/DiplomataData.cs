@@ -83,5 +83,60 @@ namespace Diplomata
       gameProgress = new GameProgressManager();
       gameProgress.Start();
     }
+
+    public static Message GetMessageById(string uniqueId)
+    {
+      foreach (Character character in characters)
+      {
+        foreach (Context context in character.contexts)
+        {
+          foreach (Column column in context.columns)
+          {
+            foreach (Message message in column.messages)
+            {
+              if (message.uniqueId == uniqueId)
+              {
+                return message;
+              }
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    public static List<Message> GetMessageByLabel(Context context, string labelName)
+    {
+      string labelId = null;
+      List<Message> messages = new List<Message>();
+
+      foreach (Label label in context.labels)
+      {
+        if (label.name == labelName)
+        {
+          labelId = label.id;
+        }
+      }
+
+      if (labelId != null)
+      {
+        foreach (Column column in context.columns)
+        {
+          foreach (Message message in column.messages)
+          {
+            if (message.labelId == labelId)
+            {
+              messages.Add(message);
+            }
+          }
+        }
+      }
+      else
+      {
+        Debug.LogWarning("No label with the name \"" + labelName + "\"");
+      }
+
+      return messages;
+    }
   }
 }

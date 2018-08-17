@@ -268,10 +268,13 @@ namespace DiplomataEditor.Windows
 
             if (context.idFilter)
             {
-              text += "<i>[" + currentMessage.columnId + " " + currentMessage.id + "]</i>";
+              text = "<b><i>Id:</i></b>\n\n";
+              text += currentMessage.uniqueId;
+              GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorSub(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
               GUIHelper.textContent.text = text;
               height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
               GUILayout.Label(GUIHelper.textContent, GUIHelper.labelStyle, GUILayout.Width(context.columnWidth), GUILayout.Height(height));
+              GUIHelper.labelStyle.normal.textColor = ColorHelper.ColorAdd(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
             }
 
             if (context.conditionsFilter)

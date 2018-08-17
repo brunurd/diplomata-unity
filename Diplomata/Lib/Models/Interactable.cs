@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Diplomata.Helpers;
+using UnityEngine;
 
 namespace Diplomata.Models
 {
@@ -11,7 +11,7 @@ namespace Diplomata.Models
     public Interactable() : base() {}
 
     public Interactable(string name) : base(name) {}
-    
+
     public static void UpdateList()
     {
       var interactablesFiles = Resources.LoadAll("Diplomata/Interactables/");
