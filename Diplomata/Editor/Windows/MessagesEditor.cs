@@ -453,6 +453,9 @@ namespace DiplomataEditor.Windows
                     case Effect.Type.SetGlobalFlag:
                       text += effect.DisplayGlobalFlagEqualTo();
                       break;
+                    case Effect.Type.EndOfDialogue:
+                      text += effect.DisplayEndOfDialogue();
+                      break;
                   }
 
                   if (k < currentMessage.effects.Length - 1)
@@ -1642,6 +1645,9 @@ namespace DiplomataEditor.Windows
 
                   }
 
+                  break;
+
+                case Effect.Type.EndOfDialogue:
                   break;
               }
 

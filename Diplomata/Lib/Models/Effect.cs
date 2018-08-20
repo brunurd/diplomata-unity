@@ -29,7 +29,8 @@ namespace Diplomata.Models
       GetItem,
       DiscardItem,
       SetGlobalFlag,
-      EquipItem
+      EquipItem,
+      EndOfDialogue
     }
 
     [Serializable]
@@ -153,6 +154,11 @@ namespace Diplomata.Models
     public string DisplayGlobalFlagEqualTo()
     {
       return "\"" + globalFlag.name + "\" set to " + globalFlag.value;
+    }
+
+    public string DisplayEndOfDialogue()
+    {
+      return "End of dialogue.";
     }
   }
 }
