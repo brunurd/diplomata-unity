@@ -12,6 +12,7 @@ namespace Diplomata.Models
     public Flag globalFlag;
     public int itemId;
     public string interactWith;
+    public QuestAndState questAndState;
 
     [NonSerialized]
     public Events custom = new Events();
@@ -30,31 +31,8 @@ namespace Diplomata.Models
       ItemWasDiscarded,
       GlobalFlagEqualTo,
       ItemIsEquipped,
-      DoesNotHaveTheItem
-    }
-
-    [Serializable]
-    public struct AfterOf
-    {
-      public string uniqueId;
-
-      public AfterOf(string uniqueId)
-      {
-        this.uniqueId = uniqueId;
-      }
-
-      public Message GetMessage(Context context)
-      {
-        foreach (Column col in context.columns)
-        {
-          if (Message.Find(col.messages, uniqueId) != null)
-          {
-            return Message.Find(col.messages, uniqueId);
-          }
-        }
-
-        return null;
-      }
+      DoesNotHaveTheItem,
+      QuestStateIs
     }
 
     public Condition() {}
@@ -66,7 +44,7 @@ namespace Diplomata.Models
 
     public string DisplayAfterOf(string messageContent)
     {
-      return "After of \"" + messageContent + "\"";
+      return string.Format("After of \"{0}\"", messageContent);
     }
 
     public string DisplayCompareInfluence()
@@ -74,11 +52,11 @@ namespace Diplomata.Models
       switch (type)
       {
         case Type.InfluenceEqualTo:
-          return "Influence equal to " + comparedInfluence + " in " + characterInfluencedName;
+          return string.Format("Influence equal to {0} in {1}", comparedInfluence, characterInfluencedName);
         case Type.InfluenceGreaterThan:
-          return "Influence greater then " + comparedInfluence + " in " + characterInfluencedName;
+          return string.Format("Influence greater then {0} in {1}", comparedInfluence, characterInfluencedName);
         case Type.InfluenceLessThan:
-          return "Influence less then " + comparedInfluence + " in " + characterInfluencedName;
+          return string.Format("Influence less then {0} in {1}", comparedInfluence, characterInfluencedName);
         default:
           return string.Empty;
       }
@@ -86,27 +64,32 @@ namespace Diplomata.Models
 
     public string DisplayHasItem(string itemName)
     {
-      return "Has the item: \"" + itemName + "\"";
+      return string.Format("Has the item: \"{0}\"", itemName);
     }
 
     public string DisplayDoesNotHaveItem(string itemName)
     {
-      return "Does not have the item: \"" + itemName + "\"";
+      return string.Format("Does not have the item: \"{0}\"", itemName);
     }
 
     public string DisplayItemWasDiscarded(string itemName)
     {
-      return "item was discarded: \"" + itemName + "\"";
+      return string.Format("Item was discarded: \"{0}\"", itemName);
     }
 
     public string DisplayItemIsEquipped(string itemName)
     {
-      return "item is equipped: \"" + itemName + "\"";
+      return string.Format("Item is equipped: \"{0}\"", itemName);
     }
 
     public string DisplayGlobalFlagEqualTo()
     {
-      return "\"" + globalFlag.name + "\" is " + globalFlag.value;
+      return string.Format("\"{0}\" is {1}", globalFlag.name, globalFlag.value);
+    }
+
+    public string DisplayQuestStateIs()
+    {
+      return string.Format("Quest {0} state is: {1}", "", "");
     }
 
     public static bool CanProceed(Condition[] conditions)

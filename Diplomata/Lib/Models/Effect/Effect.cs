@@ -13,7 +13,7 @@ namespace Diplomata.Models
     public AnimatorAttributeSetter animatorAttributeSetter = new AnimatorAttributeSetter();
     public Flag globalFlag;
     public int itemId;
-    public QuestState questState;
+    public QuestAndState questAndState;
 
     [NonSerialized]
     public Events onStart = new Events();
@@ -33,65 +33,6 @@ namespace Diplomata.Models
       EquipItem,
       EndOfDialogue,
       SetQuestState
-    }
-
-    [Serializable]
-    public struct GoTo
-    {
-      public string uniqueId;
-
-      public GoTo(string uniqueId)
-      {
-        this.uniqueId = uniqueId;
-      }
-
-      public Message GetMessage(Context context)
-      {
-        foreach (Column col in context.columns)
-        {
-          if (Message.Find(col.messages, uniqueId) != null)
-          {
-            return Message.Find(col.messages, uniqueId);
-          }
-        }
-
-        return null;
-      }
-    }
-
-    [Serializable]
-    public struct EndOfContext
-    {
-      public string talkableName;
-      public int contextId;
-
-      public EndOfContext(string talkableName, int contextId)
-      {
-        this.talkableName = talkableName;
-        this.contextId = contextId;
-      }
-
-      public void Set(string talkableName, int contextId)
-      {
-        this.talkableName = talkableName;
-        this.contextId = contextId;
-      }
-
-      public Context GetContext(List<Character> characters, List<Interactable> interactables)
-      {
-        if (Context.Find(Character.Find(characters, talkableName), contextId) != null)
-          return Context.Find(Character.Find(characters, talkableName), contextId);
-        if (Context.Find(Interactable.Find(interactables, talkableName), contextId) != null)
-          return Context.Find(Interactable.Find(interactables, talkableName), contextId);
-        return null;
-      }
-    }
-
-    [Serializable]
-    public struct QuestState
-    {
-      public string questId;
-      public string questStateId;
     }
 
     public Effect() {}
@@ -172,8 +113,8 @@ namespace Diplomata.Models
 
     public string DisplaySetQuestState(Quest[] quests)
     {
-      var quest = Quest.Find(quests, questState.questId);
-      var questState = quest.GetState(questState.questStateId);
+      var quest = Quest.Find(quests, questAndState.questId);
+      var questState = quest.GetState(questAndState.questStateId);
       return string.Format("Set quest {0} to: {1}.", quest.Name, questState.Name);
     }
   }

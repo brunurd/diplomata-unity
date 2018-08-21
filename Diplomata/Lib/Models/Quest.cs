@@ -100,7 +100,7 @@ namespace Diplomata.Models
     {
       foreach (QuestState state in questStates)
       {
-        if (state.Id = id) return state;
+        if (state.Id == id) return state;
       }
       return null;
     }
@@ -160,9 +160,9 @@ namespace Diplomata.Models
     /// <param name="quests">A array of quests.</param>
     /// <param name="with">The quest id or name.</param>
     /// <returns>The quest with that id or null if don't exists.</returns>
-    public Quest Find(Quest[] quests, string[] with)
+    public static Quest Find(Quest[] quests, params string[] with)
     {
-      foreach(Quest quest in quests)
+      foreach (Quest quest in quests)
       {
         if (ArrayHelper.Contains(with, quest.Id) || ArrayHelper.Contains(with, quest.Name))
         {
