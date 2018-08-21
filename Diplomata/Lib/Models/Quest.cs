@@ -84,11 +84,25 @@ namespace Diplomata.Models
     /// Get the current quest name.
     /// </summary>
     /// <returns>Return the current quest name, if don't have one return null.</returns>
-    public string GetState()
+    public string GetCurrentState()
     {
       int index = GetStateIndex();
       if (index != -1) return questStates[index].Name;
       else return null;
+    }
+
+    /// <summary>
+    /// Get a state from id.
+    /// </summary>
+    /// <param name="id">The id to find.</param>
+    /// <returns>The state object.</returns>
+    public QuestState GetState(string id)
+    {
+      foreach (QuestState state in questStates)
+      {
+        if (state.Id = id) return state;
+      }
+      return null;
     }
 
     /// <summary>
@@ -138,6 +152,24 @@ namespace Diplomata.Models
     {
       Finished = true;
       questStateId = string.Empty;
+    }
+
+    /// <summary>
+    /// Find a quest from a array.
+    /// </summary>
+    /// <param name="quests">A array of quests.</param>
+    /// <param name="with">The quest id or name.</param>
+    /// <returns>The quest with that id or null if don't exists.</returns>
+    public Quest Find(Quest[] quests, string[] with)
+    {
+      foreach(Quest quest in quests)
+      {
+        if (ArrayHelper.Contains(with, quest.Id) || ArrayHelper.Contains(with, quest.Name))
+        {
+          return quest;
+        }
+      }
+      return null;
     }
   }
 }

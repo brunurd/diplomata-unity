@@ -2,6 +2,7 @@ using System;
 
 namespace Diplomata.Models
 {
+  [Serializable]
   public class QuestState
   {
     public string Id { get; private set; }
