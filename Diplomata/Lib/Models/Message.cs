@@ -13,7 +13,7 @@ namespace Diplomata.Models
   {
     [SerializeField]
     private string uniqueId;
-    
+
     public int id;
     public bool isAChoice;
     public bool disposable;
