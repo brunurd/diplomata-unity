@@ -31,18 +31,16 @@ namespace Diplomata.Helpers
       {
         tempArray[i] = array[i];
       }
-      tempArray[array.Length - 1] = element;
 
-      // TODO: Test if this commented block is necessary.
-      // array = new T[tempArray.Length + 1];
-      // for (var i = 0; i < tempArray.Length; i++)
-      // {
-      //   array[i] = tempArray[i];
-      // }
-      // array[array.Length - 1] = element;
+      // TODO: Test if this loop block is necessary.
+      array = new T[tempArray.Length + 1];
+      for (var i = 0; i < tempArray.Length; i++)
+      {
+        array[i] = tempArray[i];
+      }
+      array[array.Length - 1] = element;
 
-      // return array;
-      return tempArray;
+      return array;
     }
 
     /// <summary>
@@ -167,7 +165,7 @@ namespace Diplomata.Helpers
       {
         array[i] = DeepCopy(copyOf[i]);
       }
-      
+
       return array;
     }
 
@@ -223,6 +221,19 @@ namespace Diplomata.Helpers
     {
       T[] array = new T[0];
       return array;
+    }
+
+    /// <summary>
+    /// Check if the element is the last element of the array.
+    /// </summary>
+    /// <param name="array">The array to check.</param>
+    /// <param name="element">The element to check.</param>
+    /// <typeparam name="T">The type of the array, auto setted by the parameters.</typeparam>
+    /// <returns>Return a boolean flag, is true if is the last.</returns>
+    public static bool IsLast<T>(T[] array, T element)
+    {
+      if (array == null || element == null) return false;
+      return array[array.Length - 1].Equals(element);
     }
   }
 }
