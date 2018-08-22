@@ -87,9 +87,13 @@ namespace Diplomata.Models
       return string.Format("\"{0}\" is {1}", globalFlag.name, globalFlag.value);
     }
 
-    public string DisplayQuestStateIs()
+    public string DisplayQuestStateIs(Quest[] quests)
     {
-      return string.Format("Quest {0} state is: {1}", "", "");
+      var quest = Quest.Find(quests, questAndState.questId);
+      var questState = quest != null ? quest.GetState(questAndState.questStateId) : null;
+      var questName = quest != null ? quest.Name : string.Empty;
+      var questStateName = questState != null ? questState.Name : string.Empty;
+      return string.Format("Quest \"{0}\" state is: {1}", questName, questStateName);
     }
 
     public static bool CanProceed(Condition[] conditions)

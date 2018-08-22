@@ -163,6 +163,42 @@ namespace Diplomata.Models
     }
 
     /// <summary>
+    /// Get a list of the names of the quests of a array.
+    /// </summary>
+    /// <param name="quests">The quests array.</param>
+    /// <returns>A array of names as strings.</returns>
+    public static string[] GetNames(Quest[] quests)
+    {
+      string[] questsReturn = quests == null ? new string[0] : new string[quests.Length];
+      if (quests != null)
+      {
+        for (var i = 0; i < quests.Length; i++)
+        {
+          questsReturn[i] = quests[i].Name;
+        }
+      }
+      return questsReturn;
+    }
+
+    /// <summary>
+    /// Get a list of the ids of the quests of a array.
+    /// </summary>
+    /// <param name="quests">The quests array.</param>
+    /// <returns>A array of ids as strings.</returns>
+    public static string[] GetIDs(Quest[] quests)
+    {
+      string[] questsReturn = quests == null ? new string[0] : new string[quests.Length];
+      if (quests != null)
+      {
+        for (var i = 0; i < quests.Length; i++)
+        {
+          questsReturn[i] = quests[i].GetId();
+        }
+      }
+      return questsReturn;
+    }
+
+    /// <summary>
     /// Return the quest states.
     /// </summary>
     /// <returns>A array with the quest states.</returns>

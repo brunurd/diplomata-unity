@@ -201,12 +201,18 @@ namespace Diplomata.Helpers
     public static bool Contains<T>(T[] array, T element)
     {
       bool response = false;
-      for (int i = 0; i < array.Length; i++)
+      if (element != null)
       {
-        if (array[i].Equals(element))
+        for (int i = 0; i < array.Length; i++)
         {
-          response = true;
-          break;
+          if (array[i] != null)
+          {
+            if (array[i].Equals(element))
+            {
+              response = true;
+              break;
+            }
+          }
         }
       }
       return response;

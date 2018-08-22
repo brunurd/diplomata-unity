@@ -114,8 +114,12 @@ namespace Diplomata.Models
     public string DisplaySetQuestState(Quest[] quests)
     {
       var quest = Quest.Find(quests, questAndState.questId);
-      var questState = quest.GetState(questAndState.questStateId);
-      return string.Format("Set quest {0} to: {1}.", quest.Name, questState.Name);
+      var questState = quest != null ? quest.GetState(questAndState.questStateId) : null;
+
+      var questName = quest != null ? quest.Name : string.Empty;
+      var questStateName = questState != null ? questState.Name : string.Empty;
+      
+      return string.Format("Set quest \"{0}\" to: {1}", questName, questStateName);
     }
   }
 }

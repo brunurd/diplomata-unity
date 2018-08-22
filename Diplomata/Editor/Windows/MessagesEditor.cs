@@ -351,6 +351,9 @@ namespace DiplomataEditor.Windows
                     case Condition.Type.GlobalFlagEqualTo:
                       text += condition.DisplayGlobalFlagEqualTo();
                       break;
+                    case Condition.Type.QuestStateIs:
+                      text += condition.DisplayQuestStateIs(diplomataEditor.quests);
+                      break;
                   }
 
                   if (k < currentMessage.conditions.Length - 1)
@@ -455,6 +458,9 @@ namespace DiplomataEditor.Windows
                       break;
                     case Effect.Type.EndOfDialogue:
                       text += effect.DisplayEndOfDialogue();
+                      break;
+                    case Effect.Type.SetQuestState:
+                      text += effect.DisplaySetQuestState(diplomataEditor.quests);
                       break;
                   }
 
@@ -1309,7 +1315,35 @@ namespace DiplomataEditor.Windows
                     }
 
                   }
+                  break;
+                case Condition.Type.QuestStateIs:
+                  // Get the quest name.
+                  var quest = Quest.Find(diplomataEditor.quests, condition.questAndState.questId);
+                  var questName = quest != null ? quest.Name : string.Empty;
 
+                  // Quest name Popup with a change checker.
+                  EditorGUI.BeginChangeCheck();
+                  questName = GUIHelper.Popup("Quest: ", questName, Quest.GetNames(diplomataEditor.quests));
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(diplomataEditor.quests), questName);
+                    if (questIndex > -1) condition.questAndState.questId = Quest.GetIDs(diplomataEditor.quests) [questIndex];
+                    quest = Quest.Find(diplomataEditor.quests, condition.questAndState.questId);
+                  }
+
+                  // Get the quest state name.
+                  var questState = quest != null ? quest.GetState(condition.questAndState.questId) : null;
+                  var questStateName = questState != null ? questState.Name : string.Empty;
+
+                  // Quest state Popup with a change checker.
+                  EditorGUI.BeginChangeCheck();
+                  questStateName = GUIHelper.Popup("Quest state: ", questStateName, QuestState.GetNames(quest.GetQuestStates()));
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
+                    if (questStateIndex > -1)
+                      condition.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates())[questStateIndex];
+                  }
                   break;
               }
 
@@ -1648,6 +1682,35 @@ namespace DiplomataEditor.Windows
                   break;
 
                 case Effect.Type.EndOfDialogue:
+                  break;
+                case Effect.Type.SetQuestState:
+                  // Get the quest name.
+                  var quest = Quest.Find(diplomataEditor.quests, effect.questAndState.questId);
+                  var questName = quest != null ? quest.Name : string.Empty;
+
+                  // Quest Popup with a change checker.
+                  EditorGUI.BeginChangeCheck();
+                  questName = GUIHelper.Popup("Quest: ", questName, Quest.GetNames(diplomataEditor.quests));
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(diplomataEditor.quests), questName);
+                    if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(diplomataEditor.quests) [questIndex];
+                    quest = Quest.Find(diplomataEditor.quests, effect.questAndState.questId);
+                  }
+
+                  // Get the quest state name.
+                  var questState = quest != null ? quest.GetState(effect.questAndState.questId) : null;
+                  var questStateName = questState != null ? questState.Name : string.Empty;
+
+                  // Quest state Popup with a change checker.
+                  EditorGUI.BeginChangeCheck();
+                  questStateName = GUIHelper.Popup("Quest state: ", questStateName, QuestState.GetNames(quest.GetQuestStates()));
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
+                    if (questStateIndex > -1)
+                      effect.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates())[questStateIndex];
+                  }
                   break;
               }
 
