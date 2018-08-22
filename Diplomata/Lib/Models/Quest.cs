@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Diplomata.Helpers;
+using UnityEngine;
 
 namespace Diplomata.Models
 {
@@ -10,20 +12,20 @@ namespace Diplomata.Models
   [Serializable]
   public class Quest
   {
-    public string Id { get; private set; }
+    [SerializeField] private string id;
     public string Name;
-    private QuestState[] questStates;
+    [SerializeField] private QuestState[] questStates;
     private string questStateId;
-    public bool Initialized { get; private set; }
-    public bool Finished { get; private set; }
+    private bool initialized;
+    private bool finished;
 
     /// <summary>
     /// Basic constructor, it sets the id and create the default "In progress" state.
     /// </summary>
     public Quest()
     {
-      Id = Guid.NewGuid().ToString();
-      questStates = new QuestState[] { new QuestState("In progress") };
+      id = Guid.NewGuid().ToString();
+      questStates = new QuestState[] { new QuestState("In progress.") };
     }
 
     /// <summary>
@@ -32,7 +34,7 @@ namespace Diplomata.Models
     /// <param name="questState">The state name.</param>
     public void AddState(string questState)
     {
-      questStates = ArrayHelper.Add(questStates, new QuestState(questState));
+      if (!finished) questStates = ArrayHelper.Add(questStates, new QuestState(questState));
     }
 
     /// <summary>
@@ -42,11 +44,11 @@ namespace Diplomata.Models
     private int GetStateIndex()
     {
       int index = -1;
-      if (questStateId != string.Empty && questStateId != null && Initialized)
+      if (questStateId != string.Empty && questStateId != null && initialized && !finished)
       {
         for (var i = 0; i < questStates.Length; i++)
         {
-          if (questStates[i].Id == questStateId)
+          if (questStates[i].GetId() == questStateId)
           {
             index = i;
             break;
@@ -62,7 +64,7 @@ namespace Diplomata.Models
     /// <param name="questState">The state to remove.</param>
     public void RemoveState(QuestState questState)
     {
-      if (!Initialized)
+      if (!initialized)
       {
         if (ArrayHelper.Contains(questStates, questState))
         {
@@ -76,8 +78,11 @@ namespace Diplomata.Models
     /// </summary>
     public void Initialize()
     {
-      Initialized = true;
-      questStateId = questStates[0].Id;
+      if (!finished && !initialized)
+      {
+        initialized = true;
+        questStateId = questStates[0].GetId();
+      }
     }
 
     /// <summary>
@@ -100,7 +105,7 @@ namespace Diplomata.Models
     {
       foreach (QuestState state in questStates)
       {
-        if (state.Id == id) return state;
+        if (state.GetId() == id) return state;
       }
       return null;
     }
@@ -110,16 +115,19 @@ namespace Diplomata.Models
     /// </summary>
     public void NextState()
     {
-      int index = GetStateIndex();
-      if (index != -1)
+      if (!finished)
       {
-        if (index == questStates.Length - 1)
+        int index = GetStateIndex();
+        if (index != -1)
         {
-          Finish();
-        }
-        else
-        {
-          questStateId = questStates[index + 1].Id;
+          if (index == questStates.Length - 1)
+          {
+            Finish();
+          }
+          else
+          {
+            questStateId = questStates[index + 1].GetId();
+          }
         }
       }
     }
@@ -138,7 +146,7 @@ namespace Diplomata.Models
       for (var i = 0; i < questStates.Length; i++)
       {
         var name = questStates[i].Name;
-        var completed = currentStateIndex > i ? true : false;
+        var completed = (currentStateIndex > i && currentStateIndex > -1) ? true : false;
         questLog.Add(name, completed);
       }
 
@@ -146,12 +154,24 @@ namespace Diplomata.Models
     }
 
     /// <summary>
+    /// Return the quest states.
+    /// </summary>
+    /// <returns>A array with the quest states.</returns>
+    public QuestState[] GetQuestStates()
+    {
+      return questStates;
+    }
+
+    /// <summary>
     /// Finish the quest and set the state to empty.
     /// </summary>
-    public void Finish()
+    private void Finish()
     {
-      Finished = true;
-      questStateId = string.Empty;
+      if (initialized)
+      {
+        finished = true;
+        questStateId = string.Empty;
+      }
     }
 
     /// <summary>
@@ -164,12 +184,36 @@ namespace Diplomata.Models
     {
       foreach (Quest quest in quests)
       {
-        if (ArrayHelper.Contains(with, quest.Id) || ArrayHelper.Contains(with, quest.Name))
+        if (ArrayHelper.Contains(with, quest.id) || ArrayHelper.Contains(with, quest.Name))
         {
           return quest;
         }
       }
       return null;
     }
+
+    /// <summary>
+    /// The string return.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+      var questString = new StringBuilder();
+      questString.Append(string.Format("{0}: ", Name));
+      foreach (KeyValuePair<string, bool> state in GetQuestLog())
+      {
+        questString.Append(string.Format("{0}:{1}; ", state.Key, state.Value));
+      }
+      return questString.ToString();
+    }
+  }
+
+  /// <summary>
+  /// Class to serialize as json.
+  /// </summary>
+  [Serializable]
+  public class Quests
+  {
+    public Quest[] quests;
   }
 }

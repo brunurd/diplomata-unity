@@ -15,12 +15,14 @@ namespace DiplomataEditor
     public Options options = new Options();
     public Inventory inventory = new Inventory();
     public GlobalFlags globalFlags = new GlobalFlags();
+    public Quests quests = new Quests();
 
     public int workingContextMessagesId;
     public int workingContextEditId;
     public string workingCharacter;
     public string workingInteractable;
     public int workingItemId;
+    public string workingQuest;
 
     public static void Instantiate()
     {
@@ -44,6 +46,11 @@ namespace DiplomataEditor
         JSONHelper.Create(new GlobalFlags(), "globalFlags", false, "Diplomata/");
       }
 
+      if (!JSONHelper.Exists("quests", "Diplomata/"))
+      {
+        JSONHelper.Create(new Quests(), "quests", false, "Diplomata/");
+      }
+
       DiplomataData.Restart();
       var diplomataEditor = CreateInstance<DiplomataEditorData>();
 
@@ -54,6 +61,7 @@ namespace DiplomataEditor
         diplomataEditor.globalFlags = DiplomataData.globalFlags;
         diplomataEditor.characters = DiplomataData.characters;
         diplomataEditor.interactables = DiplomataData.interactables;
+        diplomataEditor.quests = DiplomataData.quests;
 
         AssetHelper.Create(diplomataEditor, "Diplomata.asset", "Diplomata/");
       }
@@ -64,6 +72,7 @@ namespace DiplomataEditor
         diplomataEditor.options = JSONHelper.Read<Options>("preferences", "Diplomata/");
         diplomataEditor.inventory = JSONHelper.Read<Inventory>("inventory", "Diplomata/");
         diplomataEditor.globalFlags = JSONHelper.Read<GlobalFlags>("globalFlags", "Diplomata/");
+        diplomataEditor.quests = JSONHelper.Read<Quests>("quests", "Diplomata/");
         diplomataEditor.UpdateList();
       }
     }
@@ -75,6 +84,7 @@ namespace DiplomataEditor
       workingContextMessagesId = -1;
       workingContextEditId = -1;
       workingItemId = -1;
+      workingQuest = string.Empty;
     }
 
     public void UpdateList()
@@ -197,6 +207,11 @@ namespace DiplomataEditor
     public void SaveGlobalFlags()
     {
       JSONHelper.Update(globalFlags, "globalFlags", options.jsonPrettyPrint, "Diplomata/");
+    }
+
+    public void SaveQuests()
+    {
+      JSONHelper.Update(quests, "quests", options.jsonPrettyPrint, "Diplomata/");
     }
 
     public void Save(Talkable character, string folderName)
