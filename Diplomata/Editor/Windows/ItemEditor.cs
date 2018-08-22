@@ -48,7 +48,6 @@ namespace DiplomataEditor.Windows
     {
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       ItemEditor.item = item;
-      diplomataEditor.workingItemId = item.id;
       Init(State.Edit);
     }
 
@@ -62,15 +61,9 @@ namespace DiplomataEditor.Windows
       switch (state)
       {
         case State.None:
-
-          if (diplomataEditor.workingItemId != -1)
-          {
-            item = Item.Find(diplomataEditor.inventory.items, diplomataEditor.workingItemId);
-            DrawEditWindow();
-          }
-
+          Init(State.Close);
           break;
-
+          
         case State.Edit:
           DrawEditWindow();
           break;

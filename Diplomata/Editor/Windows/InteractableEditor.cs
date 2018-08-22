@@ -64,7 +64,6 @@ namespace DiplomataEditor.Windows
       interactable = null;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingInteractable = string.Empty;
       Init(State.Create);
     }
 
@@ -73,7 +72,6 @@ namespace DiplomataEditor.Windows
       interactable = currentInteractable;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingInteractable = currentInteractable.name;
       Init(State.Edit);
     }
 
@@ -84,7 +82,6 @@ namespace DiplomataEditor.Windows
         if (interactable.name == interactableName)
         {
           diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-          diplomataEditor.workingInteractable = string.Empty;
           interactable = null;
           Init(State.Close);
         }
@@ -101,15 +98,7 @@ namespace DiplomataEditor.Windows
       switch (state)
       {
         case State.None:
-          if (diplomataEditor.workingInteractable != string.Empty)
-          {
-            interactable = Interactable.Find(diplomataEditor.interactables, diplomataEditor.workingInteractable);
-            DrawEditWindow();
-          }
-          else
-          {
-            DrawCreateWindow();
-          }
+          Init(State.Close);
           break;
 
         case State.Create:

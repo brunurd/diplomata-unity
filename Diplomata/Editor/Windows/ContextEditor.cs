@@ -53,7 +53,6 @@ namespace DiplomataEditor.Windows
       context = currentContext;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingContextEditId = context.id;
       Init(State.Edit);
     }
 
@@ -67,7 +66,6 @@ namespace DiplomataEditor.Windows
           context = null;
 
           diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-          diplomataEditor.workingContextEditId = -1;
 
           Init(State.Close);
         }
@@ -84,19 +82,9 @@ namespace DiplomataEditor.Windows
       switch (state)
       {
         case State.None:
-          if (diplomataEditor.workingCharacter != string.Empty)
-          {
-            talkable = (Character) Find.In(diplomataEditor.characters.ToArray()).Where("name", diplomataEditor.workingCharacter).Results[0];
-            if (talkable == null) talkable = (Interactable) Interactable.Find(diplomataEditor.interactables, diplomataEditor.workingInteractable);
-
-            if (diplomataEditor.workingContextEditId > -1)
-            {
-              context = Context.Find(talkable, diplomataEditor.workingContextEditId);
-              DrawEditWindow();
-            }
-          }
+          Init(State.Close);
           break;
-
+          
         case State.Edit:
           DrawEditWindow();
           break;

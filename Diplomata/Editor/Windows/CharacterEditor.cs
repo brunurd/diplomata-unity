@@ -64,7 +64,6 @@ namespace DiplomataEditor.Windows
       character = null;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingCharacter = string.Empty;
       Init(State.Create);
     }
 
@@ -73,7 +72,6 @@ namespace DiplomataEditor.Windows
       character = currentCharacter;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingCharacter = currentCharacter.name;
       Init(State.Edit);
     }
 
@@ -84,7 +82,6 @@ namespace DiplomataEditor.Windows
         if (character.name == characterName)
         {
           diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-          diplomataEditor.workingCharacter = string.Empty;
           character = null;
           Init(State.Close);
         }
@@ -101,16 +98,7 @@ namespace DiplomataEditor.Windows
       switch (state)
       {
         case State.None:
-          if (diplomataEditor.workingCharacter != string.Empty)
-          {
-            var results = (Character[]) Find.In(diplomataEditor.characters.ToArray()).Where("name", diplomataEditor.workingCharacter).Results;
-            if (results.Length > 0) character = results[0];
-            DrawEditWindow();
-          }
-          else
-          {
-            DrawCreateWindow();
-          }
+          Init(State.Close);
           break;
 
         case State.Create:

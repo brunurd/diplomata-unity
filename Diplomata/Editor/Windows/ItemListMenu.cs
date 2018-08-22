@@ -78,13 +78,7 @@ namespace DiplomataEditor.Windows
         {
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
-
-            if (item.id == diplomataEditor.workingItemId)
-            {
-              ItemEditor.Init(ItemEditor.State.Close);
-              diplomataEditor.workingItemId = -1;
-            }
-
+            ItemEditor.Init(ItemEditor.State.Close);
             diplomataEditor.inventory.items = ArrayHelper.Remove(diplomataEditor.inventory.items, item);
             diplomataEditor.SaveInventory();
           }

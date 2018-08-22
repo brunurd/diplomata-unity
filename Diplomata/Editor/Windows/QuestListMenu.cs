@@ -63,6 +63,7 @@ namespace DiplomataEditor.Windows
         {
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
+            QuestEditor.Init(QuestEditor.State.Close);
             diplomataEditor.quests = ArrayHelper.Remove(diplomataEditor.quests, quest);
             diplomataEditor.SaveQuests();
           }

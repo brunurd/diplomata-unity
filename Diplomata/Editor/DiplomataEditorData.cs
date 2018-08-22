@@ -17,13 +17,6 @@ namespace DiplomataEditor
     public GlobalFlags globalFlags = new GlobalFlags();
     public Quest[] quests = new Quest[0];
 
-    public int workingContextMessagesId;
-    public int workingContextEditId;
-    public string workingCharacter;
-    public string workingInteractable;
-    public int workingItemId;
-    public string workingQuest;
-
     public static void Instantiate()
     {
       DiplomataData.SetData();
@@ -75,16 +68,6 @@ namespace DiplomataEditor
         diplomataEditor.quests = JSONHelper.Read<Quests>("quests", "Diplomata/").GetQuests();
         diplomataEditor.UpdateList();
       }
-    }
-
-    private void Awake()
-    {
-      workingCharacter = string.Empty;
-      workingInteractable = string.Empty;
-      workingContextMessagesId = -1;
-      workingContextEditId = -1;
-      workingItemId = -1;
-      workingQuest = string.Empty;
     }
 
     public void UpdateList()

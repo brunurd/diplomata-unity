@@ -50,9 +50,7 @@ namespace DiplomataEditor.Windows
     public static void Open(Quest currentQuest)
     {
       quest = currentQuest;
-
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingQuest = currentQuest.GetId();
       Init(State.CreateEdit);
     }
 
@@ -62,65 +60,64 @@ namespace DiplomataEditor.Windows
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      // Set the last worked quest.
-      if (state == State.None && diplomataEditor.workingQuest != string.Empty)
+      switch (state)
       {
-        quest = Quest.Find(diplomataEditor.quests, diplomataEditor.workingQuest);
-      }
+        case State.None:
+          Init(State.Close);
+          break;
 
-      if (quest != null)
-      {
-        // TODO: Close window.
-        // Set quest name.
-        GUILayout.Label("Name: ");
-        GUI.SetNextControlName("name");
-        quest.Name = EditorGUILayout.TextField(quest.Name);
-        GUIHelper.Focus("name");
+        case State.CreateEdit:
+          // Set quest name.
+          GUILayout.Label("Name: ");
+          GUI.SetNextControlName("name");
+          quest.Name = EditorGUILayout.TextField(quest.Name);
+          GUIHelper.Focus("name");
 
-        // Set label properties for quest states header.
-        GUILayout.BeginHorizontal();
-        if (EditorGUIUtility.isProSkin) GUIHelper.labelStyle.normal.textColor = Color.white;
-        GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
-        GUILayout.Label("Quest states:", GUIHelper.labelStyle);
-        GUILayout.EndHorizontal();
-
-        // Loop of the quest states.
-        foreach (QuestState state in quest.GetQuestStates())
-        {
+          // Set label properties for quest states header.
           GUILayout.BeginHorizontal();
-          state.Name = EditorGUILayout.TextField(state.Name);
+          if (EditorGUIUtility.isProSkin) GUIHelper.labelStyle.normal.textColor = Color.white;
+          GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
+          GUILayout.Label("Quest states:", GUIHelper.labelStyle);
           GUILayout.EndHorizontal();
-        }
 
-        // Buttons.
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-        {
-          quest.AddState("New state.");
-          Save();
-        }
-        GUILayout.EndHorizontal();
-        EditorGUILayout.Separator();
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Save and close", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-        {
-          Save();
-          Close();
-        }
-        GUILayout.EndHorizontal();
-
-        // Save and close on press Enter.
-        if (focusedWindow != null)
-        {
-          if (focusedWindow.ToString() == "(DiplomataEditor.Windows.QuestEditor)")
+          // Loop of the quest states.
+          foreach (QuestState state in quest.GetQuestStates())
           {
-            if (Event.current.keyCode == KeyCode.Return)
+            GUILayout.BeginHorizontal();
+            state.Name = EditorGUILayout.TextField(state.Name);
+            GUILayout.EndHorizontal();
+          }
+
+          // Buttons.
+          GUILayout.BeginHorizontal();
+          if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+          {
+            quest.AddState("New state.");
+            Save();
+          }
+          GUILayout.EndHorizontal();
+          EditorGUILayout.Separator();
+          GUILayout.BeginHorizontal();
+          if (GUILayout.Button("Save and close", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+          {
+            Save();
+            Close();
+          }
+          GUILayout.EndHorizontal();
+
+          // Save and close on press Enter.
+          if (focusedWindow != null)
+          {
+            if (focusedWindow.ToString() == "(DiplomataEditor.Windows.QuestEditor)")
             {
-              Save();
-              Close();
+              if (Event.current.keyCode == KeyCode.Return)
+              {
+                Save();
+                Close();
+              }
             }
           }
-        }
+          break;
       }
 
       GUILayout.EndVertical();
