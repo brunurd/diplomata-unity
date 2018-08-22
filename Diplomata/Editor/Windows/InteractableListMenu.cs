@@ -73,7 +73,7 @@ namespace DiplomataEditor.Windows
           {
 
             diplomataEditor.interactables.Remove(Interactable.Find(diplomataEditor.interactables, name));
-            diplomataEditor.options.characterList = ArrayHelper.Remove(diplomataEditor.options.interactableList, name);
+            diplomataEditor.options.interactableList = ArrayHelper.Remove(diplomataEditor.options.interactableList, name);
 
             JSONHelper.Delete(name, "Diplomata/Interactables/");
 
