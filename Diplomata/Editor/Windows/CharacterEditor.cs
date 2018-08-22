@@ -152,7 +152,7 @@ namespace DiplomataEditor.Windows
 
       if (focusedWindow != null)
       {
-        if (focusedWindow.ToString() == " (DiplomataEditor.CharacterEditor)")
+        if (focusedWindow.ToString() == " (DiplomataEditor.Windows.CharacterEditor)")
         {
           if (Event.current.keyCode == KeyCode.Return)
           {

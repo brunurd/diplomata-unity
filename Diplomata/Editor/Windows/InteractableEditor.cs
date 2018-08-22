@@ -152,7 +152,7 @@ namespace DiplomataEditor.Windows
 
       if (focusedWindow != null)
       {
-        if (focusedWindow.ToString() == " (DiplomataEditor.InteractableEditor)")
+        if (focusedWindow.ToString() == " (DiplomataEditor.Windows.InteractableEditor)")
         {
           if (Event.current.keyCode == KeyCode.Return)
           {
