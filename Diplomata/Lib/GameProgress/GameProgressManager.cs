@@ -101,7 +101,7 @@ namespace Diplomata.GameProgress
     {
       foreach (CharacterProgress character in characters)
       {
-        var characterTemp = Character.Find(DiplomataData.characters, character.name);
+        var characterTemp = (Character) Find.In(DiplomataData.characters.ToArray()).Where("name", character.name).Results[0];
         characterTemp.influence = character.influence;
 
         foreach (ContextProgress context in character.contexts)

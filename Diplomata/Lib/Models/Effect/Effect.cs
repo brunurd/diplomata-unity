@@ -118,7 +118,7 @@ namespace Diplomata.Models
 
       var questName = quest != null ? quest.Name : string.Empty;
       var questStateName = questState != null ? questState.Name : string.Empty;
-      
+
       return string.Format("Set quest \"{0}\" to: {1}", questName, questStateName);
     }
   }

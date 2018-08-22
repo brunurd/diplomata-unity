@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Diplomata.Helpers;
 
 namespace Diplomata.Models
 {
@@ -23,8 +24,10 @@ namespace Diplomata.Models
 
     public Context GetContext(List<Character> characters, List<Interactable> interactables)
     {
-      if (Context.Find(Character.Find(characters, talkableName), contextId) != null)
-        return Context.Find(Character.Find(characters, talkableName), contextId);
+      var character = (Character) Find.In(characters.ToArray()).Where("name", talkableName).Results[0];
+
+      if (Context.Find(character, contextId) != null) return Context.Find(character, contextId);
+
       if (Context.Find(Interactable.Find(interactables, talkableName), contextId) != null)
         return Context.Find(Interactable.Find(interactables, talkableName), contextId);
       return null;

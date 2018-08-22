@@ -64,18 +64,5 @@ namespace Diplomata.Models
         }
       }
     }
-
-    public static Character Find(List<Character> characters, string name)
-    {
-      foreach (Character character in characters)
-      {
-        if (character.name == name)
-        {
-          return character;
-        }
-      }
-
-      return null;
-    }
   }
 }

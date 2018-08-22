@@ -103,7 +103,8 @@ namespace DiplomataEditor.Windows
         case State.None:
           if (diplomataEditor.workingCharacter != string.Empty)
           {
-            character = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+            var results = (Character[]) Find.In(diplomataEditor.characters.ToArray()).Where("name", diplomataEditor.workingCharacter).Results;
+            if (results.Length > 0) character = results[0];
             DrawEditWindow();
           }
           else

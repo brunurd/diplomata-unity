@@ -1,3 +1,4 @@
+using Diplomata.Helpers;
 using Diplomata.Models;
 using DiplomataEditor;
 using DiplomataEditor.Helpers;
@@ -125,7 +126,7 @@ namespace DiplomataEditor.Windows
         case State.None:
           if (diplomataEditor.workingCharacter != string.Empty)
           {
-            talkable = Character.Find(diplomataEditor.characters, diplomataEditor.workingCharacter);
+            talkable = (Character) Find.In(diplomataEditor.characters.ToArray()).Where("name", diplomataEditor.workingCharacter).Results[0];
             if (talkable == null) talkable = Interactable.Find(diplomataEditor.interactables, diplomataEditor.workingInteractable);
 
             if (diplomataEditor.workingContextMessagesId > -1)

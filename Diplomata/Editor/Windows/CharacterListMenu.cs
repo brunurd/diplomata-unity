@@ -44,6 +44,7 @@ namespace DiplomataEditor.Windows
       for (int i = 0; i < diplomataEditor.options.characterList.Length; i++)
       {
         var name = diplomataEditor.options.characterList[i];
+        var character = (Character) Find.In(diplomataEditor.characters.ToArray()).Where("name", name).Results[0];
 
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();
@@ -70,12 +71,12 @@ namespace DiplomataEditor.Windows
 
         if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          CharacterEditor.Edit(Character.Find(diplomataEditor.characters, name));
+          CharacterEditor.Edit(character);
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          TalkableMessagesManager.OpenContextMenu(Character.Find(diplomataEditor.characters, name));
+          TalkableMessagesManager.OpenContextMenu(character);
           Close();
         }
 
@@ -90,7 +91,7 @@ namespace DiplomataEditor.Windows
               isPlayer = true;
             }
 
-            diplomataEditor.characters.Remove(Character.Find(diplomataEditor.characters, name));
+            diplomataEditor.characters.Remove(character);
             diplomataEditor.options.characterList = ArrayHelper.Remove(diplomataEditor.options.characterList, name);
 
             JSONHelper.Delete(name, "Diplomata/Characters/");

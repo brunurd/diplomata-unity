@@ -1342,7 +1342,7 @@ namespace DiplomataEditor.Windows
                   {
                     var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
                     if (questStateIndex > -1)
-                      condition.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates())[questStateIndex];
+                      condition.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates()) [questStateIndex];
                   }
                   break;
               }
@@ -1709,7 +1709,7 @@ namespace DiplomataEditor.Windows
                   {
                     var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
                     if (questStateIndex > -1)
-                      effect.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates())[questStateIndex];
+                      effect.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates()) [questStateIndex];
                   }
                   break;
               }
