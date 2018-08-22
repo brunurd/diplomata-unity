@@ -861,7 +861,7 @@ namespace Diplomata
               }
 
               break;
-            
+
             case Effect.Type.EndOfDialogue:
               EndTalk();
               break;
