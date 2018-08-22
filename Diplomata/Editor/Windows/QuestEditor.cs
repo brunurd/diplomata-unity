@@ -10,8 +10,6 @@ namespace DiplomataEditor.Windows
 {
   public class QuestEditor : EditorWindow
   {
-    // TODO: Close on Play Mode
-
     public static Quest quest;
     private Vector2 scrollPos = new Vector2(0, 0);
     private static DiplomataEditorData diplomataEditor;
@@ -32,14 +30,14 @@ namespace DiplomataEditor.Windows
 
       QuestEditor window = (QuestEditor) GetWindow(typeof(QuestEditor), false, "Quest", true);
 
-      if (state == State.Close || quest == null)
+      if (state == State.Close)
       {
         window.Close();
       }
 
       else
       {
-        window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH, 390);
+        window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH, 160);
         window.Show();
       }
     }
@@ -54,7 +52,7 @@ namespace DiplomataEditor.Windows
       quest = currentQuest;
 
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-      diplomataEditor.workingQuest = currentQuest.Name;
+      diplomataEditor.workingQuest = currentQuest.GetId();
       Init(State.CreateEdit);
     }
 
@@ -67,59 +65,60 @@ namespace DiplomataEditor.Windows
       // Set the last worked quest.
       if (state == State.None && diplomataEditor.workingQuest != string.Empty)
       {
-        quest = Quest.Find(diplomataEditor.quests.quests, diplomataEditor.workingQuest);
+        quest = Quest.Find(diplomataEditor.quests, diplomataEditor.workingQuest);
       }
 
-      // Set quest name.
-      GUILayout.Label("Name: ");
-      GUI.SetNextControlName("name");
-      quest.Name = EditorGUILayout.TextField(quest.Name);
-      GUIHelper.Focus("name");
-
-      // Set label properties for quest states header.
-      GUILayout.BeginHorizontal();
-      if (EditorGUIUtility.isProSkin) GUIHelper.labelStyle.normal.textColor = Color.white;
-      GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
-      GUILayout.Label("Quest states:", GUIHelper.labelStyle);
-      GUILayout.EndHorizontal();
-
-      // Loop of the quest states.
-      foreach (QuestState state in quest.GetQuestStates())
+      if (quest != null)
       {
+        // TODO: Close window.
+        // Set quest name.
+        GUILayout.Label("Name: ");
+        GUI.SetNextControlName("name");
+        quest.Name = EditorGUILayout.TextField(quest.Name);
+        GUIHelper.Focus("name");
+
+        // Set label properties for quest states header.
         GUILayout.BeginHorizontal();
-        state.Name = EditorGUILayout.TextField(state.Name);
+        if (EditorGUIUtility.isProSkin) GUIHelper.labelStyle.normal.textColor = Color.white;
+        GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
+        GUILayout.Label("Quest states:", GUIHelper.labelStyle);
         GUILayout.EndHorizontal();
-      }
 
-      // Buttons.
-      GUILayout.BeginHorizontal();
-      if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-      {
-        quest.AddState("New state.");
-        Save();
-      }
-      GUILayout.EndHorizontal();
-      EditorGUILayout.Separator();
-      GUILayout.BeginHorizontal();
-      if (GUILayout.Button("Save", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-      {
-        Save();
-      }
-      if (GUILayout.Button("Cancel", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-      {
-        Close();
-      }
-      GUILayout.EndHorizontal();
-
-      // Save and close on press Enter.
-      if (focusedWindow != null)
-      {
-        if (focusedWindow.ToString() == "(DiplomataEditor.Windows.QuestEditor)")
+        // Loop of the quest states.
+        foreach (QuestState state in quest.GetQuestStates())
         {
-          if (Event.current.keyCode == KeyCode.Return)
+          GUILayout.BeginHorizontal();
+          state.Name = EditorGUILayout.TextField(state.Name);
+          GUILayout.EndHorizontal();
+        }
+
+        // Buttons.
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+        {
+          quest.AddState("New state.");
+          Save();
+        }
+        GUILayout.EndHorizontal();
+        EditorGUILayout.Separator();
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Save and close", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+        {
+          Save();
+          Close();
+        }
+        GUILayout.EndHorizontal();
+
+        // Save and close on press Enter.
+        if (focusedWindow != null)
+        {
+          if (focusedWindow.ToString() == "(DiplomataEditor.Windows.QuestEditor)")
           {
-            Save();
-            Close();
+            if (Event.current.keyCode == KeyCode.Return)
+            {
+              Save();
+              Close();
+            }
           }
         }
       }

@@ -29,6 +29,15 @@ namespace Diplomata.Models
     }
 
     /// <summary>
+    /// Get the quest id private field.
+    /// </summary>
+    /// <returns>The id (a guid string).</returns>
+    public string GetId()
+    {
+      return id;
+    }
+
+    /// <summary>
     /// Add a state to the states list.
     /// </summary>
     /// <param name="questState">The state name.</param>
@@ -214,6 +223,31 @@ namespace Diplomata.Models
   [Serializable]
   public class Quests
   {
-    public Quest[] quests;
+    [SerializeField] private Quest[] quests = new Quest[0];
+
+    /// <summary>
+    /// A clean constructor.
+    /// </summary>
+    public Quests() {}
+
+    /// <summary>
+    /// A constructor with a quests array.
+    /// Made to work with <seealso cref="UnityEngine.JsonUtility.ToJson(object)">.
+    /// </summary>
+    /// <param name="quests">A array of quests objects.</param>
+    public Quests(Quest[] quests)
+    {
+      this.quests = quests;
+    }
+
+    /// <summary>
+    /// Get the quest array private field.
+    /// Made to work with <seealso cref="UnityEngine.JsonUtility.FromJson(string, Type)">.
+    /// </summary>
+    /// <returns>A array of quests.</returns>
+    public Quest[] GetQuests()
+    {
+      return quests;
+    }
   }
 }

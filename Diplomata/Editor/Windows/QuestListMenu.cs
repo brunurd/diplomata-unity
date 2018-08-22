@@ -18,7 +18,7 @@ namespace DiplomataEditor.Windows
       DiplomataEditorData.Instantiate();
 
       QuestListMenu window = (QuestListMenu) GetWindow(typeof(QuestListMenu), false, "Quests");
-      window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 150, 300);
+      window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 150, 110);
       window.Show();
     }
 
@@ -34,13 +34,13 @@ namespace DiplomataEditor.Windows
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
       // If empty show this message.
-      if (diplomataEditor.quests.quests.Length <= 0)
+      if (diplomataEditor.quests.Length <= 0)
       {
         EditorGUILayout.HelpBox("No quests yet.", MessageType.Info);
       }
 
       // Quests loop to list.
-      foreach (Quest quest in diplomataEditor.quests.quests)
+      foreach (Quest quest in diplomataEditor.quests)
       {
         GUILayout.BeginHorizontal();
 
@@ -61,8 +61,11 @@ namespace DiplomataEditor.Windows
         }
         if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          diplomataEditor.quests.quests = ArrayHelper.Remove(diplomataEditor.quests.quests, quest);
-          diplomataEditor.SaveQuests();
+          if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
+          {
+            diplomataEditor.quests = ArrayHelper.Remove(diplomataEditor.quests, quest);
+            diplomataEditor.SaveQuests();
+          }
         }
         GUILayout.EndHorizontal();
 
@@ -73,7 +76,7 @@ namespace DiplomataEditor.Windows
       if (GUILayout.Button("Add Quest", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
         var quest = new Quest();
-        diplomataEditor.quests.quests = ArrayHelper.Add(diplomataEditor.quests.quests, quest);
+        diplomataEditor.quests = ArrayHelper.Add(diplomataEditor.quests, quest);
         diplomataEditor.SaveQuests();
         QuestEditor.Open(quest);
       }
@@ -85,6 +88,11 @@ namespace DiplomataEditor.Windows
     public void OnDisable()
     {
       diplomataEditor.SaveQuests();
+    }
+
+    public void OnInspectorUpdate()
+    {
+      Repaint();
     }
   }
 }

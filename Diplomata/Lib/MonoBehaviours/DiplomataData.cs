@@ -17,7 +17,7 @@ namespace Diplomata
     public static List<Interactable> interactables = new List<Interactable>();
     public static Inventory inventory = new Inventory();
     public static GlobalFlags globalFlags = new GlobalFlags();
-    public static Quests quests = new Quests();
+    public static Quest[] quests = new Quest[0];
     public static bool isTalking;
 
     private void Awake()
@@ -78,11 +78,11 @@ namespace Diplomata
         globalFlags = JsonUtility.FromJson<GlobalFlags>(json.text);
       }
 
-      quests = new Quests();
+      quests = new Quest[0];
       json = (TextAsset) Resources.Load("Diplomata/quests");
       if (json != null)
       {
-        quests = JsonUtility.FromJson<Quests>(json.text);
+        quests = JsonUtility.FromJson<Quests>(json.text).GetQuests();
       }
 
       gameProgress = new GameProgressManager();

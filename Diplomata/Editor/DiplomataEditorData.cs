@@ -15,7 +15,7 @@ namespace DiplomataEditor
     public Options options = new Options();
     public Inventory inventory = new Inventory();
     public GlobalFlags globalFlags = new GlobalFlags();
-    public Quests quests = new Quests();
+    public Quest[] quests = new Quest[0];
 
     public int workingContextMessagesId;
     public int workingContextEditId;
@@ -72,7 +72,7 @@ namespace DiplomataEditor
         diplomataEditor.options = JSONHelper.Read<Options>("preferences", "Diplomata/");
         diplomataEditor.inventory = JSONHelper.Read<Inventory>("inventory", "Diplomata/");
         diplomataEditor.globalFlags = JSONHelper.Read<GlobalFlags>("globalFlags", "Diplomata/");
-        diplomataEditor.quests = JSONHelper.Read<Quests>("quests", "Diplomata/");
+        diplomataEditor.quests = JSONHelper.Read<Quests>("quests", "Diplomata/").GetQuests();
         diplomataEditor.UpdateList();
       }
     }
@@ -211,7 +211,7 @@ namespace DiplomataEditor
 
     public void SaveQuests()
     {
-      JSONHelper.Update(quests, "quests", options.jsonPrettyPrint, "Diplomata/");
+      JSONHelper.Update(new Quests(quests), "quests", options.jsonPrettyPrint, "Diplomata/");
     }
 
     public void Save(Talkable character, string folderName)
