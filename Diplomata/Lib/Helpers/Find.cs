@@ -7,6 +7,8 @@ namespace Diplomata.Helpers
 {
   public class Subject
   {
+    // TODO: Consider arrays: create a method to bring a new Subject from a array field.
+
     private Type type;
     private Array collection;
     private List<object> results;
@@ -15,16 +17,8 @@ namespace Diplomata.Helpers
     {
       get
       {
-        try
-        {
-          if (results.Count < 1) throw new IndexOutOfRangeException();
-          return results.ToArray();
-        }
-        catch (Exception e)
-        {
-          Debug.LogError(string.Format("No results found. {0}", e.Message));
-          return new object[] { null };
-        }
+        if (results.Count < 1) return new object[] { null };
+        return results.ToArray();
       }
       private set
       {
@@ -49,54 +43,33 @@ namespace Diplomata.Helpers
     {
       results = new List<object>();
       this.collection = collection;
-      type = collection[0] != null ? collection[0].GetType() : typeof(object);
+      if (collection.Length > 0)
+      {
+        type = collection[0] != null ? collection[0].GetType() : null;
+      }
     }
 
     public Subject Where(string fieldName, object value)
     {
-      var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-      foreach (var field in fields)
+      if (type != null)
       {
-        if (field.Name == fieldName)
+        var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        foreach (var field in fields)
         {
-          foreach (var instance in collection)
+          if (field.Name == fieldName)
           {
-            if (field.GetValue(instance).Equals(value))
+            foreach (var instance in collection)
             {
-              results.Add(instance);
+              if (field.GetValue(instance).Equals(value))
+              {
+                results.Add(instance);
+              }
             }
           }
         }
       }
       return this;
-    }
-
-    public Subject In(string collectionName)
-    {
-      var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-      foreach (var field in fields)
-      {
-        if (field.Name == collectionName)
-        {
-          foreach (var instance in collection)
-          {
-            if (field.GetType() == typeof(Array))
-            {
-              return new Subject((object[]) field.GetValue(instance));
-            }
-            if (field.GetType() == typeof(List<object>))
-            {
-              var list = (List<object>) field.GetValue(instance);
-              return new Subject(list.ToArray());
-            }
-          }
-        }
-      }
-
-      Debug.LogError(string.Format("No results found. for {0}.", collectionName));
-      return null;
     }
   }
 
