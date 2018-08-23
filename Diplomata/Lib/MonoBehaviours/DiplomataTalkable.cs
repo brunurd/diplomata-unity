@@ -73,7 +73,8 @@ namespace Diplomata
 
         for (controlIndexes["context"] = 0; controlIndexes["context"] < talkable.contexts.Length; controlIndexes["context"]++)
         {
-          var context = Context.Find(talkable, controlIndexes["context"]);
+
+          var context = (Context) Find.In(talkable.contexts).Where("id", controlIndexes["context"]).Result;
           var lastContext = talkable.contexts.Length - 1;
 
           if (context != null)

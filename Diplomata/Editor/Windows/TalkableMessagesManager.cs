@@ -121,7 +121,7 @@ namespace DiplomataEditor.Windows
         case State.None:
           Init(State.Close);
           break;
-          
+
         case State.Context:
           ContextListMenu.Draw();
           break;

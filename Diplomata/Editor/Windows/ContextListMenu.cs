@@ -47,7 +47,7 @@ namespace DiplomataEditor.Windows
         for (int i = 0; i < talkable.contexts.Length; i++)
         {
 
-          Context context = Context.Find(talkable, i);
+          var context = (Context) Find.In(talkable.contexts).Where("id", i).Results[0];
 
           Rect boxRect = EditorGUILayout.BeginVertical(GUIHelper.boxStyle);
           GUI.Box(boxRect, GUIContent.none);
@@ -102,8 +102,9 @@ namespace DiplomataEditor.Windows
           {
             if (context.id > 0)
             {
+              var neighboorContext = (Context) Find.In(talkable.contexts).Where("id", context.id - 1).Results[0];
 
-              Context.Find(talkable, context.id - 1).id += 1;
+              neighboorContext.id += 1;
               context.id -= 1;
 
               diplomataEditor.Save(talkable, folderName);
@@ -114,8 +115,8 @@ namespace DiplomataEditor.Windows
           {
             if (context.id < talkable.contexts.Length - 1)
             {
-
-              Context.Find(talkable, context.id + 1).id -= 1;
+              var neighboorContext = (Context) Find.In(talkable.contexts).Where("id", context.id + 1).Results[0];
+              neighboorContext.id -= 1;
               context.id += 1;
 
               diplomataEditor.Save(talkable, folderName);

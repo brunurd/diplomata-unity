@@ -33,6 +33,18 @@ namespace Diplomata.Helpers
       }
     }
 
+    public object Result
+    {
+      get
+      {
+        return Results[0];
+      }
+      private set
+      {
+        results[0] = value;
+      }
+    }
+
     public Subject(object[] collection)
     {
       results = new List<object>();

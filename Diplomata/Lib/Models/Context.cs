@@ -71,48 +71,13 @@ namespace Diplomata.Models
       }
     }
 
-    public static Context Find(Talkable talkable, int id)
-    {
-      if (talkable != null)
-      {
-        foreach (Context context in talkable.contexts)
-        {
-          if (context.id == id)
-          {
-            return context;
-          }
-        }
-      }
-
-      return null;
-    }
-
-    public static Context Find(Talkable talkable, string name, string language)
-    {
-      if (talkable != null)
-      {
-
-        foreach (Context context in talkable.contexts)
-        {
-          LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, language);
-
-          if (name == contextName.value)
-          {
-            return context;
-          }
-        }
-      }
-
-      return null;
-    }
-
     public static Context[] ResetIDs(Talkable talkable, Context[] array)
     {
-      Context[] temp = new Context[0];
+      var temp = new Context[0];
 
       for (int i = 0; i < array.Length + 1; i++)
       {
-        Context ctx = Find(talkable, i);
+        var ctx = (Context) Find.In(talkable.contexts).Where("id", i).Result;
 
         if (ctx != null)
         {

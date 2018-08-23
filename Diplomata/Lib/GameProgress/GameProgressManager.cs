@@ -106,7 +106,8 @@ namespace Diplomata.GameProgress
 
         foreach (ContextProgress context in character.contexts)
         {
-          var contextTemp = Context.Find(characterTemp, (int) context.id);
+          var contextTemp = (Context) Find.In(characterTemp.contexts)
+            .Where("id", (int) context.id).Results[0];
           contextTemp.happened = context.happened;
 
           foreach (ColumnProgress column in context.columns)
@@ -130,7 +131,8 @@ namespace Diplomata.GameProgress
 
         foreach (ContextProgress context in interactable.contexts)
         {
-          var contextTemp = Context.Find(interactableTemp, (int) context.id);
+          var contextTemp = (Context) Find.In(interactableTemp.contexts)
+            .Where("id", (int) context.id).Results[0];
           contextTemp.happened = context.happened;
 
           foreach (ColumnProgress column in context.columns)

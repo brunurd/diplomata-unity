@@ -84,7 +84,7 @@ namespace DiplomataEditor.Windows
         case State.None:
           Init(State.Close);
           break;
-          
+
         case State.Edit:
           DrawEditWindow();
           break;
