@@ -18,7 +18,7 @@ namespace Diplomata
 
       if (talkable != null && Application.isPlaying)
       {
-        talkable = (Interactable) Find.In(DiplomataData.interactables.ToArray()).Where("name", talkable.name).Result;
+        talkable = Interactable.Find(DiplomataData.interactables, talkable.name);
       }
     }
   }

@@ -19,7 +19,7 @@ namespace Diplomata
 
       if (talkable != null && Application.isPlaying)
       {
-        talkable = (Character) Find.In(DiplomataData.characters.ToArray()).Where("name", talkable.name).Result;
+        talkable = Character.Find(DiplomataData.characters, talkable.name);
       }
     }
 

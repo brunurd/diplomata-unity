@@ -223,18 +223,13 @@ namespace Diplomata.Models
     /// Find a quest from a array.
     /// </summary>
     /// <param name="quests">A array of quests.</param>
-    /// <param name="with">The quest id or name.</param>
-    /// <returns>The quest with that id or null if don't exists.</returns>
-    public static Quest Find(Quest[] quests, params string[] with)
+    /// <param name="value">The quest id (a string guid) or name.</param>
+    /// <returns>The quest if found, or null.</returns>
+    public static Quest Find(Quest[] quests, string value)
     {
-      foreach (Quest quest in quests)
-      {
-        if (ArrayHelper.Contains(with, quest.id) || ArrayHelper.Contains(with, quest.Name))
-        {
-          return quest;
-        }
-      }
-      return null;
+      var quest = (Quest) Helpers.Find.In(quests).Where("id",value).Result;
+      if (quest == null) quest = (Quest) Helpers.Find.In(quests).Where("Name",value).Result;
+      return quest;
     }
 
     /// <summary>

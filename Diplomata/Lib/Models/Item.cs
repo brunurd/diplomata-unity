@@ -44,23 +44,27 @@ namespace Diplomata.Models
       }
     }
 
-    public static Item Find(Item[] items, int itemId)
+    /// <summary>
+    /// Find a item by id.
+    /// </summary>
+    /// <param name="array">A array of items.</param>
+    /// <param name="itemId">The id of the item.</param>
+    /// <returns>The item if found, or null.</returns>
+    public static Item Find(Item[] array, int itemId)
     {
-
-      foreach (Item item in items)
-      {
-        if (item.id == itemId)
-        {
-          return item;
-        }
-      }
-
-      return null;
+      return (Item) Helpers.Find.In(array).Where("id", itemId).Result;
     }
 
+    /// <summary>
+    /// Find a item by name in a specific language.
+    /// </summary>
+    /// <param name="items">A array of items.</param>
+    /// <param name="name">The name of the item.</param>
+    /// <param name="language">The specific language.</param>
+    /// <returns>The item if found, or null.s</returns>
     public static Item Find(Item[] items, string name, string language = "English")
     {
-
+      // TODO: use the Helpers.Find class here.
       foreach (Item item in items)
       {
         LanguageDictionary itemName = DictionariesHelper.ContainsKey(item.name, language);
@@ -70,8 +74,7 @@ namespace Diplomata.Models
           return item;
         }
       }
-
-      Debug.LogWarning("This item doesn't exist.");
+      Debug.LogError("This item doesn't exist.");
       return null;
     }
   }

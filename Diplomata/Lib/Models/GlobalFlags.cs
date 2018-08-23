@@ -7,17 +7,15 @@ namespace Diplomata.Models
   {
     public Flag[] flags = new Flag[0];
 
-    public Flag Find(Flag[] flagArray, string name)
+    /// <summary>
+    /// Find a flag by name.
+    /// </summary>
+    /// <param name="array">A array of flags.</param>
+    /// <param name="name">The name of the flag.</param>
+    /// <returns>The flag if found, or null.</returns>
+    public static Flag Find(Flag[] array, string name)
     {
-      foreach (Flag flag in flagArray)
-      {
-        if (flag.name == name)
-        {
-          return flag;
-        }
-      }
-
-      return null;
+      return (Flag) Helpers.Find.In(array).Where("name", name).Result;
     }
   }
 }

@@ -44,7 +44,7 @@ namespace DiplomataEditor.Windows
       for (int i = 0; i < diplomataEditor.options.characterList.Length; i++)
       {
         var name = diplomataEditor.options.characterList[i];
-        var character = (Character) Find.In(diplomataEditor.characters.ToArray()).Where("name", name).Result;
+        var character = (Character.Find(diplomataEditor.characters, name);
 
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();

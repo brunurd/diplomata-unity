@@ -1328,21 +1328,24 @@ namespace DiplomataEditor.Windows
                   {
                     var questIndex = ArrayHelper.GetIndex(Quest.GetNames(diplomataEditor.quests), questName);
                     if (questIndex > -1) condition.questAndState.questId = Quest.GetIDs(diplomataEditor.quests) [questIndex];
-                    quest = Quest.Find(diplomataEditor.quests, condition.questAndState.questId);
                   }
 
                   // Get the quest state name.
+                  quest = Quest.Find(diplomataEditor.quests, condition.questAndState.questId);
                   var questState = quest != null ? quest.GetState(condition.questAndState.questId) : null;
                   var questStateName = questState != null ? questState.Name : string.Empty;
 
                   // Quest state Popup with a change checker.
-                  EditorGUI.BeginChangeCheck();
-                  questStateName = GUIHelper.Popup("Quest state: ", questStateName, QuestState.GetNames(quest.GetQuestStates()));
-                  if (EditorGUI.EndChangeCheck())
+                  if (quest != null)
                   {
-                    var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
-                    if (questStateIndex > -1)
-                      condition.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates()) [questStateIndex];
+                    EditorGUI.BeginChangeCheck();
+                    questStateName = GUIHelper.Popup("Quest state: ", questStateName, QuestState.GetNames(quest.GetQuestStates()));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
+                      if (questStateIndex > -1)
+                        condition.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates()) [questStateIndex];
+                    }
                   }
                   break;
               }
@@ -1695,21 +1698,25 @@ namespace DiplomataEditor.Windows
                   {
                     var questIndex = ArrayHelper.GetIndex(Quest.GetNames(diplomataEditor.quests), questName);
                     if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(diplomataEditor.quests) [questIndex];
-                    quest = Quest.Find(diplomataEditor.quests, effect.questAndState.questId);
                   }
 
                   // Get the quest state name.
+                  quest = Quest.Find(diplomataEditor.quests, effect.questAndState.questId);
                   var questState = quest != null ? quest.GetState(effect.questAndState.questId) : null;
                   var questStateName = questState != null ? questState.Name : string.Empty;
 
                   // Quest state Popup with a change checker.
-                  EditorGUI.BeginChangeCheck();
-                  questStateName = GUIHelper.Popup("Quest state: ", questStateName, QuestState.GetNames(quest.GetQuestStates()));
-                  if (EditorGUI.EndChangeCheck())
+                  if (quest != null)
                   {
-                    var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
-                    if (questStateIndex > -1)
-                      effect.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates()) [questStateIndex];
+                    EditorGUI.BeginChangeCheck();
+
+                    questStateName = GUIHelper.Popup("Quest state: ", questStateName, QuestState.GetNames(quest.GetQuestStates()));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
+                      if (questStateIndex > -1)
+                        effect.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates()) [questStateIndex];
+                    }
                   }
                   break;
               }

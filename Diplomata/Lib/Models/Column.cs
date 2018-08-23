@@ -20,19 +20,6 @@ namespace Diplomata.Models
       messages = new Message[0];
     }
 
-    public static Column Find(Context context, int columnId)
-    {
-      foreach (Column column in context.columns)
-      {
-        if (column.id == columnId)
-        {
-          return column;
-        }
-      }
-
-      return null;
-    }
-
     public static Column[] RemoveEmptyColumns(Column[] columns)
     {
       var newArray = new Column[0];
@@ -59,6 +46,17 @@ namespace Diplomata.Models
       }
 
       return newArray;
+    }
+
+    /// <summary>
+    /// Find a column by it id.
+    /// </summary>
+    /// <param name="context">A context.</param>
+    /// <param name="columnId">The id of the column.</param>
+    /// <returns>The column if found, or null.</returns>
+    public static Column Find(Context context, int columnId)
+    {
+      return (Column) Helpers.Find.In(context.columns).Where("id", columnId).Result;
     }
   }
 }

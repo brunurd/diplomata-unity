@@ -126,30 +126,26 @@ namespace Diplomata.Models
       return sprite;
     }
 
-    public static Message Find(Message[] messages, int rowId)
+    /// <summary>
+    /// Find a message by it unique id.
+    /// </summary>
+    /// <param name="array">A array of messages.</param>
+    /// <param name="rowId">The unique id (a string guid) of the message.</param>
+    /// <returns>The message if found, or null.</returns>
+    public static Message Find(Message[] array, string uniqueId)
     {
-      foreach (Message message in messages)
-      {
-        if (message.id == rowId)
-        {
-          return message;
-        }
-      }
-
-      return null;
+      return (Message) Helpers.Find.In(array).Where("uniqueId", uniqueId).Result;
     }
 
-    public static Message Find(Message[] messages, string uniqueId)
+    /// <summary>
+    /// Find a message by it row id (it index).
+    /// </summary>
+    /// <param name="array">A array of messages.</param>
+    /// <param name="rowId">The row id (it index) of the message.</param>
+    /// <returns>The message if found, or null.</returns>
+    public static Message Find(Message[] array, int rowId)
     {
-      foreach (Message message in messages)
-      {
-        if (message.uniqueId == uniqueId)
-        {
-          return message;
-        }
-      }
-
-      return null;
+      return (Message) Helpers.Find.In(array).Where("id", rowId).Result;
     }
 
     public static Message[] ResetIDs(Message[] array)

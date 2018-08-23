@@ -64,5 +64,16 @@ namespace Diplomata.Models
         }
       }
     }
+
+    /// <summary>
+    /// Find a character by name.
+    /// </summary>
+    /// <param name="list">A list of characters.</param>
+    /// <param name="name">The name of the character.</param>
+    /// <returns>The character if found, or null.</returns>
+    public static Character Find(List<Character> list, string name)
+    {
+      return (Character) Helpers.Find.In(list.ToArray()).Where("name", name).Result;
+    }
   }
 }
