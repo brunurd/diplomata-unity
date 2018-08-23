@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Diplomata.GameProgress;
+using Diplomata.Helpers;
 using Diplomata.Models;
 using UnityEngine;
 
@@ -12,12 +12,12 @@ namespace Diplomata
   {
     private static DiplomataData instance = null;
     public static Options options = new Options();
-    public static GameProgressManager gameProgress = new GameProgressManager();
     public static List<Character> characters = new List<Character>();
     public static List<Interactable> interactables = new List<Interactable>();
     public static Inventory inventory = new Inventory();
     public static GlobalFlags globalFlags = new GlobalFlags();
     public static Quest[] quests = new Quest[0];
+    public static TalkLog[] talkLogs = new TalkLog[0];
     public static bool isTalking;
 
     private void Awake()
@@ -52,6 +52,7 @@ namespace Diplomata
     public static void Restart()
     {
       options = new Options();
+
       var json = (TextAsset) Resources.Load("Diplomata/preferences");
 
       if (json != null)
@@ -85,8 +86,11 @@ namespace Diplomata
         quests = JsonUtility.FromJson<Quests>(json.text).GetQuests();
       }
 
-      gameProgress = new GameProgressManager();
-      gameProgress.Start();
+      talkLogs = new TalkLog[0];
+      foreach (var character in characters)
+      {
+        talkLogs = ArrayHelper.Add(talkLogs, new TalkLog(character.name));
+      }
     }
 
     public static Message GetMessageById(string uniqueId)

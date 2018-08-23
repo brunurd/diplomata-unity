@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Diplomata.Dictionaries;
-using Diplomata.GameProgress;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using UnityEngine;
@@ -16,8 +15,6 @@ namespace Diplomata
   [DisallowMultipleComponent]
   public class DiplomataTalkable : MonoBehaviour
   {
-    // protected Action onStart;
-
     public List<Message> choices;
     public Talkable talkable;
     public Column currentColumn;
@@ -473,28 +470,25 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Returns the text of the current message
+    /// Returns the text of the current message.
     /// </summary>
-    /// <returns>The current message</returns>
+    /// <returns>The current message.</returns>
     public string ShowMessageContentSubtitle()
     {
       if (DiplomataData.isTalking)
       {
         if (currentMessage != null)
         {
-          var talkLog = TalkLog.Find(DiplomataData.gameProgress.talkLog, talkable.name);
-
-          if (talkLog == null)
+          // Save in the talk log.
+          var talkLog = TalkLog.Find(DiplomataData.talkLogs, talkable.name);
+          if (talkLog != null)
           {
-            DiplomataData.gameProgress.talkLog = ArrayHelper.Add(DiplomataData.gameProgress.talkLog, new TalkLog(talkable.name));
-            talkLog = TalkLog.Find(DiplomataData.gameProgress.talkLog, talkable.name);
+            talkLog.messagesIds = ArrayHelper.Add(talkLog.messagesIds, currentMessage.GetUniqueId());
           }
 
-          talkLog.messagesIds = ArrayHelper.Add(talkLog.messagesIds, currentMessage.GetUniqueId());
-
-          return DictionariesHelper.ContainsKey(currentMessage.content, DiplomataData.gameProgress.options.currentSubtitledLanguage).value;
+          // Return the text.
+          return DictionariesHelper.ContainsKey(currentMessage.content, DiplomataData.options.currentLanguage).value;
         }
-
         else
         {
           var errorText = "Current message to show is not setted.";
@@ -503,8 +497,6 @@ namespace Diplomata
           return errorText;
         }
       }
-
-      Debug.Log("Empty string returned.");
       return string.Empty;
     }
 
@@ -515,7 +507,7 @@ namespace Diplomata
     {
       if (currentMessage != null)
       {
-        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, DiplomataData.gameProgress.options.currentDubbedLanguage);
+        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, DiplomataData.options.currentLanguage);
 
         if (audioClipPath.value != string.Empty)
         {
@@ -535,7 +527,7 @@ namespace Diplomata
 
             if (audioSource != null)
             {
-              audioSource.PlayOneShot(currentMessage.audioClip, DiplomataData.gameProgress.options.volumeScale);
+              audioSource.PlayOneShot(currentMessage.audioClip, DiplomataData.options.volumeScale);
             }
 
             else
@@ -554,7 +546,7 @@ namespace Diplomata
     {
       if (currentMessage != null)
       {
-        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, DiplomataData.gameProgress.options.currentDubbedLanguage);
+        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, DiplomataData.options.currentLanguage);
 
         if (audioClipPath.value != string.Empty)
         {
@@ -964,7 +956,7 @@ namespace Diplomata
       {
         foreach (Message choice in choices)
         {
-          var content = DictionariesHelper.ContainsKey(choice.content, DiplomataData.gameProgress.options.currentSubtitledLanguage).value;
+          var content = DictionariesHelper.ContainsKey(choice.content, DiplomataData.options.currentLanguage).value;
           var choiceText = content; //(shortContent != "") ? shortContent : content;
 
           if (!choice.alreadySpoked && choice.disposable)
@@ -1073,7 +1065,7 @@ namespace Diplomata
       }
 
       return DictionariesHelper.ContainsKey(GetLastMessage().content,
-        DiplomataData.gameProgress.options.currentSubtitledLanguage).value;
+        DiplomataData.options.currentLanguage).value;
     }
   }
 }

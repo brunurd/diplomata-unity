@@ -147,8 +147,16 @@ namespace Diplomata.Models
     /// <param name="stateId">The id (a string guid) of the quest state to force.</param>
     public void SetState(string stateId)
     {
-      if (ArrayHelper.Contains(QuestState.GetIDs(GetQuestStates()), stateId))
-        currentStateId = stateId;
+      if (!finished)
+      {
+        initialized = true;
+        if (ArrayHelper.Contains(QuestState.GetIDs(GetQuestStates()), stateId))
+          currentStateId = stateId;
+      }
+      else
+      {
+        Debug.Log(string.Format("Quest {0} already finished.", Name));
+      }
     }
 
     /// <summary>

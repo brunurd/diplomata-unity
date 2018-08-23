@@ -299,7 +299,6 @@ namespace DiplomataEditor.Windows
                           diplomataEditor.options.currentLanguage).value);
                       }
                       break;
-
                     case Condition.Type.InfluenceEqualTo:
                     case Condition.Type.InfluenceGreaterThan:
                     case Condition.Type.InfluenceLessThan:

@@ -1,6 +1,7 @@
 using System;
+using Diplomata.Helpers;
 
-namespace Diplomata.GameProgress
+namespace Diplomata.Models
 {
   [Serializable]
   public class TalkLog
@@ -17,15 +18,7 @@ namespace Diplomata.GameProgress
 
     public static TalkLog Find(TalkLog[] array, string talkableName)
     {
-      foreach (TalkLog talkLog in array)
-      {
-        if (talkLog.talkableName == talkableName)
-        {
-          return talkLog;
-        }
-      }
-
-      return null;
+      return (TalkLog) Helpers.Find.In(array).Where("talkableName", talkableName).Result;
     }
   }
 }

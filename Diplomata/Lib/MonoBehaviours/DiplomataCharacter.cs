@@ -31,7 +31,7 @@ namespace Diplomata
       {
         foreach (Message msg in choices)
         {
-          var localContent = DictionariesHelper.ContainsKey(msg.content, DiplomataData.gameProgress.options.currentSubtitledLanguage).value;
+          var localContent = DictionariesHelper.ContainsKey(msg.content, DiplomataData.options.currentLanguage).value;
 
           if (localContent == content)
           {

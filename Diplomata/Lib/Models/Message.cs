@@ -130,7 +130,7 @@ namespace Diplomata.Models
     /// Find a message by it unique id.
     /// </summary>
     /// <param name="array">A array of messages.</param>
-    /// <param name="rowId">The unique id (a string guid) of the message.</param>
+    /// <param name="uniqueId">The unique id (a string guid) of the message.</param>
     /// <returns>The message if found, or null.</returns>
     public static Message Find(Message[] array, string uniqueId)
     {
