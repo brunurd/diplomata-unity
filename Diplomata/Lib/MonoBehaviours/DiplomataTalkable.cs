@@ -341,6 +341,38 @@ namespace Diplomata
                           }
 
                           break;
+                        case Condition.Type.QuestStateIs:
+                          var quest = Quest.Find(DiplomataData.quests, condition.questAndState.questId);
+
+                          if (quest != null)
+                          {
+                            var currentState = quest.GetCurrentState();
+                            var targetState = quest.GetState(condition.questAndState.questStateId);
+                            if (currentState == null)
+                            {
+                              Debug.Log(string.Format("Probably quest {0} is not initialized.", quest.Name));
+                              condition.proceed = false;
+                            }
+                            else if (targetState == null)
+                            {
+                              Debug.Log(string.Format("Invalid quest state id: {0}.", condition.questAndState.questStateId));
+                              condition.proceed = false;
+                            }
+                            else if (currentState == targetState.Name)
+                            {
+                              condition.proceed = true;
+                            }
+                            else
+                            {
+                              condition.proceed = false;
+                            }
+                          }
+                          else
+                          {
+                            Debug.LogWarning("Cannot find the quest " + condition.questAndState.questId);
+                            condition.proceed = false;
+                          }
+                          break;
                       }
 
                       if (!condition.custom.CheckAll())
@@ -865,6 +897,31 @@ namespace Diplomata
 
             case Effect.Type.EndOfDialogue:
               EndTalk();
+              break;
+            case Effect.Type.SetQuestState:
+              var quest = Quest.Find(DiplomataData.quests, effect.questAndState.questId);
+
+              if (quest != null)
+              {
+                var currentState = quest.GetCurrentState();
+                var targetState = quest.GetState(effect.questAndState.questStateId);
+                if (currentState == null)
+                {
+                  Debug.Log(string.Format("Probably quest {0} is not initialized.", quest.Name));
+                }
+                else if (targetState == null)
+                {
+                  Debug.Log(string.Format("Invalid quest state id: {0}.", effect.questAndState.questStateId));
+                }
+                else
+                {
+                  quest.SetState(effect.questAndState.questStateId);
+                }
+              }
+              else
+              {
+                Debug.LogWarning("Cannot find the quest " + effect.questAndState.questId);
+              }
               break;
           }
 

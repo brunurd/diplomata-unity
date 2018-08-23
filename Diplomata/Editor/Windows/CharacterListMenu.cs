@@ -7,132 +7,129 @@ using UnityEditor;
 using UnityEngine;
 
 namespace DiplomataEditor.Windows
-{
-  public class CharacterListMenu : EditorWindow
   {
-    public Vector2 scrollPos = new Vector2(0, 0);
-    private DiplomataEditorData diplomataEditor;
-
-    [MenuItem("Diplomata/Characters")]
-    static public void Init()
+    public class CharacterListMenu : EditorWindow
     {
-      DiplomataEditorData.Instantiate();
+      public Vector2 scrollPos = new Vector2(0, 0);
+      private DiplomataEditorData diplomataEditor;
 
-      CharacterListMenu window = (CharacterListMenu) GetWindow(typeof(CharacterListMenu), false, "Character List");
-      window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
-
-      window.Show();
-    }
-
-    public void OnEnable()
-    {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-    }
-
-    public void OnGUI()
-    {
-      GUIHelper.Init();
-
-      scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
-      GUILayout.BeginVertical(GUIHelper.windowStyle);
-
-      if (diplomataEditor.options.characterList.Length <= 0)
+      [MenuItem("Diplomata/Characters")]
+      static public void Init()
       {
-        EditorGUILayout.HelpBox("No characters yet.", MessageType.Info);
+        DiplomataEditorData.Instantiate();
+
+        CharacterListMenu window = (CharacterListMenu) GetWindow(typeof(CharacterListMenu), false, "Character List");
+        window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
+
+        window.Show();
       }
 
-      for (int i = 0; i < diplomataEditor.options.characterList.Length; i++)
+      public void OnEnable()
       {
-        var name = diplomataEditor.options.characterList[i];
-        var character = (Character.Find(diplomataEditor.characters, name);
+        diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      }
 
-        GUILayout.BeginHorizontal();
-        GUILayout.BeginHorizontal();
+      public void OnGUI()
+      {
+        GUIHelper.Init();
 
-        if (EditorGUIUtility.isProSkin)
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        GUILayout.BeginVertical(GUIHelper.windowStyle);
+
+        if (diplomataEditor.options.characterList.Length <= 0)
         {
-          GUIHelper.labelStyle.normal.textColor = Color.white;
+          EditorGUILayout.HelpBox("No characters yet.", MessageType.Info);
         }
 
-        GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
-        GUILayout.Label(name, GUIHelper.labelStyle);
-
-        GUIHelper.labelStyle.alignment = TextAnchor.MiddleRight;
-        if (diplomataEditor.options.playerCharacterName == name)
+        for (int i = 0; i < diplomataEditor.options.characterList.Length; i++)
         {
-          GUILayout.Label("<b>[Player]</b>", GUIHelper.labelStyle);
-        }
+          var name = diplomataEditor.options.characterList[i];
+          var character = (Character.Find(diplomataEditor.characters, name));
 
-        GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal(); GUILayout.BeginHorizontal();
 
-        GUILayout.Space(10.0f);
-
-        GUILayout.BeginHorizontal(GUILayout.MaxWidth(Screen.width / 2));
-
-        if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-        {
-          CharacterEditor.Edit(character);
-        }
-
-        if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-        {
-          TalkableMessagesManager.OpenContextMenu(character);
-          Close();
-        }
-
-        if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-        {
-          if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
-          {
-            var isPlayer = false;
-
-            if (name == diplomataEditor.options.playerCharacterName)
+            if (EditorGUIUtility.isProSkin)
             {
-              isPlayer = true;
+              GUIHelper.labelStyle.normal.textColor = Color.white;
             }
 
-            diplomataEditor.characters.Remove(character);
-            diplomataEditor.options.characterList = ArrayHelper.Remove(diplomataEditor.options.characterList, name);
+            GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft; GUILayout.Label(name, GUIHelper.labelStyle);
 
-            JSONHelper.Delete(name, "Diplomata/Characters/");
-
-            if (isPlayer && diplomataEditor.options.characterList.Length > 0)
+            GUIHelper.labelStyle.alignment = TextAnchor.MiddleRight;
+            if (diplomataEditor.options.playerCharacterName == name)
             {
-              diplomataEditor.options.playerCharacterName = diplomataEditor.options.characterList[0];
+              GUILayout.Label("<b>[Player]</b>", GUIHelper.labelStyle);
             }
 
-            diplomataEditor.SavePreferences();
+            GUILayout.EndHorizontal();
 
-            CharacterEditor.Reset(name);
-            TalkableMessagesManager.Reset(name);
-            ContextEditor.Reset(name);
+            GUILayout.Space(10.0f);
+
+            GUILayout.BeginHorizontal(GUILayout.MaxWidth(Screen.width / 2));
+
+            if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            {
+              CharacterEditor.Edit(character);
+            }
+
+            if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            {
+              TalkableMessagesManager.OpenContextMenu(character);
+              Close();
+            }
+
+            if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            {
+              if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
+              {
+                var isPlayer = false;
+
+                if (name == diplomataEditor.options.playerCharacterName)
+                {
+                  isPlayer = true;
+                }
+
+                diplomataEditor.characters.Remove(character);
+                diplomataEditor.options.characterList = ArrayHelper.Remove(diplomataEditor.options.characterList, name);
+
+                JSONHelper.Delete(name, "Diplomata/Characters/");
+
+                if (isPlayer && diplomataEditor.options.characterList.Length > 0)
+                {
+                  diplomataEditor.options.playerCharacterName = diplomataEditor.options.characterList[0];
+                }
+
+                diplomataEditor.SavePreferences();
+
+                CharacterEditor.Reset(name);
+                TalkableMessagesManager.Reset(name);
+                ContextEditor.Reset(name);
+              }
+            }
+
+            GUILayout.EndHorizontal(); GUILayout.EndHorizontal();
+
+            if (i < diplomataEditor.options.characterList.Length - 1)
+            {
+              GUIHelper.Separator();
+            }
           }
+
+          EditorGUILayout.Separator();
+
+          if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+          {
+            CharacterEditor.OpenCreate();
+          }
+
+          GUILayout.EndVertical();
+          EditorGUILayout.EndScrollView();
         }
 
-        GUILayout.EndHorizontal();
-        GUILayout.EndHorizontal();
-
-        if (i < diplomataEditor.options.characterList.Length - 1)
+        public void OnInspectorUpdate()
         {
-          GUIHelper.Separator();
+          Repaint();
         }
       }
 
-      EditorGUILayout.Separator();
-
-      if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-      {
-        CharacterEditor.OpenCreate();
-      }
-
-      GUILayout.EndVertical();
-      EditorGUILayout.EndScrollView();
     }
-
-    public void OnInspectorUpdate()
-    {
-      Repaint();
-    }
-  }
-
-}

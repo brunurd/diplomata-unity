@@ -13,7 +13,7 @@ namespace Diplomata.Models
     /// <param name="array">A array of flags.</param>
     /// <param name="name">The name of the flag.</param>
     /// <returns>The flag if found, or null.</returns>
-    public static Flag Find(Flag[] array, string name)
+    public Flag Find(Flag[] array, string name)
     {
       return (Flag) Helpers.Find.In(array).Where("name", name).Result;
     }

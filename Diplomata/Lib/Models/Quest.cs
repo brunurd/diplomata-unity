@@ -15,7 +15,7 @@ namespace Diplomata.Models
     [SerializeField] private string id;
     public string Name;
     [SerializeField] private QuestState[] questStates;
-    private string questStateId;
+    private string currentStateId;
     private bool initialized;
     private bool finished;
 
@@ -53,11 +53,11 @@ namespace Diplomata.Models
     private int GetStateIndex()
     {
       int index = -1;
-      if (questStateId != string.Empty && questStateId != null && initialized && !finished)
+      if (currentStateId != string.Empty && currentStateId != null && initialized && !finished)
       {
         for (var i = 0; i < questStates.Length; i++)
         {
-          if (questStates[i].GetId() == questStateId)
+          if (questStates[i].GetId() == currentStateId)
           {
             index = i;
             break;
@@ -90,7 +90,7 @@ namespace Diplomata.Models
       if (!finished && !initialized)
       {
         initialized = true;
-        questStateId = questStates[0].GetId();
+        currentStateId = questStates[0].GetId();
       }
     }
 
@@ -135,10 +135,20 @@ namespace Diplomata.Models
           }
           else
           {
-            questStateId = questStates[index + 1].GetId();
+            currentStateId = questStates[index + 1].GetId();
           }
         }
       }
+    }
+
+    /// <summary>
+    /// Force a quest state.
+    /// </summary>
+    /// <param name="stateId">The id (a string guid) of the quest state to force.</param>
+    public void SetState(string stateId)
+    {
+      if (ArrayHelper.Contains(QuestState.GetIDs(GetQuestStates()), stateId))
+        currentStateId = stateId;
     }
 
     /// <summary>
@@ -215,7 +225,7 @@ namespace Diplomata.Models
       if (initialized)
       {
         finished = true;
-        questStateId = string.Empty;
+        currentStateId = string.Empty;
       }
     }
 
@@ -227,8 +237,8 @@ namespace Diplomata.Models
     /// <returns>The quest if found, or null.</returns>
     public static Quest Find(Quest[] quests, string value)
     {
-      var quest = (Quest) Helpers.Find.In(quests).Where("id",value).Result;
-      if (quest == null) quest = (Quest) Helpers.Find.In(quests).Where("Name",value).Result;
+      var quest = (Quest) Helpers.Find.In(quests).Where("id", value).Result;
+      if (quest == null) quest = (Quest) Helpers.Find.In(quests).Where("Name", value).Result;
       return quest;
     }
 

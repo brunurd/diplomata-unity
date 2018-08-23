@@ -94,7 +94,7 @@ namespace Diplomata.Helpers
           }
         }
       }
-      
+
       Debug.LogError(string.Format("No results found. for {0}.", collectionName));
       return null;
     }
