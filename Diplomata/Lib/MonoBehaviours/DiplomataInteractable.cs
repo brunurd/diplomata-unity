@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Diplomata.Helpers;
 using Diplomata.Models;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace Diplomata
 
       if (talkable != null && Application.isPlaying)
       {
-        talkable = (Interactable) Interactable.Find(DiplomataData.interactables, talkable.name);
+        talkable = (Interactable) Find.In(DiplomataData.interactables.ToArray()).Where("name", talkable.name).Result;
       }
     }
   }

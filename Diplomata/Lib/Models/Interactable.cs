@@ -49,18 +49,5 @@ namespace Diplomata.Models
         }
       }
     }
-
-    public static Interactable Find(List<Interactable> interactables, string name)
-    {
-      foreach (Interactable interactable in interactables)
-      {
-        if (interactable.name == name)
-        {
-          return interactable;
-        }
-      }
-
-      return null;
-    }
   }
 }

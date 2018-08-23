@@ -64,15 +64,15 @@ namespace DiplomataEditor.Windows
 
         if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          InteractableEditor.Edit(Interactable.Find(diplomataEditor.interactables, name));
+          InteractableEditor.Edit((Interactable) Find.In(diplomataEditor.interactables.ToArray()).Where("name", name).Result);
         }
 
         if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
-
-            diplomataEditor.interactables.Remove(Interactable.Find(diplomataEditor.interactables, name));
+            var interactable = (Interactable) Find.In(diplomataEditor.interactables.ToArray()).Where("name", name).Result;
+            diplomataEditor.interactables.Remove(interactable);
             diplomataEditor.options.interactableList = ArrayHelper.Remove(diplomataEditor.options.interactableList, name);
 
             JSONHelper.Delete(name, "Diplomata/Interactables/");
