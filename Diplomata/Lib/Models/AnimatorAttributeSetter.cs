@@ -6,6 +6,7 @@ namespace Diplomata.Models
   [Serializable]
   public class AnimatorAttributeSetter
   {
+    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
     public AnimatorControllerParameterType type = AnimatorControllerParameterType.Float;
     public string name;
     public float setFloat;

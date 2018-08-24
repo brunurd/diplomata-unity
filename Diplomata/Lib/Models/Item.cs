@@ -9,6 +9,7 @@ namespace Diplomata.Models
   [Serializable]
   public class Item
   {
+    [SerializeField] string uniqueId = Guid.NewGuid().ToString();
     public int id;
     public LanguageDictionary[] name;
     public LanguageDictionary[] description;

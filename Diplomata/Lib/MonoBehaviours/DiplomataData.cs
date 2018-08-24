@@ -124,7 +124,7 @@ namespace Diplomata
       {
         if (label.name == labelName)
         {
-          labelId = label.id;
+          labelId = label.uniqueId;
         }
       }
 

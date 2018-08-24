@@ -1,10 +1,12 @@
 using System;
+using UnityEngine;
 
 namespace Diplomata.Models
 {
   [Serializable]
   public class Flag
   {
+    [SerializeField] string uniqueId = Guid.NewGuid().ToString();
     public string name;
     public bool value;
 

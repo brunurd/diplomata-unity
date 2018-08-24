@@ -1,7 +1,7 @@
+using System;
+
 namespace Diplomata.Persistence
 {
-  public class ContextPersistent
-  {
-
-  }
+  [Serializable]
+  public class ContextPersistent : Persistent {}
 }

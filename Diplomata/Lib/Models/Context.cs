@@ -2,6 +2,9 @@ using System;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Persistence;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Diplomata.Models
 {
@@ -14,8 +17,9 @@ namespace Diplomata.Models
   }
 
   [Serializable]
-  public class Context
+  public class Context : Data
   {
+    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
     public int id;
     public string talkableName;
     public bool idFilter = false;
@@ -57,12 +61,13 @@ namespace Diplomata.Models
 
     public Context(int id, string talkableName)
     {
+      uniqueId = Guid.NewGuid().ToString();
       this.id = id;
       this.talkableName = talkableName;
-      columns = new Column[0];
       name = new LanguageDictionary[0];
-      labels = new Label[] { new Label() };
       description = new LanguageDictionary[0];
+      columns = new Column[0];
+      labels = new Label[] { new Label() };
 
       foreach (Language lang in DiplomataData.options.languages)
       {
@@ -105,6 +110,26 @@ namespace Diplomata.Models
       }
 
       return temp;
+    }
+
+    public override Persistent GetData()
+    {
+      throw new NotImplementedException();
+    }
+
+    public override Persistent[] GetArrayData(Data[] array)
+    {
+      throw new NotImplementedException();
+    }
+
+    public override void SetData(Persistent persistentData)
+    {
+      throw new NotImplementedException();
+    }
+
+    public override void SetArrayData(ref Data[] data, Persistent[] persistentData)
+    {
+      throw new NotImplementedException();
     }
   }
 }

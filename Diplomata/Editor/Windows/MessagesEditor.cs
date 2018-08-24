@@ -148,9 +148,9 @@ namespace DiplomataEditor.Windows
             {
               foreach (Message msg in col.messages)
               {
-                if (msg.labelId == label.id)
+                if (msg.labelId == label.uniqueId)
                 {
-                  msg.labelId = context.labels[0].id;
+                  msg.labelId = context.labels[0].uniqueId;
                 }
               }
             }
@@ -217,7 +217,7 @@ namespace DiplomataEditor.Windows
 
           if (currentMessage.labelId == "")
           {
-            currentMessage.labelId = context.labels[0].id;
+            currentMessage.labelId = context.labels[0].uniqueId;
           }
 
           var label = Label.Find(context.labels, currentMessage.labelId);
@@ -230,6 +230,8 @@ namespace DiplomataEditor.Windows
               break;
             }
           }
+
+          label = label != null ? label : new Label();
 
           if (label.show)
           {
@@ -516,7 +518,7 @@ namespace DiplomataEditor.Windows
 
         if (GUILayout.Button("Add Message", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          column.messages = ArrayHelper.Add(column.messages, new Message(column.messages.Length, column.emitter, column.id, context.labels[0].id));
+          column.messages = ArrayHelper.Add(column.messages, new Message(column.messages.Length, column.emitter, column.id, context.labels[0].uniqueId));
 
           SetMessage(null);
 
@@ -668,7 +670,7 @@ namespace DiplomataEditor.Windows
 
             if (EditorGUI.EndChangeCheck())
             {
-              message.labelId = context.labels[labelIndex].id;
+              message.labelId = context.labels[labelIndex].uniqueId;
             }
 
             GUILayout.EndHorizontal();

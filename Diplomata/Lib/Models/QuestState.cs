@@ -9,7 +9,7 @@ namespace Diplomata.Models
   [Serializable]
   public class QuestState
   {
-    [SerializeField] private string id;
+    [SerializeField] private string uniqueId;
     public string Name;
 
     /// <summary>
@@ -18,7 +18,7 @@ namespace Diplomata.Models
     /// <param name="name">The name of the state.</param>
     public QuestState(string name)
     {
-      id = Guid.NewGuid().ToString();
+      uniqueId = Guid.NewGuid().ToString();
       Name = name;
     }
 
@@ -28,7 +28,7 @@ namespace Diplomata.Models
     /// <returns>The id (a guid string).</returns>
     public string GetId()
     {
-      return id;
+      return uniqueId;
     }
 
     /// <summary>

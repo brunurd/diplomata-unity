@@ -1,5 +1,4 @@
 using System;
-using Diplomata.Models;
 
 namespace Diplomata.Persistence
 {

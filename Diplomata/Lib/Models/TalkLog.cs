@@ -1,11 +1,13 @@
 using System;
 using Diplomata.Helpers;
+using UnityEngine;
 
 namespace Diplomata.Models
 {
   [Serializable]
   public class TalkLog
   {
+    [SerializeField] public string uniqueId = Guid.NewGuid().ToString();
     public string talkableName;
     public string[] messagesIds = new string[0];
 
@@ -13,6 +15,7 @@ namespace Diplomata.Models
 
     public TalkLog(string talkableName)
     {
+      uniqueId = Guid.NewGuid().ToString();
       this.talkableName = talkableName;
     }
 

@@ -12,7 +12,7 @@ namespace Diplomata.Models
   [Serializable]
   public class Quest
   {
-    [SerializeField] private string id;
+    [SerializeField] private string uniqueId;
     public string Name;
     [SerializeField] private QuestState[] questStates;
     private string currentStateId;
@@ -24,7 +24,7 @@ namespace Diplomata.Models
     /// </summary>
     public Quest()
     {
-      id = Guid.NewGuid().ToString();
+      uniqueId = Guid.NewGuid().ToString();
       questStates = new QuestState[] { new QuestState("In progress.") };
     }
 
@@ -34,7 +34,7 @@ namespace Diplomata.Models
     /// <returns>The id (a guid string).</returns>
     public string GetId()
     {
-      return id;
+      return uniqueId;
     }
 
     /// <summary>
@@ -245,7 +245,7 @@ namespace Diplomata.Models
     /// <returns>The quest if found, or null.</returns>
     public static Quest Find(Quest[] quests, string value)
     {
-      var quest = (Quest) Helpers.Find.In(quests).Where("id", value).Result;
+      var quest = (Quest) Helpers.Find.In(quests).Where("uniqueId", value).Result;
       if (quest == null) quest = (Quest) Helpers.Find.In(quests).Where("Name", value).Result;
       return quest;
     }

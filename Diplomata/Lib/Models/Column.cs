@@ -1,11 +1,13 @@
 using System;
 using Diplomata.Helpers;
+using UnityEngine;
 
 namespace Diplomata.Models
 {
   [Serializable]
   public class Column
   {
+    [SerializeField] public string uniqueId = Guid.NewGuid().ToString();
     public int id;
     public string emitter;
     public Message[] messages;
@@ -14,6 +16,7 @@ namespace Diplomata.Models
 
     public Column(int id)
     {
+      uniqueId = Guid.NewGuid().ToString();
       this.id = id;
       emitter = DiplomataData.options.playerCharacterName;
 
