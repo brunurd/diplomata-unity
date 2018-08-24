@@ -76,37 +76,5 @@ namespace Diplomata.Models
     {
       return (Character) Helpers.Find.In(list.ToArray()).Where("name", name).Result;
     }
-
-    /// <summary>
-    /// Get the object data and save to the persistent character reference.
-    /// </summary>
-    /// <param name="character">A character persistent object reference.</param>
-    public void GetData(ref CharacterPersistent character)
-    {
-      character.name = name;
-      character.influence = influence;
-
-      // foreach (var context in contexts)
-      // {
-      //   var newContext = new ContextPersistent();
-      //   context.GetData(ref newContext);
-      //   character.contexts = ArrayHelper.Add(character.contexts, newContext);
-      // }
-    }
-
-    /// <summary>
-    /// Get the objects array data and save to the persistent character reference array.
-    /// </summary>
-    /// <param name="persistentCharacters">The persistent characters array.</param>
-    /// <param name="characters">The characters array.</param>
-    public static void GetArrayData(ref CharacterPersistent[] persistentCharacters, Character[] characters)
-    {
-      foreach (var character in characters)
-      {
-        var newCharacter = new CharacterPersistent();
-        character.GetData(ref newCharacter);
-        persistentCharacters = ArrayHelper.Add(persistentCharacters, newCharacter);
-      }
-    }
   }
 }

@@ -254,7 +254,7 @@ namespace Diplomata.Helpers
 
       foreach (T[] array in arrays)
       {
-        foreach(var element in array)
+        foreach (var element in array)
         {
           mergedArray = Add(mergedArray, element);
         }

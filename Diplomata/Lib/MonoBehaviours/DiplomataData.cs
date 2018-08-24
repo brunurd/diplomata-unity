@@ -148,24 +148,5 @@ namespace Diplomata
 
       return messages;
     }
-
-    /// <summary>
-    /// Return the object with the current data.
-    /// </summary>
-    /// <param name="save"></param>
-    /// <returns>A <seealso cref="DiplomataPersistentData"> with relevant data to persist.</returns>
-    public static DiplomataPersistentData GetPersistentData()
-    {
-      return new DiplomataPersistentData();
-    }
-
-    /// <summary>
-    /// Sets the Diplomata data from a persistent data object.
-    /// </summary>
-    /// <param name="data">A <seealso cref="DiplomataPersistentData"> object.</param>
-    public static void SetPersistentData(DiplomataPersistentData data)
-    {
-      data.SetData();
-    }
   }
 }
