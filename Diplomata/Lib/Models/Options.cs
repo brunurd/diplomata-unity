@@ -1,10 +1,11 @@
 using System;
+using Diplomata.Helpers;
 using Diplomata.Persistence;
 
 namespace Diplomata.Models
 {
   [Serializable]
-  public class Options
+  public class Options : Data
   {
     public Language[] languages = new Language[] { new Language("English") };
     public string[] languagesList = new string[] { "English" };
@@ -34,10 +35,32 @@ namespace Diplomata.Models
       }
     }
 
-    public void GetData(ref OptionsPersistent options)
+    public override Persistent GetData()
     {
+      var options = new OptionsPersistent();
       options.currentLanguage = currentLanguage;
       options.volumeScale = volumeScale;
+      return options;
+    }
+
+    public override Persistent[] GetArrayData(Data[] array)
+    {
+      var optionsPersistent = new OptionsPersistent[0];
+      foreach (var item in array)
+      {
+        optionsPersistent = ArrayHelper.Add(optionsPersistent, (OptionsPersistent) item.GetData());
+      }
+      return optionsPersistent;
+    }
+
+    public override void SetData(Persistent persistentData)
+    {
+      throw new NotImplementedException();
+    }
+
+    public override Data[] SetArrayData(Persistent[] from)
+    {
+      throw new NotImplementedException();
     }
   }
 }
