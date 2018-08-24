@@ -1,4 +1,5 @@
 using System;
+using Diplomata.Persistence;
 
 namespace Diplomata.Models
 {
@@ -13,7 +14,9 @@ namespace Diplomata.Models
     public string playerCharacterName;
     public bool jsonPrettyPrint;
     public string currentLanguage = "English";
-    [NonSerialized] public float volumeScale = 1.0f;
+
+    [NonSerialized]
+    public float volumeScale = 1.0f;
 
     public void SetCurrentLanguage(string language)
     {
@@ -29,6 +32,12 @@ namespace Diplomata.Models
       {
         languagesList[i] = languages[i].name;
       }
+    }
+
+    public void GetData(ref OptionsPersistent options)
+    {
+      options.currentLanguage = currentLanguage;
+      options.volumeScale = volumeScale;
     }
   }
 }

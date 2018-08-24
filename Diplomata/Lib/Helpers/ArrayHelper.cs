@@ -241,5 +241,26 @@ namespace Diplomata.Helpers
       if (array == null || element == null) return false;
       return array[array.Length - 1].Equals(element);
     }
+
+    /// <summary>
+    /// Merge array of the same type.
+    /// </summary>
+    /// <param name="arrays">Arrays to merge.</param>
+    /// <typeparam name="T">The type of the array, auto setted by the parameters.</typeparam>
+    /// <returns>Return a array merged.</returns>
+    public static T[] Merge<T>(params T[][] arrays)
+    {
+      var mergedArray = new T[0];
+
+      foreach (T[] array in arrays)
+      {
+        foreach(var element in array)
+        {
+          mergedArray = Add(mergedArray, element);
+        }
+      }
+
+      return mergedArray;
+    }
   }
 }

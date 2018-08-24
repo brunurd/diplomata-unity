@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Persistence;
 using UnityEngine;
 
 namespace Diplomata
 {
   [AddComponentMenu("")]
   [ExecuteInEditMode]
-  public class DiplomataData : MonoBehaviour
+  sealed public class DiplomataData : MonoBehaviour
   {
     private static DiplomataData instance = null;
     public static Options options = new Options();
@@ -146,6 +147,25 @@ namespace Diplomata
       }
 
       return messages;
+    }
+
+    /// <summary>
+    /// Return the object with the current data.
+    /// </summary>
+    /// <param name="save"></param>
+    /// <returns>A <seealso cref="DiplomataPersistentData"> with relevant data to persist.</returns>
+    public static DiplomataPersistentData GetPersistentData()
+    {
+      return new DiplomataPersistentData();
+    }
+
+    /// <summary>
+    /// Sets the Diplomata data from a persistent data object.
+    /// </summary>
+    /// <param name="data">A <seealso cref="DiplomataPersistentData"> object.</param>
+    public static void SetPersistentData(DiplomataPersistentData data)
+    {
+      data.SetData();
     }
   }
 }

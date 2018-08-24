@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace DiplomataEditor
 {
-  public class DiplomataEditorData : ScriptableObject
+  sealed public class DiplomataEditorData : ScriptableObject
   {
     public static string resourcesFolder = "Assets/Resources/";
     public List<Character> characters = new List<Character>();

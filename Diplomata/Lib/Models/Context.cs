@@ -27,9 +27,9 @@ namespace Diplomata.Models
     public MessageEditorState messageEditorState = MessageEditorState.None;
     public ushort columnWidth = 200;
     public ushort fontSize = 11;
+    public Column[] columns;
     public LanguageDictionary[] name;
     public LanguageDictionary[] description;
-    public Column[] columns;
     public Label[] labels = new Label[] { new Label() };
 
     [NonSerialized]

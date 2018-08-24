@@ -4,6 +4,7 @@ using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Diplomata.Models
 {
