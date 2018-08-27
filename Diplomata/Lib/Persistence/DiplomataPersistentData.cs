@@ -10,7 +10,7 @@ namespace Diplomata
   [Serializable]
   sealed public class DiplomataPersistentData
   {
-    [SerializeField] private OptionsPersistent options;
+    public OptionsPersistent options;
 
     /// <summary>
     /// The constructor, it return all the persistent data from DiplomataData into the new object.

@@ -81,10 +81,10 @@ namespace DiplomataEditor.Windows
           GUILayout.EndHorizontal();
 
           // Loop of the quest states.
-          foreach (QuestState state in quest.GetQuestStates())
+          foreach (QuestState questState in quest.GetQuestStates())
           {
             GUILayout.BeginHorizontal();
-            state.Name = EditorGUILayout.TextField(state.Name);
+            questState.Name = EditorGUILayout.TextField(questState.Name);
             GUILayout.EndHorizontal();
           }
 
