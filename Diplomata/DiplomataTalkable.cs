@@ -487,7 +487,15 @@ namespace Diplomata
           }
 
           // Return the text.
-          return DictionariesHelper.ContainsKey(currentMessage.content, DiplomataData.options.currentLanguage).value;
+          var content = DictionariesHelper.ContainsKey(currentMessage.content, DiplomataData.options.currentLanguage);
+          if (content == null)
+          {
+            var errorText = string.Format("Cannot find message content in the language: {0}", DiplomataData.options.currentLanguage);
+            Debug.LogError(errorText);
+            EndTalk();
+            return errorText;
+          }
+          return content.value;
         }
         else
         {
