@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Diplomata;
+using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor.Helpers;
 using UnityEngine;
 
-namespace DiplomataEditor
+namespace Diplomata.Editor
 {
   sealed public class DiplomataEditorData : ScriptableObject
   {

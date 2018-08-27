@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Helpers
+namespace Diplomata.Editor.Helpers
 {
   public class ColorHelper
   {

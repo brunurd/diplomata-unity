@@ -1,13 +1,13 @@
+using Diplomata.Editor;
+using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor;
-using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Windows
+namespace Diplomata.Editor.Windows
 {
-  public class QuestListMenu : EditorWindow
+  public class QuestListMenu : UnityEditor.EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
     private DiplomataEditorData diplomataEditor;

@@ -1,11 +1,11 @@
 using Diplomata.Dictionaries;
+using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Windows
+namespace Diplomata.Editor.Windows
 {
   public class MessagesEditor
   {
@@ -1324,7 +1324,9 @@ namespace DiplomataEditor.Windows
 
                   // Quest name Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
-                  questName = GUIHelper.Popup("Quest: ", questName, Quest.GetNames(diplomataEditor.quests));
+                  var questNames = Quest.GetNames(diplomataEditor.quests);
+                  questNames = ArrayHelper.Add(questNames, string.Empty);
+                  questName = GUIHelper.Popup("Quest: ", questName, questNames);
                   if (EditorGUI.EndChangeCheck())
                   {
                     var questIndex = ArrayHelper.GetIndex(Quest.GetNames(diplomataEditor.quests), questName);
@@ -1333,14 +1335,16 @@ namespace DiplomataEditor.Windows
 
                   // Get the quest state name.
                   quest = Quest.Find(diplomataEditor.quests, condition.questAndState.questId);
-                  var questState = quest != null ? quest.GetState(condition.questAndState.questId) : null;
+                  var questState = quest != null ? quest.GetState(condition.questAndState.questStateId) : null;
                   var questStateName = questState != null ? questState.Name : string.Empty;
 
                   // Quest state Popup with a change checker.
                   if (quest != null)
                   {
                     EditorGUI.BeginChangeCheck();
-                    questStateName = GUIHelper.Popup("Quest state: ", questStateName, QuestState.GetNames(quest.GetQuestStates()));
+                    var questStateNames = QuestState.GetNames(quest.GetQuestStates());
+                    questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
+                    questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
                       var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
@@ -1694,7 +1698,9 @@ namespace DiplomataEditor.Windows
 
                   // Quest Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
-                  questName = GUIHelper.Popup("Quest: ", questName, Quest.GetNames(diplomataEditor.quests));
+                  var questNames = Quest.GetNames(diplomataEditor.quests);
+                  questNames = ArrayHelper.Add(questNames, string.Empty);
+                  questName = GUIHelper.Popup("Quest: ", questName, questNames);
                   if (EditorGUI.EndChangeCheck())
                   {
                     var questIndex = ArrayHelper.GetIndex(Quest.GetNames(diplomataEditor.quests), questName);
@@ -1703,15 +1709,16 @@ namespace DiplomataEditor.Windows
 
                   // Get the quest state name.
                   quest = Quest.Find(diplomataEditor.quests, effect.questAndState.questId);
-                  var questState = quest != null ? quest.GetState(effect.questAndState.questId) : null;
+                  var questState = quest != null ? quest.GetState(effect.questAndState.questStateId) : null;
                   var questStateName = questState != null ? questState.Name : string.Empty;
 
                   // Quest state Popup with a change checker.
                   if (quest != null)
                   {
                     EditorGUI.BeginChangeCheck();
-
-                    questStateName = GUIHelper.Popup("Quest state: ", questStateName, QuestState.GetNames(quest.GetQuestStates()));
+                    var questStateNames = QuestState.GetNames(quest.GetQuestStates());
+                    questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
+                    questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
                       var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);

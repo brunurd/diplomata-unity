@@ -1,13 +1,13 @@
 using System;
+using Diplomata.Editor;
+using Diplomata.Editor.Helpers;
+using Diplomata.Editor.Windows;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor;
-using DiplomataEditor.Helpers;
-using DiplomataEditor.Windows;
 using RTFExporter;
 using UnityEditor;
 
-namespace DiplomataEditor
+namespace Diplomata.Editor.Extensions
 {
   public class Screenplay
   {

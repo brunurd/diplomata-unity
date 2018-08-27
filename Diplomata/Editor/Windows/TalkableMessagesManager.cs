@@ -1,13 +1,13 @@
+using Diplomata.Editor;
+using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor;
-using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Windows
+namespace Diplomata.Editor.Windows
 {
-  public class TalkableMessagesManager : EditorWindow
+  public class TalkableMessagesManager : UnityEditor.EditorWindow
   {
     private ushort iteractions = 0;
     public static Talkable talkable;

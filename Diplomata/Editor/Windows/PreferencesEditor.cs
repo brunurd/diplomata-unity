@@ -1,12 +1,12 @@
+using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Windows
+namespace Diplomata.Editor.Windows
 {
-  public class PreferencesEditor : EditorWindow
+  public class PreferencesEditor : UnityEditor.EditorWindow
   {
     public static string[] attributesTemp = new string[0];
     public static Language[] languagesTemp = new Language[0];

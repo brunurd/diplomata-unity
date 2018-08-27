@@ -3,10 +3,10 @@ using Diplomata;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Inspector
+namespace Diplomata.Editor.Inspector
 {
   [CustomEditor(typeof(DiplomataData))]
-  public class DiplomataManagerInspector : Editor
+  public class DiplomataManagerInspector : UnityEditor.Editor
   {
     public override void OnInspectorGUI()
     {

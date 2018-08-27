@@ -1,13 +1,13 @@
+using Diplomata.Editor;
+using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor;
-using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Windows
+namespace Diplomata.Editor.Windows
 {
-  public class ContextEditor : EditorWindow
+  public class ContextEditor : UnityEditor.EditorWindow
   {
     public static Talkable talkable;
     public static Context context;

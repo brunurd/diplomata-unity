@@ -1,12 +1,12 @@
 using Diplomata;
+using Diplomata.Editor;
+using Diplomata.Editor.Helpers;
+using Diplomata.Editor.Windows;
 using Diplomata.Models;
-using DiplomataEditor;
-using DiplomataEditor.Helpers;
-using DiplomataEditor.Windows;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Inspector
+namespace Diplomata.Editor.Inspector
 {
   /// <summary>
   /// The inspector class to DiplomataInteractable
@@ -14,7 +14,7 @@ namespace DiplomataEditor.Inspector
   /// </summary>
   [CustomEditor(typeof(DiplomataInteractable))]
   [CanEditMultipleObjects]
-  public class DiplomataInteractableInspector : Editor
+  public class DiplomataInteractableInspector : UnityEditor.Editor
   {
     public DiplomataInteractable diplomataInteractable;
     private static DiplomataEditorData diplomataEditor;

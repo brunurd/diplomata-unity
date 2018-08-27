@@ -1,6 +1,6 @@
 using System;
 
-namespace Diplomata.Persistence
+namespace Diplomata.Persistence.Models
 {
   [Serializable]
   public class ContextPersistent : Persistent {}

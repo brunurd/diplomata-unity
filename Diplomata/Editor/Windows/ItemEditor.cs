@@ -1,13 +1,13 @@
+using Diplomata.Editor;
+using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor;
-using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Windows
+namespace Diplomata.Editor.Windows
 {
-  public class ItemEditor : EditorWindow
+  public class ItemEditor : UnityEditor.EditorWindow
   {
     public static Item item;
     private Vector2 scrollPos = new Vector2(0, 0);

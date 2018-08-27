@@ -1,10 +1,10 @@
 using System.IO;
-using DiplomataEditor;
-using DiplomataEditor.Windows;
+using Diplomata.Editor;
+using Diplomata.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Helpers
+namespace Diplomata.Editor.Helpers
 {
   public class AssetHelper
   {

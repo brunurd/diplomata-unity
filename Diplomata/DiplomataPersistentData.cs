@@ -1,5 +1,5 @@
 using System;
-using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 using UnityEngine;
 
 namespace Diplomata

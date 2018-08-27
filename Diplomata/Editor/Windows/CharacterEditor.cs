@@ -1,15 +1,15 @@
 using System;
 using Diplomata.Dictionaries;
+using Diplomata.Editor;
+using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
-using DiplomataEditor;
-using DiplomataEditor.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace DiplomataEditor.Windows
+namespace Diplomata.Editor.Windows
 {
-  public class CharacterEditor : EditorWindow
+  public class CharacterEditor : UnityEditor.EditorWindow
   {
     public static Character character;
     private string characterName = "";
@@ -141,7 +141,7 @@ namespace DiplomataEditor.Windows
 
       if (focusedWindow != null)
       {
-        if (focusedWindow.ToString() == " (DiplomataEditor.Windows.CharacterEditor)")
+        if (focusedWindow.ToString() == " (Diplomata.Editor.Windows.CharacterEditor)")
         {
           if (Event.current.keyCode == KeyCode.Return)
           {

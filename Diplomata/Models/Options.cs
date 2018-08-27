@@ -1,6 +1,7 @@
 using System;
 using Diplomata.Helpers;
 using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 
 namespace Diplomata.Models
 {
