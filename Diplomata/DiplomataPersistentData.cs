@@ -18,7 +18,7 @@ namespace Diplomata
     public InteractablePersistent[] interactables;
     public InventoryPersistent inventory;
     public QuestPersistent[] quests;
-    public TalkLog[] talkLogs;
+    public TalkLogPersistent[] talkLogs;
 
     /// <summary>
     /// The constructor, it return all the persistent data from DiplomataData into the new object.
@@ -32,7 +32,7 @@ namespace Diplomata
       interactables = Data.GetArrayData<InteractablePersistent>(DiplomataData.interactables.ToArray());
       inventory = (InventoryPersistent) DiplomataData.inventory.GetData();
       quests = Data.GetArrayData<QuestPersistent>(DiplomataData.quests);
-      talkLogs = Data.GetArrayData<TalkLog>(DiplomataData.talkLogs);
+      talkLogs = Data.GetArrayData<TalkLogPersistent>(DiplomataData.talkLogs);
     }
   }
 }
