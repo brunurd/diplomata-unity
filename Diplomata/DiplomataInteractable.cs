@@ -5,8 +5,14 @@ using UnityEngine;
 
 namespace Diplomata
 {
+  /// <summary>
+  /// Interactable game objects component class.
+  /// </summary>
   public class DiplomataInteractable : DiplomataTalkable
   {
+    /// <summary>
+    /// Set the main talkable fields.
+    /// </summary>
     private void Start()
     {
       choices = new List<Message>();

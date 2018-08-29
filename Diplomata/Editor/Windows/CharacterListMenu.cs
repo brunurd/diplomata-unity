@@ -17,7 +17,6 @@ namespace Diplomata.Editor.Windows
     static public void Init()
     {
       DiplomataEditorData.Instantiate();
-
       CharacterListMenu window = (CharacterListMenu) GetWindow(typeof(CharacterListMenu), false, "Character List");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
 
@@ -45,6 +44,11 @@ namespace Diplomata.Editor.Windows
       {
         var name = diplomataEditor.options.characterList[i];
         var character = (Character.Find(diplomataEditor.characters, name));
+
+        if (character.SetId())
+        {
+          diplomataEditor.Save(character, "Characters");
+        }
 
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();

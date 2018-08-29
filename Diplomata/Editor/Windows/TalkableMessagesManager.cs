@@ -85,7 +85,6 @@ namespace Diplomata.Editor.Windows
     public static void OpenContextMenu(Talkable currentTalkable)
     {
       talkable = currentTalkable;
-
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       Init(State.Context);
     }
@@ -94,7 +93,6 @@ namespace Diplomata.Editor.Windows
     {
       talkable = currentTalkable;
       context = currentContext;
-
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       Init(State.Messages);
     }

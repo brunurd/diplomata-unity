@@ -18,7 +18,6 @@ namespace Diplomata.Editor.Windows
     static public void Init()
     {
       DiplomataEditorData.Instantiate();
-
       GlobalFlagsListMenu window = (GlobalFlagsListMenu) GetWindow(typeof(GlobalFlagsListMenu), false, "Custom Flags");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 150, 300);
 

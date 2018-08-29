@@ -81,7 +81,6 @@ namespace Diplomata.Editor.Windows
       {
         if (interactable.name == interactableName)
         {
-          diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
           interactable = null;
           Init(State.Close);
         }
@@ -168,8 +167,7 @@ namespace Diplomata.Editor.Windows
 
     public void DrawEditWindow()
     {
-      GUILayout.Label("Name: ");
-      interactable.name = EditorGUILayout.TextField(interactable.name);
+      GUILayout.Label(string.Format("Name: {0}", interactable.name));
 
       GUIHelper.Separator();
 

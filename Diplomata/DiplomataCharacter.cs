@@ -6,8 +6,14 @@ using UnityEngine;
 
 namespace Diplomata
 {
+  /// <summary>
+  /// The Diplomata Character component.
+  /// </summary>
   public class DiplomataCharacter : DiplomataTalkable
   {
+    /// <summary>
+    /// Set the main talkable fields.
+    /// </summary>
     private void Start()
     {
       choices = new List<Message>();
@@ -23,6 +29,10 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// To set a choice by the player.
+    /// </summary>
+    /// <param name="content">The choice text.</param>
     public void ChooseMessage(string content)
     {
       Character character = (Character) talkable;
@@ -62,6 +72,10 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Set the influence over the character using the message and player attributes.
+    /// </summary>
+    /// <returns>The influence value.</returns>
     public byte SetInfluence()
     {
       Character character = (Character) talkable;

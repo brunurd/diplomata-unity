@@ -1789,7 +1789,6 @@ namespace Diplomata.Editor.Windows
     public static void UpdateCharacterList()
     {
       var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-
       characterList = new string[0];
 
       foreach (string str in diplomataEditor.options.characterList)
@@ -1804,7 +1803,6 @@ namespace Diplomata.Editor.Windows
     public static void UpdateItemList()
     {
       var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-
       itemList = new string[0];
 
       foreach (Item item in diplomataEditor.inventory.items)
@@ -1816,7 +1814,6 @@ namespace Diplomata.Editor.Windows
     public static void UpdateMessagesList(Context context)
     {
       var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-
       messageList = new string[0];
 
       foreach (Column col in context.columns)
@@ -1839,7 +1836,6 @@ namespace Diplomata.Editor.Windows
     public static void UpdateContextList()
     {
       var diplomataEditor = TalkableMessagesManager.diplomataEditor;
-
       contextList = new string[0];
 
       foreach (Character character in diplomataEditor.characters)

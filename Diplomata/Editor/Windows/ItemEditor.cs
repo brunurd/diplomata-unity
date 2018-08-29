@@ -75,7 +75,6 @@ namespace Diplomata.Editor.Windows
 
     public void DrawEditWindow()
     {
-
       var name = DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage);
 
       GUILayout.Label("Name: ");
@@ -133,21 +132,11 @@ namespace Diplomata.Editor.Windows
 
       EditorGUILayout.Separator();
 
-      GUILayout.BeginHorizontal();
-
-      if (GUILayout.Button("Save", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
+      if (GUILayout.Button("Save and Close", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
         Save();
         Close();
       }
-
-      if (GUILayout.Button("Close", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
-      {
-        Save();
-        Close();
-      }
-
-      GUILayout.EndHorizontal();
     }
 
     public string FilenameExtract(Texture2D image)

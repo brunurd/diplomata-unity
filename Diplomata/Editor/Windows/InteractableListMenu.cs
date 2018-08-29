@@ -17,10 +17,8 @@ namespace Diplomata.Editor.Windows
     static public void Init()
     {
       DiplomataEditorData.Instantiate();
-
       InteractableListMenu window = (InteractableListMenu) GetWindow(typeof(InteractableListMenu), false, "Interactable List");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
-
       window.Show();
     }
 
@@ -44,6 +42,12 @@ namespace Diplomata.Editor.Windows
       for (int i = 0; i < diplomataEditor.options.interactableList.Length; i++)
       {
         var name = diplomataEditor.options.interactableList[i];
+        var interactable = Interactable.Find(diplomataEditor.interactables, name);
+
+        if (interactable.SetId())
+        {
+          diplomataEditor.Save(interactable, "Interactables");
+        }
 
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();
@@ -67,11 +71,16 @@ namespace Diplomata.Editor.Windows
           InteractableEditor.Edit(Interactable.Find(diplomataEditor.interactables, name));
         }
 
+        if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+        {
+          TalkableMessagesManager.OpenContextMenu(interactable);
+          Close();
+        }
+
         if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
-            var interactable = (Interactable.Find(diplomataEditor.interactables, name));
             diplomataEditor.interactables.Remove(interactable);
             diplomataEditor.options.interactableList = ArrayHelper.Remove(diplomataEditor.options.interactableList, name);
 

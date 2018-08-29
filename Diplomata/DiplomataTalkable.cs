@@ -8,9 +8,9 @@ using UnityEngine;
 namespace Diplomata
 {
   /// <summary>
-  /// The main class of the talkable
+  /// The main class of the talkable.
   /// </summary>
-  [System.Serializable]
+  [Serializable]
   [ExecuteInEditMode]
   [DisallowMultipleComponent]
   public class DiplomataTalkable : MonoBehaviour
@@ -24,6 +24,9 @@ namespace Diplomata
     protected Dictionary<string, int> controlIndexes;
     private string lastUniqueId;
 
+    /// <summary>
+    /// Set if the talkable is on scene.
+    /// </summary>
     private void OnEnable()
     {
       if (talkable != null)
@@ -32,6 +35,9 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Set to false the field onScene.
+    /// </summary>
     private void OnDisable()
     {
       if (talkable != null)
@@ -40,6 +46,9 @@ namespace Diplomata
       }
     }
 
+    /// <summary>
+    /// Set to false the field onScene.
+    /// </summary>
     private void OnDestroy()
     {
       if (talkable != null)
@@ -49,18 +58,17 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Start the talk
+    /// Start the talk.
     /// </summary>
     public void StartTalk()
     {
-      if (talkable != null)
+      if (talkable != null && DiplomataData.isTalking == false)
       {
+        DiplomataData.isTalking = true;
         controlIndexes = new Dictionary<string, int>();
         controlIndexes.Add("context", 0);
         controlIndexes.Add("column", 0);
         controlIndexes.Add("message", 0);
-
-        DiplomataData.isTalking = true;
 
         currentContext = null;
         currentColumn = null;
@@ -70,7 +78,6 @@ namespace Diplomata
 
         for (controlIndexes["context"] = 0; controlIndexes["context"] < talkable.contexts.Length; controlIndexes["context"]++)
         {
-
           var context = Context.Find(talkable, controlIndexes["context"]);
           var lastContext = talkable.contexts.Length - 1;
 
@@ -96,7 +103,6 @@ namespace Diplomata
           Debug.LogError("No context found in " + talkable.name + ".");
           EndTalk();
         }
-
         else
         {
           Next(false);
@@ -111,9 +117,9 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Internal method to go the next message
+    /// Internal method to go the next message.
     /// </summary>
-    /// <param name="hasFate">is true if use GoTo effect</param>
+    /// <param name="hasFate">is true if use GoTo effect.</param>
     private void Next(bool hasFate)
     {
       if (talkable != null && currentContext != null)
@@ -509,7 +515,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Play the current audio of the current message
+    /// Play the current audio of the current message.
     /// </summary>
     public void PlayMessageAudioContent()
     {
@@ -548,7 +554,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Stop the current audio of the current message
+    /// Stop the current audio of the current message.
     /// </summary>
     public void StopMessageAudioContent()
     {
@@ -575,7 +581,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Apply the current message animator attributes
+    /// Apply the current message animator attributes.
     /// </summary>
     public void SetAnimatorAttributes()
     {
@@ -647,7 +653,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Reset the animator attributes
+    /// Reset the animator attributes.
     /// </summary>
     public void ResetAnimators()
     {
@@ -690,9 +696,9 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Change the sprite of the current message
+    /// Change the sprite of the current message.
     /// </summary>
-    /// <param name="pivot"></param>
+    /// <param name="pivot">The GetSprite pivot from image.</param>
     public void SwapStaticSprite(Vector2 pivot)
     {
       if (currentMessage != null)
@@ -715,7 +721,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Change the sprite of the current message
+    /// Change the sprite of the current message.
     /// </summary>
     public void SwapStaticSprite()
     {
@@ -723,9 +729,9 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Return if the current message is the last
+    /// Return if the current message is the last.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>True if is the last message.</returns>
     public bool IsLastMessage()
     {
       if (controlIndexes["column"] < currentContext.columns.Length - 1)
@@ -740,7 +746,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Internally end the talk
+    /// Internally end the talk.
     /// </summary>
     public void EndTalk()
     {
@@ -748,7 +754,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// The method need to go the next message
+    /// The method need to go the next message.
     /// </summary>
     public void NextMessage()
     {
@@ -953,9 +959,9 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Get all the choices in a list
+    /// Get all the choices in a list.
     /// </summary>
-    /// <returns>A list with all the choices of the current column</returns>
+    /// <returns>A list with all the choices of the current column.</returns>
     public List<string> MessageChoices()
     {
       List<string> choicesText = new List<string>();
@@ -999,7 +1005,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Execute the onStart events of the effect
+    /// Execute the onStart events of the effect.
     /// </summary>
     public void OnStartCallbacks()
     {
@@ -1013,9 +1019,9 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Check if the emitter is the player character
+    /// Check if the emitter is the player character.
     /// </summary>
-    /// <returns>The response flag</returns>
+    /// <returns>The response flag.</returns>
     public bool EmitterIsPlayer()
     {
       if (currentMessage != null)
@@ -1030,18 +1036,18 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Get the player name
+    /// Get the player name.
     /// </summary>
-    /// <returns>the player name</returns>
+    /// <returns>the player name.</returns>
     public string PlayerName()
     {
       return DiplomataData.options.playerCharacterName;
     }
 
     /// <summary>
-    /// Get the current message emitter
+    /// Get the current message emitter.
     /// </summary>
-    /// <returns>The name of the emitter</returns>
+    /// <returns>The name of the emitter.</returns>
     public string Emitter()
     {
       if (currentColumn != null)
@@ -1052,6 +1058,10 @@ namespace Diplomata
       return null;
     }
 
+    /// <summary>
+    /// Get the last message from the context.
+    /// </summary>
+    /// <returns>The <seealso cref="Diplomata.Models.Message"> object.</returns>
     public Message GetLastMessage()
     {
       foreach (Column col in currentContext.columns)
@@ -1065,6 +1075,10 @@ namespace Diplomata
       return null;
     }
 
+    /// <summary>
+    /// Get the last message content.
+    /// </summary>
+    /// <returns>The last message text content.</returns>
     public string GetLastMessageContent()
     {
       if (lastUniqueId == null || lastUniqueId == "")

@@ -66,7 +66,6 @@ namespace Diplomata.Editor.Windows
           context = null;
 
           diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-
           Init(State.Close);
         }
       }

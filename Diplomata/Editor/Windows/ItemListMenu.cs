@@ -17,10 +17,8 @@ namespace Diplomata.Editor.Windows
     static public void Init()
     {
       DiplomataEditorData.Instantiate();
-
       ItemListMenu window = (ItemListMenu) GetWindow(typeof(ItemListMenu), false, "Inventory");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
-
       window.Show();
     }
 
@@ -41,9 +39,8 @@ namespace Diplomata.Editor.Windows
         EditorGUILayout.HelpBox("No items yet.", MessageType.Info);
       }
 
-      for (int i = 0; i < diplomataEditor.inventory.items.Length; i++)
+      for (var i = 0; i < diplomataEditor.inventory.items.Length; i++)
       {
-
         var item = diplomataEditor.inventory.items[i];
 
         GUILayout.BeginHorizontal();

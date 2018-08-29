@@ -63,7 +63,6 @@ namespace Diplomata.Editor.Helpers
             writer.Write(json);
           }
         }
-
         AssetDatabase.Refresh();
       }
 

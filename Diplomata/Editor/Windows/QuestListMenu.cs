@@ -16,7 +16,6 @@ namespace Diplomata.Editor.Windows
     static public void Init()
     {
       DiplomataEditorData.Instantiate();
-
       QuestListMenu window = (QuestListMenu) GetWindow(typeof(QuestListMenu), false, "Quests");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 150, 110);
       window.Show();

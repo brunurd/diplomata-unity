@@ -168,8 +168,7 @@ namespace Diplomata.Editor.Windows
 
     public void DrawEditWindow()
     {
-      GUILayout.Label("Name: ");
-      character.name = EditorGUILayout.TextField(character.name);
+      GUILayout.Label(string.Format("Name: {0}", character.name));
 
       GUIHelper.Separator();
 
