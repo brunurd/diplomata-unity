@@ -5,7 +5,7 @@ namespace Diplomata.Persistence.Models
   [Serializable]
   public class TalkablePersistent : Persistent
   {
-    public string name;
+    public string id;
     public ContextPersistent[] contexts;
   }
 }

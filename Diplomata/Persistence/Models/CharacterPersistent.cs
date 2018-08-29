@@ -3,10 +3,19 @@ using System;
 namespace Diplomata.Persistence.Models
 {
   [Serializable]
-  public class CharacterPersistent
+  public class CharacterPersistent : TalkablePersistent
   {
-    public string name;
     public byte influence;
-    public ContextPersistent[] contexts;
+  }
+
+  [Serializable]
+  public class CharacterPersistentContainer
+  {
+    public CharacterPersistent[] characters;
+
+    public CharacterPersistentContainer(CharacterPersistent[] characters)
+    {
+      this.characters = characters;
+    }
   }
 }

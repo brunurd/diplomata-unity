@@ -3,9 +3,9 @@ using System;
 namespace Diplomata.Persistence.Models
 {
   [Serializable]
-  public class ColumnPersistent : Persistent
+  public class MessagePersistent : Persistent
   {
     public string id;
-    public MessagePersistent[] messages;
+    public bool alreadySpoked;
   }
 }
