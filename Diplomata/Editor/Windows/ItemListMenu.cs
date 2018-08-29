@@ -77,6 +77,7 @@ namespace Diplomata.Editor.Windows
           {
             ItemEditor.Init(ItemEditor.State.Close);
             diplomataEditor.inventory.items = ArrayHelper.Remove(diplomataEditor.inventory.items, item);
+            diplomataEditor.inventory.RemoveNotUsedCategory();
             diplomataEditor.SaveInventory();
           }
         }

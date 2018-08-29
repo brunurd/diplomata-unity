@@ -33,13 +33,16 @@ namespace Diplomata.Models
     /// <param name="category">The category to add.</param>
     public void AddCategory(string category)
     {
-      if (categories == null)
+      if (category != "" && category != null)
       {
-        categories = new string[0];
+        if (categories == null)
+        {
+          categories = new string[0];
+        }
+        if (!ArrayHelper.Contains(categories, category))
+          categories = ArrayHelper.Add(categories, category);
+        RemoveNotUsedCategory();
       }
-      if (!ArrayHelper.Contains(categories, category))
-        categories = ArrayHelper.Add(categories, category);
-      RemoveNotUsedCategory();
     }
 
     /// <summary>
