@@ -26,6 +26,7 @@ TextureImporter:
     21300038: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_11
     21300040: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_12
     21300042: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_13
+  externalObjects: {}
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -79,6 +80,7 @@ TextureImporter:
   platformSettings:
   - buildTarget: DefaultTexturePlatform
     maxTextureSize: 1024
+    resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
     compressionQuality: 50

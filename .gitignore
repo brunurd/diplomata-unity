@@ -1,3 +1,16 @@
 /AssetStoreTools*
-*.meta
 *.unitypackage
+
+# Unity metas
+Demo.meta
+Diplomata.meta
+Textures.meta
+LICENSE.md.meta
+README.md.meta
+/[Dd]iplomata/**/*.meta
+!/[Dd]iplomata/Lib/MonoBehaviours/*.meta
+
+# IDE's
+.vs/
+.vscode/
+.idea/
