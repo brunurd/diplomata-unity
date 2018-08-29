@@ -124,7 +124,8 @@ namespace Diplomata.Models
     /// <summary>
     /// Go to the next state, if don't have one finish the quest.
     /// </summary>
-    public void NextState()
+    /// <returns>A dictionary with all the quest states.</returns>
+    public Dictionary<string, bool> NextState()
     {
       if (!finished)
       {
@@ -141,13 +142,15 @@ namespace Diplomata.Models
           }
         }
       }
+      return GetQuestLog();
     }
 
     /// <summary>
     /// Force a quest state.
     /// </summary>
     /// <param name="stateId">The id (a string guid) of the quest state to force.</param>
-    public void SetState(string stateId)
+    /// <returns>A dictionary with all the quest states.</returns>
+    public Dictionary<string, bool> SetState(string stateId)
     {
       if (!finished)
       {
@@ -159,6 +162,7 @@ namespace Diplomata.Models
       {
         Debug.Log(string.Format("Quest {0} already finished.", Name));
       }
+      return GetQuestLog();
     }
 
     /// <summary>
