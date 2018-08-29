@@ -1,8 +1,8 @@
 using System;
 using Diplomata.Helpers;
-using UnityEngine;
 using Diplomata.Persistence;
 using Diplomata.Persistence.Models;
+using UnityEngine;
 
 namespace Diplomata.Models
 {
