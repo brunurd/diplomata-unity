@@ -23,7 +23,7 @@ namespace Diplomata.Helpers
     {
       get
       {
-        if (results.Count < 1) return new object[] { null };
+        if (results.Count < 1) return new object[0];
         return results.ToArray();
       }
       private set

@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace Diplomata.Models
 {
+  /// <summary>
+  /// The item class.
+  /// </summary>
   [Serializable]
   public class Item : Data
   {
@@ -17,6 +20,7 @@ namespace Diplomata.Models
     public LanguageDictionary[] description;
     public string imagePath = string.Empty;
     public string highlightImagePath = string.Empty;
+    [SerializeField] private string category = string.Empty;
 
     [NonSerialized]
     public Texture2D image;
@@ -36,6 +40,23 @@ namespace Diplomata.Models
     [NonSerialized]
     public bool discarded;
 
+    /// <summary>
+    /// The item category.
+    /// </summary>
+    /// <value>The item category string.</value>
+    public string Category {
+      get {
+        return category;
+      }
+      set {
+        category = value.ToLower();
+      }
+    }
+
+    /// <summary>
+    /// Instantiate a item with a id.
+    /// </summary>
+    /// <param name="id">The item id.</param>
     public Item(int id)
     {
       this.id = id;
