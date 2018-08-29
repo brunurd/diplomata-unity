@@ -1,12 +1,14 @@
 using System;
 using UnityEngine;
+using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 
 namespace Diplomata.Models
 {
   [Serializable]
-  public class Flag
+  public class Flag : Data
   {
-    [SerializeField] string uniqueId = Guid.NewGuid().ToString();
+    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
     public string name;
     public bool value;
 
@@ -22,6 +24,21 @@ namespace Diplomata.Models
     {
       this.name = name;
       this.value = value;
+    }
+
+    public override Persistent GetData()
+    {
+      var flag = new FlagPersistent();
+      flag.id = uniqueId;
+      flag.value = value;
+      return flag;
+    }
+
+    public override void SetData(Persistent persistentData)
+    {
+      var flagPersistentData = (FlagPersistent) persistentData;
+      uniqueId = flagPersistentData.id;
+      value = flagPersistentData.value;
     }
   }
 }

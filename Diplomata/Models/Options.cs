@@ -49,21 +49,6 @@ namespace Diplomata.Models
     }
 
     /// <summary>
-    /// Return a array of persistent objects from a data object.
-    /// </summary>
-    /// <param name="array">The array of data objects.</param>
-    /// <returns>A array of persistent objects.</returns>
-    public override Persistent[] GetArrayData(Data[] array)
-    {
-      var optionsPersistent = new OptionsPersistent[0];
-      foreach (var item in array)
-      {
-        optionsPersistent = ArrayHelper.Add(optionsPersistent, (OptionsPersistent) item.GetData());
-      }
-      return optionsPersistent;
-    }
-
-    /// <summary>
     /// Store in a object data from persistent object.
     /// </summary>
     /// <param name="persistentData">The persistent data object.</param>
@@ -72,22 +57,6 @@ namespace Diplomata.Models
       var optionsPersistentData = (OptionsPersistent) persistentData;
       currentLanguage = optionsPersistentData.currentLanguage;
       volumeScale = optionsPersistentData.volumeScale;
-    }
-
-    /// <summary>
-    /// Set in a array of objects the data of a array of persistent data objects.
-    /// </summary>
-    /// <param name="data">A array of data objects.</param>
-    /// <param name="persistentData">The array of persistent data objects.</param>
-    public override void SetArrayData(ref Data[] data, Persistent[] persistentData)
-    {
-      foreach (var persistentObject in persistentData)
-      {
-        foreach (var dataObject in data)
-        {
-          dataObject.SetData(persistentObject);
-        }
-      }
     }
   }
 }

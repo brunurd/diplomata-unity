@@ -4,12 +4,14 @@ using System.Text;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 using UnityEngine;
 
 namespace Diplomata.Models
 {
   [Serializable]
-  public class Message
+  public class Message : Data
   {
     [SerializeField]
     private string uniqueId;
@@ -178,6 +180,20 @@ namespace Diplomata.Models
     {
       effects = ArrayHelper.Add(effects, new Effect());
       return effects[effects.Length - 1];
+    }
+
+    public override Persistent GetData()
+    {
+      var message = new MessagePersistent();
+      message.id = uniqueId;
+      message.alreadySpoked = alreadySpoked;
+      return message;
+    }
+
+    public override void SetData(Persistent persistentData)
+    {
+      uniqueId = ((MessagePersistent) persistentData).id;
+      alreadySpoked = ((MessagePersistent) persistentData).alreadySpoked;
     }
   }
 

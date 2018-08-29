@@ -4,6 +4,7 @@ using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 using UnityEngine;
 
 namespace Diplomata.Models
@@ -35,22 +36,49 @@ namespace Diplomata.Models
     }
 
     /// <summary>
+    /// Set the uniqueId if it is empty or null.
+    /// </summary>
+    /// <returns>Return a flag if it change or not.</returns>
+    public bool SetId()
+    {
+      if ( uniqueId == string.Empty || uniqueId == null)
+      {
+        uniqueId = Guid.NewGuid().ToString();
+        return true;
+      }
+      return false;
+    }
+
+    /// <summary>
     /// Return the data of the object to save in a persistent object.
     /// </summary>
     /// <returns>A persistent object.</returns>
     public override Persistent GetData()
     {
-      throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Return a array of persistent objects from a data object.
-    /// </summary>
-    /// <param name="array">The array of data objects.</param>
-    /// <returns>A array of persistent objects.</returns>
-    public override Persistent[] GetArrayData(Data[] array)
-    {
-      throw new NotImplementedException();
+      if (this.GetType() == typeof(Character))
+      {
+        var talkable = (Character) this;
+        var talkablePersistent = new CharacterPersistent();
+        talkablePersistent.id = uniqueId;
+        talkablePersistent.influence = talkable.influence;
+        talkablePersistent.contexts = Data.GetArrayData<ContextPersistent>(contexts);
+        return talkablePersistent;
+      }
+      else if (this.GetType() == typeof(Interactable))
+      {
+        var talkable = (Interactable) this;
+        var talkablePersistent = new InteractablePersistent();
+        talkablePersistent.id = talkable.uniqueId;
+        talkablePersistent.contexts = Data.GetArrayData<ContextPersistent>(talkable.contexts);
+        return talkablePersistent;
+      }
+      else
+      {
+        var talkablePersistent = new TalkablePersistent();
+        talkablePersistent.id = uniqueId;
+        talkablePersistent.contexts = Data.GetArrayData<ContextPersistent>(contexts);
+        return talkablePersistent;
+      }
     }
 
     /// <summary>
@@ -59,17 +87,25 @@ namespace Diplomata.Models
     /// <param name="persistentData">The persistent data object.</param>
     public override void SetData(Persistent persistentData)
     {
-      throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Set in a array of objects the data of a array of persistent data objects.
-    /// </summary>
-    /// <param name="data">A array of data objects.</param>
-    /// <param name="persistentData">The array of persistent data objects.</param>
-    public override void SetArrayData(ref Data[] data, Persistent[] persistentData)
-    {
-      throw new NotImplementedException();
+      if (this.GetType() == typeof(Character))
+      {
+        var talkablePersistent = (CharacterPersistent) persistentData;
+        uniqueId = talkablePersistent.id;
+        ((Character) this).influence = talkablePersistent.influence;
+        contexts = Data.SetArrayData<Context>(contexts, talkablePersistent.contexts);
+      }
+      else if (this.GetType() == typeof(Interactable))
+      {
+        var talkablePersistent = (InteractablePersistent) persistentData;
+        uniqueId = talkablePersistent.id;
+        contexts = Data.SetArrayData<Context>(contexts, talkablePersistent.contexts);
+      }
+      else
+      {
+        var talkablePersistent = (TalkablePersistent) persistentData;
+        uniqueId = talkablePersistent.id;
+        contexts = Data.SetArrayData<Context>(contexts, talkablePersistent.contexts);
+      }
     }
   }
 }

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Diplomata.Helpers;
+using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 using UnityEngine;
 
 namespace Diplomata.Models
@@ -10,7 +12,7 @@ namespace Diplomata.Models
   /// Class of quest that can have multiples states.
   /// </summary>
   [Serializable]
-  public class Quest
+  public class Quest : Data
   {
     [SerializeField] private string uniqueId;
     public string Name;
@@ -263,6 +265,33 @@ namespace Diplomata.Models
         questString.Append(string.Format("{0}:{1}; ", state.Key, state.Value));
       }
       return questString.ToString();
+    }
+
+    /// <summary>
+    /// Return the data of the object to save in a persistent object.
+    /// </summary>
+    /// <returns>A persistent object.</returns>
+    public override Persistent GetData()
+    {
+      var quest = new QuestPersistent();
+      quest.id = uniqueId;
+      quest.currentStateId = currentStateId;
+      quest.initialized = initialized;
+      quest.finished = finished;
+      return quest;
+    }
+
+    /// <summary>
+    /// Store in a object data from persistent object.
+    /// </summary>
+    /// <param name="persistentData">The persistent data object.</param>
+    public override void SetData(Persistent persistentData)
+    {
+      var questPersistentData = (QuestPersistent) persistentData;
+      uniqueId = questPersistentData.id;
+      currentStateId = questPersistentData.currentStateId;
+      initialized = questPersistentData.initialized;
+      finished = questPersistentData.finished;
     }
   }
 

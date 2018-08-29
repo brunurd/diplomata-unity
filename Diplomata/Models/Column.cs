@@ -1,11 +1,13 @@
 using System;
 using Diplomata.Helpers;
+using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 using UnityEngine;
 
 namespace Diplomata.Models
 {
   [Serializable]
-  public class Column
+  public class Column : Data
   {
     [SerializeField] public string uniqueId = Guid.NewGuid().ToString();
     public int id;
@@ -60,6 +62,21 @@ namespace Diplomata.Models
     public static Column Find(Context context, int columnId)
     {
       return (Column) Helpers.Find.In(context.columns).Where("id", columnId).Result;
+    }
+
+    public override Persistent GetData()
+    {
+      var column = new ColumnPersistent();
+      column.id = uniqueId;
+      column.messages = Data.GetArrayData<MessagePersistent>(messages);
+      return column;
+    }
+
+    public override void SetData(Persistent persistentData)
+    {
+      var column = (ColumnPersistent) persistentData;
+      uniqueId = column.id;
+      messages = Data.SetArrayData<Message>(messages, column.messages);
     }
   }
 }

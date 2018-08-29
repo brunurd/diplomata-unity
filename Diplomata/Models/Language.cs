@@ -6,14 +6,14 @@ namespace Diplomata.Models
   [Serializable]
   public class Language
   {
-    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
+    // [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
     public string name;
     public bool subtitle;
     public bool dubbing;
 
     public Language(string name)
     {
-      uniqueId = Guid.NewGuid().ToString();
+      // uniqueId = Guid.NewGuid().ToString();
       this.name = name;
       subtitle = true;
       dubbing = true;
@@ -21,7 +21,7 @@ namespace Diplomata.Models
 
     public Language(Language other)
     {
-      uniqueId = Guid.NewGuid().ToString();
+      // uniqueId = Guid.NewGuid().ToString();
       name = other.name;
       subtitle = other.subtitle;
       dubbing = other.dubbing;

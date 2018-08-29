@@ -2,14 +2,16 @@ using System;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 using UnityEngine;
 
 namespace Diplomata.Models
 {
   [Serializable]
-  public class Item
+  public class Item : Data
   {
-    [SerializeField] string uniqueId = Guid.NewGuid().ToString();
+    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
     public int id;
     public LanguageDictionary[] name;
     public LanguageDictionary[] description;
@@ -77,6 +79,31 @@ namespace Diplomata.Models
       }
       Debug.LogError("This item doesn't exist.");
       return null;
+    }
+
+    /// <summary>
+    /// Return the data of the object to save in a persistent object.
+    /// </summary>
+    /// <returns>A persistent object.</returns>
+    public override Persistent GetData()
+    {
+      var item = new ItemPersistent();
+      item.id = uniqueId;
+      item.have = have;
+      item.discarded = discarded;
+      return item;
+    }
+
+    /// <summary>
+    /// Store in a object data from persistent object.
+    /// </summary>
+    /// <param name="persistentData">The persistent data object.</param>
+    public override void SetData(Persistent persistentData)
+    {
+      var itemPersistentData = (ItemPersistent) persistentData;
+      uniqueId = itemPersistentData.id;
+      have = itemPersistentData.have;
+      discarded = itemPersistentData.discarded;
     }
   }
 }

@@ -2,11 +2,13 @@ using System;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using UnityEngine;
+using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 
 namespace Diplomata.Models
 {
   [Serializable]
-  public class Inventory
+  public class Inventory : Data
   {
     public Item[] items = new Item[0];
     private int equipped = -1;
@@ -110,6 +112,27 @@ namespace Diplomata.Models
           );
         }
       }
+    }
+
+    /// <summary>
+    /// Return the data of the object to save in a persistent object.
+    /// </summary>
+    /// <returns>A persistent object.</returns>
+    public override Persistent GetData()
+    {
+      var inventory = new InventoryPersistent();
+      inventory.items = Data.GetArrayData<ItemPersistent>(items);
+      return inventory;
+    }
+
+    /// <summary>
+    /// Store in a object data from persistent object.
+    /// </summary>
+    /// <param name="persistentData">The persistent data object.</param>
+    public override void SetData(Persistent persistentData)
+    {
+      var inventoryPersistent = (InventoryPersistent) persistentData;
+      items = Data.SetArrayData<Item>(items, inventoryPersistent.items);
     }
   }
 }

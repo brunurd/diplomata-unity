@@ -3,6 +3,7 @@ using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using Diplomata.Persistence;
+using Diplomata.Persistence.Models;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -112,24 +113,29 @@ namespace Diplomata.Models
       return temp;
     }
 
+    /// <summary>
+    /// Return the data of the object to save in a persistent object.
+    /// </summary>
+    /// <returns>A persistent object.</returns>
     public override Persistent GetData()
     {
-      throw new NotImplementedException();
+      var context = new ContextPersistent();
+      context.id = uniqueId;
+      context.happened = happened;
+      context.columns = Data.GetArrayData<ColumnPersistent>(columns);
+      return context;
     }
 
-    public override Persistent[] GetArrayData(Data[] array)
-    {
-      throw new NotImplementedException();
-    }
-
+    /// <summary>
+    /// Store in a object data from persistent object.
+    /// </summary>
+    /// <param name="persistentData">The persistent data object.</param>
     public override void SetData(Persistent persistentData)
     {
-      throw new NotImplementedException();
-    }
-
-    public override void SetArrayData(ref Data[] data, Persistent[] persistentData)
-    {
-      throw new NotImplementedException();
+      var context = (ContextPersistent) persistentData;
+      uniqueId = context.id;
+      happened = context.happened;
+      columns = Data.SetArrayData<Column>(columns, context.columns);
     }
   }
 }
