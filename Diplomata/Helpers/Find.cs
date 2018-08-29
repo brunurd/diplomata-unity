@@ -41,7 +41,7 @@ namespace Diplomata.Helpers
     {
       get
       {
-        return Results[0];
+        return (Results.Length >= 1) ? Results[0] : null;
       }
       private set
       {

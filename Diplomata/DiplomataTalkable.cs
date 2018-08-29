@@ -1059,7 +1059,7 @@ namespace Diplomata
     }
 
     /// <summary>
-    /// Get the last message from the context.
+    /// Get the last message before the current.
     /// </summary>
     /// <returns>The <seealso cref="Diplomata.Models.Message"> object.</returns>
     public Message GetLastMessage()
@@ -1071,7 +1071,6 @@ namespace Diplomata
           return Message.Find(col.messages, lastUniqueId);
         }
       }
-
       return null;
     }
 
