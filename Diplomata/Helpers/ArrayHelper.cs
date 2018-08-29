@@ -68,10 +68,6 @@ namespace Diplomata.Helpers
         {
           unfound = false;
         }
-        else if (returnedArray.Length >= j)
-        {
-          break;
-        }
         else
         {
           returnedArray[j] = array[i];
