@@ -29,7 +29,6 @@ namespace Diplomata.Editor.Extensions
       RTFDocument doc = CreateDocument();
       diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
-
       foreach (Character character in diplomataEditor.characters)
       {
         doc = AddTalkable(doc, character);

@@ -41,7 +41,7 @@ namespace Diplomata.Models
     /// <returns>Return a flag if it change or not.</returns>
     public bool SetId()
     {
-      if ( uniqueId == string.Empty || uniqueId == null)
+      if (uniqueId == string.Empty || uniqueId == null)
       {
         uniqueId = Guid.NewGuid().ToString();
         return true;
