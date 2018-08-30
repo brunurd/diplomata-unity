@@ -39,6 +39,18 @@ namespace Diplomata
     }
 
     /// <summary>
+    /// Get a context by name.
+    /// </summary>
+    /// <param name="talkable">The talkable to find in.</param>
+    /// <param name="contextName">The context name.</param>
+    /// <param name="language">The language of the name.</param>
+    /// <returns>The context if found or null.</returns>
+    public static Context GetContext(Character character, string contextName, string language)
+    {
+      return Context.Find(character, contextName, language);
+    }
+
+    /// <summary>
     /// Get a message by it's context and row index.
     /// </summary>
     /// <param name="context">The context parent of the message.</param>
@@ -95,6 +107,16 @@ namespace Diplomata
     {
       if (language == "") language = DiplomataData.options.languages[0].name;
       return Item.Find(DiplomataData.inventory.items, name, language);
+    }
+
+    /// <summary>
+    /// Get a item by it's id.
+    /// </summary>
+    /// <param name="itemId">The item id.</param>
+    /// <returns>The item.</returns>
+    public static Item GetItem(int itemId)
+    {
+      return Item.Find(DiplomataData.inventory.items, itemId);
     }
 
     /// <summary>

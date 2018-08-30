@@ -126,5 +126,17 @@ namespace Diplomata.Models
       have = itemPersistentData.have;
       discarded = itemPersistentData.discarded;
     }
+
+    /// <summary>
+    /// Return the name of the item.
+    /// </summary>
+    /// <param name="language">The language of the name.</param>
+    /// <returns>The name of the item or empty.</returns>
+    public string DisplayName(string language)
+    {
+      var nameResult = DictionariesHelper.ContainsKey(name, language);
+      if (nameResult == null) return string.Empty;
+      return nameResult.value;
+    }
   }
 }

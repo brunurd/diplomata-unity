@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
@@ -86,6 +87,28 @@ namespace Diplomata.Models
     public static Context Find(Talkable talkable, int contextId)
     {
       return (Context) Helpers.Find.In(talkable.contexts).Where("id", contextId).Result;
+    }
+
+    /// <summary>
+    /// Find a context by name.
+    /// </summary>
+    /// <param name="talkable">The talkable to find in.</param>
+    /// <param name="contextName">The context name.</param>
+    /// <param name="language">The language of the name.</param>
+    /// <returns>The context if found or null.</returns>
+    public static Context Find(Talkable talkable, string contextName, string language)
+    {
+      if (talkable != null)
+      {
+        foreach (var context in talkable.contexts)
+        {
+          foreach (var name in context.name)
+          {
+            if (name.key == language && name.value == contextName) return context;
+          }
+        }
+      }
+      return null;
     }
 
     public static Context[] ResetIDs(Talkable talkable, Context[] array)
