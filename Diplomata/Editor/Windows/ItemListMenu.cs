@@ -43,6 +43,11 @@ namespace Diplomata.Editor.Windows
       {
         var item = diplomataEditor.inventory.items[i];
 
+        if (item.SetId())
+        {
+          diplomataEditor.SaveInventory();
+        }
+
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();
 

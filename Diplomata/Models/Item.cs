@@ -62,6 +62,7 @@ namespace Diplomata.Models
     /// <param name="id">The item id.</param>
     public Item(int id)
     {
+      uniqueId = Guid.NewGuid().ToString();
       this.id = id;
 
       foreach (Language language in DiplomataData.options.languages)
@@ -69,6 +70,20 @@ namespace Diplomata.Models
         name = ArrayHelper.Add(name, new LanguageDictionary(language.name, "[ Edit to change this name ]"));
         description = ArrayHelper.Add(description, new LanguageDictionary(language.name, ""));
       }
+    }
+
+    /// <summary>
+    /// Set the uniqueId if it is empty or null.
+    /// </summary>
+    /// <returns>Return true if it change or false if don't.</returns>
+    public bool SetId()
+    {
+      if (uniqueId == string.Empty || uniqueId == null)
+      {
+        uniqueId = Guid.NewGuid().ToString();
+        return true;
+      }
+      return false;
     }
 
     /// <summary>

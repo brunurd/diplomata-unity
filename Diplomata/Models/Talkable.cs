@@ -49,7 +49,7 @@ namespace Diplomata.Models
     /// <summary>
     /// Set the uniqueId if it is empty or null.
     /// </summary>
-    /// <returns>Return a flag if it change or not.</returns>
+    /// <returns>Return true if it change or false if don't.</returns>
     public bool SetId()
     {
       if (uniqueId == string.Empty || uniqueId == null)
