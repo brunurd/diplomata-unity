@@ -51,9 +51,9 @@ namespace Diplomata.Models
       {
         foreach (DiplomataInteractable diplomataInteractable in interactablesOnScene)
         {
-          if (diplomataInteractable.Interactable != null)
+          if (diplomataInteractable.talkable != null)
           {
-            if (interactable.name == diplomataInteractable.Interactable.name)
+            if (interactable.name == diplomataInteractable.talkable.name)
             {
               interactable.onScene = true;
             }

@@ -11,22 +11,6 @@ namespace Diplomata
   public class DiplomataInteractable : DiplomataTalkable
   {
     /// <summary>
-    /// Interactable getter.
-    /// </summary>
-    /// <value>The talkable model.</value>
-    public Interactable Interactable
-    {
-      get
-      {
-        return (Interactable) talkable;
-      }
-      set
-      {
-        talkable = (Interactable) value;
-      }
-    }
-
-    /// <summary>
     /// Set the main talkable fields.
     /// </summary>
     private void Start()
