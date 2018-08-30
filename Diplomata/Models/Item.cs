@@ -44,11 +44,14 @@ namespace Diplomata.Models
     /// The item category.
     /// </summary>
     /// <value>The item category string.</value>
-    public string Category {
-      get {
+    public string Category
+    {
+      get
+      {
         return category;
       }
-      set {
+      set
+      {
         category = value.ToLower();
       }
     }
@@ -135,6 +138,18 @@ namespace Diplomata.Models
     public string DisplayName(string language)
     {
       var nameResult = DictionariesHelper.ContainsKey(name, language);
+      if (nameResult == null) return string.Empty;
+      return nameResult.value;
+    }
+
+    /// <summary>
+    /// Return the description of the item.
+    /// </summary>
+    /// <param name="language">The language of the name.</param>
+    /// <returns>The description of the item or empty.</returns>
+    public string DisplayDescription(string language)
+    {
+      var nameResult = DictionariesHelper.ContainsKey(description, language);
       if (nameResult == null) return string.Empty;
       return nameResult.value;
     }

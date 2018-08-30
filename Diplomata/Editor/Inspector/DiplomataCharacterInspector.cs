@@ -10,7 +10,7 @@ namespace Diplomata.Editor.Inspector
 {
   /// <summary>
   /// The inspector class to DiplomataCharacter
-  /// <seealso cref="DiplomataLib.DiplomataCharacter">
+  /// <seealso cref="Diplomata.DiplomataCharacter">
   /// </summary>
   [CustomEditor(typeof(DiplomataCharacter))]
   [CanEditMultipleObjects]

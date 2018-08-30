@@ -5,13 +5,22 @@ using UnityEngine;
 
 namespace Diplomata.Models
 {
+  /// <summary>
+  /// Interactable class, a talkable model for objects in the environment.
+  /// </summary>
   [Serializable]
   public class Interactable : Talkable
   {
-    public Interactable() : base() {}
-
+    /// <summary>
+    /// Constructor with a name.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public Interactable(string name) : base(name) {}
 
+    /// <summary>
+    /// Update the list of interactables in the DiplomataData.
+    /// </summary>
     public static void UpdateList()
     {
       var interactablesFiles = Resources.LoadAll("Diplomata/Interactables/");
@@ -31,6 +40,9 @@ namespace Diplomata.Models
       SetOnScene();
     }
 
+    /// <summary>
+    /// Set if the interactable is on the current scene.
+    /// </summary>
     public static void SetOnScene()
     {
       var interactablesOnScene = UnityEngine.Object.FindObjectsOfType<DiplomataInteractable>();
@@ -39,9 +51,9 @@ namespace Diplomata.Models
       {
         foreach (DiplomataInteractable diplomataInteractable in interactablesOnScene)
         {
-          if (diplomataInteractable.talkable != null)
+          if (diplomataInteractable.Interactable != null)
           {
-            if (interactable.name == diplomataInteractable.talkable.name)
+            if (interactable.name == diplomataInteractable.Interactable.name)
             {
               interactable.onScene = true;
             }

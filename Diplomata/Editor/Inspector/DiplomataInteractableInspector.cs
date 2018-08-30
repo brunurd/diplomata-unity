@@ -10,7 +10,7 @@ namespace Diplomata.Editor.Inspector
 {
   /// <summary>
   /// The inspector class to DiplomataInteractable
-  /// <seealso cref="DiplomataLib.DiplomataInteractable">
+  /// <seealso cref="Diplomata.DiplomataInteractable">
   /// </summary>
   [CustomEditor(typeof(DiplomataInteractable))]
   [CanEditMultipleObjects]

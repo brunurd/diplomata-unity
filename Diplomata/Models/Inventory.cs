@@ -21,8 +21,10 @@ namespace Diplomata.Models
     /// All used categories in the items.
     /// </summary>
     /// <value>A array of categories.</value>
-    public string[] Categories {
-      get {
+    public string[] Categories
+    {
+      get
+      {
         return categories;
       }
     }
@@ -52,8 +54,8 @@ namespace Diplomata.Models
     {
       foreach (var category in categories)
       {
-        var itemsWithCategory = Find.In(items).Where("category",category).Results;
-        if(itemsWithCategory.Length == 0)
+        var itemsWithCategory = Find.In(items).Where("category", category).Results;
+        if (itemsWithCategory.Length == 0)
         {
           categories = ArrayHelper.Remove(categories, category);
         }

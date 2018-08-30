@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace Diplomata.Models
 {
+  /// <summary>
+  /// A base class to talkable objects.
+  /// </summary>
   [Serializable]
   public class Talkable : Data
   {
@@ -20,8 +23,16 @@ namespace Diplomata.Models
     [NonSerialized]
     public bool onScene;
 
+    /// <summary>
+    /// Basic constructor.
+    /// </summary>
+    /// <returns>The new Talkable.</returns>
     public Talkable() {}
 
+    /// <summary>
+    /// A talkable base constructor with name.
+    /// </summary>
+    /// <param name="name">The talkable name.</param>
     public Talkable(string name)
     {
       uniqueId = Guid.NewGuid().ToString();

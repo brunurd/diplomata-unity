@@ -7,17 +7,28 @@ using UnityEngine;
 
 namespace Diplomata.Models
 {
+  /// <summary>
+  /// Character class, a talkable model for game characters.
+  /// </summary>
   [Serializable]
   public class Character : Talkable
   {
     public AttributeDictionary[] attributes;
     public byte influence = 50;
 
+    /// <summary>
+    /// Character constructor with name.
+    /// </summary>
+    /// <param name="name">The character name.</param>
+    /// <returns>The new Character.</returns>
     public Character(string name) : base(name)
     {
       SetAttributes();
     }
 
+    /// <summary>
+    /// Set the global attributes to the character local attributes.
+    /// </summary>
     public void SetAttributes()
     {
       attributes = new AttributeDictionary[0];
@@ -28,6 +39,9 @@ namespace Diplomata.Models
       }
     }
 
+    /// <summary>
+    /// Update the list of interactables in the DiplomataData.
+    /// </summary>
     public static void UpdateList()
     {
       var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
@@ -47,6 +61,9 @@ namespace Diplomata.Models
       SetOnScene();
     }
 
+    /// <summary>
+    /// Set if the character is on the current scene.
+    /// </summary>
     public static void SetOnScene()
     {
       var charactersOnScene = UnityEngine.Object.FindObjectsOfType<DiplomataCharacter>();
@@ -55,9 +72,9 @@ namespace Diplomata.Models
       {
         foreach (DiplomataCharacter diplomataCharacter in charactersOnScene)
         {
-          if (diplomataCharacter.talkable != null)
+          if (diplomataCharacter.Character != null)
           {
-            if (character.name == diplomataCharacter.talkable.name)
+            if (character.name == diplomataCharacter.Character.name)
             {
               character.onScene = true;
             }

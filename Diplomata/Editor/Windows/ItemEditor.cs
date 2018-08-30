@@ -102,7 +102,7 @@ namespace Diplomata.Editor.Windows
       var height = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
       GUILayout.Label("Description: ");
       description.value = EditorGUILayout.TextArea(description.value, GUIHelper.textAreaStyle, GUILayout.Height(height));
-      
+
       EditorGUILayout.Separator();
 
       item.image = (Texture2D) Resources.Load(item.imagePath);
