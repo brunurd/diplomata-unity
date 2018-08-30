@@ -83,7 +83,7 @@ namespace Diplomata
 
           if (context != null)
           {
-            if (!context.happened)
+            if (!context.Finished)
             {
               currentContext = context;
               break;
@@ -124,7 +124,7 @@ namespace Diplomata
     {
       if (talkable != null && currentContext != null)
       {
-        if (!currentContext.happened)
+        if (!currentContext.Finished)
         {
           currentColumn = Column.Find(currentContext, controlIndexes["column"]);
 
@@ -772,11 +772,11 @@ namespace Diplomata
           {
             case Effect.Type.EndOfContext:
               if (effect.endOfContext.GetContext(DiplomataData.characters, DiplomataData.interactables) != null)
-                effect.endOfContext.GetContext(DiplomataData.characters, DiplomataData.interactables).happened = true;
+                effect.endOfContext.GetContext(DiplomataData.characters, DiplomataData.interactables).Finished = true;
 
               if (currentContext.talkableName == effect.endOfContext.talkableName && currentContext.id == effect.endOfContext.contextId)
               {
-                currentContext.happened = true;
+                currentContext.Finished = true;
               }
 
               break;
