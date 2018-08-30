@@ -129,6 +129,45 @@ namespace Diplomata.Models
     }
 
     /// <summary>
+    /// Get all messages contents of the context.
+    /// </summary>
+    /// <param name="context">A context that is parent of the messages.</param>
+    /// <param name="language">The language of the contents.</param>
+    /// <returns>Return a string array with all contents.</returns>
+    public static string[] GetContents(Context context, string language)
+    {
+      var contents = new string[0];
+      if (context != null)
+      {
+        foreach (var column in context.columns)
+        {
+          foreach (var message in column.messages)
+          {
+            foreach (var content in message.content)
+            {
+              if (content.key == language) contents = ArrayHelper.Add(contents, content.value);
+            }
+          }
+        }
+      }
+      return contents;
+    }
+
+    /// <summary>
+    /// Get the message content.
+    /// </summary>
+    /// <param name="language">The language of the name.</param>
+    /// <returns>The name string.</returns>
+    public string GetContent(string language)
+    {
+      foreach (var langContent in content)
+      {
+        if (langContent.key == language) return langContent.value;
+      }
+      return string.Empty;
+    }
+
+    /// <summary>
     /// Find a message by it unique id.
     /// </summary>
     /// <param name="array">A array of messages.</param>

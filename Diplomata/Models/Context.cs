@@ -10,6 +10,9 @@ using UnityEngine.Serialization;
 
 namespace Diplomata.Models
 {
+  /// <summary>
+  /// The states in the editor.
+  /// </summary>
   public enum MessageEditorState
   {
     None,
@@ -18,6 +21,9 @@ namespace Diplomata.Models
     Effects
   }
 
+  /// <summary>
+  /// The context of the messages of a character.
+  /// </summary>
   [Serializable]
   public class Context : Data
   {
@@ -37,21 +43,50 @@ namespace Diplomata.Models
     public LanguageDictionary[] name;
     public LanguageDictionary[] description;
     public Label[] labels = new Label[] { new Label() };
-
+    
     [NonSerialized]
-    public bool happened;
+    public Action OnEnd;
+    private bool happened;
 
+    /// <summary>
+    /// Get and set if the context finished.
+    /// </summary>
+    /// <value>The bool happened field.</value>
+    public bool Finished
+    {
+      get {
+        return happened;
+      }
+      set {
+        OnEnd();
+        happened = value;
+      }
+    }
+
+    /// <summary>
+    /// Current message nested struct.
+    /// </summary>
     public struct CurrentMessage
     {
       public int columnId;
       public int rowId;
 
+      /// <summary>
+      /// Current message constructor with column and row id.
+      /// </summary>
+      /// <param name="columnId">The column index id.</param>
+      /// <param name="rowId">The row index id.</param>
       public CurrentMessage(int columnId, int rowId)
       {
         this.columnId = columnId;
         this.rowId = rowId;
       }
 
+      /// <summary>
+      /// Set the current fields column and row id.
+      /// </summary>
+      /// <param name="columnId">The column index id.</param>
+      /// <param name="rowId">The row index id.</param>
       public void Set(int columnId, int rowId)
       {
         this.columnId = columnId;
@@ -59,8 +94,16 @@ namespace Diplomata.Models
       }
     }
 
+    /// <summary>
+    /// Basic constructor.
+    /// </summary>
     public Context() {}
 
+    /// <summary>
+    /// Context constructor with id and the talkable name.
+    /// </summary>
+    /// <param name="id">A int id.</param>
+    /// <param name="talkableName">The talkable parent name.</param>
     public Context(int id, string talkableName)
     {
       uniqueId = Guid.NewGuid().ToString();
@@ -111,6 +154,12 @@ namespace Diplomata.Models
       return null;
     }
 
+    /// <summary>
+    /// Reset all contexts index id's.
+    /// </summary>
+    /// <param name="talkable">The talkable parent of the contexts.</param>
+    /// <param name="array">The array of contexts.</param>
+    /// <returns>The resetted array of contexts.</returns>
     public static Context[] ResetIDs(Talkable talkable, Context[] array)
     {
       var temp = new Context[0];
@@ -134,6 +183,39 @@ namespace Diplomata.Models
       }
 
       return temp;
+    }
+
+    /// <summary>
+    /// Get all context names of the array.
+    /// </summary>
+    /// <param name="contexts">A array of contexts.</param>
+    /// <param name="language">The language of the names.</param>
+    /// <returns>Return a string array with all names.</returns>
+    public static string[] GetNames(Context[] contexts, string language)
+    {
+      var names = new string[0];
+      foreach (var context in contexts)
+      {
+        foreach (var name in context.name)
+        {
+          if (name.key == language) names = ArrayHelper.Add(names, name.value);
+        }
+      }
+      return names;
+    }
+
+    /// <summary>
+    /// Get the context name.
+    /// </summary>
+    /// <param name="language">The language of the name.</param>
+    /// <returns>The name string.</returns>
+    public string GetName(string language)
+    {
+      foreach (var langName in name)
+      {
+        if (langName.key == language) return langName.value;
+      }
+      return string.Empty;
     }
 
     /// <summary>
