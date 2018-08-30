@@ -43,7 +43,7 @@ namespace Diplomata.Models
     public LanguageDictionary[] name;
     public LanguageDictionary[] description;
     public Label[] labels = new Label[] { new Label() };
-    
+
     [NonSerialized]
     public Action OnEnd;
     private bool happened;
@@ -54,10 +54,12 @@ namespace Diplomata.Models
     /// <value>The bool happened field.</value>
     public bool Finished
     {
-      get {
+      get
+      {
         return happened;
       }
-      set {
+      set
+      {
         OnEnd();
         happened = value;
       }
