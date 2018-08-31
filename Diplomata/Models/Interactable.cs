@@ -19,22 +19,22 @@ namespace Diplomata.Models
     public Interactable(string name) : base(name) {}
 
     /// <summary>
-    /// Update the list of interactables in the DiplomataData.
+    /// Update the list of interactables in the DiplomataManager.Data.
     /// </summary>
     public static void UpdateList()
     {
       var interactablesFiles = Resources.LoadAll("Diplomata/Interactables/");
 
-      DiplomataData.interactables = new List<Interactable>();
-      DiplomataData.options.interactableList = new string[0];
+      DiplomataManager.Data.interactables = new List<Interactable>();
+      DiplomataManager.Data.options.interactableList = new string[0];
 
       foreach (UnityEngine.Object obj in interactablesFiles)
       {
         var json = (TextAsset) obj;
         var interactable = JsonUtility.FromJson<Interactable>(json.text);
 
-        DiplomataData.interactables.Add(interactable);
-        DiplomataData.options.interactableList = ArrayHelper.Add(DiplomataData.options.interactableList, obj.name);
+        DiplomataManager.Data.interactables.Add(interactable);
+        DiplomataManager.Data.options.interactableList = ArrayHelper.Add(DiplomataManager.Data.options.interactableList, obj.name);
       }
 
       SetOnScene();
@@ -47,7 +47,7 @@ namespace Diplomata.Models
     {
       var interactablesOnScene = UnityEngine.Object.FindObjectsOfType<DiplomataInteractable>();
 
-      foreach (Interactable interactable in DiplomataData.interactables)
+      foreach (Interactable interactable in DiplomataManager.Data.interactables)
       {
         foreach (DiplomataInteractable diplomataInteractable in interactablesOnScene)
         {

@@ -26,13 +26,13 @@ namespace Diplomata
     public DiplomataPersistentData()
     {
       options = new OptionsPersistent();
-      options = (OptionsPersistent) DiplomataData.options.GetData();
-      characters = Data.GetArrayData<CharacterPersistent>(DiplomataData.characters.ToArray());
-      globalFlags = (GlobalFlagsPersistent) DiplomataData.globalFlags.GetData();
-      interactables = Data.GetArrayData<InteractablePersistent>(DiplomataData.interactables.ToArray());
-      inventory = (InventoryPersistent) DiplomataData.inventory.GetData();
-      quests = Data.GetArrayData<QuestPersistent>(DiplomataData.quests);
-      talkLogs = Data.GetArrayData<TalkLogPersistent>(DiplomataData.talkLogs);
+      options = (OptionsPersistent) DiplomataManager.Data.options.GetData();
+      characters = Data.GetArrayData<CharacterPersistent>(DiplomataManager.Data.characters.ToArray());
+      globalFlags = (GlobalFlagsPersistent) DiplomataManager.Data.globalFlags.GetData();
+      interactables = Data.GetArrayData<InteractablePersistent>(DiplomataManager.Data.interactables.ToArray());
+      inventory = (InventoryPersistent) DiplomataManager.Data.inventory.GetData();
+      quests = Data.GetArrayData<QuestPersistent>(DiplomataManager.Data.quests);
+      talkLogs = Data.GetArrayData<TalkLogPersistent>(DiplomataManager.Data.talkLogs);
     }
   }
 }

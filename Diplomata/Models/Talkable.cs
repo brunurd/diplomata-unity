@@ -40,7 +40,7 @@ namespace Diplomata.Models
       contexts = new Context[0];
       description = new LanguageDictionary[0];
 
-      foreach (Language lang in DiplomataData.options.languages)
+      foreach (Language lang in DiplomataManager.Data.options.languages)
       {
         description = ArrayHelper.Add(description, new LanguageDictionary(lang.name, ""));
       }

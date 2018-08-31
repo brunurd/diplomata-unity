@@ -20,7 +20,7 @@ namespace Diplomata.Models
     {
       uniqueId = Guid.NewGuid().ToString();
       this.id = id;
-      emitter = DiplomataData.options.playerCharacterName;
+      emitter = DiplomataManager.Data.options.playerCharacterName;
 
       messages = new Message[0];
     }

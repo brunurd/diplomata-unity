@@ -75,12 +75,12 @@ namespace Diplomata.Models
       animatorAttributesSetters = new AnimatorAttributeSetter[0];
       this.labelId = labelId;
 
-      foreach (string str in DiplomataData.options.attributes)
+      foreach (string str in DiplomataManager.Data.options.attributes)
       {
         attributes = ArrayHelper.Add(attributes, new AttributeDictionary(str));
       }
 
-      foreach (Language lang in DiplomataData.options.languages)
+      foreach (Language lang in DiplomataManager.Data.options.languages)
       {
         content = ArrayHelper.Add(content, new LanguageDictionary(lang.name, "[ Message content here ]"));
         screenplayNotes = ArrayHelper.Add(screenplayNotes, new LanguageDictionary(lang.name, ""));

@@ -11,10 +11,11 @@ namespace Diplomata
   /// <summary>
   /// The main class of the talkable.
   /// </summary>
+  [AddComponentMenu("")]
   [Serializable]
   [ExecuteInEditMode]
   [DisallowMultipleComponent]
-  public class DiplomataTalkable : MonoBehaviour
+  public class DiplomataTalkable : DiplomataManager
   {
     public List<Message> choices;
     public Talkable talkable;
@@ -63,9 +64,9 @@ namespace Diplomata
     /// </summary>
     public void StartTalk()
     {
-      if (talkable != null && DiplomataData.isTalking == false)
+      if (talkable != null && IsTalking == false)
       {
-        DiplomataData.isTalking = true;
+        IsTalking = true;
         controlIndexes = new Dictionary<string, int>();
         controlIndexes.Add("context", 0);
         controlIndexes.Add("column", 0);
@@ -224,7 +225,7 @@ namespace Diplomata
                           }
                           break;
                         case Condition.Type.HasItem:
-                          var item = Item.Find(DiplomataData.inventory.items, condition.itemId);
+                          var item = Item.Find(Data.inventory.items, condition.itemId);
 
                           if (item != null)
                           {
@@ -249,7 +250,7 @@ namespace Diplomata
 
                           break;
                         case Condition.Type.DoesNotHaveTheItem:
-                          var itemDont = Item.Find(DiplomataData.inventory.items, condition.itemId);
+                          var itemDont = Item.Find(Data.inventory.items, condition.itemId);
 
                           if (itemDont != null)
                           {
@@ -274,10 +275,10 @@ namespace Diplomata
 
                           break;
                         case Condition.Type.ItemIsEquipped:
-                          var equippedItem = Item.Find(DiplomataData.inventory.items, condition.itemId);
+                          var equippedItem = Item.Find(Data.inventory.items, condition.itemId);
                           if (equippedItem != null)
                           {
-                            if (DiplomataData.inventory.IsEquipped(condition.itemId))
+                            if (Data.inventory.IsEquipped(condition.itemId))
                             {
                               condition.proceed = true;
                             }
@@ -296,7 +297,7 @@ namespace Diplomata
 
                           break;
                         case Condition.Type.ItemWasDiscarded:
-                          var discardedItem = Item.Find(DiplomataData.inventory.items, condition.itemId);
+                          var discardedItem = Item.Find(Data.inventory.items, condition.itemId);
 
                           if (discardedItem != null)
                           {
@@ -321,7 +322,7 @@ namespace Diplomata
 
                           break;
                         case Condition.Type.GlobalFlagEqualTo:
-                          var flag = DiplomataData.globalFlags.Find(DiplomataData.globalFlags.flags, condition.globalFlag.name);
+                          var flag = Data.globalFlags.Find(Data.globalFlags.flags, condition.globalFlag.name);
 
                           if (flag != null)
                           {
@@ -346,7 +347,7 @@ namespace Diplomata
 
                           break;
                         case Condition.Type.QuestStateIs:
-                          var quest = Quest.Find(DiplomataData.quests, condition.questAndState.questId);
+                          var quest = Quest.Find(Data.quests, condition.questAndState.questId);
 
                           if (quest != null)
                           {
@@ -482,22 +483,22 @@ namespace Diplomata
     /// <returns>The current message.</returns>
     public string ShowMessageContentSubtitle()
     {
-      if (DiplomataData.isTalking)
+      if (IsTalking)
       {
         if (currentMessage != null)
         {
           // Save in the talk log.
-          var talkLog = TalkLog.Find(DiplomataData.talkLogs, talkable.name);
+          var talkLog = TalkLog.Find(Data.talkLogs, talkable.name);
           if (talkLog != null)
           {
             talkLog.messagesIds = ArrayHelper.Add(talkLog.messagesIds, currentMessage.GetUniqueId());
           }
 
           // Return the text.
-          var content = DictionariesHelper.ContainsKey(currentMessage.content, DiplomataData.options.currentLanguage);
+          var content = DictionariesHelper.ContainsKey(currentMessage.content, Data.options.currentLanguage);
           if (content == null)
           {
-            var errorText = string.Format("Cannot find message content in the language: {0}", DiplomataData.options.currentLanguage);
+            var errorText = string.Format("Cannot find message content in the language: {0}", Data.options.currentLanguage);
             Debug.LogError(errorText);
             EndTalk();
             return errorText;
@@ -522,7 +523,7 @@ namespace Diplomata
     {
       if (currentMessage != null)
       {
-        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, DiplomataData.options.currentLanguage);
+        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, Data.options.currentLanguage);
 
         if (audioClipPath.value != string.Empty)
         {
@@ -542,7 +543,7 @@ namespace Diplomata
 
             if (audioSource != null)
             {
-              audioSource.PlayOneShot(currentMessage.audioClip, DiplomataData.options.volumeScale);
+              audioSource.PlayOneShot(currentMessage.audioClip, Data.options.volumeScale);
             }
 
             else
@@ -561,7 +562,7 @@ namespace Diplomata
     {
       if (currentMessage != null)
       {
-        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, DiplomataData.options.currentLanguage);
+        var audioClipPath = DictionariesHelper.ContainsKey(currentMessage.audioClipPath, Data.options.currentLanguage);
 
         if (audioClipPath.value != string.Empty)
         {
@@ -751,7 +752,7 @@ namespace Diplomata
     /// </summary>
     public void EndTalk()
     {
-      DiplomataData.isTalking = false;
+      IsTalking = false;
     }
 
     /// <summary>
@@ -772,8 +773,8 @@ namespace Diplomata
           switch (effect.type)
           {
             case Effect.Type.EndOfContext:
-              if (effect.endOfContext.GetContext(DiplomataData.characters, DiplomataData.interactables) != null)
-                effect.endOfContext.GetContext(DiplomataData.characters, DiplomataData.interactables).Finished = true;
+              if (effect.endOfContext.GetContext(Data.characters, Data.interactables) != null)
+                effect.endOfContext.GetContext(Data.characters, Data.interactables).Finished = true;
 
               if (currentContext.talkableName == effect.endOfContext.talkableName && currentContext.id == effect.endOfContext.contextId)
               {
@@ -843,7 +844,7 @@ namespace Diplomata
               break;
 
             case Effect.Type.GetItem:
-              var getItem = Item.Find(DiplomataData.inventory.items, effect.itemId);
+              var getItem = Item.Find(Data.inventory.items, effect.itemId);
 
               if (getItem != null)
               {
@@ -858,11 +859,11 @@ namespace Diplomata
               break;
 
             case Effect.Type.EquipItem:
-              var equipItem = Item.Find(DiplomataData.inventory.items, effect.itemId);
+              var equipItem = Item.Find(Data.inventory.items, effect.itemId);
 
               if (equipItem != null)
               {
-                DiplomataData.inventory.Equip(effect.itemId);
+                Data.inventory.Equip(effect.itemId);
               }
 
               else
@@ -873,7 +874,7 @@ namespace Diplomata
               break;
 
             case Effect.Type.DiscardItem:
-              var discardItem = Item.Find(DiplomataData.inventory.items, effect.itemId);
+              var discardItem = Item.Find(Data.inventory.items, effect.itemId);
 
               if (discardItem != null)
               {
@@ -888,7 +889,7 @@ namespace Diplomata
               break;
 
             case Effect.Type.SetGlobalFlag:
-              var flag = DiplomataData.globalFlags.Find(DiplomataData.globalFlags.flags, effect.globalFlag.name);
+              var flag = Data.globalFlags.Find(Data.globalFlags.flags, effect.globalFlag.name);
 
               if (flag != null)
               {
@@ -906,7 +907,7 @@ namespace Diplomata
               EndTalk();
               break;
             case Effect.Type.SetQuestState:
-              var quest = Quest.Find(DiplomataData.quests, effect.questAndState.questId);
+              var quest = Quest.Find(Data.quests, effect.questAndState.questId);
 
               if (quest != null)
               {
@@ -971,7 +972,7 @@ namespace Diplomata
       {
         foreach (Message choice in choices)
         {
-          var content = DictionariesHelper.ContainsKey(choice.content, DiplomataData.options.currentLanguage).value;
+          var content = DictionariesHelper.ContainsKey(choice.content, Data.options.currentLanguage).value;
           var choiceText = content; //(shortContent != "") ? shortContent : content;
 
           if (!choice.alreadySpoked && choice.disposable)
@@ -1027,7 +1028,7 @@ namespace Diplomata
     {
       if (currentMessage != null)
       {
-        if (currentColumn.emitter == DiplomataData.options.playerCharacterName)
+        if (currentColumn.emitter == Data.options.playerCharacterName)
         {
           return true;
         }
@@ -1042,7 +1043,7 @@ namespace Diplomata
     /// <returns>the player name.</returns>
     public string PlayerName()
     {
-      return DiplomataData.options.playerCharacterName;
+      return Data.options.playerCharacterName;
     }
 
     /// <summary>
@@ -1087,7 +1088,7 @@ namespace Diplomata
       }
 
       return DictionariesHelper.ContainsKey(GetLastMessage().content,
-        DiplomataData.options.currentLanguage).value;
+        Data.options.currentLanguage).value;
     }
   }
 }

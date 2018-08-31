@@ -1,12 +1,48 @@
+using System.Collections.Generic;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using Diplomata.Persistence;
 using Diplomata.Persistence.Models;
+using UnityEngine;
 
 namespace Diplomata
 {
-  public static class DiplomataController
+  /// <summary>
+  /// The MonoBehaviour class to control all Diplomata data.
+  /// </summary>
+  [AddComponentMenu("")]
+  [ExecuteInEditMode]
+  public class DiplomataManager : MonoBehaviour
   {
+    private static DiplomataData data;
+    public static bool IsTalking;
+
+    /// <summary>
+    /// The Diplomata main data, all data come from here.
+    /// </summary>
+    /// <value>A static <seealso cref="Diplomata.DiplomataData">.</value>
+    public static DiplomataData Data
+    {
+      get
+      {
+        if (data == null)
+        {
+          data = ScriptableObject.CreateInstance<DiplomataData>();
+          data.ReadJSONs();
+        }
+        return data;
+      }
+    }
+
+    /// <summary>
+    /// Method to dispose the game data for new game.
+    /// </summary>
+    public static void DisposeData()
+    {
+      data = ScriptableObject.CreateInstance<DiplomataData>();
+      data.ReadJSONs();
+    }
+
     /// <summary>
     /// Get a global flag by name.
     /// </summary>
@@ -14,7 +50,7 @@ namespace Diplomata
     /// <returns>The <seealso cref="Diplomata.Models.Flag"> object or null.</returns>
     public static Flag GetFlag(string name)
     {
-      return DiplomataData.globalFlags.Find(DiplomataData.globalFlags.flags, name);
+      return Data.globalFlags.Find(Data.globalFlags.flags, name);
     }
 
     /// <summary>
@@ -24,7 +60,7 @@ namespace Diplomata
     /// <returns>The <seealso cref="Diplomata.Models.Character"> object or null.</returns>
     public static Character GetCharacter(string name)
     {
-      return Character.Find(DiplomataData.characters, name);
+      return Character.Find(Data.characters, name);
     }
 
     /// <summary>
@@ -73,7 +109,7 @@ namespace Diplomata
     /// <returns>The <seealso cref="Diplomata.Models.Message"> object or null.</returns>
     public static Message GetMessage(string uniqueId)
     {
-      foreach (Character character in DiplomataData.characters)
+      foreach (Character character in Data.characters)
       {
         foreach (Context context in character.contexts)
         {
@@ -94,7 +130,7 @@ namespace Diplomata
     /// <returns>The <seealso cref="Diplomata.Models.Quest"> object or null.</returns>
     public static Quest GetQuest(string name)
     {
-      return Quest.Find(DiplomataData.quests, name);
+      return Quest.Find(Data.quests, name);
     }
 
     /// <summary>
@@ -105,8 +141,8 @@ namespace Diplomata
     /// <returns>The <seealso cref="Diplomata.Models.Item"> object or null.</returns>
     public static Item GetItem(string name, string language = "")
     {
-      if (language == "") language = DiplomataData.options.languages[0].name;
-      return Item.Find(DiplomataData.inventory.items, name, language);
+      if (language == "") language = Data.options.languages[0].name;
+      return Item.Find(Data.inventory.items, name, language);
     }
 
     /// <summary>
@@ -116,43 +152,43 @@ namespace Diplomata
     /// <returns>The item.</returns>
     public static Item GetItem(int itemId)
     {
-      return Item.Find(DiplomataData.inventory.items, itemId);
+      return Item.Find(data.inventory.items, itemId);
     }
 
     /// <summary>
-    /// Return all characters persistent 
+    /// Return all characters persistent data.
     /// </summary>
-    /// <returns>A array of characters persistent </returns>
+    /// <returns>A array of characters persistent data.</returns>
     public static CharacterPersistentContainer GetPersistentCharacters()
     {
-      return new CharacterPersistentContainer(Persistence.Data.GetArrayData<CharacterPersistent>(DiplomataData.characters.ToArray()));
+      return new CharacterPersistentContainer(Persistence.Data.GetArrayData<CharacterPersistent>(DiplomataManager.Data.characters.ToArray()));
     }
 
     /// <summary>
-    /// Return all interactables persistent 
+    /// Return all interactables persistent data.
     /// </summary>
-    /// <returns>A array of interactables persistent </returns>
+    /// <returns>A array of interactables persistent data.</returns>
     public static InteractablePersistentContainer GetPersistentInteractables()
     {
-      return new InteractablePersistentContainer(Persistence.Data.GetArrayData<InteractablePersistent>(DiplomataData.interactables.ToArray()));
+      return new InteractablePersistentContainer(Persistence.Data.GetArrayData<InteractablePersistent>(DiplomataManager.Data.interactables.ToArray()));
     }
 
     /// <summary>
-    /// Return all quests persistent 
+    /// Return all quests persistent data.
     /// </summary>
-    /// <returns>A array of quests persistent </returns>
+    /// <returns>A array of quests persistent data.</returns>
     public static QuestPersistentContainer GetPersistentQuests()
     {
-      return new QuestPersistentContainer(Persistence.Data.GetArrayData<QuestPersistent>(DiplomataData.quests));
+      return new QuestPersistentContainer(Persistence.Data.GetArrayData<QuestPersistent>(DiplomataManager.Data.quests));
     }
 
     /// <summary>
-    /// Return all talk logs persistent 
+    /// Return all talk logs persistent data.
     /// </summary>
-    /// <returns>A array of talk logs persistent </returns>
+    /// <returns>A array of talk logs persistent data.</returns>
     public static TalkLogPersistentContainer GetPersistentTalkLogs()
     {
-      return new TalkLogPersistentContainer(Persistence.Data.GetArrayData<TalkLogPersistent>(DiplomataData.talkLogs));
+      return new TalkLogPersistentContainer(Persistence.Data.GetArrayData<TalkLogPersistent>(DiplomataManager.Data.talkLogs));
     }
 
     /// <summary>
@@ -167,18 +203,18 @@ namespace Diplomata
       switch (model)
       {
         case Model.OPTIONS:
-          return (Options[]) Helpers.Find.In(new Options[] { DiplomataData.options }).Where(field, value).Results;
+          return (Options[]) Helpers.Find.In(new Options[] { Data.options }).Where(field, value).Results;
 
         case Model.CHARACTER:
-          return (Character[]) Helpers.Find.In(DiplomataData.characters.ToArray()).Where(field, value).Results;
+          return (Character[]) Helpers.Find.In(Data.characters.ToArray()).Where(field, value).Results;
 
         case Model.CONTEXT:
           var contexts = new Context[0];
-          foreach (var character in DiplomataData.characters)
+          foreach (var character in Data.characters)
           {
             contexts = ArrayHelper.Merge(contexts, (Context[]) Helpers.Find.In(character.contexts).Where(field, value).Results);
           }
-          foreach (var interactable in DiplomataData.interactables)
+          foreach (var interactable in Data.interactables)
           {
             contexts = ArrayHelper.Merge(contexts, (Context[]) Helpers.Find.In(interactable.contexts).Where(field, value).Results);
           }
@@ -186,14 +222,14 @@ namespace Diplomata
 
         case Model.COLUMN:
           var columns = new Column[0];
-          foreach (var character in DiplomataData.characters)
+          foreach (var character in Data.characters)
           {
             foreach (var context in character.contexts)
             {
               columns = ArrayHelper.Merge(columns, (Column[]) Helpers.Find.In(context.columns).Where(field, value).Results);
             }
           }
-          foreach (var interactable in DiplomataData.interactables)
+          foreach (var interactable in Data.interactables)
           {
             foreach (var context in interactable.contexts)
             {
@@ -204,7 +240,7 @@ namespace Diplomata
 
         case Model.MESSAGE:
           var messages = new Message[0];
-          foreach (var character in DiplomataData.characters)
+          foreach (var character in Data.characters)
           {
             foreach (var context in character.contexts)
             {
@@ -214,7 +250,7 @@ namespace Diplomata
               }
             }
           }
-          foreach (var interactable in DiplomataData.interactables)
+          foreach (var interactable in Data.interactables)
           {
             foreach (var context in interactable.contexts)
             {
@@ -227,19 +263,19 @@ namespace Diplomata
           return messages;
 
         case Model.INTERACTABLE:
-          return (Interactable[]) Helpers.Find.In(DiplomataData.interactables.ToArray()).Where(field, value).Results;
+          return (Interactable[]) Helpers.Find.In(Data.interactables.ToArray()).Where(field, value).Results;
 
         case Model.ITEM:
-          return (Item[]) Helpers.Find.In(DiplomataData.inventory.items).Where(field, value).Results;
+          return (Item[]) Helpers.Find.In(Data.inventory.items).Where(field, value).Results;
 
         case Model.FLAG:
-          return (Flag[]) Helpers.Find.In(DiplomataData.globalFlags.flags).Where(field, value).Results;
+          return (Flag[]) Helpers.Find.In(Data.globalFlags.flags).Where(field, value).Results;
 
         case Model.QUEST:
-          return (Quest[]) Helpers.Find.In(DiplomataData.quests).Where(field, value).Results;
+          return (Quest[]) Helpers.Find.In(Data.quests).Where(field, value).Results;
 
         case Model.TALKLOG:
-          return (TalkLog[]) Helpers.Find.In(DiplomataData.talkLogs).Where(field, value).Results;
+          return (TalkLog[]) Helpers.Find.In(Data.talkLogs).Where(field, value).Results;
 
         default:
           return new object[0];

@@ -33,29 +33,29 @@ namespace Diplomata.Models
     {
       attributes = new AttributeDictionary[0];
 
-      foreach (string attrName in DiplomataData.options.attributes)
+      foreach (string attrName in DiplomataManager.Data.options.attributes)
       {
         attributes = ArrayHelper.Add(attributes, new AttributeDictionary(attrName));
       }
     }
 
     /// <summary>
-    /// Update the list of interactables in the DiplomataData.
+    /// Update the list of interactables in the DiplomataManager.Data.
     /// </summary>
     public static void UpdateList()
     {
       var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
 
-      DiplomataData.characters = new List<Character>();
-      DiplomataData.options.characterList = new string[0];
+      DiplomataManager.Data.characters = new List<Character>();
+      DiplomataManager.Data.options.characterList = new string[0];
 
       foreach (UnityEngine.Object obj in charactersFiles)
       {
         var json = (TextAsset) obj;
         var character = JsonUtility.FromJson<Character>(json.text);
 
-        DiplomataData.characters.Add(character);
-        DiplomataData.options.characterList = ArrayHelper.Add(DiplomataData.options.characterList, obj.name);
+        DiplomataManager.Data.characters.Add(character);
+        DiplomataManager.Data.options.characterList = ArrayHelper.Add(DiplomataManager.Data.options.characterList, obj.name);
       }
 
       SetOnScene();
@@ -68,7 +68,7 @@ namespace Diplomata.Models
     {
       var charactersOnScene = UnityEngine.Object.FindObjectsOfType<DiplomataCharacter>();
 
-      foreach (Character character in DiplomataData.characters)
+      foreach (Character character in DiplomataManager.Data.characters)
       {
         foreach (DiplomataCharacter diplomataCharacter in charactersOnScene)
         {

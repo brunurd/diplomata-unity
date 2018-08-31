@@ -24,7 +24,7 @@ namespace Diplomata
 
       if (talkable != null && Application.isPlaying)
       {
-        talkable = Interactable.Find(DiplomataData.interactables, talkable.name);
+        talkable = Interactable.Find(Data.interactables, talkable.name);
       }
     }
   }

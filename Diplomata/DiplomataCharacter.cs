@@ -25,7 +25,7 @@ namespace Diplomata
 
       if (talkable != null && Application.isPlaying)
       {
-        talkable = Character.Find(DiplomataData.characters, talkable.name);
+        talkable = Character.Find(Data.characters, talkable.name);
       }
     }
 
@@ -41,7 +41,7 @@ namespace Diplomata
       {
         foreach (Message msg in choices)
         {
-          var localContent = DictionariesHelper.ContainsKey(msg.content, DiplomataData.options.currentLanguage).value;
+          var localContent = DictionariesHelper.ContainsKey(msg.content, Data.options.currentLanguage).value;
 
           if (localContent == content)
           {

@@ -1,4 +1,4 @@
-namespace Diplomata
+namespace Diplomata.Models
 {
   public enum Model
   {

@@ -116,7 +116,7 @@ namespace Diplomata.Models
       columns = new Column[0];
       labels = new Label[] { new Label() };
 
-      foreach (Language lang in DiplomataData.options.languages)
+      foreach (Language lang in DiplomataManager.Data.options.languages)
       {
         name = ArrayHelper.Add(name, new LanguageDictionary(lang.name, "Name [Change clicking on Edit]"));
         description = ArrayHelper.Add(description, new LanguageDictionary(lang.name, "Description [Change clicking on Edit]"));

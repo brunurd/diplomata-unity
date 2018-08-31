@@ -1,104 +1,102 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using Diplomata.Models.Collections;
+using Diplomata.Persistence;
 using UnityEngine;
 
 namespace Diplomata
 {
-  [AddComponentMenu("")]
-  [ExecuteInEditMode]
-  sealed public class DiplomataData : MonoBehaviour
+  /// <summary>
+  /// The Data storage class, here are all the Diplomata Data fields.
+  /// </summary>
+  [Serializable]
+  public class DiplomataData : ScriptableObject
   {
-    private static DiplomataData instance = null;
-    public static Options options = new Options();
-    public static List<Character> characters = new List<Character>();
-    public static List<Interactable> interactables = new List<Interactable>();
-    public static Inventory inventory = new Inventory();
-    public static GlobalFlags globalFlags = new GlobalFlags();
-    public static Quest[] quests = new Quest[0];
-    public static TalkLog[] talkLogs = new TalkLog[0];
-    public static bool isTalking;
+    public Options options = new Options();
+    public List<Character> characters = new List<Character>();
+    public List<Interactable> interactables = new List<Interactable>();
+    public Inventory inventory = new Inventory();
+    public GlobalFlags globalFlags = new GlobalFlags();
+    public Quest[] quests = new Quest[0];
+    public TalkLog[] talkLogs = new TalkLog[0];
 
-    private void Awake()
+    /// <summary>
+    /// Get the JSON's data.
+    /// </summary>
+    public void ReadJSONs()
     {
-      if (instance == null)
-      {
-        instance = this;
-
-        if (Application.isPlaying)
-        {
-          DontDestroyOnLoad(gameObject);
-        }
-
-        Restart();
-      }
-
-      else
-      {
-        DestroyImmediate(gameObject);
-      }
-    }
-
-    public static void SetData()
-    {
-      if (instance == null && FindObjectsOfType<DiplomataData>().Length < 1)
-      {
-        GameObject obj = new GameObject("[Diplomata]");
-        obj.AddComponent<DiplomataData>();
-      }
-    }
-
-    public static void Restart()
-    {
+      // Reset objects.
       options = new Options();
-
-      var json = (TextAsset) Resources.Load("Diplomata/preferences");
-
-      if (json != null)
-      {
-        options = JsonUtility.FromJson<Options>(json.text);
-      }
-
-      characters = new List<Character>();
-      interactables = new List<Interactable>();
-      Character.UpdateList();
-
       inventory = new Inventory();
-      json = (TextAsset) Resources.Load("Diplomata/inventory");
-      if (json != null)
-      {
-        inventory = JsonUtility.FromJson<Inventory>(json.text);
-      }
-      inventory.SetImagesAndSprites();
-
       globalFlags = new GlobalFlags();
-      json = (TextAsset) Resources.Load("Diplomata/globalFlags");
-      if (json != null)
-      {
-        globalFlags = JsonUtility.FromJson<GlobalFlags>(json.text);
-      }
-
       quests = new Quest[0];
-      json = (TextAsset) Resources.Load("Diplomata/quests");
-      if (json != null)
-      {
-        quests = JsonUtility.FromJson<Quests>(json.text).GetQuests();
-      }
 
-      talkLogs = new TalkLog[0];
-      foreach (var character in characters)
+      // Read JSON's.
+      options = ReadJSON<Options>("preferences", "Diplomata");
+      inventory = ReadJSON<Inventory>("inventory", "Diplomata");
+      globalFlags = ReadJSON<GlobalFlags>("globalFlags", "Diplomata");
+      quests = ReadJSON<Quests>("quests", "Diplomata").GetQuests();
+
+      // Update characters and interactables.
+      UpdateList();
+    }
+
+    /// <summary>
+    /// Read a JSON file and turin into a object.
+    /// </summary>
+    /// <param name="filename">The json file name.</param>
+    /// <param name="folder">A extra folder path in resources.</param>
+    /// <typeparam name="T">The type of the return.</typeparam>
+    /// <returns>The object from the json or null.</returns>
+    private T ReadJSON<T>(string filename, string folder = "")
+    {
+      try
       {
-        talkLogs = ArrayHelper.Add(talkLogs, new TalkLog(character.name));
+        TextAsset json = (TextAsset) Resources.Load(Path.Combine(folder, filename));
+        if (json == null) json = (TextAsset) Resources.Load(filename);
+        return JsonUtility.FromJson<T>(json.text);
+      }
+      catch (Exception e)
+      {
+        Debug.LogError(string.Format("Cannot read {0} in Resources folder. {1}", filename, e.Message));
+        return default(T);
       }
     }
 
     /// <summary>
-    /// Method to dispose the game data for new game.
+    /// Update the characters and interactables lists from JSON's.
     /// </summary>
-    public static void DisposeData()
+    public void UpdateList()
     {
-      DestroyImmediate(instance.gameObject);
+      var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
+      var interactablesFiles = Resources.LoadAll("Diplomata/Interactables/");
+
+      characters = new List<Character>();
+      interactables = new List<Interactable>();
+
+      options.characterList = new string[0];
+      options.interactableList = new string[0];
+
+      foreach (UnityEngine.Object obj in charactersFiles)
+      {
+        var json = (TextAsset) obj;
+        var character = JsonUtility.FromJson<Character>(json.text);
+
+        characters.Add(character);
+        options.characterList = ArrayHelper.Add(options.characterList, obj.name);
+      }
+
+      foreach (UnityEngine.Object obj in interactablesFiles)
+      {
+        var json = (TextAsset) obj;
+        var interactable = JsonUtility.FromJson<Interactable>(json.text);
+
+        interactables.Add(interactable);
+        options.interactableList = ArrayHelper.Add(options.interactableList, obj.name);
+      }
     }
   }
 }
