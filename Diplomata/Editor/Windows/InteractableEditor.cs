@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Diplomata.Dictionaries;
 using Diplomata.Editor;
 using Diplomata.Editor.Helpers;
+using Diplomata.Editor.Controllers;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using UnityEditor;
@@ -11,10 +13,11 @@ namespace Diplomata.Editor.Windows
 {
   public class InteractableEditor : UnityEditor.EditorWindow
   {
-    public static Interactable interactable;
-    private string interactableName = "";
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorData diplomataEditor;
+    private string interactableName = "";
+    public Options options;
+    public List<Interactable> interactables;
+    public static Interactable interactable;
 
     public enum State
     {
@@ -56,22 +59,28 @@ namespace Diplomata.Editor.Windows
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      interactables = InteractablesController.GetInteractables(options);
+    }
+
+    public void OnDisable()
+    {
+      if (state == State.Edit && interactable != null)
+      {
+        Save();
+      }
+      interactable = null;
     }
 
     public static void OpenCreate()
     {
       interactable = null;
-
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       Init(State.Create);
     }
 
     public static void Edit(Interactable currentInteractable)
     {
       interactable = currentInteractable;
-
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       Init(State.Edit);
     }
 
@@ -154,14 +163,12 @@ namespace Diplomata.Editor.Windows
     {
       if (interactableName != "")
       {
-        diplomataEditor.AddInteractable(interactableName);
+        InteractablesController.AddInteractable(interactableName, options, interactables);
       }
-
       else
       {
         Debug.LogError("Interactable name was empty.");
       }
-
       Close();
     }
 
@@ -171,12 +178,12 @@ namespace Diplomata.Editor.Windows
 
       GUIHelper.Separator();
 
-      var description = DictionariesHelper.ContainsKey(interactable.description, diplomataEditor.options.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(interactable.description, options.currentLanguage);
 
       if (description == null)
       {
-        interactable.description = ArrayHelper.Add(interactable.description, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
-        description = DictionariesHelper.ContainsKey(interactable.description, diplomataEditor.options.currentLanguage);
+        interactable.description = ArrayHelper.Add(interactable.description, new LanguageDictionary(options.currentLanguage, ""));
+        description = DictionariesHelper.ContainsKey(interactable.description, options.currentLanguage);
       }
 
       GUIHelper.textContent.text = description.value;
@@ -206,16 +213,8 @@ namespace Diplomata.Editor.Windows
 
     public void Save()
     {
-      diplomataEditor.Save(interactable, "Interactables");
-      diplomataEditor.SavePreferences();
-    }
-
-    public void OnDisable()
-    {
-      if (state == State.Edit && interactable != null)
-      {
-        Save();
-      }
+      InteractablesController.Save(interactable, options.jsonPrettyPrint);
+      OptionsController.Save(options, options.jsonPrettyPrint);
     }
   }
 }

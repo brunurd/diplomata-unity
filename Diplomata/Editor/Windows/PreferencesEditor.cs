@@ -134,7 +134,8 @@ namespace Diplomata.Editor.Windows
       options.jsonPrettyPrint = jsonPrettyPrintTemp;
       options.currentLanguage = string.Copy(currentLanguageTemp);
       options.SetLanguageList();
-      OptionsController.Save(options);
+      CharactersController.UpdateList(options);
+      OptionsController.Save(options, options.jsonPrettyPrint);
       Close();
     }
   }

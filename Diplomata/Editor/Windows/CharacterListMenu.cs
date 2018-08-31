@@ -78,6 +78,7 @@ namespace Diplomata.Editor.Windows
         if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
           CharacterEditor.Edit(character);
+          Close();
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
@@ -108,6 +109,7 @@ namespace Diplomata.Editor.Windows
             }
 
             OptionsController.Save(options, options.jsonPrettyPrint);
+            characters = CharactersController.GetCharacters(options);
 
             CharacterEditor.Reset(name);
             TalkableMessagesManager.Reset(name);
@@ -129,6 +131,7 @@ namespace Diplomata.Editor.Windows
       if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
         CharacterEditor.OpenCreate();
+        Close();
       }
 
       GUILayout.EndVertical();
@@ -140,5 +143,4 @@ namespace Diplomata.Editor.Windows
       Repaint();
     }
   }
-
 }

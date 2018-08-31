@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Diplomata;
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
@@ -11,12 +13,12 @@ namespace Diplomata.Editor.Windows
   public class InteractableListMenu : UnityEditor.EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private DiplomataEditorData diplomataEditor;
+    public Options options;
+    public List<Interactable> interactables;
 
     [MenuItem("Diplomata/Interactables")]
     static public void Init()
     {
-      DiplomataEditorData.Instantiate();
       InteractableListMenu window = (InteractableListMenu) GetWindow(typeof(InteractableListMenu), false, "Interactable List");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
       window.Show();
@@ -24,7 +26,8 @@ namespace Diplomata.Editor.Windows
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      interactables = InteractablesController.GetInteractables(options);
     }
 
     public void OnGUI()
@@ -34,19 +37,19 @@ namespace Diplomata.Editor.Windows
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataEditor.options.interactableList.Length <= 0)
+      if (options.interactableList.Length <= 0)
       {
         EditorGUILayout.HelpBox("No interactables yet.", MessageType.Info);
       }
 
-      for (int i = 0; i < diplomataEditor.options.interactableList.Length; i++)
+      for (int i = 0; i < options.interactableList.Length; i++)
       {
-        var name = diplomataEditor.options.interactableList[i];
-        var interactable = Interactable.Find(diplomataEditor.interactables, name);
+        var name = options.interactableList[i];
+        var interactable = Interactable.Find(interactables, name);
 
         if (interactable.SetId())
         {
-          diplomataEditor.Save(interactable, "Interactables");
+          InteractablesController.Save(interactable, options.jsonPrettyPrint);
         }
 
         GUILayout.BeginHorizontal();
@@ -68,7 +71,8 @@ namespace Diplomata.Editor.Windows
 
         if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          InteractableEditor.Edit(Interactable.Find(diplomataEditor.interactables, name));
+          InteractableEditor.Edit(Interactable.Find(interactables, name));
+          Close();
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
@@ -81,14 +85,16 @@ namespace Diplomata.Editor.Windows
         {
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
-            diplomataEditor.interactables.Remove(interactable);
-            diplomataEditor.options.interactableList = ArrayHelper.Remove(diplomataEditor.options.interactableList, name);
+            interactables.Remove(interactable);
+            options.interactableList = ArrayHelper.Remove(options.interactableList, name);
 
             JSONHelper.Delete(name, "Diplomata/Interactables/");
 
-            diplomataEditor.SavePreferences();
+            OptionsController.Save(options, options.jsonPrettyPrint);
+            interactables = InteractablesController.GetInteractables(options);
 
             InteractableEditor.Reset(name);
+            TalkableMessagesManager.Reset(name);
             ContextEditor.Reset(name);
           }
         }
@@ -96,7 +102,7 @@ namespace Diplomata.Editor.Windows
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();
 
-        if (i < diplomataEditor.options.interactableList.Length - 1)
+        if (i < options.interactableList.Length - 1)
         {
           GUIHelper.Separator();
         }
@@ -107,6 +113,7 @@ namespace Diplomata.Editor.Windows
       if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
         InteractableEditor.OpenCreate();
+        Close();
       }
 
       GUILayout.EndVertical();
@@ -118,5 +125,4 @@ namespace Diplomata.Editor.Windows
       Repaint();
     }
   }
-
 }

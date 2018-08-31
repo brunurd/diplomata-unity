@@ -14,7 +14,7 @@ namespace Diplomata.Editor.Controllers
       return UpdateList(options);
     }
 
-    private static List<Character> UpdateList(Options options)
+    public static List<Character> UpdateList(Options options)
     {
       var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
       var characters = new List<Character>();
@@ -35,6 +35,42 @@ namespace Diplomata.Editor.Controllers
     public static void Save(Character character, bool prettyPrint = false)
     {
       JSONHelper.Update(character, character.name, prettyPrint, "Diplomata/Characters/");
+    }
+
+    public static void AddCharacter(string name, Options options, List<Character> characters)
+    {
+      Character character = new Character(name);
+      CheckRepeatedCharacter(character, options, characters);
+    }
+
+    private static void CheckRepeatedCharacter(Character character, Options options, List<Character> characters)
+    {
+      bool canAdd = true;
+
+      foreach (string characterName in options.characterList)
+      {
+        if (characterName == character.name)
+        {
+          canAdd = false;
+          break;
+        }
+      }
+
+      if (canAdd)
+      {
+        characters.Add(character);
+        if (characters.Count == 1) options.playerCharacterName = character.name;
+
+        options.characterList = ArrayHelper.Add(options.characterList, character.name);
+        OptionsController.Save(options, options.jsonPrettyPrint);
+
+        JSONHelper.Create(character, character.name, options.jsonPrettyPrint, "Diplomata/Characters/");
+      }
+
+      else
+      {
+        Debug.LogError("This name already exists!");
+      }
     }
   }
 }

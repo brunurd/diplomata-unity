@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Diplomata.Dictionaries;
 using Diplomata.Editor;
 using Diplomata.Editor.Helpers;
+using Diplomata.Editor.Controllers;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using UnityEditor;
@@ -11,10 +13,11 @@ namespace Diplomata.Editor.Windows
 {
   public class CharacterEditor : UnityEditor.EditorWindow
   {
-    public static Character character;
-    private string characterName = "";
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorData diplomataEditor;
+    private string characterName = "";
+    public Options options;
+    public List<Character> characters;
+    public static Character character;
 
     public enum State
     {
@@ -56,22 +59,28 @@ namespace Diplomata.Editor.Windows
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      characters = CharactersController.GetCharacters(options);
+    }
+
+    public void OnDisable()
+    {
+      if (state == State.Edit && character != null)
+      {
+        Save();
+      }
+      character = null;
     }
 
     public static void OpenCreate()
     {
       character = null;
-
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       Init(State.Create);
     }
 
     public static void Edit(Character currentCharacter)
     {
       character = currentCharacter;
-
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       Init(State.Edit);
     }
 
@@ -81,7 +90,6 @@ namespace Diplomata.Editor.Windows
       {
         if (character.name == characterName)
         {
-          diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
           character = null;
           Init(State.Close);
         }
@@ -155,14 +163,12 @@ namespace Diplomata.Editor.Windows
     {
       if (characterName != "")
       {
-        diplomataEditor.AddCharacter(characterName);
+        CharactersController.AddCharacter(characterName, options, characters);
       }
-
       else
       {
         Debug.LogError("Character name was empty.");
       }
-
       Close();
     }
 
@@ -172,12 +178,12 @@ namespace Diplomata.Editor.Windows
 
       GUIHelper.Separator();
 
-      var description = DictionariesHelper.ContainsKey(character.description, diplomataEditor.options.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(character.description, options.currentLanguage);
 
       if (description == null)
       {
-        character.description = ArrayHelper.Add(character.description, new LanguageDictionary(diplomataEditor.options.currentLanguage, ""));
-        description = DictionariesHelper.ContainsKey(character.description, diplomataEditor.options.currentLanguage);
+        character.description = ArrayHelper.Add(character.description, new LanguageDictionary(options.currentLanguage, ""));
+        description = DictionariesHelper.ContainsKey(character.description, options.currentLanguage);
       }
 
       GUIHelper.textContent.text = description.value;
@@ -192,7 +198,7 @@ namespace Diplomata.Editor.Windows
 
       var player = false;
 
-      if (diplomataEditor.options.playerCharacterName == character.name)
+      if (options.playerCharacterName == character.name)
       {
         player = true;
       }
@@ -201,18 +207,18 @@ namespace Diplomata.Editor.Windows
 
       if (player)
       {
-        diplomataEditor.options.playerCharacterName = character.name;
+        options.playerCharacterName = character.name;
       }
 
       EditorGUILayout.EndHorizontal();
 
-      if (character.name != diplomataEditor.options.playerCharacterName)
+      if (character.name != options.playerCharacterName)
       {
         GUIHelper.Separator();
 
         GUILayout.Label("Character attributes (influenceable by): ");
 
-        foreach (string attrName in diplomataEditor.options.attributes)
+        foreach (string attrName in options.attributes)
         {
           if (character.attributes.Length == 0)
           {
@@ -236,7 +242,7 @@ namespace Diplomata.Editor.Windows
 
         for (int i = 0; i < character.attributes.Length; i++)
         {
-          if (ArrayHelper.Contains(diplomataEditor.options.attributes, character.attributes[i].key))
+          if (ArrayHelper.Contains(options.attributes, character.attributes[i].key))
           {
             character.attributes[i].value = (byte) EditorGUILayout.Slider(character.attributes[i].key, character.attributes[i].value, 0, 100);
           }
@@ -269,16 +275,8 @@ namespace Diplomata.Editor.Windows
 
     public void Save()
     {
-      diplomataEditor.Save(character, "Characters");
-      diplomataEditor.SavePreferences();
-    }
-
-    public void OnDisable()
-    {
-      if (state == State.Edit && character != null)
-      {
-        Save();
-      }
+      CharactersController.Save(character, options.jsonPrettyPrint);
+      OptionsController.Save(options, options.jsonPrettyPrint);
     }
   }
 }
