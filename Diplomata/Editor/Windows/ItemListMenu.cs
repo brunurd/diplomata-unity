@@ -1,8 +1,11 @@
 using Diplomata;
+using Diplomata.Dictionaries;
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Models.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,12 +14,12 @@ namespace Diplomata.Editor.Windows
   public class ItemListMenu : UnityEditor.EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private DiplomataEditorData diplomataEditor;
+    public Options options;
+    public Inventory inventory;
 
     [MenuItem("Diplomata/Inventory")]
     static public void Init()
     {
-      DiplomataEditorData.Instantiate();
       ItemListMenu window = (ItemListMenu) GetWindow(typeof(ItemListMenu), false, "Inventory");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
       window.Show();
@@ -24,7 +27,8 @@ namespace Diplomata.Editor.Windows
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      inventory = InventoryController.GetInventory(options.jsonPrettyPrint);
     }
 
     public void OnGUI()
@@ -34,24 +38,22 @@ namespace Diplomata.Editor.Windows
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataEditor.inventory.items.Length <= 0)
+      if (inventory.items.Length <= 0)
       {
         EditorGUILayout.HelpBox("No items yet.", MessageType.Info);
       }
 
-      for (var i = 0; i < diplomataEditor.inventory.items.Length; i++)
+      foreach (var item in inventory.items)
       {
-        var item = diplomataEditor.inventory.items[i];
-
         if (item.SetId())
         {
-          diplomataEditor.SaveInventory();
+          InventoryController.Save(inventory, options.jsonPrettyPrint);
         }
 
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();
 
-        var name = DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage);
+        var name = DictionariesHelper.ContainsKey(item.name, options.currentLanguage);
 
         if (EditorGUIUtility.isProSkin)
         {
@@ -59,7 +61,14 @@ namespace Diplomata.Editor.Windows
         }
 
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
-        GUILayout.Label(name.value, GUIHelper.labelStyle);
+        if (name != null)
+        {
+          GUILayout.Label(name.value, GUIHelper.labelStyle);
+        }
+        else
+        {
+          GUILayout.Label("(!) Name not found (!)", GUIHelper.labelStyle);
+        }
 
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleRight;
         GUIHelper.labelStyle.normal.textColor = GUIHelper.grey;
@@ -81,27 +90,22 @@ namespace Diplomata.Editor.Windows
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
             ItemEditor.Init(ItemEditor.State.Close);
-            diplomataEditor.inventory.items = ArrayHelper.Remove(diplomataEditor.inventory.items, item);
-            diplomataEditor.inventory.RemoveNotUsedCategory();
-            diplomataEditor.SaveInventory();
+            inventory.items = ArrayHelper.Remove(inventory.items, item);
+            inventory.RemoveNotUsedCategory();
+            InventoryController.Save(inventory, options.jsonPrettyPrint);
           }
         }
 
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();
-
-        if (i < diplomataEditor.inventory.items.Length - 1)
-        {
-          GUIHelper.Separator();
-        }
       }
 
       EditorGUILayout.Separator();
 
       if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
-        diplomataEditor.inventory.items = ArrayHelper.Add(diplomataEditor.inventory.items, new Item(diplomataEditor.inventory.items.Length));
-        diplomataEditor.SaveInventory();
+        inventory.items = ArrayHelper.Add(inventory.items, new Item(inventory.items.Length, options));
+        InventoryController.Save(inventory, options.jsonPrettyPrint);
       }
 
       GUILayout.EndVertical();

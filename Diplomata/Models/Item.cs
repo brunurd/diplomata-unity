@@ -60,12 +60,12 @@ namespace Diplomata.Models
     /// Instantiate a item with a id.
     /// </summary>
     /// <param name="id">The item id.</param>
-    public Item(int id)
+    public Item(int id, Options options)
     {
       uniqueId = Guid.NewGuid().ToString();
       this.id = id;
 
-      foreach (Language language in DiplomataData.options.languages)
+      foreach (Language language in options.languages)
       {
         name = ArrayHelper.Add(name, new LanguageDictionary(language.name, "[ Edit to change this name ]"));
         description = ArrayHelper.Add(description, new LanguageDictionary(language.name, ""));

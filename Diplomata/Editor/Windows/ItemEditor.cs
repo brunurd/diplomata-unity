@@ -1,7 +1,9 @@
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Models.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,8 +13,9 @@ namespace Diplomata.Editor.Windows
   {
     public static Item item;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorData diplomataEditor;
     private static State state;
+    private Options options;
+    private Inventory inventory;
 
     public enum State
     {
@@ -41,12 +44,11 @@ namespace Diplomata.Editor.Windows
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      inventory = InventoryController.GetInventory(options.jsonPrettyPrint);
     }
-
     public static void OpenEdit(Item item)
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       ItemEditor.item = item;
       Init(State.Edit);
     }
@@ -75,7 +77,7 @@ namespace Diplomata.Editor.Windows
 
     public void DrawEditWindow()
     {
-      var name = DictionariesHelper.ContainsKey(item.name, diplomataEditor.options.currentLanguage);
+      var name = DictionariesHelper.ContainsKey(item.name, options.currentLanguage);
 
       GUILayout.BeginHorizontal();
       GUILayout.BeginVertical();
@@ -97,7 +99,7 @@ namespace Diplomata.Editor.Windows
       GUILayout.EndVertical();
       GUILayout.EndHorizontal();
 
-      var description = DictionariesHelper.ContainsKey(item.description, diplomataEditor.options.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(item.description, options.currentLanguage);
       GUIHelper.textContent.text = description.value;
       var height = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
       GUILayout.Label("Description: ");
@@ -171,9 +173,9 @@ namespace Diplomata.Editor.Windows
     {
       if (item != null)
       {
-        diplomataEditor.inventory.AddCategory(item.Category);
+        inventory.AddCategory(item.Category);
       }
-      diplomataEditor.SaveInventory();
+      InventoryController.Save(inventory, options.jsonPrettyPrint);
     }
 
     public void OnDisable()
