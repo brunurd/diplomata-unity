@@ -9,13 +9,15 @@ namespace Diplomata.Editor.Helpers
 {
   public class JSONHelper
   {
+    public static string resourcesFolder = "Assets/Resources/";
+
     public static void Create(System.Object obj, string filename, bool prettyPrint = false, string folder = "")
     {
       try
       {
         CreateFolder(folder);
 
-        var file = File.Create(DiplomataEditorData.resourcesFolder + folder + filename + ".json");
+        var file = File.Create(resourcesFolder + folder + filename + ".json");
         file.Close();
 
         AssetDatabase.Refresh();
@@ -25,7 +27,7 @@ namespace Diplomata.Editor.Helpers
 
       catch (Exception e)
       {
-        Debug.LogError("Cannot create " + folder + filename + ".json in " + DiplomataEditorData.resourcesFolder + ". " + e.Message);
+        Debug.LogError("Cannot create " + folder + filename + ".json in " + resourcesFolder + ". " + e.Message);
       }
     }
 
@@ -56,7 +58,7 @@ namespace Diplomata.Editor.Helpers
       {
         string json = JsonUtility.ToJson(obj, prettyPrint);
 
-        using(FileStream fs = new FileStream(DiplomataEditorData.resourcesFolder + folder + filename + ".json", FileMode.Create))
+        using(FileStream fs = new FileStream(resourcesFolder + folder + filename + ".json", FileMode.Create))
         {
           using(StreamWriter writer = new StreamWriter(fs))
           {
@@ -74,7 +76,7 @@ namespace Diplomata.Editor.Helpers
 
     public static void Delete(string filename, string folder = "")
     {
-      var path = DiplomataEditorData.resourcesFolder + folder + filename;
+      var path = resourcesFolder + folder + filename;
 
       try
       {
@@ -92,8 +94,8 @@ namespace Diplomata.Editor.Helpers
 
     public static bool Exists(string filename, string folder = "")
     {
-      if (!File.Exists(DiplomataEditorData.resourcesFolder + filename + ".json") &&
-        !File.Exists(DiplomataEditorData.resourcesFolder + folder + filename + ".json"))
+      if (!File.Exists(resourcesFolder + filename + ".json") &&
+        !File.Exists(resourcesFolder + folder + filename + ".json"))
       {
         return false;
       }
@@ -106,7 +108,7 @@ namespace Diplomata.Editor.Helpers
 
     public static void CreateFolder(string folderName)
     {
-      var path = DiplomataEditorData.resourcesFolder + folderName;
+      var path = resourcesFolder + folderName;
 
       if (!Directory.Exists(path) && folderName != "")
       {

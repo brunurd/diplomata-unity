@@ -1,5 +1,6 @@
 using System;
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Editor.Windows;
 using Diplomata.Helpers;
@@ -11,30 +12,29 @@ namespace Diplomata.Editor.Extensions
 {
   public class Screenplay
   {
-    private static DiplomataEditorData diplomataEditor;
-
     public static void Save(Talkable talkable)
     {
+      var options = OptionsController.GetOptions();
       RTFDocument doc = CreateDocument();
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
-      doc = AddTalkable(doc, talkable);
+      doc = AddTalkable(doc, talkable, options);
 
-      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + talkable.name + " - " + diplomataEditor.options.currentLanguage + ".rtf", doc);
+      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + talkable.name + " - " + options.currentLanguage + ".rtf", doc);
       AssetDatabase.Refresh();
     }
 
     public static void SaveAll()
     {
+      var options = OptionsController.GetOptions();
+      var characters = CharactersController.GetCharacters(options);
       RTFDocument doc = CreateDocument();
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
 
-      foreach (Character character in diplomataEditor.characters)
+      foreach (Character character in characters)
       {
-        doc = AddTalkable(doc, character);
+        doc = AddTalkable(doc, character, options);
       }
 
-      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + diplomataEditor.options.currentLanguage + ".rtf", doc);
+      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + options.currentLanguage + ".rtf", doc);
       AssetDatabase.Refresh();
     }
 
@@ -51,7 +51,7 @@ namespace Diplomata.Editor.Extensions
       return document;
     }
 
-    private static RTFDocument AddTalkable(RTFDocument document, Talkable character)
+    private static RTFDocument AddTalkable(RTFDocument document, Talkable character, Options options)
     {
       RTFTextStyle style = new RTFTextStyle(false, false, 12, "Courier", Color.black);
       RTFTextStyle styleAllcaps = new RTFTextStyle(false, false, false, false, true, false, 12, "Courier", Color.black, Underline.None);
@@ -62,7 +62,7 @@ namespace Diplomata.Editor.Extensions
       var presentation = document.AppendParagraph(noIndent);
       presentation.AppendText(character.name, styleAllcaps);
 
-      var characterDescription = DictionariesHelper.ContainsKey(character.description, diplomataEditor.options.currentLanguage);
+      var characterDescription = DictionariesHelper.ContainsKey(character.description, options.currentLanguage);
       var text = string.Empty;
 
       text = ", " + characterDescription.value;
@@ -79,8 +79,8 @@ namespace Diplomata.Editor.Extensions
 
         var contextPar = document.AppendParagraph(noIndent);
 
-        var name = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
-        var contextDescription = DictionariesHelper.ContainsKey(context.description, diplomataEditor.options.currentLanguage);
+        var name = DictionariesHelper.ContainsKey(context.name, options.currentLanguage);
+        var contextDescription = DictionariesHelper.ContainsKey(context.description, options.currentLanguage);
 
         contextPar.AppendText(name.value + "\n", styleAllcaps);
         contextPar.AppendText(contextDescription.value, style);
@@ -92,7 +92,7 @@ namespace Diplomata.Editor.Extensions
             var messagePar = document.AppendParagraph(messageContentIndent);
             messagePar.AppendText("\t\t" + column.emitter + "\n", styleAllcaps);
 
-            var screenplayNotes = DictionariesHelper.ContainsKey(column.messages[i].screenplayNotes, diplomataEditor.options.currentLanguage);
+            var screenplayNotes = DictionariesHelper.ContainsKey(column.messages[i].screenplayNotes, options.currentLanguage);
 
             if (screenplayNotes != null)
             {
@@ -102,7 +102,7 @@ namespace Diplomata.Editor.Extensions
               }
             }
 
-            var content = DictionariesHelper.ContainsKey(column.messages[i].content, diplomataEditor.options.currentLanguage);
+            var content = DictionariesHelper.ContainsKey(column.messages[i].content, options.currentLanguage);
 
             if (column.messages.Length > 1)
             {
@@ -115,9 +115,7 @@ namespace Diplomata.Editor.Extensions
             }
           }
         }
-
       }
-
       return document;
     }
   }

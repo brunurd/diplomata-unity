@@ -4,7 +4,7 @@ using Diplomata.Models.Collections;
 
 namespace Diplomata.Editor.Controllers
 {
-  public class GlobalFlagsController
+  public static class GlobalFlagsController
   {
     public static GlobalFlags GetGlobalFlags(bool prettyPrint = false)
     {

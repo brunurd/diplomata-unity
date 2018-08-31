@@ -8,9 +8,11 @@ namespace Diplomata.Editor.Helpers
 {
   public class AssetHelper
   {
+    private static string resourcesFolder = "Assets/Resources/";
+
     public static void Create(Object obj, string name, string folder = "")
     {
-      string path = DiplomataEditorData.resourcesFolder + folder + name;
+      string path = resourcesFolder + folder + name;
 
       try
       {
@@ -27,7 +29,7 @@ namespace Diplomata.Editor.Helpers
 
     public static Object Read(string name, string folder = "")
     {
-      string path = DiplomataEditorData.resourcesFolder + folder + name;
+      string path = resourcesFolder + folder + name;
 
       try
       {
@@ -43,7 +45,7 @@ namespace Diplomata.Editor.Helpers
 
     public static void Delete(string name, string folder = "")
     {
-      string path = DiplomataEditorData.resourcesFolder + folder + name;
+      string path = resourcesFolder + folder + name;
 
       try
       {
@@ -59,8 +61,8 @@ namespace Diplomata.Editor.Helpers
 
     public static bool Exists(string filename, string folder = "")
     {
-      if (!File.Exists(DiplomataEditorData.resourcesFolder + filename) &&
-        !File.Exists(DiplomataEditorData.resourcesFolder + folder + filename))
+      if (!File.Exists(resourcesFolder + filename) &&
+        !File.Exists(resourcesFolder + folder + filename))
       {
         return false;
       }
@@ -73,7 +75,7 @@ namespace Diplomata.Editor.Helpers
 
     public static void CreateFolder(string folderName)
     {
-      var path = DiplomataEditorData.resourcesFolder + folderName;
+      var path = resourcesFolder + folderName;
 
       if (!Directory.Exists(path) && folderName != "")
       {

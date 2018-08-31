@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Diplomata;
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Editor.Windows;
 using Diplomata.Models;
@@ -17,7 +19,8 @@ namespace Diplomata.Editor.Inspector
   public class DiplomataInteractableInspector : UnityEditor.Editor
   {
     public DiplomataInteractable diplomataInteractable;
-    private static DiplomataEditorData diplomataEditor;
+    private Options options;
+    private List<Interactable> interactables;
 
     private void OnEnable()
     {
@@ -26,8 +29,8 @@ namespace Diplomata.Editor.Inspector
 
     private void Refresh()
     {
-      DiplomataEditorData.Instantiate();
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      interactables = InteractablesController.GetInteractables(options);
       diplomataInteractable = target as DiplomataInteractable;
     }
 
@@ -37,7 +40,7 @@ namespace Diplomata.Editor.Inspector
       serializedObject.Update();
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataInteractable.talkable != null && diplomataEditor.characters.Count > 0)
+      if (diplomataInteractable.talkable != null && interactables.Count > 0)
       {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Interactable: ");
@@ -46,9 +49,9 @@ namespace Diplomata.Editor.Inspector
         {
           var selected = 0;
 
-          for (var i = 0; i < diplomataEditor.interactables.Count; i++)
+          for (var i = 0; i < interactables.Count; i++)
           {
-            if (diplomataEditor.interactables[i].name == diplomataInteractable.talkable.name)
+            if (interactables[i].name == diplomataInteractable.talkable.name)
             {
               selected = i;
               break;
@@ -56,14 +59,14 @@ namespace Diplomata.Editor.Inspector
           }
 
           var selectedBefore = selected;
-          selected = EditorGUILayout.Popup(selected, diplomataEditor.options.interactableList);
+          selected = EditorGUILayout.Popup(selected, options.interactableList);
 
-          for (var i = 0; i < diplomataEditor.interactables.Count; i++)
+          for (var i = 0; i < interactables.Count; i++)
           {
             if (selected == i)
             {
-              diplomataInteractable.talkable = diplomataEditor.interactables[i];
-              diplomataEditor.interactables[selectedBefore].onScene = false;
+              diplomataInteractable.talkable = interactables[i];
+              interactables[selectedBefore].onScene = false;
               diplomataInteractable.talkable.onScene = true;
               break;
             }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
@@ -10,9 +11,10 @@ namespace Diplomata.Editor.Windows
 {
   public class QuestEditor : UnityEditor.EditorWindow
   {
-    public static Quest quest;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorData diplomataEditor;
+    public static Quest quest;
+    private Quest[] quests;
+    private Options options;
 
     public enum State
     {
@@ -44,13 +46,21 @@ namespace Diplomata.Editor.Windows
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      quests = QuestsController.GetQuests(options.jsonPrettyPrint);
+    }
+
+    public void OnDisable()
+    {
+      if (state == State.CreateEdit && quest != null)
+      {
+        Save();
+      }
     }
 
     public static void Open(Quest currentQuest)
     {
       quest = currentQuest;
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       Init(State.CreateEdit);
     }
 
@@ -126,15 +136,12 @@ namespace Diplomata.Editor.Windows
 
     public void Save()
     {
-      diplomataEditor.SaveQuests();
-    }
-
-    public void OnDisable()
-    {
-      if (state == State.CreateEdit && quest != null)
+      for (var i = 0; i < quests.Length; i++)
       {
-        Save();
+        if (quests[i].GetId() == quest.GetId())
+          quests[i] = quest;
       }
+      QuestsController.Save(quests, options.jsonPrettyPrint);
     }
   }
 }

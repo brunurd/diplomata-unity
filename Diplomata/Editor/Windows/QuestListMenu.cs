@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
@@ -10,12 +12,12 @@ namespace Diplomata.Editor.Windows
   public class QuestListMenu : UnityEditor.EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private DiplomataEditorData diplomataEditor;
+    private Options options;
+    private Quest[] quests;
 
     [MenuItem("Diplomata/Quests")]
     static public void Init()
     {
-      DiplomataEditorData.Instantiate();
       QuestListMenu window = (QuestListMenu) GetWindow(typeof(QuestListMenu), false, "Quests");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 150, 110);
       window.Show();
@@ -23,7 +25,8 @@ namespace Diplomata.Editor.Windows
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      quests = QuestsController.GetQuests(options.jsonPrettyPrint);
     }
 
     public void OnGUI()
@@ -33,13 +36,13 @@ namespace Diplomata.Editor.Windows
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
       // If empty show this message.
-      if (diplomataEditor.quests.Length <= 0)
+      if (quests.Length <= 0)
       {
         EditorGUILayout.HelpBox("No quests yet.", MessageType.Info);
       }
 
       // Quests loop to list.
-      foreach (Quest quest in diplomataEditor.quests)
+      foreach (Quest quest in quests)
       {
         GUILayout.BeginHorizontal();
 
@@ -63,12 +66,11 @@ namespace Diplomata.Editor.Windows
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
             QuestEditor.Init(QuestEditor.State.Close);
-            diplomataEditor.quests = ArrayHelper.Remove(diplomataEditor.quests, quest);
-            diplomataEditor.SaveQuests();
+            quests = ArrayHelper.Remove(quests, quest);
+            QuestsController.Save(quests, options.jsonPrettyPrint);
           }
         }
         GUILayout.EndHorizontal();
-
         GUILayout.EndHorizontal();
       }
 
@@ -76,8 +78,8 @@ namespace Diplomata.Editor.Windows
       if (GUILayout.Button("Add Quest", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
         var quest = new Quest();
-        diplomataEditor.quests = ArrayHelper.Add(diplomataEditor.quests, quest);
-        diplomataEditor.SaveQuests();
+        quests = ArrayHelper.Add(quests, quest);
+        QuestsController.Save(quests, options.jsonPrettyPrint);
         QuestEditor.Open(quest);
       }
 
@@ -87,7 +89,7 @@ namespace Diplomata.Editor.Windows
 
     public void OnDisable()
     {
-      diplomataEditor.SaveQuests();
+      QuestsController.Save(quests, options.jsonPrettyPrint);
     }
 
     public void OnInspectorUpdate()

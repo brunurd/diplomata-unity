@@ -69,7 +69,6 @@ namespace Diplomata.Editor.Windows
       {
         Save();
       }
-      character = null;
     }
 
     public static void OpenCreate()

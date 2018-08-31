@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Diplomata;
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Editor.Windows;
 using Diplomata.Models;
@@ -17,7 +19,8 @@ namespace Diplomata.Editor.Inspector
   public class DiplomataCharacterInspector : UnityEditor.Editor
   {
     public DiplomataCharacter diplomataCharacter;
-    private static DiplomataEditorData diplomataEditor;
+    private Options options;
+    private List<Character> characters;
 
     /// <summary>
     /// Refresh right on enable on editor (on appears in the inspector)
@@ -32,8 +35,8 @@ namespace Diplomata.Editor.Inspector
     /// </summary>
     private void Refresh()
     {
-      DiplomataEditorData.Instantiate();
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      characters = CharactersController.GetCharacters(options);
       diplomataCharacter = target as DiplomataCharacter;
     }
 
@@ -46,7 +49,7 @@ namespace Diplomata.Editor.Inspector
       serializedObject.Update();
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataCharacter.talkable != null && diplomataEditor.characters.Count > 0)
+      if (diplomataCharacter.talkable != null && characters.Count > 0)
       {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Character: ");
@@ -55,9 +58,9 @@ namespace Diplomata.Editor.Inspector
         {
           var selected = 0;
 
-          for (var i = 0; i < diplomataEditor.characters.Count; i++)
+          for (var i = 0; i < characters.Count; i++)
           {
-            if (diplomataEditor.characters[i].name == diplomataCharacter.talkable.name)
+            if (characters[i].name == diplomataCharacter.talkable.name)
             {
               selected = i;
               break;
@@ -65,14 +68,14 @@ namespace Diplomata.Editor.Inspector
           }
 
           var selectedBefore = selected;
-          selected = EditorGUILayout.Popup(selected, diplomataEditor.options.characterList);
+          selected = EditorGUILayout.Popup(selected, options.characterList);
 
-          for (var i = 0; i < diplomataEditor.characters.Count; i++)
+          for (var i = 0; i < characters.Count; i++)
           {
             if (selected == i)
             {
-              diplomataCharacter.talkable = diplomataEditor.characters[i];
-              diplomataEditor.characters[selectedBefore].onScene = false;
+              diplomataCharacter.talkable = characters[i];
+              characters[selectedBefore].onScene = false;
               diplomataCharacter.talkable.onScene = true;
               break;
             }
@@ -95,7 +98,7 @@ namespace Diplomata.Editor.Inspector
 
         var showInfluence = true;
 
-        if (diplomataCharacter.talkable.name == diplomataEditor.options.playerCharacterName)
+        if (diplomataCharacter.talkable.name == options.playerCharacterName)
         {
           EditorGUILayout.HelpBox("\nThis character is the player, he doesn't influence himself, use his messages only in the case he speaks with himself.\n", MessageType.Info);
           showInfluence = false;

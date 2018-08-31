@@ -70,7 +70,6 @@ namespace Diplomata.Editor.Helpers
       labelStyle.normal.textColor = Color.black;
 
       separatorStyle.normal.background = softAlphaBlack;
-
       textContent.text = "";
     }
 

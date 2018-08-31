@@ -1,4 +1,5 @@
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
@@ -12,7 +13,7 @@ namespace Diplomata.Editor.Windows
     public static Talkable talkable;
     public static Context context;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorData diplomataEditor;
+    private Options options;
 
     public enum State
     {
@@ -44,15 +45,13 @@ namespace Diplomata.Editor.Windows
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
     }
 
     public static void Edit(Talkable currentTalkable, Context currentContext)
     {
       talkable = currentTalkable;
       context = currentContext;
-
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
       Init(State.Edit);
     }
 
@@ -64,8 +63,6 @@ namespace Diplomata.Editor.Windows
         {
           talkable = null;
           context = null;
-
-          diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
           Init(State.Close);
         }
       }
@@ -95,8 +92,8 @@ namespace Diplomata.Editor.Windows
 
     public void DrawEditWindow()
     {
-      var name = DictionariesHelper.ContainsKey(context.name, diplomataEditor.options.currentLanguage);
-      var description = DictionariesHelper.ContainsKey(context.description, diplomataEditor.options.currentLanguage);
+      var name = DictionariesHelper.ContainsKey(context.name, options.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(context.description, options.currentLanguage);
 
       if (name != null && description != null)
       {
@@ -133,8 +130,7 @@ namespace Diplomata.Editor.Windows
 
     public void UpdateContext()
     {
-      string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
-      diplomataEditor.Save(talkable, folderName);
+      Save();
       Close();
     }
 
@@ -142,10 +138,20 @@ namespace Diplomata.Editor.Windows
     {
       if (talkable != null)
       {
-        string folderName = (talkable.GetType() == typeof(Character)) ? "Characters" : "Interactables";
-        diplomataEditor.Save(talkable, folderName);
+        Save();
+      }
+    }
+
+    private void Save()
+    {
+      if (talkable.GetType() == typeof(Character))
+      {
+        CharactersController.Save((Character) talkable, options.jsonPrettyPrint);
+      }
+      else if (talkable.GetType() == typeof(Interactable))
+      {
+        InteractablesController.Save((Interactable) talkable, options.jsonPrettyPrint);
       }
     }
   }
-
 }
