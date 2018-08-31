@@ -5,7 +5,7 @@ using Diplomata.Persistence;
 using Diplomata.Persistence.Models;
 using UnityEngine;
 
-namespace Diplomata.Models
+namespace Diplomata.Models.Collections
 {
   /// <summary>
   /// The inventory class with all items and items categories.

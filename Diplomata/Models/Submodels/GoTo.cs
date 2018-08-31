@@ -1,6 +1,6 @@
 using System;
 
-namespace Diplomata.Models
+namespace Diplomata.Models.Submodels
 {
   [Serializable]
   public struct GoTo

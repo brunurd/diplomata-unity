@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Diplomata.Helpers;
 
-namespace Diplomata.Models
+namespace Diplomata.Models.Submodels
 {
   [Serializable]
   public struct EndOfContext

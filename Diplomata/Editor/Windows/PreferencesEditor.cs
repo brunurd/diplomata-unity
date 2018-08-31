@@ -1,6 +1,7 @@
 using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Models.Submodels;
 using UnityEditor;
 using UnityEngine;
 

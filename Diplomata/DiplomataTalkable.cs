@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Models.Submodels;
 using UnityEngine;
 
 namespace Diplomata

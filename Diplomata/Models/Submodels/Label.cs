@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Diplomata.Models
+namespace Diplomata.Models.Submodels
 {
   [Serializable]
   public class Label

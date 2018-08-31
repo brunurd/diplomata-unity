@@ -2,7 +2,7 @@ using System;
 using Diplomata.Persistence;
 using Diplomata.Persistence.Models;
 
-namespace Diplomata.Models
+namespace Diplomata.Models.Collections
 {
   [Serializable]
   public class GlobalFlags : Data

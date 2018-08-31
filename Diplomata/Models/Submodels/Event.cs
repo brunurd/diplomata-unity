@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Diplomata.Models
+namespace Diplomata.Models.Submodels
 {
   public class Events
   {

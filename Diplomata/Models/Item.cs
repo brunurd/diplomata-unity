@@ -1,7 +1,7 @@
 using System;
 using Diplomata.Dictionaries;
 using Diplomata.Helpers;
-using Diplomata.Models;
+using Diplomata.Models.Submodels;
 using Diplomata.Persistence;
 using Diplomata.Persistence.Models;
 using UnityEngine;

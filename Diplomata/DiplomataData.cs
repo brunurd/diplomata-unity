@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Diplomata.Helpers;
 using Diplomata.Models;
+using Diplomata.Models.Collections;
 using UnityEngine;
 
 namespace Diplomata

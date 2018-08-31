@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Diplomata.Helpers;
+using Diplomata.Models.Submodels;
 using Diplomata.Persistence;
 using Diplomata.Persistence.Models;
 using UnityEngine;

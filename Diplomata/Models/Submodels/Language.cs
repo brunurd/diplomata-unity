@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Diplomata.Models
+namespace Diplomata.Models.Submodels
 {
   [Serializable]
   public class Language
