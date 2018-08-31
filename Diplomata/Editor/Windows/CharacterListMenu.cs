@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Diplomata;
 using Diplomata.Editor;
+using Diplomata.Editor.Controllers;
 using Diplomata.Editor.Helpers;
 using Diplomata.Helpers;
 using Diplomata.Models;
@@ -11,21 +13,21 @@ namespace Diplomata.Editor.Windows
   public class CharacterListMenu : UnityEditor.EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private DiplomataEditorData diplomataEditor;
+    public Options options;
+    public List<Character> characters;
 
     [MenuItem("Diplomata/Characters")]
     static public void Init()
     {
-      DiplomataEditorData.Instantiate();
       CharacterListMenu window = (CharacterListMenu) GetWindow(typeof(CharacterListMenu), false, "Character List");
       window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 80, 300);
-
       window.Show();
     }
 
     public void OnEnable()
     {
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
+      options = OptionsController.GetOptions();
+      characters = CharactersController.GetCharacters(options);
     }
 
     public void OnGUI()
@@ -35,19 +37,19 @@ namespace Diplomata.Editor.Windows
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataEditor.options.characterList.Length <= 0)
+      if (options.characterList.Length <= 0)
       {
         EditorGUILayout.HelpBox("No characters yet.", MessageType.Info);
       }
 
-      for (int i = 0; i < diplomataEditor.options.characterList.Length; i++)
+      for (int i = 0; i < options.characterList.Length; i++)
       {
-        var name = diplomataEditor.options.characterList[i];
-        var character = (Character.Find(diplomataEditor.characters, name));
+        var name = options.characterList[i];
+        var character = (Character.Find(characters, name));
 
         if (character.SetId())
         {
-          diplomataEditor.Save(character, "Characters");
+          CharactersController.Save(character, options.jsonPrettyPrint);
         }
 
         GUILayout.BeginHorizontal();
@@ -62,7 +64,7 @@ namespace Diplomata.Editor.Windows
         GUILayout.Label(name, GUIHelper.labelStyle);
 
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleRight;
-        if (diplomataEditor.options.playerCharacterName == name)
+        if (options.playerCharacterName == name)
         {
           GUILayout.Label("<b>[Player]</b>", GUIHelper.labelStyle);
         }
@@ -90,22 +92,22 @@ namespace Diplomata.Editor.Windows
           {
             var isPlayer = false;
 
-            if (name == diplomataEditor.options.playerCharacterName)
+            if (name == options.playerCharacterName)
             {
               isPlayer = true;
             }
 
-            diplomataEditor.characters.Remove(character);
-            diplomataEditor.options.characterList = ArrayHelper.Remove(diplomataEditor.options.characterList, name);
+            characters.Remove(character);
+            options.characterList = ArrayHelper.Remove(options.characterList, name);
 
             JSONHelper.Delete(name, "Diplomata/Characters/");
 
-            if (isPlayer && diplomataEditor.options.characterList.Length > 0)
+            if (isPlayer && options.characterList.Length > 0)
             {
-              diplomataEditor.options.playerCharacterName = diplomataEditor.options.characterList[0];
+              options.playerCharacterName = options.characterList[0];
             }
 
-            diplomataEditor.SavePreferences();
+            OptionsController.Save(options, options.jsonPrettyPrint);
 
             CharacterEditor.Reset(name);
             TalkableMessagesManager.Reset(name);
@@ -116,7 +118,7 @@ namespace Diplomata.Editor.Windows
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();
 
-        if (i < diplomataEditor.options.characterList.Length - 1)
+        if (i < options.characterList.Length - 1)
         {
           GUIHelper.Separator();
         }

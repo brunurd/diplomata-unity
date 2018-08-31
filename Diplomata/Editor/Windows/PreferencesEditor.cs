@@ -1,4 +1,5 @@
 using Diplomata.Editor.Helpers;
+using Diplomata.Editor.Controllers;
 using Diplomata.Helpers;
 using Diplomata.Models;
 using Diplomata.Models.Submodels;
@@ -14,22 +15,23 @@ namespace Diplomata.Editor.Windows
     public static bool jsonPrettyPrintTemp = false;
     public static string currentLanguageTemp;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private static DiplomataEditorData diplomataEditor;
+    private Options options;
 
     [MenuItem("Diplomata/Preferences")]
     static public void Init()
     {
-      DiplomataEditorData.Instantiate();
-      diplomataEditor = (DiplomataEditorData) AssetHelper.Read("Diplomata.asset", "Diplomata/");
-
-      attributesTemp = ArrayHelper.Copy(diplomataEditor.options.attributes);
-      languagesTemp = ArrayHelper.Copy(diplomataEditor.options.languages);
-      jsonPrettyPrintTemp = diplomataEditor.options.jsonPrettyPrint;
-      currentLanguageTemp = string.Copy(diplomataEditor.options.currentLanguage);
-
       PreferencesEditor window = (PreferencesEditor) GetWindow(typeof(PreferencesEditor), false, "Preferences");
       window.minSize = new Vector2(600, 325);
       window.Show();
+    }
+
+    private void OnEnable()
+    {
+      options = OptionsController.GetOptions();
+      attributesTemp = ArrayHelper.Copy(options.attributes);
+      languagesTemp = ArrayHelper.Copy(options.languages);
+      jsonPrettyPrintTemp = options.jsonPrettyPrint;
+      currentLanguageTemp = string.Copy(options.currentLanguage);
     }
 
     public void OnGUI()
@@ -48,7 +50,7 @@ namespace Diplomata.Editor.Windows
 
       GUILayout.BeginHorizontal();
       jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
-      currentLanguageTemp = GUIHelper.Popup("Current Language", currentLanguageTemp, diplomataEditor.options.languagesList);
+      currentLanguageTemp = GUIHelper.Popup("Current Language", currentLanguageTemp, options.languagesList);
       GUILayout.EndHorizontal();
 
       EditorGUILayout.Separator();
@@ -127,13 +129,12 @@ namespace Diplomata.Editor.Windows
 
     public void Save()
     {
-      diplomataEditor.options.attributes = ArrayHelper.Copy(attributesTemp);
-      diplomataEditor.options.languages = ArrayHelper.Copy(languagesTemp);
-      diplomataEditor.options.jsonPrettyPrint = jsonPrettyPrintTemp;
-      diplomataEditor.options.currentLanguage = string.Copy(currentLanguageTemp);
-      diplomataEditor.options.SetLanguageList();
-
-      diplomataEditor.SavePreferences();
+      options.attributes = ArrayHelper.Copy(attributesTemp);
+      options.languages = ArrayHelper.Copy(languagesTemp);
+      options.jsonPrettyPrint = jsonPrettyPrintTemp;
+      options.currentLanguage = string.Copy(currentLanguageTemp);
+      options.SetLanguageList();
+      OptionsController.Save(options);
       Close();
     }
   }
