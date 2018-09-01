@@ -149,6 +149,11 @@ namespace Diplomata.Editor.Windows
     {
       talkable = currentTalkable;
       context = currentContext;
+      if (context.talkableName == null || context.talkableName == string.Empty)
+      {
+        context.talkableName = talkable.name;
+        StaticSave(talkable);
+      }
       Init(State.Messages);
     }
 
@@ -192,6 +197,19 @@ namespace Diplomata.Editor.Windows
 
     private void Save()
     {
+      if (talkable.GetType() == typeof(Character))
+      {
+        CharactersController.Save((Character) talkable, options.jsonPrettyPrint);
+      }
+      else if (talkable.GetType() == typeof(Interactable))
+      {
+        InteractablesController.Save((Interactable) talkable, options.jsonPrettyPrint);
+      }
+    }
+
+    private static void StaticSave(Talkable talkable)
+    {
+      var options = OptionsController.GetOptions();
       if (talkable.GetType() == typeof(Character))
       {
         CharactersController.Save((Character) talkable, options.jsonPrettyPrint);
@@ -672,9 +690,20 @@ namespace Diplomata.Editor.Windows
                       break;
 
                     case Effect.Type.EndOfContext:
-                      if (effect.endOfContext.talkableName != null)
+                      if (effect.endOfContext.talkableName != null && effect.endOfContext.talkableName != string.Empty)
                       {
-                        text += effect.DisplayEndOfContext(DictionariesHelper.ContainsKey(effect.endOfContext.GetContext(characters, TalkableMessagesManager.interactables).name, options.currentLanguage).value);
+                        var tempContext = effect.endOfContext.GetContext(characters, TalkableMessagesManager.interactables);
+                        if (tempContext == null) break;
+                        var tempName = DictionariesHelper.ContainsKey(tempContext.name, options.currentLanguage);
+                        if (tempName == null) break;
+                        text += effect.DisplayEndOfContext(tempName.value);
+                      }
+                      else
+                      {
+                        var tempColumn = Column.Find(context, currentMessage.columnId);
+                        if (tempColumn == null) break;
+                        effect.endOfContext.talkableName = tempColumn.emitter;
+                        Save();
                       }
                       break;
 
