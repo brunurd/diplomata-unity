@@ -94,7 +94,7 @@ namespace Diplomata.Editor.Inspector
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          TalkableMessagesManager.OpenContextMenu((Interactable) diplomataInteractable.talkable);
+          TalkableMessagesEditor.OpenContextMenu((Interactable) diplomataInteractable.talkable);
         }
 
         GUIHelper.Separator();

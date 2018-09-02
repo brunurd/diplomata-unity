@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace Diplomata.Editor.Windows
 {
-  public class TalkableMessagesManager : UnityEditor.EditorWindow
+  public class TalkableMessagesEditor : UnityEditor.EditorWindow
   {
     private ushort iteractions = 0;
 
@@ -73,10 +73,10 @@ namespace Diplomata.Editor.Windows
 
     public static void Init(State state = State.None)
     {
-      TalkableMessagesManager window = (TalkableMessagesManager) GetWindow(typeof(TalkableMessagesManager), false, "Messages", true);
+      TalkableMessagesEditor window = (TalkableMessagesEditor) GetWindow(typeof(TalkableMessagesEditor), false, "Messages", true);
       window.minSize = new Vector2(1100, 300);
 
-      TalkableMessagesManager.state = state;
+      TalkableMessagesEditor.state = state;
 
       if (state == State.Close)
       {
@@ -389,9 +389,9 @@ namespace Diplomata.Editor.Windows
     {
       if (context != null)
       {
-        messagesWindowHeaderStyle.normal.background = TalkableMessagesManager.headerBG;
-        messagesWindowMainStyle.normal.background = TalkableMessagesManager.mainBG;
-        messagesWindowSidebarStyle.normal.background = TalkableMessagesManager.sidebarBG;
+        messagesWindowHeaderStyle.normal.background = TalkableMessagesEditor.headerBG;
+        messagesWindowMainStyle.normal.background = TalkableMessagesEditor.mainBG;
+        messagesWindowSidebarStyle.normal.background = TalkableMessagesEditor.sidebarBG;
 
         messagesWindowMainStyle.alignment = TextAnchor.UpperLeft;
         messagesWindowSidebarStyle.alignment = TextAnchor.UpperLeft;
@@ -405,7 +405,7 @@ namespace Diplomata.Editor.Windows
       }
       else
       {
-        TalkableMessagesManager.Init(State.Close);
+        TalkableMessagesEditor.Init(State.Close);
       }
     }
 
@@ -416,7 +416,7 @@ namespace Diplomata.Editor.Windows
       if (GUILayout.Button("< Back", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
       {
         Save();
-        TalkableMessagesManager.OpenContextMenu(talkable);
+        TalkableMessagesEditor.OpenContextMenu(talkable);
       }
 
       EditorGUILayout.Separator();
@@ -692,7 +692,7 @@ namespace Diplomata.Editor.Windows
                     case Effect.Type.EndOfContext:
                       if (effect.endOfContext.talkableName != null && effect.endOfContext.talkableName != string.Empty)
                       {
-                        var tempContext = effect.endOfContext.GetContext(characters, TalkableMessagesManager.interactables);
+                        var tempContext = effect.endOfContext.GetContext(characters, TalkableMessagesEditor.interactables);
                         if (tempContext == null) break;
                         var tempName = DictionariesHelper.ContainsKey(tempContext.name, options.currentLanguage);
                         if (tempName == null) break;
@@ -784,6 +784,35 @@ namespace Diplomata.Editor.Windows
               if (currentMessage.isAChoice)
               {
                 text += "[ is a choice ]";
+
+                if (GUILayout.Button("Add feedback?", GUILayout.Width(context.columnWidth), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+                {
+                  // Get next column.
+                  var nextColumn = Column.Find(context, currentMessage.columnId + 1);
+
+                  // If don't have a next column create one.
+                  if (nextColumn == null)
+                  {
+                    context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
+                    nextColumn = context.columns[context.columns.Length];
+                  }
+
+                  // Create a new message.
+                  var newMessage = new Message(nextColumn.messages.Length, options.playerCharacterName, nextColumn.id, currentMessage.labelId);
+
+                  // Create a new condition with a after of.
+                  var newCondition = new Condition();
+                  newCondition.type = Condition.Type.AfterOf;
+                  newCondition.afterOf.uniqueId = currentMessage.GetUniqueId();
+
+                  // Add condition to the message.
+                  newMessage.conditions = ArrayHelper.Add(newMessage.conditions, newCondition);
+
+                  // Add message to the column.
+                  nextColumn.messages = ArrayHelper.Add(nextColumn.messages, newMessage);
+
+                  Save();
+                }
               }
 
               GUIHelper.textContent.text = text;
@@ -890,22 +919,22 @@ namespace Diplomata.Editor.Windows
     {
       if (msg == null)
       {
-        TalkableMessagesManager.context.messageEditorState = MessageEditorState.None;
-        TalkableMessagesManager.context.currentMessage.Set(-1, -1);
+        TalkableMessagesEditor.context.messageEditorState = MessageEditorState.None;
+        TalkableMessagesEditor.context.currentMessage.Set(-1, -1);
       }
 
       else
       {
-        TalkableMessagesManager.context.messageEditorState = MessageEditorState.Normal;
-        TalkableMessagesManager.context.currentMessage.Set(msg.columnId, msg.id);
+        TalkableMessagesEditor.context.messageEditorState = MessageEditorState.Normal;
+        TalkableMessagesEditor.context.currentMessage.Set(msg.columnId, msg.id);
         message = msg;
       }
     }
 
     private void ResetStyle()
     {
-      textAreaStyle.normal.background = TalkableMessagesManager.textAreaBGTextureNormal;
-      textAreaStyle.focused.background = TalkableMessagesManager.textAreaBGTextureFocused;
+      textAreaStyle.normal.background = TalkableMessagesEditor.textAreaBGTextureNormal;
+      textAreaStyle.focused.background = TalkableMessagesEditor.textAreaBGTextureFocused;
       buttonStyle.normal.background = GUIHelper.transparentTexture;
       buttonStyle.active.background = GUIHelper.transparentTexture;
       GUIHelper.labelStyle.padding = GUIHelper.padding;

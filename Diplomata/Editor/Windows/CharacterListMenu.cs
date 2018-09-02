@@ -83,7 +83,7 @@ namespace Diplomata.Editor.Windows
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          TalkableMessagesManager.OpenContextMenu(character);
+          TalkableMessagesEditor.OpenContextMenu(character);
           Close();
         }
 
@@ -112,7 +112,7 @@ namespace Diplomata.Editor.Windows
             characters = CharactersController.GetCharacters(options);
 
             CharacterEditor.Reset(name);
-            TalkableMessagesManager.Reset(name);
+            TalkableMessagesEditor.Reset(name);
             ContextEditor.Reset(name);
           }
         }
