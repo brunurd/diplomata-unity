@@ -39,7 +39,7 @@ namespace Diplomata.Editor.Windows
 
       else
       {
-        window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 200, 160);
+        window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 240, 160);
         window.Show();
       }
     }
@@ -96,7 +96,7 @@ namespace Diplomata.Editor.Windows
           {
             GUILayout.BeginHorizontal();
             var index = ArrayHelper.GetIndex(quest.questStates, questState);
-            GUILayout.Label(string.Format("{0}.", (index + 1).ToString()), GUILayout.Width(15));
+            GUILayout.Label(string.Format("{0}.", (index + 1).ToString()), GUILayout.Width(25));
             questState.Name = EditorGUILayout.TextField(questState.Name);
             if (GUILayout.Button("Up", GUILayout.Width(40), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
             {
