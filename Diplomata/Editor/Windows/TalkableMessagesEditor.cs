@@ -785,7 +785,7 @@ namespace Diplomata.Editor.Windows
               {
                 text += "[ is a choice ]";
 
-                if (GUILayout.Button("Add feedback?", GUILayout.Width(context.columnWidth), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+                if (GUILayout.Button("Add answer?", GUILayout.Width(context.columnWidth), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
                 {
                   // Get next column.
                   var nextColumn = Column.Find(context, currentMessage.columnId + 1);
