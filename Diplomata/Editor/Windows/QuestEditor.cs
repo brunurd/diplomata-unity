@@ -39,7 +39,7 @@ namespace Diplomata.Editor.Windows
 
       else
       {
-        window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH, 160);
+        window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 200, 160);
         window.Show();
       }
     }
@@ -82,6 +82,7 @@ namespace Diplomata.Editor.Windows
           GUI.SetNextControlName("name");
           quest.Name = EditorGUILayout.TextField(quest.Name);
           GUIHelper.Focus("name");
+          EditorGUILayout.Space();
 
           // Set label properties for quest states header.
           GUILayout.BeginHorizontal();
@@ -91,14 +92,41 @@ namespace Diplomata.Editor.Windows
           GUILayout.EndHorizontal();
 
           // Loop of the quest states.
-          foreach (var questState in quest.GetQuestStates())
+          foreach (var questState in quest.questStates)
           {
             GUILayout.BeginHorizontal();
+            var index = ArrayHelper.GetIndex(quest.questStates, questState);
+            GUILayout.Label(string.Format("{0}.", (index + 1).ToString()), GUILayout.Width(15));
             questState.Name = EditorGUILayout.TextField(questState.Name);
+            if (GUILayout.Button("Up", GUILayout.Width(40), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            {
+              if (index > 0)
+              {
+                quest.questStates = ArrayHelper.Swap(quest.questStates, index, index - 1);
+                QuestsController.Save(quests, options.jsonPrettyPrint);
+              }
+            }
+            if (GUILayout.Button("Down", GUILayout.Width(50), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            {
+              if (index < quest.questStates.Length - 1)
+              {
+                quest.questStates = ArrayHelper.Swap(quest.questStates, index, index + 1);
+                QuestsController.Save(quests, options.jsonPrettyPrint);
+              }
+            }
+            if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+            {
+              if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
+              {
+                quest.questStates = ArrayHelper.Remove(quest.questStates, questState);
+                QuestsController.Save(quests, options.jsonPrettyPrint);
+              }
+            }
             GUILayout.EndHorizontal();
           }
 
           // Buttons.
+          EditorGUILayout.Space();
           GUILayout.BeginHorizontal();
           if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
           {

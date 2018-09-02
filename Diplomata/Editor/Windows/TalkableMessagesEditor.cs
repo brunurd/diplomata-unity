@@ -1706,14 +1706,14 @@ namespace Diplomata.Editor.Windows
                   if (quest != null)
                   {
                     EditorGUI.BeginChangeCheck();
-                    var questStateNames = QuestState.GetNames(quest.GetQuestStates());
+                    var questStateNames = QuestState.GetNames(quest.questStates);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
                     questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
-                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
+                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.questStates), questStateName);
                       if (questStateIndex > -1)
-                        condition.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates()) [questStateIndex];
+                        condition.questAndState.questStateId = QuestState.GetIDs(quest.questStates) [questStateIndex];
                     }
                   }
                   break;
@@ -2080,14 +2080,14 @@ namespace Diplomata.Editor.Windows
                   if (quest != null)
                   {
                     EditorGUI.BeginChangeCheck();
-                    var questStateNames = QuestState.GetNames(quest.GetQuestStates());
+                    var questStateNames = QuestState.GetNames(quest.questStates);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
                     questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
-                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.GetQuestStates()), questStateName);
+                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.questStates), questStateName);
                       if (questStateIndex > -1)
-                        effect.questAndState.questStateId = QuestState.GetIDs(quest.GetQuestStates()) [questStateIndex];
+                        effect.questAndState.questStateId = QuestState.GetIDs(quest.questStates) [questStateIndex];
                     }
                   }
                   break;

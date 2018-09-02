@@ -17,7 +17,7 @@ namespace Diplomata.Models
   {
     [SerializeField] private string uniqueId;
     public string Name;
-    [SerializeField] private QuestState[] questStates;
+    public QuestState[] questStates;
     private string currentStateId;
     private bool initialized;
     private bool finished;
@@ -156,7 +156,7 @@ namespace Diplomata.Models
       if (!finished)
       {
         initialized = true;
-        if (ArrayHelper.Contains(QuestState.GetIDs(GetQuestStates()), stateId))
+        if (ArrayHelper.Contains(QuestState.GetIDs(questStates), stateId))
           currentStateId = stateId;
       }
       else
@@ -221,15 +221,6 @@ namespace Diplomata.Models
         }
       }
       return questsReturn;
-    }
-
-    /// <summary>
-    /// Return the quest states.
-    /// </summary>
-    /// <returns>A array with the quest states.</returns>
-    public QuestState[] GetQuestStates()
-    {
-      return questStates;
     }
 
     /// <summary>
