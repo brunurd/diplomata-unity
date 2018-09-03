@@ -110,7 +110,7 @@ namespace Diplomata.Editor.Windows
       item.image = (Texture2D) Resources.Load(item.imagePath);
       if (item.image == null && item.imagePath != string.Empty)
       {
-        Debug.LogWarning("Cannot find the file \"" + item.imagePath + "\" in Resources folder.");
+        Debug.LogWarning(string.Format("Cannot find the file \"{0}\" in Resources folder.", item.imagePath));
       }
 
       item.highlightImage = (Texture2D) Resources.Load(item.highlightImagePath);
@@ -152,14 +152,17 @@ namespace Diplomata.Editor.Windows
       {
         var str = AssetDatabase.GetAssetPath(image).Replace("Resources/", "¬");
         var strings = str.Split('¬');
-        str = strings[1].Replace(".png", "");
-        str = str.Replace(".jpg", "");
-        str = str.Replace(".jpeg", "");
-        str = str.Replace(".psd", "");
-        str = str.Replace(".tga", "");
-        str = str.Replace(".tiff", "");
-        str = str.Replace(".gif", "");
-        str = str.Replace(".bmp", "");
+        if (strings.Length >= 2)
+        {
+          str = strings[1].Replace(".png", "");
+          str = str.Replace(".jpg", "");
+          str = str.Replace(".jpeg", "");
+          str = str.Replace(".psd", "");
+          str = str.Replace(".tga", "");
+          str = str.Replace(".tiff", "");
+          str = str.Replace(".gif", "");
+          str = str.Replace(".bmp", "");
+        }
         return str;
       }
 
@@ -174,6 +177,11 @@ namespace Diplomata.Editor.Windows
       if (item != null)
       {
         inventory.AddCategory(item.Category);
+      }
+      for (var i = 0; i < inventory.items.Length; i++)
+      {
+        if (inventory.items[i].GetId() == item.GetId())
+          inventory.items[i] = item;
       }
       InventoryController.Save(inventory, options.jsonPrettyPrint);
     }

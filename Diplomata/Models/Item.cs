@@ -20,13 +20,13 @@ namespace Diplomata.Models
     public LanguageDictionary[] description;
     public string imagePath = string.Empty;
     public string highlightImagePath = string.Empty;
-    [SerializeField] private string category = string.Empty;
+
+    [SerializeField]
+    private string category = string.Empty;
 
     [NonSerialized]
     public Texture2D image;
-
-    [NonSerialized]
-    public Sprite sprite;
+    private Sprite sprite;
 
     [NonSerialized]
     public Texture2D highlightImage;
@@ -53,6 +53,57 @@ namespace Diplomata.Models
       set
       {
         category = value.ToLower();
+      }
+    }
+
+    /// <summary>
+    /// Property to get sprite after it's setted.
+    /// </summary>
+    /// <value>Sprite from image.</value>
+    public Sprite Sprite
+    {
+      get {
+        SetImageAndSprite();
+        return sprite;
+      }
+    }
+
+    /// <summary>
+    /// Get the item unique id.
+    /// </summary>
+    /// <returns>The unique id(a string guid).</returns>
+    public string GetId()
+    {
+      return uniqueId;
+    }
+
+    /// <summary>
+    /// Set image and sprite from the path.
+    /// </summary>
+    public void SetImageAndSprite()
+    {
+      if (image == null || sprite == null)
+      {
+        image = (Texture2D) Resources.Load(imagePath);
+        highlightImage = (Texture2D) Resources.Load(highlightImagePath);
+
+        if (image != null)
+        {
+          sprite = Sprite.Create(
+            image,
+            new Rect(0, 0, image.width, image.height),
+            new Vector2(0.5f, 0.5f)
+          );
+        }
+
+        if (highlightImage != null)
+        {
+          highlightSprite = Sprite.Create(
+            highlightImage,
+            new Rect(0, 0, highlightImage.width, highlightImage.height),
+            new Vector2(0.5f, 0.5f)
+          );
+        }
       }
     }
 

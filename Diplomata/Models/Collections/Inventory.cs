@@ -168,26 +168,7 @@ namespace Diplomata.Models.Collections
     {
       foreach (Item item in items)
       {
-        item.image = (Texture2D) Resources.Load(item.imagePath);
-        item.highlightImage = (Texture2D) Resources.Load(item.highlightImagePath);
-
-        if (item.image != null)
-        {
-          item.sprite = Sprite.Create(
-            item.image,
-            new Rect(0, 0, item.image.width, item.image.height),
-            new Vector2(0.5f, 0.5f)
-          );
-        }
-
-        if (item.highlightImage != null)
-        {
-          item.highlightSprite = Sprite.Create(
-            item.highlightImage,
-            new Rect(0, 0, item.highlightImage.width, item.highlightImage.height),
-            new Vector2(0.5f, 0.5f)
-          );
-        }
+        item.SetImageAndSprite();
       }
     }
 

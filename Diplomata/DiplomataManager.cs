@@ -44,6 +44,15 @@ namespace Diplomata
     }
 
     /// <summary>
+    /// Get all data from the global flags.
+    /// </summary>
+    /// <returns>A array of <seealso cref="Diplomata.Models.Flag">.</returns>
+    public static Flag[] GetFlags()
+    {
+      return Data.globalFlags.flags;
+    }
+
+    /// <summary>
     /// Get a global flag by name.
     /// </summary>
     /// <param name="name">The name of the flag.</param>
@@ -51,6 +60,24 @@ namespace Diplomata
     public static Flag GetFlag(string name)
     {
       return Data.globalFlags.Find(Data.globalFlags.flags, name);
+    }
+
+    /// <summary>
+    /// Get all data from the characters.
+    /// </summary>
+    /// <returns>A array of <seealso cref="Diplomata.Models.Character">.</returns>
+    public static Character[] GetCharacters()
+    {
+      return Data.characters.ToArray();
+    }
+
+    /// <summary>
+    /// Get all data from the interactables.
+    /// </summary>
+    /// <returns>A array of <seealso cref="Diplomata.Models.Interactable">.</returns>
+    public static Interactable[] GetInteractables()
+    {
+      return Data.interactables.ToArray();
     }
 
     /// <summary>
@@ -64,14 +91,24 @@ namespace Diplomata
     }
 
     /// <summary>
+    /// Get a interactable by it's name.
+    /// </summary>
+    /// <param name="name">The interactable name.</param>
+    /// <returns>The <seealso cref="Diplomata.Models.Interactable"> object or null.</returns>
+    public static Interactable GetInteractable(string name)
+    {
+      return Interactable.Find(Data.interactables, name);
+    }
+
+    /// <summary>
     /// Get a context by it's index.
     /// </summary>
-    /// <param name="character">The character parent of the context.</param>
+    /// <param name="talkable">The talkable parent of the context.</param>
     /// <param name="contextIndex">The index of the context.</param>
     /// <returns>The <seealso cref="Diplomata.Models.Context"> object or null.</returns>
-    public static Context GetContext(Character character, int contextIndex)
+    public static Context GetContext(Talkable talkable, int contextIndex)
     {
-      return Context.Find(character, contextIndex);
+      return Context.Find(talkable, contextIndex);
     }
 
     /// <summary>
@@ -81,9 +118,9 @@ namespace Diplomata
     /// <param name="contextName">The context name.</param>
     /// <param name="language">The language of the name.</param>
     /// <returns>The context if found or null.</returns>
-    public static Context GetContext(Character character, string contextName, string language)
+    public static Context GetContext(Talkable talkable, string contextName, string language)
     {
-      return Context.Find(character, contextName, language);
+      return Context.Find(talkable, contextName, language);
     }
 
     /// <summary>
@@ -124,6 +161,15 @@ namespace Diplomata
     }
 
     /// <summary>
+    /// Get all data from the quests.
+    /// </summary>
+    /// <returns>A array of <seealso cref="Diplomata.Models.Quest">.</returns>
+    public static Quest[] GetQuests()
+    {
+      return Data.quests;
+    }
+
+    /// <summary>
     /// Get a quest by it's name.
     /// </summary>
     /// <param name="name">The quest name.</param>
@@ -131,6 +177,15 @@ namespace Diplomata
     public static Quest GetQuest(string name)
     {
       return Quest.Find(Data.quests, name);
+    }
+
+    /// <summary>
+    /// Get all data from the items in the inventory.
+    /// </summary>
+    /// <returns>A array of <seealso cref="Diplomata.Models.Item">.</returns>
+    public static Item[] GetItems()
+    {
+      return Data.inventory.items;
     }
 
     /// <summary>
@@ -152,7 +207,7 @@ namespace Diplomata
     /// <returns>The item.</returns>
     public static Item GetItem(int itemId)
     {
-      return Item.Find(data.inventory.items, itemId);
+      return Item.Find(Data.inventory.items, itemId);
     }
 
     /// <summary>
