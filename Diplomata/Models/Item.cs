@@ -62,7 +62,8 @@ namespace Diplomata.Models
     /// <value>Sprite from image.</value>
     public Sprite Sprite
     {
-      get {
+      get
+      {
         SetImageAndSprite();
         return sprite;
       }
