@@ -81,10 +81,37 @@ namespace LavaLeak.Diplomata.Models
     /// <summary>
     /// Get the item name.
     /// </summary>
-    /// <returns>The preferences language.</returns>
+    /// <returns>The name in the current language.</returns>
+    public string GetName()
+    {
+      return DictionariesHelper.ContainsKey(name, DiplomataManager.Data.options.currentLanguage).value;
+    }
+
+    /// <summary>
+    /// Get the item name.
+    /// </summary>
+    /// <returns>The name in the setted language.</returns>
     public string GetName(string language)
     {
       return DictionariesHelper.ContainsKey(name, language).value;
+    }
+
+    /// <summary>
+    /// Get the item description.
+    /// </summary>
+    /// <returns>The description in the current language.</returns>
+    public string GetDescription()
+    {
+      return DictionariesHelper.ContainsKey(description, DiplomataManager.Data.options.currentLanguage).value;
+    }
+
+    /// <summary>
+    /// Get the item description.
+    /// </summary>
+    /// <returns>The description in the setted language.</returns>
+    public string GetDescription(string language)
+    {
+      return DictionariesHelper.ContainsKey(description, language).value;
     }
 
     /// <summary>
