@@ -10,7 +10,8 @@ namespace LavaLeak.Diplomata.Models.Collections
   [Serializable]
   public class Quests
   {
-    [SerializeField] private Quest[] quests = new Quest[0];
+    [SerializeField]
+    private Quest[] quests = new Quest[0];
 
     /// <summary>
     /// A clean constructor.

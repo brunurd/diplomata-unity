@@ -9,7 +9,9 @@ namespace LavaLeak.Diplomata.Models.Submodels
   [Serializable]
   public class QuestState
   {
-    [SerializeField] private string uniqueId;
+    [SerializeField]
+    private string uniqueId;
+
     public string Name;
 
     /// <summary>

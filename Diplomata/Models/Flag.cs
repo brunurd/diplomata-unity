@@ -8,7 +8,9 @@ namespace LavaLeak.Diplomata.Models
   [Serializable]
   public class Flag : Data
   {
-    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
+    [SerializeField]
+    private string uniqueId = Guid.NewGuid().ToString();
+
     public string name;
     public bool value;
 

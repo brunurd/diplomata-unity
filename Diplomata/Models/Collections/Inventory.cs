@@ -14,8 +14,10 @@ namespace LavaLeak.Diplomata.Models.Collections
   public class Inventory : Data
   {
     public Item[] items = new Item[0];
-    [SerializeField] private string[] categories = new string[0];
     private int equipped = -1;
+
+    [SerializeField]
+    private string[] categories = new string[0];
 
     /// <summary>
     /// All used categories in the items.

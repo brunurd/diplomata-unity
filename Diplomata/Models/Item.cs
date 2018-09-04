@@ -14,7 +14,9 @@ namespace LavaLeak.Diplomata.Models
   [Serializable]
   public class Item : Data
   {
-    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
+    [SerializeField]
+    private string uniqueId = Guid.NewGuid().ToString();
+
     public int id;
     public LanguageDictionary[] name;
     public LanguageDictionary[] description;

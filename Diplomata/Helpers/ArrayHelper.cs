@@ -7,7 +7,7 @@ namespace LavaLeak.Diplomata.Helpers
   /// <summary>
   /// A helper to manipulate any Array.
   /// </summary>
-  public class ArrayHelper
+  public static class ArrayHelper
   {
     /// <summary>
     /// Return one array with a element added in the last position.

@@ -3,7 +3,7 @@ using LavaLeak.Diplomata.Dictionaries;
 
 namespace LavaLeak.Diplomata.Helpers
 {
-  public class DictionariesHelper
+  public static class DictionariesHelper
   {
     public static AttributeDictionary ContainsKey(AttributeDictionary[] array, string key)
     {

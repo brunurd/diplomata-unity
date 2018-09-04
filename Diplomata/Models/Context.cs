@@ -27,7 +27,9 @@ namespace LavaLeak.Diplomata.Models
   [Serializable]
   public class Context : Data
   {
-    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
+    [SerializeField]
+    private string uniqueId = Guid.NewGuid().ToString();
+
     public int id;
     public string talkableName;
     public bool idFilter = false;

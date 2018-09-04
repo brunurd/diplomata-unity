@@ -6,6 +6,22 @@ using UnityEngine;
 namespace LavaLeak.Diplomata.Helpers
 {
   /// <summary>
+  /// The main Find class.
+  /// </summary>
+  public static class Find
+  {
+    /// <summary>
+    /// Find something in a array.
+    /// </summary>
+    /// <param name="collection">The array collection.</param>
+    /// <returns>A <seealso cref="Diplomata.Helpers.Subject"> object.</returns>
+    public static Subject In(object[] collection)
+    {
+      return new Subject(collection);
+    }
+  }
+
+  /// <summary>
   /// The subject class with the Results of a search.
   /// </summary>
   public class Subject
@@ -115,22 +131,6 @@ namespace LavaLeak.Diplomata.Helpers
         }
       }
       return this;
-    }
-  }
-
-  /// <summary>
-  /// The main Find class.
-  /// </summary>
-  public static class Find
-  {
-    /// <summary>
-    /// Find something in a array.
-    /// </summary>
-    /// <param name="collection">The array collection.</param>
-    /// <returns>A <seealso cref="Diplomata.Helpers.Subject"> object.</returns>
-    public static Subject In(object[] collection)
-    {
-      return new Subject(collection);
     }
   }
 }

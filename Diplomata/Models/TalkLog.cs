@@ -9,7 +9,9 @@ namespace LavaLeak.Diplomata.Models
   [Serializable]
   public class TalkLog : Data
   {
-    [SerializeField] public string uniqueId = Guid.NewGuid().ToString();
+    [SerializeField]
+    public string uniqueId = Guid.NewGuid().ToString();
+
     public string talkableName;
     public string[] messagesIds = new string[0];
 

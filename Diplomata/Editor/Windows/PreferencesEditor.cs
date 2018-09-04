@@ -50,7 +50,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       GUILayout.BeginHorizontal();
       jsonPrettyPrintTemp = GUILayout.Toggle(jsonPrettyPrintTemp, "JSON pretty print");
-      currentLanguageTemp = GUIHelper.Popup("Current Language", currentLanguageTemp, options.languagesList);
+      currentLanguageTemp = GUIHelper.Popup("Current Language", currentLanguageTemp, Language.GetNames(languagesTemp));
       GUILayout.EndHorizontal();
 
       EditorGUILayout.Separator();
@@ -106,8 +106,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUILayout.BeginHorizontal();
 
         languagesTemp[i].name = EditorGUILayout.TextField(languagesTemp[i].name);
-        languagesTemp[i].subtitle = GUILayout.Toggle(languagesTemp[i].subtitle, "Sub");
-        languagesTemp[i].dubbing = GUILayout.Toggle(languagesTemp[i].dubbing, "Dub");
+
+        // TODO: Implements dub and sub in the Options.
+        // languagesTemp[i].subtitle = GUILayout.Toggle(languagesTemp[i].subtitle, "Sub");
+        // languagesTemp[i].dubbing = GUILayout.Toggle(languagesTemp[i].dubbing, "Dub");
 
         if (GUILayout.Button("X", GUILayout.Width(20)))
         {

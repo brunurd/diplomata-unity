@@ -9,7 +9,9 @@ namespace LavaLeak.Diplomata.Models
   [Serializable]
   public class Column : Data
   {
-    [SerializeField] public string uniqueId = Guid.NewGuid().ToString();
+    [SerializeField]
+    public string uniqueId = Guid.NewGuid().ToString();
+
     public int id;
     public string emitter;
     public Message[] messages;

@@ -15,7 +15,9 @@ namespace LavaLeak.Diplomata.Models
   [Serializable]
   public class Quest : Data
   {
-    [SerializeField] private string uniqueId;
+    [SerializeField]
+    private string uniqueId;
+
     public string Name;
     public QuestState[] questStates;
     private string currentStateId;
