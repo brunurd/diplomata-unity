@@ -8,7 +8,11 @@ Textures.meta
 LICENSE.md.meta
 README.md.meta
 /[Dd]iplomata/**/*.meta
-!/[Dd]iplomata/Lib/MonoBehaviours/*.meta
+
+# Mono behaviours metas
+!/[Dd]iplomata/DiplomataCharacter.cs.meta
+!/[Dd]iplomata/DiplomataInteractable.cs.meta
+!/[Dd]iplomata/DiplomataTalkable.cs.meta
 
 # IDE's
 .vs/
