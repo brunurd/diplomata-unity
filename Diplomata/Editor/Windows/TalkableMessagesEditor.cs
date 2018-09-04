@@ -68,7 +68,13 @@ namespace LavaLeak.Diplomata.Editor.Windows
     private static Message message;
 
     // Window states.
-    public enum State { None, Context, Messages, Close }
+    public enum State
+    {
+      None = 0,
+      Context = 1,
+      Messages = 2,
+      Close = 3
+    }
     public static State state;
 
     public static void Init(State state = State.None)

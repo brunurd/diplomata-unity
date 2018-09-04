@@ -23,16 +23,16 @@ namespace LavaLeak.Diplomata.Models.Submodels
 
     public enum Type
     {
-      None,
-      EndOfContext,
-      GoTo,
-      SetAnimatorAttribute,
-      GetItem,
-      DiscardItem,
-      SetGlobalFlag,
-      EquipItem,
-      EndOfDialogue,
-      SetQuestState
+      None = 0,
+      EndOfContext = 1,
+      GoTo = 2,
+      SetAnimatorAttribute = 3,
+      GetItem = 4,
+      DiscardItem = 5,
+      SetGlobalFlag = 6,
+      EquipItem = 7,
+      EndOfDialogue = 8,
+      SetQuestState = 9
     }
 
     public Effect() {}

@@ -21,10 +21,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public enum State
     {
-      None,
-      Create,
-      Edit,
-      Close
+      None = 0,
+      Create = 1,
+      Edit = 2,
+      Close = 3
     }
 
     private static State state;

@@ -15,10 +15,10 @@ namespace LavaLeak.Diplomata.Models
   /// </summary>
   public enum MessageEditorState
   {
-    None,
-    Normal,
-    Conditions,
-    Effects
+    None = 0,
+    Normal = 1,
+    Conditions = 2,
+    Effects = 3
   }
 
   /// <summary>

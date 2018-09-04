@@ -22,17 +22,17 @@ namespace LavaLeak.Diplomata.Models.Submodels
 
     public enum Type
     {
-      None,
-      AfterOf,
-      InfluenceEqualTo,
-      InfluenceGreaterThan,
-      InfluenceLessThan,
-      HasItem,
-      ItemWasDiscarded,
-      GlobalFlagEqualTo,
-      ItemIsEquipped,
-      DoesNotHaveTheItem,
-      QuestStateIs
+      None = 0,
+      AfterOf = 1,
+      InfluenceEqualTo = 2,
+      InfluenceGreaterThan = 3,
+      InfluenceLessThan = 4,
+      HasItem = 5,
+      ItemWasDiscarded = 6,
+      GlobalFlagEqualTo = 7,
+      ItemIsEquipped = 8,
+      DoesNotHaveTheItem = 9,
+      QuestStateIs = 10
     }
 
     public Condition() {}
