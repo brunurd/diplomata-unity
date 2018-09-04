@@ -35,12 +35,22 @@ namespace LavaLeak.Diplomata
     }
 
     /// <summary>
-    /// Method to dispose the game data for new game.
+    /// Pre-load all the static data.
     /// </summary>
-    public static void DisposeData()
+    public static void PreLoadData()
     {
       data = ScriptableObject.CreateInstance<DiplomataData>();
       data.ReadJSONs();
+    }
+
+    /// <summary>
+    /// Method to dispose the game data for new game.
+    /// </summary>
+    /// <param name="load">Load static data after dispose?</param>
+    public static void DisposeData(bool reload = true)
+    {
+      data = ScriptableObject.CreateInstance<DiplomataData>();
+      if (reload) data.ReadJSONs();
     }
 
     /// <summary>
