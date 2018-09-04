@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Diplomata;
+using LavaLeak.Diplomata;
 using UnityEditor;
 using UnityEngine;
 
-namespace Diplomata.Editor.Inspector
+namespace LavaLeak.Diplomata.Editor.Inspector
 {
   [CustomEditor(typeof(DiplomataData))]
   public class DiplomataManagerInspector : UnityEditor.Editor

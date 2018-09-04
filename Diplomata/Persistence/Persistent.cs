@@ -1,9 +1,9 @@
 using System;
-using Diplomata.Models;
-using Diplomata.Persistence;
+using LavaLeak.Diplomata.Models;
+using LavaLeak.Diplomata.Persistence;
 using UnityEngine;
 
-namespace Diplomata.Persistence
+namespace LavaLeak.Diplomata.Persistence
 {
   /// <summary>
   /// The abstract class to get the persistent models data.

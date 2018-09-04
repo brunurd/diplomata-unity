@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Diplomata.Models.Submodels
+namespace LavaLeak.Diplomata.Models.Submodels
 {
   [Serializable]
   public class Effect

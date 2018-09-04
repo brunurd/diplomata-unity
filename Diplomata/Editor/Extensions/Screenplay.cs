@@ -1,14 +1,14 @@
 using System;
-using Diplomata.Editor;
-using Diplomata.Editor.Controllers;
-using Diplomata.Editor.Helpers;
-using Diplomata.Editor.Windows;
-using Diplomata.Helpers;
-using Diplomata.Models;
+using LavaLeak.Diplomata.Editor;
+using LavaLeak.Diplomata.Editor.Controllers;
+using LavaLeak.Diplomata.Editor.Helpers;
+using LavaLeak.Diplomata.Editor.Windows;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models;
 using RTFExporter;
 using UnityEditor;
 
-namespace Diplomata.Editor.Extensions
+namespace LavaLeak.Diplomata.Editor.Extensions
 {
   public class Screenplay
   {

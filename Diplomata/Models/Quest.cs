@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Diplomata.Helpers;
-using Diplomata.Models.Submodels;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models.Submodels;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 
-namespace Diplomata.Models
+namespace LavaLeak.Diplomata.Models
 {
   /// <summary>
   /// Class of quest that can have multiples states.

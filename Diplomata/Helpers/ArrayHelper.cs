@@ -2,7 +2,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-namespace Diplomata.Helpers
+namespace LavaLeak.Diplomata.Helpers
 {
   /// <summary>
   /// A helper to manipulate any Array.

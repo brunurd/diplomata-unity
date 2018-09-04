@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Diplomata.Models.Submodels
+namespace LavaLeak.Diplomata.Models.Submodels
 {
   [Serializable]
   public class Language

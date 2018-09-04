@@ -1,9 +1,9 @@
 using System;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 
-namespace Diplomata.Models
+namespace LavaLeak.Diplomata.Models
 {
   [Serializable]
   public class Flag : Data

@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Diplomata.Dictionaries;
-using Diplomata.Editor;
-using Diplomata.Editor.Controllers;
-using Diplomata.Editor.Helpers;
-using Diplomata.Helpers;
-using Diplomata.Models;
+using LavaLeak.Diplomata.Dictionaries;
+using LavaLeak.Diplomata.Editor;
+using LavaLeak.Diplomata.Editor.Controllers;
+using LavaLeak.Diplomata.Editor.Helpers;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models;
 using UnityEditor;
 using UnityEngine;
 
-namespace Diplomata.Editor.Windows
+namespace LavaLeak.Diplomata.Editor.Windows
 {
   public class CharacterEditor : UnityEditor.EditorWindow
   {

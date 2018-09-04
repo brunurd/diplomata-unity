@@ -1,4 +1,4 @@
-namespace Diplomata.Models
+namespace LavaLeak.Diplomata.Models
 {
   public enum Model
   {

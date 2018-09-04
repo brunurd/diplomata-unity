@@ -1,11 +1,11 @@
 using System;
-using Diplomata.Dictionaries;
-using Diplomata.Helpers;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Dictionaries;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 
-namespace Diplomata.Models.Collections
+namespace LavaLeak.Diplomata.Models.Collections
 {
   /// <summary>
   /// The inventory class with all items and items categories.

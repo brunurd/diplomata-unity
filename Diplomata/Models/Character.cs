@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Diplomata.Dictionaries;
-using Diplomata.Helpers;
-using Diplomata.Persistence;
+using LavaLeak.Diplomata.Dictionaries;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Persistence;
 using UnityEngine;
 
-namespace Diplomata.Models
+namespace LavaLeak.Diplomata.Models
 {
   /// <summary>
   /// Character class, a talkable model for game characters.

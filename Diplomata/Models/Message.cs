@@ -1,14 +1,14 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using Diplomata.Dictionaries;
-using Diplomata.Helpers;
-using Diplomata.Models.Submodels;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Dictionaries;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models.Submodels;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 
-namespace Diplomata.Models
+namespace LavaLeak.Diplomata.Models
 {
   [Serializable]
   public class Message : Data

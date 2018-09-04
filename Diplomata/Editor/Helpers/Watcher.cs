@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Diplomata.Editor.Helpers
+namespace LavaLeak.Diplomata.Editor.Helpers
 {
   [ExecuteInEditMode]
   public class Watcher : ScriptableObject

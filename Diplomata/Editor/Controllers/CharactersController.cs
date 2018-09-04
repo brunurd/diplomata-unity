@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Diplomata.Editor.Helpers;
-using Diplomata.Helpers;
-using Diplomata.Models;
+using LavaLeak.Diplomata.Editor.Helpers;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models;
 using UnityEngine;
 
-namespace Diplomata.Editor.Controllers
+namespace LavaLeak.Diplomata.Editor.Controllers
 {
   public static class CharactersController
   {

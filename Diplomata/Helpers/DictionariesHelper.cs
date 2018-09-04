@@ -1,7 +1,7 @@
 using System;
-using Diplomata.Dictionaries;
+using LavaLeak.Diplomata.Dictionaries;
 
-namespace Diplomata.Helpers
+namespace LavaLeak.Diplomata.Helpers
 {
   public class DictionariesHelper
   {

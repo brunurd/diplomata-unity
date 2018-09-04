@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Diplomata.Editor.Helpers;
-using Diplomata.Models;
-using Diplomata.Models.Collections;
+using LavaLeak.Diplomata.Editor.Helpers;
+using LavaLeak.Diplomata.Models;
+using LavaLeak.Diplomata.Models.Collections;
 
-namespace Diplomata.Editor.Controllers
+namespace LavaLeak.Diplomata.Editor.Controllers
 {
   public static class QuestsController
   {

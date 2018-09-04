@@ -1,6 +1,6 @@
 using System;
 
-namespace Diplomata.Models.Submodels
+namespace LavaLeak.Diplomata.Models.Submodels
 {
   [Serializable]
   public class Condition

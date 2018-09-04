@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Diplomata.Helpers;
-using Diplomata.Models;
-using Diplomata.Models.Collections;
-using Diplomata.Persistence;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models;
+using LavaLeak.Diplomata.Models.Collections;
+using LavaLeak.Diplomata.Persistence;
 using UnityEngine;
 
-namespace Diplomata
+namespace LavaLeak.Diplomata
 {
   /// <summary>
   /// The Data storage class, here are all the Diplomata Data fields.

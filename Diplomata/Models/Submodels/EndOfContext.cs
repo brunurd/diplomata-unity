@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Diplomata.Helpers;
+using LavaLeak.Diplomata.Helpers;
 
-namespace Diplomata.Models.Submodels
+namespace LavaLeak.Diplomata.Models.Submodels
 {
   [Serializable]
   public struct EndOfContext

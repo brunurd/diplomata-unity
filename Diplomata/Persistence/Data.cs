@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Diplomata.Helpers;
-using Diplomata.Models;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models;
 
-namespace Diplomata.Persistence
+namespace LavaLeak.Diplomata.Persistence
 {
   /// <summary>
   /// The abstract class to the main models data store.

@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-using Diplomata.Editor;
-using Diplomata.Editor.Windows;
+using LavaLeak.Diplomata.Editor;
+using LavaLeak.Diplomata.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
 
-namespace Diplomata.Editor.Helpers
+namespace LavaLeak.Diplomata.Editor.Helpers
 {
   public class JSONHelper
   {

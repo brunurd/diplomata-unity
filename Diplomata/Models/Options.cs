@@ -1,10 +1,10 @@
 using System;
-using Diplomata.Helpers;
-using Diplomata.Models.Submodels;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models.Submodels;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 
-namespace Diplomata.Models
+namespace LavaLeak.Diplomata.Models
 {
   [Serializable]
   public class Options : Data

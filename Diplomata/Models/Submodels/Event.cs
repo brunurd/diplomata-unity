@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Diplomata.Models.Submodels
+namespace LavaLeak.Diplomata.Models.Submodels
 {
   public class Events
   {

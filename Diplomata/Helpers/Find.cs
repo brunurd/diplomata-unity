@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-namespace Diplomata.Helpers
+namespace LavaLeak.Diplomata.Helpers
 {
   /// <summary>
   /// The subject class with the Results of a search.

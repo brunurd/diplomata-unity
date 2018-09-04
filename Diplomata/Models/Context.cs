@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using Diplomata.Dictionaries;
-using Diplomata.Helpers;
-using Diplomata.Models.Submodels;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Dictionaries;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models.Submodels;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Diplomata.Models
+namespace LavaLeak.Diplomata.Models
 {
   /// <summary>
   /// The states in the editor.

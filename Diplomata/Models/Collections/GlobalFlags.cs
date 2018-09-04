@@ -1,8 +1,8 @@
 using System;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 
-namespace Diplomata.Models.Collections
+namespace LavaLeak.Diplomata.Models.Collections
 {
   [Serializable]
   public class GlobalFlags : Data

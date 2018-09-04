@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Diplomata.Helpers;
+using LavaLeak.Diplomata.Helpers;
 using UnityEngine;
 
-namespace Diplomata.Models
+namespace LavaLeak.Diplomata.Models
 {
   /// <summary>
   /// Interactable class, a talkable model for objects in the environment.

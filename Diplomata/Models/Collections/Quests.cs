@@ -1,8 +1,8 @@
 using System;
-using Diplomata.Models;
+using LavaLeak.Diplomata.Models;
 using UnityEngine;
 
-namespace Diplomata.Models.Collections
+namespace LavaLeak.Diplomata.Models.Collections
 {
   /// <summary>
   /// Class to serialize as json.

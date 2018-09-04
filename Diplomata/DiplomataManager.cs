@@ -1,18 +1,18 @@
 using System.Collections.Generic;
-using Diplomata.Helpers;
-using Diplomata.Models;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 
-namespace Diplomata
+namespace LavaLeak.Diplomata
 {
   /// <summary>
-  /// The MonoBehaviour class to control all Diplomata data.
+  /// The class to manage all Diplomata project data.
   /// </summary>
   [AddComponentMenu("")]
   [ExecuteInEditMode]
-  public class DiplomataManager : MonoBehaviour
+  public static class DiplomataManager
   {
     private static DiplomataData data;
     public static bool IsTalking;

@@ -1,10 +1,10 @@
 using System;
-using Diplomata.Models;
-using Diplomata.Persistence;
-using Diplomata.Persistence.Models;
+using LavaLeak.Diplomata.Models;
+using LavaLeak.Diplomata.Persistence;
+using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 
-namespace Diplomata
+namespace LavaLeak.Diplomata
 {
   /// <summary>
   /// Class to return all persistent data from the DiplomataData object.

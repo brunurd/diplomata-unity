@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using Diplomata;
-using Diplomata.Editor;
-using Diplomata.Editor.Controllers;
-using Diplomata.Editor.Helpers;
-using Diplomata.Editor.Windows;
-using Diplomata.Models;
+using LavaLeak.Diplomata;
+using LavaLeak.Diplomata.Editor;
+using LavaLeak.Diplomata.Editor.Controllers;
+using LavaLeak.Diplomata.Editor.Helpers;
+using LavaLeak.Diplomata.Editor.Windows;
+using LavaLeak.Diplomata.Models;
 using UnityEditor;
 using UnityEngine;
 
-namespace Diplomata.Editor.Inspector
+namespace LavaLeak.Diplomata.Editor.Inspector
 {
   /// <summary>
   /// The inspector class to DiplomataInteractable

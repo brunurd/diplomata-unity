@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Diplomata.Dictionaries;
-using Diplomata.Helpers;
-using Diplomata.Models;
+using LavaLeak.Diplomata.Dictionaries;
+using LavaLeak.Diplomata.Helpers;
+using LavaLeak.Diplomata.Models;
 using UnityEngine;
 
-namespace Diplomata
+namespace LavaLeak.Diplomata
 {
   /// <summary>
   /// The Diplomata Character component.
@@ -25,7 +25,7 @@ namespace Diplomata
 
       if (talkable != null && Application.isPlaying)
       {
-        talkable = Character.Find(Data.characters, talkable.name);
+        talkable = Character.Find(DiplomataManager.Data.characters, talkable.name);
       }
     }
 
@@ -41,7 +41,7 @@ namespace Diplomata
       {
         foreach (Message msg in choices)
         {
-          var localContent = DictionariesHelper.ContainsKey(msg.content, Data.options.currentLanguage).value;
+          var localContent = DictionariesHelper.ContainsKey(msg.content, DiplomataManager.Data.options.currentLanguage).value;
 
           if (localContent == content)
           {

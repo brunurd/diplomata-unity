@@ -1,6 +1,6 @@
 using System;
 
-namespace Diplomata.Dictionaries
+namespace LavaLeak.Diplomata.Dictionaries
 {
   [Serializable]
   public class AttributeDictionary

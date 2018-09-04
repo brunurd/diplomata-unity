@@ -1,6 +1,6 @@
 using System;
 
-namespace Diplomata.Persistence.Models
+namespace LavaLeak.Diplomata.Persistence.Models
 {
   [Serializable]
   public class TalkLogPersistent : Persistent
