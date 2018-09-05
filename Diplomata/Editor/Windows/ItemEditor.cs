@@ -1,3 +1,4 @@
+using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
@@ -99,11 +100,27 @@ namespace LavaLeak.Diplomata.Editor.Windows
       GUILayout.EndVertical();
       GUILayout.EndHorizontal();
 
+      var toolTip = DictionariesHelper.ContainsKey(item.toolTip, options.currentLanguage);
+      if (toolTip == null)
+      {
+        item.toolTip = ArrayHelper.Add(item.toolTip, new LanguageDictionary(options.currentLanguage, ""));
+        toolTip = DictionariesHelper.ContainsKey(item.toolTip, options.currentLanguage);
+      }
+      GUIHelper.textContent.text = toolTip.value;
+      var toolTipheight = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
+      GUILayout.Label("Tool Tip: ");
+      toolTip.value = EditorGUILayout.TextArea(toolTip.value, GUIHelper.textAreaStyle, GUILayout.Height(toolTipheight));
+
       var description = DictionariesHelper.ContainsKey(item.description, options.currentLanguage);
+      if (description == null)
+      {
+        item.description = ArrayHelper.Add(item.description, new LanguageDictionary(options.currentLanguage, ""));
+        description = DictionariesHelper.ContainsKey(item.description, options.currentLanguage);
+      }
       GUIHelper.textContent.text = description.value;
-      var height = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
+      var descriptionHeight = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
       GUILayout.Label("Description: ");
-      description.value = EditorGUILayout.TextArea(description.value, GUIHelper.textAreaStyle, GUILayout.Height(height));
+      description.value = EditorGUILayout.TextArea(description.value, GUIHelper.textAreaStyle, GUILayout.Height(descriptionHeight));
 
       EditorGUILayout.Separator();
 
