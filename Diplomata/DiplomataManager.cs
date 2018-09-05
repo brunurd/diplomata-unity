@@ -32,6 +32,10 @@ namespace LavaLeak.Diplomata
         }
         return data;
       }
+      set
+      {
+        data = value;
+      }
     }
 
     /// <summary>
