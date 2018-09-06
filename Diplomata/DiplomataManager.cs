@@ -184,6 +184,36 @@ namespace LavaLeak.Diplomata
     }
 
     /// <summary>
+    /// Get all active quests.
+    /// </summary>
+    /// <returns>A array of active quests.</returns>
+    public static Quest[] GetActiveQuests()
+    {
+      var activeQuests = new Quest[0];
+      foreach (var quest in Data.quests)
+      {
+        if (quest.IsActive())
+          activeQuests = ArrayHelper.Add(activeQuests, quest);
+      }
+      return activeQuests;
+    }
+
+    /// <summary>
+    /// Get all complete quests.
+    /// </summary>
+    /// <returns>A array of complete quests.</returns>
+    public static Quest[] GetCompleteQuests()
+    {
+      var activeQuests = new Quest[0];
+      foreach (var quest in Data.quests)
+      {
+        if (quest.IsComplete())
+          activeQuests = ArrayHelper.Add(activeQuests, quest);
+      }
+      return activeQuests;
+    }
+
+    /// <summary>
     /// Get a quest by it's name.
     /// </summary>
     /// <param name="name">The quest name.</param>

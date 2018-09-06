@@ -43,6 +43,24 @@ namespace LavaLeak.Diplomata.Models
     }
 
     /// <summary>
+    /// Get if the quest is active.
+    /// </summary>
+    /// <returns>Return true if is active or false.</returns>
+    public bool IsActive()
+    {
+      return initialized && !finished;
+    }
+
+    /// <summary>
+    /// Get if the quest is complete.
+    /// </summary>
+    /// <returns>Return true if is complete or false.</returns>
+    public bool IsComplete()
+    {
+      return initialized && finished;
+    }
+
+    /// <summary>
     /// Add a state to the states list.
     /// </summary>
     /// <param name="questState">The state name.</param>
