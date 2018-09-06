@@ -768,7 +768,7 @@ namespace LavaLeak.Diplomata
         controlIndexes["message"] = currentMessage.id;
         lastUniqueId = currentMessage.GetUniqueId();
 
-        foreach (Effect effect in currentMessage.effects)
+        foreach (var effect in currentMessage.effects)
         {
           switch (effect.type)
           {
@@ -784,7 +784,7 @@ namespace LavaLeak.Diplomata
               break;
 
             case Effect.Type.GoTo:
-              Message goToMsg = effect.goTo.GetMessage(currentContext);
+              var goToMsg = effect.goTo.GetMessage(currentContext);
               controlIndexes["column"] = goToMsg.columnId;
               controlIndexes["message"] = goToMsg.id;
               hasFate = true;
@@ -795,10 +795,8 @@ namespace LavaLeak.Diplomata
 
               foreach (Animator animator in animators)
               {
-
                 if (animator.runtimeAnimatorController != null)
                 {
-
                   if (effect.animatorAttributeSetter.animator == null)
                   {
                     effect.animatorAttributeSetter.animator = (RuntimeAnimatorController) Resources.Load(effect.animatorAttributeSetter.animatorPath);
@@ -840,75 +838,62 @@ namespace LavaLeak.Diplomata
                 }
 
               }
-
               break;
 
             case Effect.Type.GetItem:
               var getItem = Item.Find(DiplomataManager.Data.inventory.items, effect.itemId);
-
               if (getItem != null)
               {
                 getItem.have = true;
               }
-
               else
               {
                 Debug.LogError("Cannot find the item with id " + effect.itemId + " to get.");
               }
-
               break;
 
             case Effect.Type.EquipItem:
               var equipItem = Item.Find(DiplomataManager.Data.inventory.items, effect.itemId);
-
               if (equipItem != null)
               {
                 DiplomataManager.Data.inventory.Equip(effect.itemId);
               }
-
               else
               {
                 Debug.LogError("Cannot find the item with id " + effect.itemId + " to equip.");
               }
-
               break;
 
             case Effect.Type.DiscardItem:
               var discardItem = Item.Find(DiplomataManager.Data.inventory.items, effect.itemId);
-
               if (discardItem != null)
               {
                 discardItem.discarded = true;
               }
-
               else
               {
                 Debug.LogError("Cannot find the item with id " + effect.itemId + " to discard.");
               }
-
               break;
 
             case Effect.Type.SetGlobalFlag:
               var flag = DiplomataManager.Data.globalFlags.Find(DiplomataManager.Data.globalFlags.flags, effect.globalFlag.name);
-
               if (flag != null)
               {
                 flag.value = effect.globalFlag.value;
               }
-
               else
               {
                 Debug.LogError("Cannot find the custom flag " + effect.globalFlag.name);
               }
-
               break;
 
             case Effect.Type.EndOfDialogue:
               EndTalk();
               break;
+
             case Effect.Type.SetQuestState:
               var quest = Quest.Find(DiplomataManager.Data.quests, effect.questAndState.questId);
-
               if (quest != null)
               {
                 var currentState = quest.GetCurrentState();
@@ -925,6 +910,30 @@ namespace LavaLeak.Diplomata
                 {
                   quest.SetState(effect.questAndState.questStateId);
                 }
+              }
+              else
+              {
+                Debug.LogWarning("Cannot find the quest " + effect.questAndState.questId);
+              }
+              break;
+            
+            case Effect.Type.FinishQuest:
+              var questToFinish = Quest.Find(DiplomataManager.Data.quests, effect.questAndState.questId);
+              if (questToFinish != null)
+              {
+                questToFinish.Finish();
+              }
+              else
+              {
+                Debug.LogWarning("Cannot find the quest " + effect.questAndState.questId);
+              }
+              break;
+            
+            case Effect.Type.StartQuest:
+              var questToStart = Quest.Find(DiplomataManager.Data.quests, effect.questAndState.questId);
+              if (questToStart != null)
+              {
+                questToStart.Initialize();
               }
               else
               {

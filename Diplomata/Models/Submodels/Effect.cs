@@ -32,7 +32,9 @@ namespace LavaLeak.Diplomata.Models.Submodels
       SetGlobalFlag = 6,
       EquipItem = 7,
       EndOfDialogue = 8,
-      SetQuestState = 9
+      SetQuestState = 9,
+      FinishQuest = 10,
+      StartQuest = 11
     }
 
     public Effect() {}
@@ -120,6 +122,20 @@ namespace LavaLeak.Diplomata.Models.Submodels
       var questStateName = questState != null ? questState.Name : string.Empty;
 
       return string.Format("Set quest \"{0}\" to: {1}", questName, questStateName);
+    }
+
+    public string DiplayStartQuest(Quest[] quests)
+    {
+      var quest = Quest.Find(quests, questAndState.questId);
+      var questName = quest != null ? quest.Name : string.Empty;
+      return string.Format("Start the quest \"{0}\"", questName);
+    }
+
+    public string DisplayFinishQuest(Quest[] quests)
+    {
+      var quest = Quest.Find(quests, questAndState.questId);
+      var questName = quest != null ? quest.Name : string.Empty;
+      return string.Format("Finish the quest \"{0}\"", questName);
     }
   }
 }

@@ -228,7 +228,7 @@ namespace LavaLeak.Diplomata.Models
     /// <summary>
     /// Finish the quest and set the state to empty.
     /// </summary>
-    private void Finish()
+    public void Finish()
     {
       if (initialized)
       {

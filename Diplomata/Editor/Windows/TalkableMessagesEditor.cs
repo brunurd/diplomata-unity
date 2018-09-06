@@ -758,6 +758,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
                     case Effect.Type.SetQuestState:
                       text += effect.DisplaySetQuestState(quests);
                       break;
+                    case Effect.Type.FinishQuest:
+                      text += effect.DisplayFinishQuest(quests);
+                      break;
+                    case Effect.Type.StartQuest:
+                      text += effect.DiplayStartQuest(quests);
+                      break;
                   }
 
                   if (k < currentMessage.effects.Length - 1)
@@ -2061,6 +2067,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                 case Effect.Type.EndOfDialogue:
                   break;
+                
                 case Effect.Type.SetQuestState:
                   // Get the quest name.
                   var quest = Quest.Find(quests, effect.questAndState.questId);
@@ -2095,6 +2102,40 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       if (questStateIndex > -1)
                         effect.questAndState.questStateId = QuestState.GetIDs(quest.questStates) [questStateIndex];
                     }
+                  }
+                  break;
+
+                case Effect.Type.FinishQuest:
+                  // Get the quest name.
+                  var questToFinish = Quest.Find(quests, effect.questAndState.questId);
+                  var questToFinishName = questToFinish != null ? questToFinish.Name : string.Empty;
+
+                  // Quest Popup with a change checker.
+                  EditorGUI.BeginChangeCheck();
+                  var questToFinishNames = Quest.GetNames(quests);
+                  questToFinishNames = ArrayHelper.Add(questToFinishNames, string.Empty);
+                  questToFinishName = GUIHelper.Popup("Quest: ", questToFinishName, questToFinishNames);
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests), questToFinishName);
+                    if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(quests) [questIndex];
+                  }
+                  break;
+
+                case Effect.Type.StartQuest:
+                  // Get the quest name.
+                  var questToStart = Quest.Find(quests, effect.questAndState.questId);
+                  var questToStartName = questToStart != null ? questToStart.Name : string.Empty;
+
+                  // Quest Popup with a change checker.
+                  EditorGUI.BeginChangeCheck();
+                  var questToStartNames = Quest.GetNames(quests);
+                  questToStartNames = ArrayHelper.Add(questToStartNames, string.Empty);
+                  questToStartName = GUIHelper.Popup("Quest: ", questToStartName, questToStartNames);
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests), questToStartName);
+                    if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(quests) [questIndex];
                   }
                   break;
               }

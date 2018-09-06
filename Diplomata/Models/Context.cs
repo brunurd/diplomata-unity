@@ -62,7 +62,8 @@ namespace LavaLeak.Diplomata.Models
       }
       set
       {
-        OnEnd();
+        if (OnEnd != null)
+          OnEnd();
         happened = value;
       }
     }
