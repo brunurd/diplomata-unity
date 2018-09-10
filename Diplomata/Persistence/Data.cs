@@ -28,7 +28,7 @@ namespace LavaLeak.Diplomata.Persistence
     /// </summary>
     /// <param name="array">The array of data objects.</param>
     /// <returns>A array of persistent objects.</returns>
-    internal static T[] GetArrayData<T>(Data[] array)
+    public static T[] GetArrayData<T>(Data[] array)
     {
       var persistent = new T[0];
       foreach (var item in array)
@@ -43,7 +43,7 @@ namespace LavaLeak.Diplomata.Persistence
     /// </summary>
     /// <param name="dataArray">A array of data objects.</param>
     /// <param name="array">The array of persistent data objects.</param>
-    internal static T[] SetArrayData<T>(Data[] dataArray, Persistent[] array)
+    public static T[] SetArrayData<T>(Data[] dataArray, Persistent[] array)
     {
       var data = new T[0];
       foreach (var item in array)
