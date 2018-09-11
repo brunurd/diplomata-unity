@@ -15,7 +15,7 @@ namespace LavaLeak.Diplomata
   public static class DiplomataManager
   {
     private static DiplomataData data;
-    public static bool IsTalking;
+    public static bool OnATalk;
 
     /// <summary>
     /// The Diplomata main data, all data come from here.

@@ -22,6 +22,8 @@ namespace LavaLeak.Diplomata
     public Column currentColumn;
     public Message currentMessage;
     public bool choiceMenu;
+    public bool IsTalking;
+
     private Context currentContext;
     protected Dictionary<string, int> controlIndexes;
     private string lastUniqueId;
@@ -64,9 +66,10 @@ namespace LavaLeak.Diplomata
     /// </summary>
     public void StartTalk()
     {
-      if (talkable != null && DiplomataManager.IsTalking == false)
+      if (talkable != null && IsTalking == false && DiplomataManager.OnATalk == false)
       {
-        DiplomataManager.IsTalking = true;
+        IsTalking = true;
+        DiplomataManager.OnATalk = true;
         controlIndexes = new Dictionary<string, int>();
         controlIndexes.Add("context", 0);
         controlIndexes.Add("column", 0);
@@ -483,7 +486,7 @@ namespace LavaLeak.Diplomata
     /// <returns>The current message.</returns>
     public string ShowMessageContentSubtitle()
     {
-      if (DiplomataManager.IsTalking)
+      if (IsTalking && DiplomataManager.OnATalk)
       {
         if (currentMessage != null)
         {
@@ -752,7 +755,8 @@ namespace LavaLeak.Diplomata
     /// </summary>
     public void EndTalk()
     {
-      DiplomataManager.IsTalking = false;
+      DiplomataManager.OnATalk = false;
+      IsTalking = false;
     }
 
     /// <summary>
