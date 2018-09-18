@@ -282,18 +282,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
             name = DictionariesHelper.ContainsKey(context.name, options.currentLanguage);
           }
 
-          var description = DictionariesHelper.ContainsKey(context.description, options.currentLanguage);
-
-          if (description == null)
-          {
-            context.description = ArrayHelper.Add(context.description, new LanguageDictionary(options.currentLanguage, "Description [Change clicking on Edit]"));
-            description = DictionariesHelper.ContainsKey(context.description, options.currentLanguage);
-          }
-
           GUIHelper.labelStyle.fontSize = 11;
           GUIHelper.labelStyle.alignment = TextAnchor.UpperCenter;
 
-          GUIHelper.textContent.text = "<size=13><i>" + name.value + "</i></size>\n\n" + description.value + "\n";
+          GUIHelper.textContent.text = "<size=13><i>" + name.value + "</i></size>\n";
           var height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, listWidth);
 
           GUILayout.Label(GUIHelper.textContent, GUIHelper.labelStyle, GUILayout.Width(listWidth), GUILayout.Height(height));

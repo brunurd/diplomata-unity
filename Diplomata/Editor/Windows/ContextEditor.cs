@@ -93,9 +93,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
     public void DrawEditWindow()
     {
       var name = DictionariesHelper.ContainsKey(context.name, options.currentLanguage);
-      var description = DictionariesHelper.ContainsKey(context.description, options.currentLanguage);
 
-      if (name != null && description != null)
+      if (name != null)
       {
         GUILayout.Label("Name: ");
 
@@ -103,14 +102,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
         name.value = EditorGUILayout.TextField(name.value);
 
         GUIHelper.Focus("name");
-
-        EditorGUILayout.Separator();
-
-        GUIHelper.textContent.text = description.value;
-        var height = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
-
-        GUILayout.Label("Description: ");
-        description.value = EditorGUILayout.TextArea(description.value, GUIHelper.textAreaStyle, GUILayout.Height(height));
 
         EditorGUILayout.Separator();
 

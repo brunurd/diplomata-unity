@@ -43,7 +43,6 @@ namespace LavaLeak.Diplomata.Models
     public ushort fontSize = 11;
     public Column[] columns;
     public LanguageDictionary[] name;
-    public LanguageDictionary[] description;
     public Label[] labels = new Label[] { new Label() };
 
     [NonSerialized]
@@ -115,14 +114,12 @@ namespace LavaLeak.Diplomata.Models
       this.id = id;
       this.talkableName = talkableName;
       name = new LanguageDictionary[0];
-      description = new LanguageDictionary[0];
       columns = new Column[0];
       labels = new Label[] { new Label() };
 
       foreach (Language lang in DiplomataManager.Data.options.languages)
       {
         name = ArrayHelper.Add(name, new LanguageDictionary(lang.name, "Name [Change clicking on Edit]"));
-        description = ArrayHelper.Add(description, new LanguageDictionary(lang.name, "Description [Change clicking on Edit]"));
       }
     }
 

@@ -19,7 +19,6 @@ namespace LavaLeak.Diplomata.Models
 
     public int id;
     public LanguageDictionary[] name;
-    public LanguageDictionary[] toolTip;
     public LanguageDictionary[] description;
     public string imagePath = string.Empty;
     public string highlightImagePath = string.Empty;
@@ -100,24 +99,6 @@ namespace LavaLeak.Diplomata.Models
     }
 
     /// <summary>
-    /// Get the item tool tip.
-    /// </summary>
-    /// <returns>The tool tip in the current language.</returns>
-    public string GetToolTip()
-    {
-      return DictionariesHelper.ContainsKey(toolTip, DiplomataManager.Data.options.currentLanguage).value;
-    }
-
-    /// <summary>
-    /// Get the item tool tip.
-    /// </summary>
-    /// <returns>The tool tip in the setted language.</returns>
-    public string GetToolTip(string language)
-    {
-      return DictionariesHelper.ContainsKey(toolTip, language).value;
-    }
-
-    /// <summary>
     /// Get the item description.
     /// </summary>
     /// <returns>The description in the current language.</returns>
@@ -178,7 +159,6 @@ namespace LavaLeak.Diplomata.Models
       {
         name = ArrayHelper.Add(name, new LanguageDictionary(language.name, "[ Edit to change this name ]"));
         description = ArrayHelper.Add(description, new LanguageDictionary(language.name, ""));
-        toolTip = ArrayHelper.Add(toolTip, new LanguageDictionary(language.name, ""));
       }
     }
 

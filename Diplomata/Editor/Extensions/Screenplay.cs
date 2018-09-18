@@ -74,25 +74,23 @@ namespace LavaLeak.Diplomata.Editor.Extensions
 
       presentation.AppendText(text, style);
 
-      foreach (Context context in character.contexts)
+      for (var i = 0; i < character.contexts.Length; i++)
       {
-
+        var context = character.contexts[i];
         var contextPar = document.AppendParagraph(noIndent);
-
         var name = DictionariesHelper.ContainsKey(context.name, options.currentLanguage);
-        var contextDescription = DictionariesHelper.ContainsKey(context.description, options.currentLanguage);
 
-        contextPar.AppendText(name.value + "\n", styleAllcaps);
-        contextPar.AppendText(contextDescription.value, style);
+        contextPar.AppendText(string.Format("CTX {0}\n", i), styleAllcaps);
+        contextPar.AppendText(name.value, style);
 
-        foreach (Column column in context.columns)
+        foreach (var column in context.columns)
         {
-          for (int i = 0; i < column.messages.Length; i++)
+          for (var j = 0; j < column.messages.Length; j++)
           {
             var messagePar = document.AppendParagraph(messageContentIndent);
             messagePar.AppendText("\t\t" + column.emitter + "\n", styleAllcaps);
 
-            var screenplayNotes = DictionariesHelper.ContainsKey(column.messages[i].screenplayNotes, options.currentLanguage);
+            var screenplayNotes = DictionariesHelper.ContainsKey(column.messages[j].screenplayNotes, options.currentLanguage);
 
             if (screenplayNotes != null)
             {
@@ -102,11 +100,11 @@ namespace LavaLeak.Diplomata.Editor.Extensions
               }
             }
 
-            var content = DictionariesHelper.ContainsKey(column.messages[i].content, options.currentLanguage);
+            var content = DictionariesHelper.ContainsKey(column.messages[j].content, options.currentLanguage);
 
             if (column.messages.Length > 1)
             {
-              messagePar.AppendText("(" + i + "): " + content.value, style);
+              messagePar.AppendText("(" + j + "): " + content.value, style);
             }
 
             else

@@ -100,17 +100,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       GUILayout.EndVertical();
       GUILayout.EndHorizontal();
 
-      var toolTip = DictionariesHelper.ContainsKey(item.toolTip, options.currentLanguage);
-      if (toolTip == null)
-      {
-        item.toolTip = ArrayHelper.Add(item.toolTip, new LanguageDictionary(options.currentLanguage, ""));
-        toolTip = DictionariesHelper.ContainsKey(item.toolTip, options.currentLanguage);
-      }
-      GUIHelper.textContent.text = toolTip.value;
-      var toolTipheight = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
-      GUILayout.Label("Tool Tip: ");
-      toolTip.value = EditorGUILayout.TextArea(toolTip.value, GUIHelper.textAreaStyle, GUILayout.Height(toolTipheight));
-
       var description = DictionariesHelper.ContainsKey(item.description, options.currentLanguage);
       if (description == null)
       {
