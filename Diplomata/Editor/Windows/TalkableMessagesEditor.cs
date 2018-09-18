@@ -1807,7 +1807,18 @@ namespace LavaLeak.Diplomata.Editor.Windows
                           effect.endOfContext.Set(tempCharacter.name, ctx.id);
                           break;
                         }
+                      }
+                    }
+                    foreach (Interactable tempInteractable in interactables)
+                    {
+                      foreach (Context ctx in tempInteractable.contexts)
+                      {
 
+                        if (DictionariesHelper.ContainsKey(ctx.name, options.currentLanguage).value == contextName)
+                        {
+                          effect.endOfContext.Set(tempInteractable.name, ctx.id);
+                          break;
+                        }
                       }
                     }
                   }
