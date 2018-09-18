@@ -105,7 +105,7 @@ namespace LavaLeak.Diplomata
 
         if (currentContext == null)
         {
-          Debug.LogError("No context found in " + talkable.name + ".");
+          Debug.LogWarning("No context found in " + talkable.name + ".");
           EndTalk();
         }
         else
@@ -516,6 +516,7 @@ namespace LavaLeak.Diplomata
           return errorText;
         }
       }
+      EndTalk();
       return string.Empty;
     }
 
