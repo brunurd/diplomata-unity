@@ -28,6 +28,14 @@ namespace LavaLeak.Diplomata
     protected Dictionary<string, int> controlIndexes;
     private string lastUniqueId;
 
+    // Events.
+    public Action<Context> OnContextEnd;
+    public Action<Message> OnMessageEnd;
+    public Action<Item> OnItemWasCaught;
+    public Action<Quest> OnQuestStart;
+    public Action<Quest> OnQuestStateChage;
+    public Action<Quest> OnQuestEnd; 
+
     /// <summary>
     /// Set if the talkable is on scene.
     /// </summary>
@@ -769,6 +777,9 @@ namespace LavaLeak.Diplomata
 
       if (currentMessage != null)
       {
+        if (OnMessageEnd != null)
+          OnMessageEnd(currentMessage);
+
         controlIndexes["column"] = currentMessage.columnId;
         controlIndexes["message"] = currentMessage.id;
         lastUniqueId = currentMessage.GetUniqueId();
@@ -779,11 +790,17 @@ namespace LavaLeak.Diplomata
           {
             case Effect.Type.EndOfContext:
               if (effect.endOfContext.GetContext(DiplomataManager.Data.characters, DiplomataManager.Data.interactables) != null)
+              {
                 effect.endOfContext.GetContext(DiplomataManager.Data.characters, DiplomataManager.Data.interactables).Finished = true;
+                if (OnContextEnd != null)
+                  OnContextEnd(currentContext);
+              }
 
               if (currentContext.talkableName == effect.endOfContext.talkableName && currentContext.id == effect.endOfContext.contextId)
               {
                 currentContext.Finished = true;
+                if (OnContextEnd != null)
+                  OnContextEnd(currentContext);
               }
 
               break;
@@ -850,6 +867,8 @@ namespace LavaLeak.Diplomata
               if (getItem != null)
               {
                 getItem.have = true;
+                if (OnItemWasCaught != null)
+                  OnItemWasCaught(getItem);
               }
               else
               {
@@ -914,6 +933,8 @@ namespace LavaLeak.Diplomata
                 else
                 {
                   quest.SetState(effect.questAndState.questStateId);
+                  if (OnQuestStateChage != null)
+                    OnQuestStateChage(quest);
                 }
               }
               else
@@ -927,6 +948,8 @@ namespace LavaLeak.Diplomata
               if (questToFinish != null)
               {
                 questToFinish.Finish();
+                if (OnQuestEnd != null)
+                  OnQuestEnd(questToFinish);
               }
               else
               {
@@ -939,6 +962,8 @@ namespace LavaLeak.Diplomata
               if (questToStart != null)
               {
                 questToStart.Initialize();
+                if (OnQuestStart != null)
+                  OnQuestStart(questToStart);
               }
               else
               {

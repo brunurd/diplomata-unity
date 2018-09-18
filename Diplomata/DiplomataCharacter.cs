@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Helpers;
@@ -11,6 +12,8 @@ namespace LavaLeak.Diplomata
   /// </summary>
   public class DiplomataCharacter : DiplomataTalkable
   {
+    public Action<Message> OnMessageChosen;
+
     /// <summary>
     /// Set the main talkable fields.
     /// </summary>
@@ -53,6 +56,8 @@ namespace LavaLeak.Diplomata
 
         if (currentMessage != null)
         {
+          if (OnMessageChosen != null)
+            OnMessageChosen(currentMessage);
           choiceMenu = false;
           choices = new List<Message>();
           character.influence = SetInfluence();
