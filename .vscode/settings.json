@@ -1,0 +1,15 @@
+{
+  "files.exclude": {
+    "*.meta": true,
+    "**/*.meta": true
+  },
+  "editor.tabSize": 2,
+  "editor.renderWhitespace": "all",
+  "files.insertFinalNewline": true,
+  "csharpfixformat.style.newline.atEnd": true,
+  "csharpfixformat.style.spaces.beforeParenthesis": false,
+  "csharpfixformat.style.spaces.insideEmptyBraces": false,
+  "csharpfixformat.style.spaces.insideEmptyBrackets": false,
+  "csharpfixformat.style.spaces.afterParenthesis": true,
+  "csharpfixformat.style.braces.onSameLine": false
+}

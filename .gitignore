@@ -13,8 +13,3 @@ README.md.meta
 !/[Dd]iplomata/DiplomataCharacter.cs.meta
 !/[Dd]iplomata/DiplomataInteractable.cs.meta
 !/[Dd]iplomata/DiplomataTalkable.cs.meta
-
-# IDE's
-.vs/
-.vscode/
-.idea/
