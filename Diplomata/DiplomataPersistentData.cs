@@ -41,7 +41,7 @@ namespace LavaLeak.Diplomata
     /// <param name="data">A <seealso cref="LavaLeak.Diplomata.DiplomataData"> reference.</param>
     public DiplomataData SetDiplomataData()
     {
-      var data = ScriptableObject.CreateInstance<DiplomataData>();
+      var data = new DiplomataData();
       data.ReadJSONs();
 
       data.options.SetData(options);

@@ -27,7 +27,7 @@ namespace LavaLeak.Diplomata
       {
         if (data == null)
         {
-          data = ScriptableObject.CreateInstance<DiplomataData>();
+          data = new DiplomataData();
           data.ReadJSONs();
         }
         return data;
@@ -43,7 +43,7 @@ namespace LavaLeak.Diplomata
     /// </summary>
     public static void PreLoadData()
     {
-      data = ScriptableObject.CreateInstance<DiplomataData>();
+      data = new DiplomataData();
       data.ReadJSONs();
     }
 
@@ -53,7 +53,7 @@ namespace LavaLeak.Diplomata
     /// <param name="load">Load static data after dispose?</param>
     public static void DisposeData(bool reload = true)
     {
-      data = ScriptableObject.CreateInstance<DiplomataData>();
+      data = new DiplomataData();
       if (reload) data.ReadJSONs();
     }
 
