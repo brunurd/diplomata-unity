@@ -54,7 +54,8 @@ namespace LavaLeak.Diplomata
     public static void DisposeData(bool reload = true)
     {
       data = new DiplomataData();
-      if (reload) data.ReadJSONs();
+      if (reload)
+        data.ReadJSONs();
     }
 
     /// <summary>
