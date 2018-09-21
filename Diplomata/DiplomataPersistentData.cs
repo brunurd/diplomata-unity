@@ -22,9 +22,9 @@ namespace LavaLeak.Diplomata
     public TalkLogPersistent[] talkLogs;
 
     /// <summary>
-    /// The constructor, it return all the persistent data from DiplomataData into the new object.
+    /// It get all the persistent data from DiplomataData.
     /// </summary>
-    public DiplomataPersistentData()
+    public void GetDiplomataData()
     {
       options = (OptionsPersistent) DiplomataManager.Data.options.GetData();
       characters = Data.GetArrayData<CharacterPersistent>(DiplomataManager.Data.characters.ToArray());
