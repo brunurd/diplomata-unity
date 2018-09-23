@@ -14,11 +14,12 @@ namespace LavaLeak.Diplomata.Editor.Helpers
 
       if (e != null)
       {
+#if UNITY_2017_2_OR_NEWER
         if (e.control)
         {
           Undo.ClearAll();
         }
-
+#endif
         if (e.control && e.keyCode == KeyCode.Z && obj.Equals(UndoHelper.obj))
         {
           value = (T) cachedValue;

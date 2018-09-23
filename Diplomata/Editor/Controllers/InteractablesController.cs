@@ -11,6 +11,7 @@ namespace LavaLeak.Diplomata.Editor.Controllers
     public static List<Interactable> GetInteractables(Options options)
     {
       JSONHelper.CreateFolder("Diplomata/Interactables/");
+      GlobalFlagsController.GetGlobalFlags(options.jsonPrettyPrint);
       return UpdateList(options);
     }
 

@@ -5,8 +5,8 @@ namespace LavaLeak.Diplomata.Dictionaries
   [Serializable]
   public class LanguageDictionary
   {
-    public string key;
-    public string value;
+    public string key = string.Empty;
+    public string value = string.Empty;
 
     public LanguageDictionary() {}
     public LanguageDictionary(string key, string value)
