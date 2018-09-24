@@ -200,7 +200,13 @@ namespace LavaLeak.Diplomata.Models
       for (var i = 0; i < questStates.Length; i++)
       {
         var name = questStates[i].Name;
-        var completed = (currentStateIndex > i && currentStateIndex > -1) ? true : false;
+        var completed = true;
+
+        if (!initialized)
+          completed = false;
+        else if (!finished)
+          completed = (currentStateIndex > i && currentStateIndex > -1) ? true : false;
+
         questLog.Add(name, completed);
       }
 
