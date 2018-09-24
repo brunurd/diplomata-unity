@@ -22,19 +22,28 @@ namespace LavaLeak.Diplomata.Models
     public LanguageDictionary[] description;
     public string imagePath = string.Empty;
     public string highlightImagePath = string.Empty;
+    public string pressedImagePath = string.Empty;
+    public string disabledImagePath = string.Empty;
 
     [SerializeField]
     private string category = string.Empty;
 
     [NonSerialized]
     public Texture2D image;
-    private Sprite sprite;
 
     [NonSerialized]
     public Texture2D highlightImage;
 
     [NonSerialized]
-    public Sprite highlightSprite;
+    public Texture2D pressedImage;
+
+    [NonSerialized]
+    public Texture2D disabledImage;
+
+    private Sprite sprite;
+    private Sprite highlightSprite;
+    private Sprite pressedSprite;
+    private Sprite disabledSprite;
 
     [NonSerialized]
     public bool have;
@@ -68,6 +77,45 @@ namespace LavaLeak.Diplomata.Models
       {
         SetImageAndSprite();
         return sprite;
+      }
+    }
+
+    /// <summary>
+    /// Property to get sprite to highlighted, after it's setted.
+    /// </summary>
+    /// <value>Sprite from highlited image.</value>
+    public Sprite HighlightedSprite
+    {
+      get
+      {
+        SetHighlightedImageAndSprite();
+        return highlightSprite;
+      }
+    }
+
+    /// <summary>
+    /// Property to get sprite to pressed, after it's setted.
+    /// </summary>
+    /// <value>Sprite from pressed image.</value>
+    public Sprite PressedSprite
+    {
+      get
+      {
+        SetPressedImageAndSprite();
+        return pressedSprite;
+      }
+    }
+
+    /// <summary>
+    /// Property to get sprite to disabled, after it's setted.
+    /// </summary>
+    /// <value>Sprite from disabled image.</value>
+    public Sprite DisabledSprite
+    {
+      get
+      {
+        SetDisabledImageAndSprite();
+        return disabledSprite;
       }
     }
 
@@ -124,7 +172,6 @@ namespace LavaLeak.Diplomata.Models
       if (image == null || sprite == null)
       {
         image = (Texture2D) Resources.Load(imagePath);
-        highlightImage = (Texture2D) Resources.Load(highlightImagePath);
 
         if (image != null)
         {
@@ -134,12 +181,63 @@ namespace LavaLeak.Diplomata.Models
             new Vector2(0.5f, 0.5f)
           );
         }
+      }
+    }
+
+    /// <summary>
+    /// Set image and sprite from the path for highlight.
+    /// </summary>
+    public void SetHighlightedImageAndSprite()
+    {
+      if (highlightImage == null || highlightSprite == null)
+      {
+        highlightImage = (Texture2D) Resources.Load(highlightImagePath);
 
         if (highlightImage != null)
         {
           highlightSprite = Sprite.Create(
             highlightImage,
             new Rect(0, 0, highlightImage.width, highlightImage.height),
+            new Vector2(0.5f, 0.5f)
+          );
+        }
+      }
+    }
+
+    /// <summary>
+    /// Set image and sprite from the path for pressed.
+    /// </summary>
+    public void SetPressedImageAndSprite()
+    {
+      if (pressedImage == null || pressedSprite == null)
+      {
+        pressedImage = (Texture2D) Resources.Load(pressedImagePath);
+
+        if (pressedImage != null)
+        {
+          pressedSprite = Sprite.Create(
+            pressedImage,
+            new Rect(0, 0, pressedImage.width, pressedImage.height),
+            new Vector2(0.5f, 0.5f)
+          );
+        }
+      }
+    }
+
+    /// <summary>
+    /// Set image and sprite from the path for disabled.
+    /// </summary>
+    public void SetDisabledImageAndSprite()
+    {
+      if (disabledImage == null || disabledSprite == null)
+      {
+        disabledImage = (Texture2D) Resources.Load(disabledImagePath);
+
+        if (disabledImage != null)
+        {
+          disabledSprite = Sprite.Create(
+            disabledImage,
+            new Rect(0, 0, disabledImage.width, disabledImage.height),
             new Vector2(0.5f, 0.5f)
           );
         }

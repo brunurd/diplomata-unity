@@ -26,17 +26,14 @@ TextureImporter:
     21300038: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_11
     21300040: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_12
     21300042: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_13
-  externalObjects: {}
-  serializedVersion: 4
+  serializedVersion: 2
   mipmaps:
     mipMapMode: 0
     enableMipMap: 1
-    sRGBTexture: 1
     linearTexture: 0
+    correctGamma: 0
     fadeOut: 0
     borderMipMap: 0
-    mipMapsPreserveCoverage: 0
-    alphaTestReferenceValue: 0.5
     mipMapFadeDistanceStart: 1
     mipMapFadeDistanceEnd: 3
   bumpmap:
@@ -46,22 +43,23 @@ TextureImporter:
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
-  generateCubemap: 6
+  generateCubemap: 0
   cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 1024
+  maxTextureSize: 512
   textureSettings:
-    serializedVersion: 2
     filterMode: 1
     aniso: 16
     mipBias: -1
-    wrapU: 1
-    wrapV: 1
-    wrapW: 1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
+  rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
@@ -69,29 +67,12 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
-  alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: -1
   textureType: 8
-  textureShape: 1
-  maxTextureSizeSet: 0
-  compressionQualitySet: 0
-  textureFormatSet: 0
-  platformSettings:
-  - buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
+  buildTargetSettings: []
   spriteSheet:
-    serializedVersion: 2
     sprites:
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_0
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_0
       rect:
         serializedVersion: 2
         x: 0
@@ -101,11 +82,28 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 37, y: 35, z: 34, w: 31}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_1
+      outline:
+      - - {x: 341, y: -125}
+        - {x: 341, y: -22}
+        - {x: 340, y: -19}
+        - {x: 337, y: -12}
+        - {x: 329, y: -3}
+        - {x: 320, y: 0}
+        - {x: 22, y: 0}
+        - {x: 19, y: -1}
+        - {x: 12, y: -4}
+        - {x: 3, y: -12}
+        - {x: 0, y: -21}
+        - {x: 0, y: -124}
+        - {x: 1, y: -127}
+        - {x: 4, y: -134}
+        - {x: 12, y: -143}
+        - {x: 21, y: -146}
+        - {x: 319, y: -146}
+        - {x: 322, y: -145}
+        - {x: 329, y: -142}
+        - {x: 338, y: -134}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_1
       rect:
         serializedVersion: 2
         x: 351
@@ -115,11 +113,15 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 23, y: 27, z: 21, w: 28}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_2
+      outline:
+      - - {x: 8, y: 0}
+        - {x: 0, y: -8}
+        - {x: 0, y: -116}
+        - {x: 6, y: -124}
+        - {x: 154, y: -124}
+        - {x: 154, y: -1}
+        - {x: 150, y: 0}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_2
       rect:
         serializedVersion: 2
         x: 0
@@ -129,11 +131,18 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 28, y: 30, z: 28, w: 26}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_3
+      outline:
+      - - {x: 336, y: 0}
+        - {x: 5, y: 0}
+        - {x: 0, y: -6}
+        - {x: 0, y: -73}
+        - {x: 6, y: -76}
+        - {x: 12, y: -78}
+        - {x: 327, y: -78}
+        - {x: 333, y: -77}
+        - {x: 339, y: -68}
+        - {x: 339, y: -11}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_3
       rect:
         serializedVersion: 2
         x: 351
@@ -143,11 +152,15 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 26, y: 28, z: 24, w: 29}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_4
+      outline:
+      - - {x: 5, y: 0}
+        - {x: 0, y: -2}
+        - {x: 0, y: -124}
+        - {x: 144, y: -124}
+        - {x: 154, y: -114}
+        - {x: 154, y: -6}
+        - {x: 147, y: 0}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_4
       rect:
         serializedVersion: 2
         x: 0
@@ -157,11 +170,23 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 24, y: 26, z: 22, w: 22}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_5
+      outline:
+      - - {x: 324, y: -113}
+        - {x: 324, y: -12}
+        - {x: 323, y: -9}
+        - {x: 316, y: -2}
+        - {x: 311, y: 0}
+        - {x: 13, y: 0}
+        - {x: 8, y: -2}
+        - {x: 1, y: -9}
+        - {x: 0, y: -12}
+        - {x: 0, y: -116}
+        - {x: 13, y: -130}
+        - {x: 308, y: -130}
+        - {x: 310, y: -129}
+        - {x: 317, y: -123}
+        - {x: 323, y: -116}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_5
       rect:
         serializedVersion: 2
         x: 351
@@ -171,11 +196,15 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 26, y: 29, z: 27, w: 30}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_6
+      outline:
+      - - {x: 8, y: 0}
+        - {x: 0, y: -8}
+        - {x: 0, y: -116}
+        - {x: 6, y: -124}
+        - {x: 154, y: -124}
+        - {x: 154, y: -1}
+        - {x: 150, y: 0}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_6
       rect:
         serializedVersion: 2
         x: 0
@@ -185,11 +214,16 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_7
+      outline:
+      - - {x: 15, y: 0}
+        - {x: 0, y: -5}
+        - {x: 0, y: -104}
+        - {x: 22, y: -132}
+        - {x: 103, y: -132}
+        - {x: 132, y: -110}
+        - {x: 132, y: -23}
+        - {x: 124, y: 0}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_7
       rect:
         serializedVersion: 2
         x: 144
@@ -199,11 +233,14 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 29, y: 31, z: 27, w: 27}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_8
+      outline:
+      - - {x: 5, y: 0}
+        - {x: 0, y: -5}
+        - {x: 0, y: -74}
+        - {x: 6, y: -80}
+        - {x: 159, y: -80}
+        - {x: 159, y: 0}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_8
       rect:
         serializedVersion: 2
         x: 336
@@ -213,11 +250,16 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_9
+      outline:
+      - - {x: 9, y: -5}
+        - {x: 7, y: -7}
+        - {x: 7, y: -41}
+        - {x: 9, y: -43}
+        - {x: 12, y: -43}
+        - {x: 31, y: -26}
+        - {x: 31, y: -21}
+        - {x: 12, y: -5}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_9
       rect:
         serializedVersion: 2
         x: 377
@@ -227,11 +269,14 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_10
+      outline:
+      - - {x: 0, y: 0}
+        - {x: 0, y: -48}
+        - {x: 21, y: -48}
+        - {x: 37, y: -33}
+        - {x: 37, y: -14}
+        - {x: 21, y: 0}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_10
       rect:
         serializedVersion: 2
         x: 418
@@ -241,11 +286,13 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_11
+      outline:
+      - - {x: 10, y: -6}
+        - {x: 6, y: -7}
+        - {x: 6, y: -37}
+        - {x: 37, y: -37}
+        - {x: 37, y: -6}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_11
       rect:
         serializedVersion: 2
         x: 465
@@ -255,11 +302,13 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_12
+      outline:
+      - - {x: 0, y: 0}
+        - {x: 0, y: -43}
+        - {x: 42, y: -43}
+        - {x: 43, y: -42}
+        - {x: 43, y: 0}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_12
       rect:
         serializedVersion: 2
         x: 342
@@ -269,11 +318,15 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_13
+      outline:
+      - - {x: 7, y: -5}
+        - {x: 7, y: -41}
+        - {x: 8, y: -43}
+        - {x: 36, y: -43}
+        - {x: 54, y: -35}
+        - {x: 54, y: -12}
+        - {x: 49, y: -5}
+    - name: DIPLOMATA-UI_CC-BY-ND_by-Bruno-Araujo_13
       rect:
         serializedVersion: 2
         x: 405
@@ -283,11 +336,14 @@ TextureImporter:
       alignment: 1
       pivot: {x: 0, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
+      outline:
+      - - {x: 0, y: 0}
+        - {x: 0, y: -48}
+        - {x: 58, y: -48}
+        - {x: 60, y: -40}
+        - {x: 60, y: -8}
+        - {x: 49, y: 0}
     outline: []
-    physicsShape: []
   spritePackingTag: 
   userData: 
   assetBundleName: 

@@ -13,7 +13,7 @@ namespace LavaLeak.Diplomata
   /// The Data storage class, here are all the Diplomata Data fields.
   /// </summary>
   [Serializable]
-  public class DiplomataData : ScriptableObject
+  public class DiplomataData
   {
     public Options options = new Options();
     public List<Character> characters = new List<Character>();

@@ -11,6 +11,7 @@ namespace LavaLeak.Diplomata.Editor.Controllers
     public static List<Character> GetCharacters(Options options)
     {
       JSONHelper.CreateFolder("Diplomata/Characters/");
+      GlobalFlagsController.GetGlobalFlags(options.jsonPrettyPrint);
       return UpdateList(options);
     }
 

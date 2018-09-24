@@ -125,6 +125,18 @@ namespace LavaLeak.Diplomata.Editor.Windows
         Debug.LogWarning("Cannot find the file \"" + item.highlightImagePath + "\" in Resources folder.");
       }
 
+      item.pressedImage = (Texture2D) Resources.Load(item.pressedImagePath);
+      // if (item.pressedImage == null && item.pressedImagePath != string.Empty)
+      // {
+      //   Debug.LogWarning("Cannot find the file \"" + item.pressedImagePath + "\" in Resources folder.");
+      // }
+
+      item.disabledImage = (Texture2D) Resources.Load(item.disabledImagePath);
+      // if (item.disabledImage == null && item.disabledImagePath != string.Empty)
+      // {
+      //   Debug.LogWarning("Cannot find the file \"" + item.disabledImagePath + "\" in Resources folder.");
+      // }
+
       GUILayout.Label("Image: ");
       EditorGUI.BeginChangeCheck();
       item.image = (Texture2D) EditorGUILayout.ObjectField(item.image, typeof(Texture2D), false);
@@ -133,16 +145,32 @@ namespace LavaLeak.Diplomata.Editor.Windows
         item.imagePath = FilenameExtract(item.image);
       }
 
-      GUILayout.Label("Highlight Image: ");
+      GUILayout.Label("Highlighted Image: ");
       EditorGUI.BeginChangeCheck();
       item.highlightImage = (Texture2D) EditorGUILayout.ObjectField(item.highlightImage, typeof(Texture2D), false);
       if (EditorGUI.EndChangeCheck())
       {
         item.highlightImagePath = FilenameExtract(item.highlightImage);
       }
+
+      GUILayout.Label("Pressed Image: ");
+      EditorGUI.BeginChangeCheck();
+      item.pressedImage = (Texture2D) EditorGUILayout.ObjectField(item.pressedImage, typeof(Texture2D), false);
+      if (EditorGUI.EndChangeCheck())
+      {
+        item.pressedImagePath = FilenameExtract(item.pressedImage);
+      }
+
+      GUILayout.Label("Disabled Image: ");
+      EditorGUI.BeginChangeCheck();
+      item.disabledImage = (Texture2D) EditorGUILayout.ObjectField(item.disabledImage, typeof(Texture2D), false);
+      if (EditorGUI.EndChangeCheck())
+      {
+        item.disabledImagePath = FilenameExtract(item.disabledImage);
+      }
       EditorGUILayout.Separator();
 
-      EditorGUILayout.HelpBox("\nMake sure to store this texture in Resources folder.\n", MessageType.Info);
+      EditorGUILayout.HelpBox("\nMake sure to store all textures in Resources folder.\n", MessageType.Info);
       EditorGUILayout.Separator();
 
       if (GUILayout.Button("Save and Close", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))

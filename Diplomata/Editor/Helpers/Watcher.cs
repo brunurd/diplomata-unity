@@ -8,7 +8,7 @@ namespace LavaLeak.Diplomata.Editor.Helpers
   [ExecuteInEditMode]
   public class Watcher : ScriptableObject
   {
-    private List<bool> flags;
+    private List<bool> flags = new List<bool>();
     private Action action;
 
     public void Set(Action action, params bool[] flags)
