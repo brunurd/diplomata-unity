@@ -13,7 +13,6 @@ namespace LavaLeak.Diplomata
   /// </summary>
   [AddComponentMenu("")]
   [Serializable]
-  [ExecuteInEditMode]
   [DisallowMultipleComponent]
   public class DiplomataTalkable : MonoBehaviour
   {
@@ -30,11 +29,7 @@ namespace LavaLeak.Diplomata
 
     // Events.
     public Action<Context> OnContextEnd;
-    public Action<Message> OnMessageEnd;
-    public Action<Item> OnItemWasCaught;
-    public Action<Quest> OnQuestStart;
-    public Action<Quest> OnQuestStateChage;
-    public Action<Quest> OnQuestEnd; 
+    public Action<Message> OnMessageEnd; 
 
     /// <summary>
     /// Set if the talkable is on scene.
@@ -867,8 +862,11 @@ namespace LavaLeak.Diplomata
               if (getItem != null)
               {
                 getItem.have = true;
-                if (OnItemWasCaught != null)
-                  OnItemWasCaught(getItem);
+                
+                DiplomataManager.EventController.SendItemWasCaught(getItem);
+                
+//                if (OnItemWasCaught != null)
+//                  OnItemWasCaught(getItem);
               }
               else
               {
@@ -933,8 +931,9 @@ namespace LavaLeak.Diplomata
                 else
                 {
                   quest.SetState(effect.questAndState.questStateId);
-                  if (OnQuestStateChage != null)
-                    OnQuestStateChage(quest);
+                  DiplomataManager.EventController.SendQuestStateChange(quest);
+//                  if (OnQuestStateChage != null)
+//                    OnQuestStateChage(quest);
                 }
               }
               else
@@ -948,8 +947,9 @@ namespace LavaLeak.Diplomata
               if (questToFinish != null)
               {
                 questToFinish.Finish();
-                if (OnQuestEnd != null)
-                  OnQuestEnd(questToFinish);
+                DiplomataManager.EventController.SendQuestEnd(questToFinish);
+//                if (OnQuestEnd != null)
+//                  OnQuestEnd(questToFinish);
               }
               else
               {
@@ -961,9 +961,12 @@ namespace LavaLeak.Diplomata
               var questToStart = Quest.Find(DiplomataManager.Data.quests, effect.questAndState.questId);
               if (questToStart != null)
               {
+                if (questToStart.Initialized)
+                  break;
+                
                 questToStart.Initialize();
-                if (OnQuestStart != null)
-                  OnQuestStart(questToStart);
+                
+                DiplomataManager.EventController.SendQuestStart(questToStart);
               }
               else
               {

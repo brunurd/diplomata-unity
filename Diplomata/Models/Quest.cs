@@ -21,6 +21,12 @@ namespace LavaLeak.Diplomata.Models
     public string Name;
     public QuestState[] questStates;
     private string currentStateId;
+    
+    public bool Initialized
+    {
+      get { return initialized; }
+    }
+    
     private bool initialized;
     private bool finished;
 

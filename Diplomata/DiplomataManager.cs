@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
@@ -6,17 +7,64 @@ using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 
 namespace LavaLeak.Diplomata
-{
+{  
+  public class DiplomataEventController
+  {
+    public event Action<Context> OnContextEnd;
+    public event Action<Message> OnMessageEnd;
+    public event Action<Item> OnItemWasCaught;
+    public event Action<Quest> OnQuestStart;
+    public event Action<Quest> OnQuestStateChage;
+    public event Action<Quest> OnQuestEnd;
+
+    public void SendQuestStart(Quest questStart)
+    {
+      if (OnQuestStart != null)
+        OnQuestStart(questStart);
+    }
+
+    public void SendQuestStateChange(Quest questStateChange)
+    {
+      if (OnQuestStateChage != null)
+        OnQuestStateChage(questStateChange);
+    }
+
+    public void SendQuestEnd(Quest questEnd)
+    {
+      if (OnQuestEnd != null)
+        OnQuestEnd(questEnd);
+    }
+
+    public void SendItemWasCaught(Item itemWasCaught)
+    {
+      if (OnItemWasCaught != null)
+        OnItemWasCaught(itemWasCaught);
+    }
+
+    public void SendContextEnd(Context contextEnd)
+    {
+      if (OnContextEnd != null)
+        OnContextEnd(contextEnd);
+    }
+
+    public void SendMessageEnd(Message messageEnd)
+    {
+      if (OnMessageEnd != null)
+        OnMessageEnd(messageEnd);
+    }
+  }
+  
   /// <summary>
   /// The class to manage all Diplomata project data.
   /// </summary>
-  [AddComponentMenu("")]
   [ExecuteInEditMode]
   public static class DiplomataManager
   {
+    public static LavaLeak.Diplomata.DiplomataEventController EventController = new DiplomataEventController();
+    
     private static DiplomataData data;
     public static bool OnATalk;
-
+    
     /// <summary>
     /// The Diplomata main data, all data come from here.
     /// </summary>
