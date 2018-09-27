@@ -31,6 +31,11 @@ namespace LavaLeak.Diplomata
     public Action<Context> OnContextEnd;
     public Action<Message> OnMessageEnd; 
 
+    public event Action<Item> OnItemWasCaughtLocal;
+    public event Action<Quest> OnQuestStartLocal;
+    public event Action<Quest> OnQuestStateChangeLocal;
+    public event Action<Quest> OnQuestEndLocal;
+    
     /// <summary>
     /// Set if the talkable is on scene.
     /// </summary>
@@ -864,9 +869,9 @@ namespace LavaLeak.Diplomata
                 getItem.have = true;
                 
                 DiplomataManager.EventController.SendItemWasCaught(getItem);
-                
-//                if (OnItemWasCaught != null)
-//                  OnItemWasCaught(getItem);
+
+                if (OnItemWasCaughtLocal != null)
+                  OnItemWasCaughtLocal(getItem);
               }
               else
               {
@@ -932,8 +937,9 @@ namespace LavaLeak.Diplomata
                 {
                   quest.SetState(effect.questAndState.questStateId);
                   DiplomataManager.EventController.SendQuestStateChange(quest);
-//                  if (OnQuestStateChage != null)
-//                    OnQuestStateChage(quest);
+                  
+                  if (OnQuestStateChangeLocal != null)
+                    OnQuestStateChangeLocal(quest);
                 }
               }
               else
@@ -948,8 +954,9 @@ namespace LavaLeak.Diplomata
               {
                 questToFinish.Finish();
                 DiplomataManager.EventController.SendQuestEnd(questToFinish);
-//                if (OnQuestEnd != null)
-//                  OnQuestEnd(questToFinish);
+
+                if (OnQuestEndLocal != null)
+                  OnQuestEndLocal(questToFinish);
               }
               else
               {
@@ -967,6 +974,9 @@ namespace LavaLeak.Diplomata
                 questToStart.Initialize();
                 
                 DiplomataManager.EventController.SendQuestStart(questToStart);
+
+                if (OnQuestStartLocal != null)
+                  OnQuestStartLocal(questToStart);
               }
               else
               {
