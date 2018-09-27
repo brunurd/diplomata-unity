@@ -97,7 +97,21 @@ namespace LavaLeak.Diplomata.Editor.Windows
             GUILayout.BeginHorizontal();
             var index = ArrayHelper.GetIndex(quest.questStates, questState);
             GUILayout.Label(string.Format("{0}.", (index + 1).ToString()), GUILayout.Width(25));
-            questState.Name = EditorGUILayout.TextField(questState.Name);
+
+            //TODO(Celso): Added new editor layout to show what is name and short description and what is long
+            //description
+            
+            GUILayout.BeginVertical();
+            
+            EditorGUILayout.SelectableLabel("Unique ID: " + questState.GetId());
+            
+            questState.ShortDescription = EditorGUILayout.TextField("Short Description", questState.ShortDescription);
+            questState.LongDescription = EditorGUILayout.TextField("Long Description", questState.LongDescription);
+            
+            GUILayout.Space(10f);
+            
+            GUILayout.EndVertical();
+            
             if (GUILayout.Button("Up", GUILayout.Width(40), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
             {
               if (index > 0)
@@ -106,6 +120,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 QuestsController.Save(quests, options.jsonPrettyPrint);
               }
             }
+            
             if (GUILayout.Button("Down", GUILayout.Width(50), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
             {
               if (index < quest.questStates.Length - 1)
@@ -114,6 +129,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 QuestsController.Save(quests, options.jsonPrettyPrint);
               }
             }
+            
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
             {
               if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
@@ -122,6 +138,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 QuestsController.Save(quests, options.jsonPrettyPrint);
               }
             }
+            
             GUILayout.EndHorizontal();
           }
 
@@ -130,7 +147,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
           GUILayout.BeginHorizontal();
           if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
           {
-            quest.AddState("New state.");
+            quest.AddState("Shot Description", "Long Description");
             Save();
           }
           GUILayout.EndHorizontal();

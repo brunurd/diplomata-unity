@@ -374,7 +374,7 @@ namespace LavaLeak.Diplomata
                               Debug.Log(string.Format("Invalid quest state id: {0}.", condition.questAndState.questStateId));
                               condition.proceed = false;
                             }
-                            else if (currentState == targetState.Name)
+                            else if (currentState == targetState.ShortDescription)
                             {
                               condition.proceed = true;
                             }

@@ -1704,18 +1704,18 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   // Get the quest state name.
                   quest = Quest.Find(quests, condition.questAndState.questId);
                   var questState = quest != null ? quest.GetState(condition.questAndState.questStateId) : null;
-                  var questStateName = questState != null ? questState.Name : string.Empty;
+                  var questStateName = questState != null ? questState.ShortDescription : string.Empty;
 
                   // Quest state Popup with a change checker.
                   if (quest != null)
                   {
                     EditorGUI.BeginChangeCheck();
-                    var questStateNames = QuestState.GetNames(quest.questStates);
+                    var questStateNames = QuestState.GetShortDescriptions(quest.questStates);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
                     questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
-                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.questStates), questStateName);
+                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetShortDescriptions(quest.questStates), questStateName);
                       if (questStateIndex > -1)
                         condition.questAndState.questStateId = QuestState.GetIDs(quest.questStates) [questStateIndex];
                     }
@@ -2090,18 +2090,18 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   // Get the quest state name.
                   quest = Quest.Find(quests, effect.questAndState.questId);
                   var questState = quest != null ? quest.GetState(effect.questAndState.questStateId) : null;
-                  var questStateName = questState != null ? questState.Name : string.Empty;
+                  var questStateName = questState != null ? questState.ShortDescription : string.Empty;
 
                   // Quest state Popup with a change checker.
                   if (quest != null)
                   {
                     EditorGUI.BeginChangeCheck();
-                    var questStateNames = QuestState.GetNames(quest.questStates);
+                    var questStateNames = QuestState.GetShortDescriptions(quest.questStates);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
                     questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
-                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetNames(quest.questStates), questStateName);
+                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetShortDescriptions(quest.questStates), questStateName);
                       if (questStateIndex > -1)
                         effect.questAndState.questStateId = QuestState.GetIDs(quest.questStates) [questStateIndex];
                     }

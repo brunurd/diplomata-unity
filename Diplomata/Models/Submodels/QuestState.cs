@@ -9,19 +9,23 @@ namespace LavaLeak.Diplomata.Models.Submodels
   [Serializable]
   public class QuestState
   {
-    [SerializeField]
+    [SerializeField] 
     private string uniqueId;
 
-    public string Name;
+    //TODO(Celso): Need to add this to use the language system
+    
+    public string ShortDescription;
+    public string LongDescription;
 
     /// <summary>
     /// The state constructor.
     /// </summary>
     /// <param name="name">The name of the state.</param>
-    public QuestState(string name)
+    public QuestState(string shortDescription, string longDescription)
     {
       uniqueId = Guid.NewGuid().ToString();
-      Name = name;
+      ShortDescription = shortDescription;
+      LongDescription = longDescription;
     }
 
     /// <summary>
@@ -34,23 +38,43 @@ namespace LavaLeak.Diplomata.Models.Submodels
     }
 
     /// <summary>
-    /// Get a list of the names of the quests states of a array.
+    /// Get a list of the short description of the quests states of a array.
     /// </summary>
     /// <param name="questsStates">The quests states array.</param>
-    /// <returns>A array of names as strings.</returns>
-    public static string[] GetNames(QuestState[] questsStates)
+    /// <returns>A array of short description as strings.</returns>
+    public static string[] GetShortDescriptions(QuestState[] questsStates)
     {
       string[] questsReturn = questsStates == null ? new string[0] : new string[questsStates.Length];
       if (questsStates != null)
       {
         for (var i = 0; i < questsStates.Length; i++)
         {
-          questsReturn[i] = questsStates[i].Name;
+          questsReturn[i] = questsStates[i].ShortDescription;
         }
       }
+
       return questsReturn;
     }
 
+    /// <summary>
+    /// Get a list of the long descriptions of the quests states of a array.
+    /// </summary>
+    /// <param name="questsStates">The quests states array.</param>
+    /// <returns>A array of long description as strings.</returns>
+    public static string[] GetLongDescriptions(QuestState[] questsStates)
+    {
+      string[] questsReturn = questsStates == null ? new string[0] : new string[questsStates.Length];
+      if (questsStates != null)
+      {
+        for (int i = 0; i < questsStates.Length; i++)
+        {
+          questsReturn[i] = questsStates[i].LongDescription;
+        }
+      }
+
+      return questsReturn;
+    }
+    
     /// <summary>
     /// Get a list of the ids of the quests states of a array.
     /// </summary>
@@ -66,6 +90,7 @@ namespace LavaLeak.Diplomata.Models.Submodels
           questsReturn[i] = questsStates[i].GetId();
         }
       }
+
       return questsReturn;
     }
   }
