@@ -245,7 +245,7 @@ namespace LavaLeak.Diplomata
       if (language == "") language = Data.options.languages[0].name;
       return Item.Find(Data.inventory.items, name, language);
     }
-
+   
     /// <summary>
     /// Get a item by it's id.
     /// </summary>
@@ -256,6 +256,24 @@ namespace LavaLeak.Diplomata
       return Item.Find(Data.inventory.items, itemId);
     }
 
+    /// <summary>
+    /// Mark a item as have by it's name.
+    /// </summary>
+    /// <param name="name">The item name.</param>
+    /// <param name="language">The language of this name, if empty uses the options first language.</param>
+    /// <returns>The <seealso cref="Diplomata.Models.Item"> object or null.</returns>
+    public static Item GiveItem(string name, string language = "")
+    {
+      if (language == "") language = Data.options.languages[0].name;
+      var itemToGive = Item.Find(Data.inventory.items, name, language);
+
+      if (itemToGive == null)
+        return null;
+      
+      itemToGive.MarkItemAsHave();
+      return itemToGive;
+    }
+    
     /// <summary>
     /// Return all characters persistent data.
     /// </summary>

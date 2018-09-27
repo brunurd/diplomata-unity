@@ -261,6 +261,14 @@ namespace LavaLeak.Diplomata.Models
     }
 
     /// <summary>
+    /// Mark a item as have.
+    /// </summary>
+    public void MarkItemAsHave()
+    {
+      have = true;
+    }
+    
+    /// <summary>
     /// Set the uniqueId if it is empty or null.
     /// </summary>
     /// <returns>Return true if it change or false if don't.</returns>
