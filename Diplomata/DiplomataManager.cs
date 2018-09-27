@@ -270,6 +270,9 @@ namespace LavaLeak.Diplomata
       if (itemToGive == null)
         return null;
       
+      //Trigger a ItemWasCaught globally.
+      EventController.SendItemWasCaught(itemToGive);
+      
       itemToGive.MarkItemAsHave();
       return itemToGive;
     }
