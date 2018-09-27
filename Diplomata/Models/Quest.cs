@@ -134,6 +134,12 @@ namespace LavaLeak.Diplomata.Models
       else return null;
     }
 
+    public string GetCurrentStateID()
+    {
+      var index = GetStateIndex();
+      return index != -1 ? questStates[index].GetId() : null;
+    }
+    
     /// <summary>
     /// Get a state from id.
     /// </summary>
