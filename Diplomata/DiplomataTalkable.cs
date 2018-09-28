@@ -28,9 +28,8 @@ namespace LavaLeak.Diplomata
     private string lastUniqueId;
 
     // Events.
-    public Action<Context> OnContextEnd;
-    public Action<Message> OnMessageEnd; 
-
+    public event Action<Context> OnContextEnd;
+    public event Action<Message> OnMessageEnd; 
     public event Action<Item> OnItemWasCaughtLocal;
     public event Action<Quest> OnQuestStartLocal;
     public event Action<Quest> OnQuestStateChangeLocal;
