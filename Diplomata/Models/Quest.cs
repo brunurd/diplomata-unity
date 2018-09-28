@@ -36,7 +36,7 @@ namespace LavaLeak.Diplomata.Models
     public Quest()
     {
       uniqueId = Guid.NewGuid().ToString();
-      questStates = new QuestState[] { new QuestState("In progress.", "Long Description.") };
+      questStates = new QuestState[] { new QuestState("Short description.", "Long description.") };
     }
 
     /// <summary>
