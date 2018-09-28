@@ -13,11 +13,10 @@ namespace LavaLeak.Diplomata
   [ExecuteInEditMode]
   public static class DiplomataManager
   {
-    public static LavaLeak.Diplomata.DiplomataEventController EventController = new DiplomataEventController();
-    
     private static DiplomataData data;
+    public static DiplomataEventController EventController = new DiplomataEventController();
     public static bool OnATalk;
-    
+   
     /// <summary>
     /// The Diplomata main data, all data come from here.
     /// </summary>
