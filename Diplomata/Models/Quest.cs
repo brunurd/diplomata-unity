@@ -21,6 +21,12 @@ namespace LavaLeak.Diplomata.Models
     public string Name;
     public QuestState[] questStates;
     private string currentStateId;
+    
+    public bool Initialized
+    {
+      get { return initialized; }
+    }
+    
     private bool initialized;
     private bool finished;
 
@@ -30,7 +36,7 @@ namespace LavaLeak.Diplomata.Models
     public Quest()
     {
       uniqueId = Guid.NewGuid().ToString();
-      questStates = new QuestState[] { new QuestState("In progress.") };
+      questStates = new QuestState[] { new QuestState("Short description.", "Long description.") };
     }
 
     /// <summary>
@@ -64,9 +70,9 @@ namespace LavaLeak.Diplomata.Models
     /// Add a state to the states list.
     /// </summary>
     /// <param name="questState">The state name.</param>
-    public void AddState(string questState)
+    public void AddState(string questState, string longDescription)
     {
-      if (!finished) questStates = ArrayHelper.Add(questStates, new QuestState(questState));
+      if (!finished) questStates = ArrayHelper.Add(questStates, new QuestState(questState, longDescription));
     }
 
     /// <summary>
@@ -124,10 +130,16 @@ namespace LavaLeak.Diplomata.Models
     public string GetCurrentState()
     {
       int index = GetStateIndex();
-      if (index != -1) return questStates[index].Name;
+      if (index != -1) return questStates[index].ShortDescription;
       else return null;
     }
 
+    public string GetCurrentStateID()
+    {
+      var index = GetStateIndex();
+      return index != -1 ? questStates[index].GetId() : null;
+    }
+    
     /// <summary>
     /// Get a state from id.
     /// </summary>
@@ -199,7 +211,7 @@ namespace LavaLeak.Diplomata.Models
 
       for (var i = 0; i < questStates.Length; i++)
       {
-        var name = questStates[i].Name;
+        var name = questStates[i].ShortDescription;
         var completed = true;
 
         if (!initialized)

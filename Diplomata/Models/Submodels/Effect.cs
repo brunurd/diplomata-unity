@@ -119,7 +119,7 @@ namespace LavaLeak.Diplomata.Models.Submodels
       var questState = quest != null ? quest.GetState(questAndState.questStateId) : null;
 
       var questName = quest != null ? quest.Name : string.Empty;
-      var questStateName = questState != null ? questState.Name : string.Empty;
+      var questStateName = questState != null ? questState.ShortDescription : string.Empty;
 
       return string.Format("Set quest \"{0}\" to: {1}", questName, questStateName);
     }
