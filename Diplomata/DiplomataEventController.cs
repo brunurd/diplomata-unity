@@ -2,9 +2,7 @@ using System;
 using LavaLeak.Diplomata.Models;
 
 namespace LavaLeak.Diplomata
-{
-  //TODO(Celso): Make Item also trigger the OnItemWasCaught
-  
+{ 
   /// <summary>
   /// Single source of Truth for all events that are occuring
   /// on diplomatas entities.
