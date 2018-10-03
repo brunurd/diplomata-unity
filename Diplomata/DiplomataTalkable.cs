@@ -73,7 +73,13 @@ namespace LavaLeak.Diplomata
     /// </summary>
     public void StartTalk()
     {
-      if (talkable != null && IsTalking == false && DiplomataManager.OnATalk == false)
+      if (IsTalking || DiplomataManager.OnATalk)
+      {
+        Debug.LogWarning("This talk cannot start, because the player is already in one.");
+        return;
+      }
+
+      if (talkable != null)
       {
         IsTalking = true;
         DiplomataManager.OnATalk = true;
