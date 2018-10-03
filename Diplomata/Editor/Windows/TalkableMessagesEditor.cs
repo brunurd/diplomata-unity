@@ -82,7 +82,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       TalkableMessagesEditor window =
         (TalkableMessagesEditor) GetWindow(typeof(TalkableMessagesEditor), false, "Messages", true);
-      window.minSize = new Vector2(1100, 300);
+      window.minSize = new Vector2(370, 300);
 
       TalkableMessagesEditor.state = state;
 
@@ -700,47 +700,53 @@ namespace LavaLeak.Diplomata.Editor.Windows
               EditorGUILayout.Separator();
 
               #region Attached Content
-
-              foreach (var attachedContent in currentMessage.attachedContent)
+              if (!currentMessage.isAChoice)
               {
-                var currentAttachedContent =
-                  DictionariesHelper.ContainsKey(attachedContent.content, options.currentLanguage);
+                if (currentMessage.attachedContent == null)
+                  currentMessage.attachedContent = new AttachedContent[0];
 
-                if (currentAttachedContent == null)
+                foreach (var attachedContent in currentMessage.attachedContent)
                 {
-                  attachedContent.content = ArrayHelper.Add(attachedContent.content,
-                    new LanguageDictionary(options.currentLanguage, "[ Message content here ]"));
-                  currentAttachedContent =
+                  var currentAttachedContent =
                     DictionariesHelper.ContainsKey(attachedContent.content, options.currentLanguage);
-                }
 
-                GUIHelper.textContent.text = currentAttachedContent.value;
-                height = textAreaStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
-
-                EditorGUILayout.BeginHorizontal(GUILayout.Height(height));
-                currentAttachedContent.value = EditorGUILayout.TextArea(currentAttachedContent.value, textAreaStyle,
-                  GUILayout.Width(context.columnWidth - 30), GUILayout.Height(height));
-                if (GUILayout.Button("X", GUILayout.Width(20), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-                {
-                  if (EditorUtility.DisplayDialog("Are you sure?",
-                    "Do you really want to delete?\nThis content will be lost forever.", "Yes", "No"))
+                  if (currentAttachedContent == null)
                   {
-                    currentMessage.attachedContent =
-                      ArrayHelper.Remove(currentMessage.attachedContent, attachedContent);
+                    attachedContent.content = ArrayHelper.Add(attachedContent.content,
+                      new LanguageDictionary(options.currentLanguage, "[ Message content here ]"));
+                    currentAttachedContent =
+                      DictionariesHelper.ContainsKey(attachedContent.content, options.currentLanguage);
                   }
+
+                  GUIHelper.textContent.text = currentAttachedContent.value;
+                  height = textAreaStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
+
+                  EditorGUILayout.BeginHorizontal(GUILayout.Height(height));
+                  currentAttachedContent.value = EditorGUILayout.TextArea(currentAttachedContent.value, textAreaStyle,
+                    GUILayout.Width(context.columnWidth - 30), GUILayout.Height(height));
+                  if (GUILayout.Button("X", GUILayout.Width(20), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+                  {
+                    if (EditorUtility.DisplayDialog("Are you sure?",
+                      "Do you really want to delete?\nThis content will be lost forever.", "Yes", "No"))
+                    {
+                      currentMessage.attachedContent =
+                        ArrayHelper.Remove(currentMessage.attachedContent, attachedContent);
+                    }
+                  }
+
+                  EditorGUILayout.EndHorizontal();
+
+                  EditorGUILayout.Separator();
                 }
 
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.Separator();
+                // Attach content button.
+                if (GUILayout.Button("Attach content", GUILayout.Width(context.columnWidth),
+                  GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+                {
+                  currentMessage.attachedContent =
+                    ArrayHelper.Add(currentMessage.attachedContent, new AttachedContent());
+                }
               }
-
-              if (GUILayout.Button("Attach content", GUILayout.Width(context.columnWidth),
-                GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-              {
-                currentMessage.attachedContent = ArrayHelper.Add(currentMessage.attachedContent, new AttachedContent());
-              }
-
               #endregion
             }
 
