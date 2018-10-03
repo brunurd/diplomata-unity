@@ -23,6 +23,7 @@ namespace LavaLeak.Diplomata.Models
     public string imagePath = string.Empty;
     public Condition[] conditions;
     public LanguageDictionary[] content;
+    public AttachedContent[] attachedContent;
     public LanguageDictionary[] screenplayNotes;
     public AttributeDictionary[] attributes;
     public Effect[] effects;
@@ -55,6 +56,7 @@ namespace LavaLeak.Diplomata.Models
 
       conditions = ArrayHelper.Copy(msg.conditions);
       content = ArrayHelper.Copy(msg.content);
+      attachedContent = ArrayHelper.Copy(msg.attachedContent);
       screenplayNotes = ArrayHelper.Copy(msg.screenplayNotes);
       attributes = ArrayHelper.Copy(msg.attributes);
       effects = ArrayHelper.Copy(msg.effects);
@@ -68,6 +70,7 @@ namespace LavaLeak.Diplomata.Models
     {
       conditions = new Condition[0];
       content = new LanguageDictionary[0];
+      attachedContent = new AttachedContent[0];
       attributes = new AttributeDictionary[0];
       screenplayNotes = new LanguageDictionary[0];
       effects = new Effect[0];
