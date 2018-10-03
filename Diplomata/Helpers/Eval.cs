@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace Diplomata.Helpers
+namespace LavaLeak.Diplomata.Helpers
 {
   public static class Eval
   {
