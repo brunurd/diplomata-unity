@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
 
 namespace LavaLeak.Diplomata.Helpers
 {
@@ -14,7 +13,7 @@ namespace LavaLeak.Diplomata.Helpers
     /// Find something in a array.
     /// </summary>
     /// <param name="collection">The array collection.</param>
-    /// <returns>A <seealso cref="Diplomata.Helpers.Subject"> object.</returns>
+    /// <returns>A <seealso cref="Diplomata.Helpers.Subject" /> object.</returns>
     public static Subject In(object[] collection)
     {
       return new Subject(collection);
@@ -27,9 +26,9 @@ namespace LavaLeak.Diplomata.Helpers
   public class Subject
   {
     // TODO: Consider arrays: create a method to bring a new Subject from a array field.
-    private Type type;
-    private Array collection;
-    private List<object> results;
+    private readonly Type _type;
+    private readonly Array _collection;
+    private readonly List<object> _results;
 
     /// <summary>
     /// The result array.
@@ -39,13 +38,12 @@ namespace LavaLeak.Diplomata.Helpers
     {
       get
       {
-        if (results.Count < 1) return new object[0];
-        return results.ToArray();
+        return _results.Count < 1 ? new object[0] : _results.ToArray();
       }
       private set
       {
-        foreach (object result in value)
-          results.Add(result);
+        foreach (var result in value)
+          _results.Add(result);
       }
     }
 
@@ -57,11 +55,11 @@ namespace LavaLeak.Diplomata.Helpers
     {
       get
       {
-        return (Results.Length >= 1) ? Results[0] : null;
+        return Results.Length >= 1 ? Results[0] : null;
       }
       private set
       {
-        results[0] = value;
+        _results[0] = value;
       }
     }
 
@@ -71,11 +69,11 @@ namespace LavaLeak.Diplomata.Helpers
     /// <param name="collection">The array of results.</param>
     public Subject(object[] collection)
     {
-      results = new List<object>();
-      this.collection = collection;
+      _results = new List<object>();
+      _collection = collection;
       if (collection.Length > 0)
       {
-        type = collection[0] != null ? collection[0].GetType() : null;
+        _type = collection[0] != null ? collection[0].GetType() : null;
       }
     }
 
@@ -87,21 +85,17 @@ namespace LavaLeak.Diplomata.Helpers
     /// <returns>A subject with preset results.</returns>
     public Subject Where(string fieldName, object value)
     {
-      if (type != null)
-      {
-        var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
+      if (_type == null) return this;
+      var fields = _type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
 
-        foreach (var field in fields)
+      foreach (var field in fields)
+      {
+        if (field.Name != fieldName) continue;
+        foreach (var instance in _collection)
         {
-          if (field.Name == fieldName)
+          if (field.GetValue(instance).Equals(value))
           {
-            foreach (var instance in collection)
-            {
-              if (field.GetValue(instance).Equals(value))
-              {
-                results.Add(instance);
-              }
-            }
+            _results.Add(instance);
           }
         }
       }
@@ -115,18 +109,16 @@ namespace LavaLeak.Diplomata.Helpers
     /// <returns>The results of all the fields.</returns>
     public Subject Where(string fieldName)
     {
-      if (type != null)
+      if (_type != null)
       {
-        var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
+        var fields = _type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
 
         foreach (var field in fields)
         {
-          if (field.Name == fieldName)
+          if (field.Name != fieldName) continue;
+          foreach (var instance in _collection)
           {
-            foreach (var instance in collection)
-            {
-              results.Add(field.GetValue(instance));
-            }
+            _results.Add(field.GetValue(instance));
           }
         }
       }
