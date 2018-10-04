@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
 using LavaLeak.Diplomata.Persistence;
@@ -234,6 +235,16 @@ namespace LavaLeak.Diplomata
     }
 
     /// <summary>
+    /// Get all data from the items in the inventory based on a category
+    /// </summary>
+    /// <param name="category">Item category to search for</param>
+    /// <returns>A array of <seealso cref="Diplomata.Models.Item">.</returns>
+    public static List<Item> GetItems(string category)
+    {
+      return Data.inventory.items.ToList().FindAll(i => i.Category == category);
+    }
+    
+    /// <summary>
     /// Get a item by it's name.
     /// </summary>
     /// <param name="name">The item name.</param>
@@ -244,7 +255,20 @@ namespace LavaLeak.Diplomata
       if (language == "") language = Data.options.languages[0].name;
       return Item.Find(Data.inventory.items, name, language);
     }
-   
+
+    /// <summary>
+    /// Get a item by it's name and it's category. 
+    /// </summary>
+    /// <param name="name">The item name</param>
+    /// <param name="category">The item category</param>
+    /// <param name="language">The language of this name, if empty uses the options first language.</param>
+    /// <returns>The <seealso cref="Diplomata.Models.Item"> object or null.</returns>
+    public static Item GetItem(string name, string language = "", string category = "")
+    {
+      if (language == "") language = Data.options.languages[0].name;
+      return Data.inventory.items.ToList().Find(i => i.GetName(language) == name && i.Category == category);
+    }
+    
     /// <summary>
     /// Get a item by it's id.
     /// </summary>
