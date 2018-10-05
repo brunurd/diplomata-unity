@@ -54,12 +54,9 @@ namespace LavaLeak.Diplomata.Models
     /// <returns>Return true if it change or false if don't.</returns>
     public bool SetId()
     {
-      if (uniqueId == string.Empty || uniqueId == null)
-      {
-        uniqueId = Guid.NewGuid().ToString();
-        return true;
-      }
-      return false;
+      if (!string.IsNullOrEmpty(uniqueId)) return false;
+      uniqueId = Guid.NewGuid().ToString();
+      return true;
     }
 
     /// <summary>

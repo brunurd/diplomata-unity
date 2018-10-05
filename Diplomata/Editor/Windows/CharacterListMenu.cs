@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LavaLeak.Diplomata;
 using LavaLeak.Diplomata.Editor;
@@ -45,7 +46,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
       for (int i = 0; i < options.characterList.Length; i++)
       {
         var name = options.characterList[i];
-        var character = (Character.Find(characters, name));
+        var character = Character.Find(characters, name);
 
         if (character.SetId())
         {
