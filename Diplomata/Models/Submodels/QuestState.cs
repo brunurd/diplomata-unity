@@ -1,4 +1,6 @@
 using System;
+using LavaLeak.Diplomata.Dictionaries;
+using LavaLeak.Diplomata.Helpers;
 using UnityEngine;
 
 namespace LavaLeak.Diplomata.Models.Submodels
@@ -14,18 +16,25 @@ namespace LavaLeak.Diplomata.Models.Submodels
 
     //TODO(Celso): Need to add this to use the language system
     
-    public string ShortDescription;
-    public string LongDescription;
+    public LanguageDictionary[] ShortDescription;
+    public LanguageDictionary[] LongDescription;
 
     /// <summary>
     /// The state constructor.
     /// </summary>
-    /// <param name="name">The name of the state.</param>
+    /// <param name="shortDescription">The short description of the state.</param>
+    /// <param name="longDescription">The long description of the state.</param>
     public QuestState(string shortDescription, string longDescription)
     {
       uniqueId = Guid.NewGuid().ToString();
-      ShortDescription = shortDescription;
-      LongDescription = longDescription;
+      ShortDescription = new LanguageDictionary[0];
+      LongDescription = new LanguageDictionary[0];
+
+      foreach (var language in DiplomataManager.Data.options.languagesList)
+      {
+        ShortDescription = ArrayHelper.Add(ShortDescription, new LanguageDictionary(language, shortDescription));
+        LongDescription = ArrayHelper.Add(ShortDescription, new LanguageDictionary(language, longDescription));
+      }
     }
 
     /// <summary>
@@ -38,22 +47,46 @@ namespace LavaLeak.Diplomata.Models.Submodels
     }
 
     /// <summary>
+    /// Get the short description as string the setted language.
+    /// </summary>
+    /// <param name="language">The language desired.</param>
+    /// <returns>The string value of the short description.</returns>
+    public string GetShortDescription(string language = "")
+    {
+      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
+      var shortDescription = DictionariesHelper.ContainsKey(ShortDescription, language);
+      return shortDescription != null ? shortDescription.value : string.Empty;
+    }
+
+    /// <summary>
     /// Get a list of the short description of the quests states of a array.
     /// </summary>
     /// <param name="questsStates">The quests states array.</param>
     /// <returns>A array of short description as strings.</returns>
-    public static string[] GetShortDescriptions(QuestState[] questsStates)
+    public static string[] GetShortDescriptions(QuestState[] questsStates, string language = "")
     {
-      string[] questsReturn = questsStates == null ? new string[0] : new string[questsStates.Length];
+      var questsReturn = questsStates == null ? new string[0] : new string[questsStates.Length];
       if (questsStates != null)
       {
         for (var i = 0; i < questsStates.Length; i++)
         {
-          questsReturn[i] = questsStates[i].ShortDescription;
+          questsReturn[i] = questsStates[i].GetShortDescription(language);
         }
       }
 
       return questsReturn;
+    }
+    
+    /// <summary>
+    /// Get the long description as string the setted language.
+    /// </summary>
+    /// <param name="language">The language desired.</param>
+    /// <returns>The string value of the long description.</returns>
+    public string GetLongDescription(string language = "")
+    {
+      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
+      var longDescription = DictionariesHelper.ContainsKey(LongDescription, language);
+      return longDescription != null ? longDescription.value : string.Empty;
     }
 
     /// <summary>
@@ -61,14 +94,14 @@ namespace LavaLeak.Diplomata.Models.Submodels
     /// </summary>
     /// <param name="questsStates">The quests states array.</param>
     /// <returns>A array of long description as strings.</returns>
-    public static string[] GetLongDescriptions(QuestState[] questsStates)
+    public static string[] GetLongDescriptions(QuestState[] questsStates, string language = "")
     {
-      string[] questsReturn = questsStates == null ? new string[0] : new string[questsStates.Length];
+      var questsReturn = questsStates == null ? new string[0] : new string[questsStates.Length];
       if (questsStates != null)
       {
         for (int i = 0; i < questsStates.Length; i++)
         {
-          questsReturn[i] = questsStates[i].LongDescription;
+          questsReturn[i] = questsStates[i].GetLongDescription(language);
         }
       }
 

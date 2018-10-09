@@ -50,7 +50,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUILayout.BeginHorizontal();
         if (EditorGUIUtility.isProSkin) GUIHelper.labelStyle.normal.textColor = Color.white;
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
-        GUILayout.Label(quest.Name, GUIHelper.labelStyle);
+        GUILayout.Label(DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage).value, GUIHelper.labelStyle);
         GUILayout.EndHorizontal();
 
         GUILayout.Space(10.0f);

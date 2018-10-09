@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models.Submodels;
 using LavaLeak.Diplomata.Persistence;
@@ -17,18 +18,12 @@ namespace LavaLeak.Diplomata.Models
   {
     [SerializeField]
     private string uniqueId;
-
-    public string Name;
-    public QuestState[] questStates;
     private string currentStateId;
-    
-    public bool Initialized
-    {
-      get { return initialized; }
-    }
-    
-    private bool initialized;
     private bool finished;
+
+    public LanguageDictionary[] Name;
+    public QuestState[] questStates;
+    public bool Initialized { get; private set; }
 
     /// <summary>
     /// Basic constructor, it sets the id and create the default "In progress" state.
@@ -36,7 +31,7 @@ namespace LavaLeak.Diplomata.Models
     public Quest()
     {
       uniqueId = Guid.NewGuid().ToString();
-      questStates = new QuestState[] { new QuestState("Short description.", "Long description.") };
+      questStates = new [] { new QuestState("Short description.", "Long description.") };
     }
 
     /// <summary>
@@ -54,7 +49,7 @@ namespace LavaLeak.Diplomata.Models
     /// <returns>Return true if is active or false.</returns>
     public bool IsActive()
     {
-      return initialized && !finished;
+      return Initialized && !finished;
     }
 
     /// <summary>
@@ -63,7 +58,7 @@ namespace LavaLeak.Diplomata.Models
     /// <returns>Return true if is complete or false.</returns>
     public bool IsComplete()
     {
-      return initialized && finished;
+      return Initialized && finished;
     }
 
     /// <summary>
@@ -81,17 +76,14 @@ namespace LavaLeak.Diplomata.Models
     /// <returns>Return the index or -1 if don't have a current state.</returns>
     private int GetStateIndex()
     {
-      int index = -1;
-      if (currentStateId != string.Empty && currentStateId != null && initialized && !finished)
+      var index = -1;
+      if (string.IsNullOrEmpty(currentStateId) || !Initialized || finished)
+        return index;
+      for (var i = 0; i < questStates.Length; i++)
       {
-        for (var i = 0; i < questStates.Length; i++)
-        {
-          if (questStates[i].GetId() == currentStateId)
-          {
-            index = i;
-            break;
-          }
-        }
+        if (questStates[i].GetId() != currentStateId) continue;
+        index = i;
+        break;
       }
       return index;
     }
@@ -102,13 +94,9 @@ namespace LavaLeak.Diplomata.Models
     /// <param name="questState">The state to remove.</param>
     public void RemoveState(QuestState questState)
     {
-      if (!initialized)
-      {
-        if (ArrayHelper.Contains(questStates, questState))
-        {
-          questStates = ArrayHelper.Remove(questStates, questState);
-        }
-      }
+      if (Initialized) return;
+      if (ArrayHelper.Contains(questStates, questState))
+        questStates = ArrayHelper.Remove(questStates, questState);
     }
 
     /// <summary>
@@ -116,9 +104,9 @@ namespace LavaLeak.Diplomata.Models
     /// </summary>
     public void Initialize()
     {
-      if (!finished && !initialized)
+      if (!finished && !Initialized)
       {
-        initialized = true;
+        Initialized = true;
         currentStateId = questStates[0].GetId();
       }
     }
@@ -127,11 +115,10 @@ namespace LavaLeak.Diplomata.Models
     /// Get the current quest name.
     /// </summary>
     /// <returns>Return the current quest name, if don't have one return null.</returns>
-    public string GetCurrentState()
+    public string GetCurrentState(string language = "")
     {
-      int index = GetStateIndex();
-      if (index != -1) return questStates[index].ShortDescription;
-      else return null;
+      var index = GetStateIndex();
+      return index != -1 ? questStates[index].GetShortDescription(language) : null;
     }
 
     public string GetCurrentStateID()
@@ -147,9 +134,10 @@ namespace LavaLeak.Diplomata.Models
     /// <returns>The state object.</returns>
     public QuestState GetState(string id)
     {
-      foreach (QuestState state in questStates)
+      foreach (var state in questStates)
       {
-        if (state.GetId() == id) return state;
+        if (state.GetId() == id)
+          return state;
       }
       return null;
     }
@@ -187,7 +175,7 @@ namespace LavaLeak.Diplomata.Models
     {
       if (!finished)
       {
-        initialized = true;
+        Initialized = true;
         if (ArrayHelper.Contains(QuestState.GetIDs(questStates), stateId))
           currentStateId = stateId;
       }
@@ -201,28 +189,33 @@ namespace LavaLeak.Diplomata.Models
     /// <summary>
     /// Return a dictionary with all the quest states and if it is complete or don't.
     /// </summary>
-    /// <typeparam name="string">The quest state name.</typeparam>
-    /// <typeparam name="bool">If the quest is complete.</typeparam>
     /// <returns>A dictionary with all the quest states.</returns>
-    public Dictionary<string, bool> GetQuestLog()
+    public Dictionary<string, bool> GetQuestLog(string language = "")
     {
       var questLog = new Dictionary<string, bool>();
-      int currentStateIndex = GetStateIndex();
+      var currentStateIndex = GetStateIndex();
 
       for (var i = 0; i < questStates.Length; i++)
       {
-        var name = questStates[i].ShortDescription;
         var completed = true;
 
-        if (!initialized)
+        if (!Initialized)
           completed = false;
         else if (!finished)
-          completed = (currentStateIndex > i && currentStateIndex > -1) ? true : false;
+          completed = currentStateIndex > i && currentStateIndex > -1;
 
-        questLog.Add(name, completed);
+        var questStateName = questStates[i].GetShortDescription(language);
+        if (questStateName != null)
+          questLog.Add(questStateName, completed);
       }
-
       return questLog;
+    }
+
+    public string GetName(string language = "")
+    {
+      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
+      var name = DictionariesHelper.ContainsKey(Name, language);
+      return name != null ? name.value : string.Empty;
     }
 
     /// <summary>
@@ -230,14 +223,14 @@ namespace LavaLeak.Diplomata.Models
     /// </summary>
     /// <param name="quests">The quests array.</param>
     /// <returns>A array of names as strings.</returns>
-    public static string[] GetNames(Quest[] quests)
+    public static string[] GetNames(Quest[] quests, string language = "")
     {
       string[] questsReturn = quests == null ? new string[0] : new string[quests.Length];
       if (quests != null)
       {
         for (var i = 0; i < quests.Length; i++)
         {
-          questsReturn[i] = quests[i].Name;
+          questsReturn[i] = quests[i].GetName(language);
         }
       }
       return questsReturn;
@@ -266,7 +259,7 @@ namespace LavaLeak.Diplomata.Models
     /// </summary>
     public void Finish()
     {
-      if (initialized)
+      if (Initialized)
       {
         finished = true;
         currentStateId = string.Empty;
@@ -310,7 +303,7 @@ namespace LavaLeak.Diplomata.Models
       var quest = new QuestPersistent();
       quest.id = uniqueId;
       quest.currentStateId = currentStateId;
-      quest.initialized = initialized;
+      quest.initialized = Initialized;
       quest.finished = finished;
       return quest;
     }
@@ -324,7 +317,7 @@ namespace LavaLeak.Diplomata.Models
       var questPersistentData = (QuestPersistent) persistentData;
       uniqueId = questPersistentData.id;
       currentStateId = questPersistentData.currentStateId;
-      initialized = questPersistentData.initialized;
+      Initialized = questPersistentData.initialized;
       finished = questPersistentData.finished;
     }
   }

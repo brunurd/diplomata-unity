@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LavaLeak.Diplomata.Helpers;
 using UnityEngine;
 
 namespace LavaLeak.Diplomata.Models.Submodels
@@ -113,29 +114,37 @@ namespace LavaLeak.Diplomata.Models.Submodels
       return "End of dialogue.";
     }
 
-    public string DisplaySetQuestState(Quest[] quests)
+    public string DisplaySetQuestState(Quest[] quests, string language = "")
     {
+      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
       var quest = Quest.Find(quests, questAndState.questId);
-      var questState = quest != null ? quest.GetState(questAndState.questStateId) : null;
+      var questState = quest.GetState(questAndState.questStateId);
 
-      var questName = quest != null ? quest.Name : string.Empty;
-      var questStateName = questState != null ? questState.ShortDescription : string.Empty;
+      var questName = DictionariesHelper.ContainsKey(quest.Name, language);
+      var questStateName = DictionariesHelper.ContainsKey(questState.ShortDescription, language);
 
-      return string.Format("Set quest \"{0}\" to: {1}", questName, questStateName);
+      var questNameContent = questName == null ? string.Empty : questName.value;
+      var questStateNameContent = questStateName == null ? string.Empty : questStateName.value;
+
+      return string.Format("Set quest \"{0}\" to: {1}", questNameContent, questStateNameContent);
     }
 
-    public string DiplayStartQuest(Quest[] quests)
+    public string DiplayStartQuest(Quest[] quests, string language = "")
     {
+      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
       var quest = Quest.Find(quests, questAndState.questId);
-      var questName = quest != null ? quest.Name : string.Empty;
-      return string.Format("Start the quest \"{0}\"", questName);
+      var questName = DictionariesHelper.ContainsKey(quest.Name, language);
+      var questNameContent = questName == null ? string.Empty : questName.value;
+      return string.Format("Start the quest \"{0}\"", questNameContent);
     }
 
-    public string DisplayFinishQuest(Quest[] quests)
+    public string DisplayFinishQuest(Quest[] quests, string language = "")
     {
+      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
       var quest = Quest.Find(quests, questAndState.questId);
-      var questName = quest != null ? quest.Name : string.Empty;
-      return string.Format("Finish the quest \"{0}\"", questName);
+      var questName = DictionariesHelper.ContainsKey(quest.Name, language);
+      var questNameContent = questName == null ? string.Empty : questName.value;
+      return string.Format("Finish the quest \"{0}\"", questNameContent);
     }
   }
 }

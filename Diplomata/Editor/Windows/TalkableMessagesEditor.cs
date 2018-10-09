@@ -1787,7 +1787,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 case Condition.Type.QuestStateIs:
                   // Get the quest name.
                   var quest = Quest.Find(quests, condition.questAndState.questId);
-                  var questName = quest != null ? quest.Name : string.Empty;
+                  var questNameDict = quest != null
+                    ? DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage)
+                    : null;
+                  var questName = questNameDict != null ? questNameDict.value : string.Empty;
 
                   // Quest name Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
@@ -1802,8 +1805,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   // Get the quest state name.
                   quest = Quest.Find(quests, condition.questAndState.questId);
-                  var questState = quest != null ? quest.GetState(condition.questAndState.questStateId) : null;
-                  var questStateName = questState != null ? questState.ShortDescription : string.Empty;
+                  var questState = quest.GetState(condition.questAndState.questStateId);
+                  var questStateNameDict =
+                    DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage);
+                  var questStateName = questStateNameDict != null ? questStateNameDict.value : string.Empty;
 
                   // Quest state Popup with a change checker.
                   if (quest != null)
@@ -2175,7 +2180,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 case Effect.Type.SetQuestState:
                   // Get the quest name.
                   var quest = Quest.Find(quests, effect.questAndState.questId);
-                  var questName = quest != null ? quest.Name : string.Empty;
+                  var questNameDict = quest != null
+                    ? DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage)
+                    : null;
+                  var questName = questNameDict != null ? questNameDict.value : string.Empty;
 
                   // Quest Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
@@ -2190,8 +2198,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   // Get the quest state name.
                   quest = Quest.Find(quests, effect.questAndState.questId);
-                  var questState = quest != null ? quest.GetState(effect.questAndState.questStateId) : null;
-                  var questStateName = questState != null ? questState.ShortDescription : string.Empty;
+                  var questState = quest.GetState(effect.questAndState.questStateId);
+                  var questStateNameDict =
+                    DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage);
+                  var questStateName = questStateNameDict != null ? questStateNameDict.value : string.Empty;
 
                   // Quest state Popup with a change checker.
                   if (quest != null)
@@ -2214,7 +2224,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 case Effect.Type.FinishQuest:
                   // Get the quest name.
                   var questToFinish = Quest.Find(quests, effect.questAndState.questId);
-                  var questToFinishName = questToFinish != null ? questToFinish.Name : string.Empty;
+                  var questToFinishNameDict = questToFinish != null
+                    ? DictionariesHelper.ContainsKey(questToFinish.Name, options.currentLanguage)
+                    : null;
+                  var questToFinishName = questToFinishNameDict != null ? questToFinishNameDict.value : string.Empty;
 
                   // Quest Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
@@ -2232,7 +2245,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 case Effect.Type.StartQuest:
                   // Get the quest name.
                   var questToStart = Quest.Find(quests, effect.questAndState.questId);
-                  var questToStartName = questToStart != null ? questToStart.Name : string.Empty;
+                  var questToStartNameDict = questToStart != null
+                    ? DictionariesHelper.ContainsKey(questToStart.Name, options.currentLanguage)
+                    : null;
+                  var questToStartName = questToStartNameDict != null ? questToStartNameDict.value : string.Empty;
 
                   // Quest Popup with a change checker.
                   EditorGUI.BeginChangeCheck();

@@ -369,7 +369,7 @@ namespace LavaLeak.Diplomata
                             var targetState = quest.GetState(condition.questAndState.questStateId);
                             if (currentState == null)
                             {
-                              Debug.Log(string.Format("Probably quest {0} is not initialized.", quest.Name));
+                              Debug.Log(string.Format("Probably quest {0} is not initialized.", quest.GetName()));
                               condition.proceed = false;
                             }
                             else if (targetState == null)
@@ -378,7 +378,7 @@ namespace LavaLeak.Diplomata
                                 condition.questAndState.questStateId));
                               condition.proceed = false;
                             }
-                            else if (currentState == targetState.ShortDescription)
+                            else if (currentState == targetState.GetShortDescription())
                             {
                               condition.proceed = true;
                             }

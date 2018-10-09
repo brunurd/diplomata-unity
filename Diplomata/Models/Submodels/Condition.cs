@@ -1,4 +1,5 @@
 using System;
+using LavaLeak.Diplomata.Helpers;
 
 namespace LavaLeak.Diplomata.Models.Submodels
 {
@@ -87,23 +88,27 @@ namespace LavaLeak.Diplomata.Models.Submodels
       return string.Format("\"{0}\" is {1}", globalFlag.name, globalFlag.value);
     }
 
-    public string DisplayQuestStateIs(Quest[] quests)
+    public string DisplayQuestStateIs(Quest[] quests, string language = "")
     {
+      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
       var quest = Quest.Find(quests, questAndState.questId);
-      var questState = quest != null ? quest.GetState(questAndState.questStateId) : null;
-      var questName = quest != null ? quest.Name : string.Empty;
-      var questStateName = questState != null ? questState.ShortDescription : string.Empty;
-      return string.Format("Quest \"{0}\" state is: {1}", questName, questStateName);
+      var questState = quest.GetState(questAndState.questStateId);
+
+      var questName = DictionariesHelper.ContainsKey(quest.Name, language);
+      var questStateName = DictionariesHelper.ContainsKey(questState.ShortDescription, language);
+
+      var questNameContent = questName == null ? string.Empty : questName.value;
+      var questStateNameContent = questStateName == null ? string.Empty : questStateName.value;
+      
+      return string.Format("Quest \"{0}\" state is: {1}", questNameContent, questStateNameContent);
     }
 
     public static bool CanProceed(Condition[] conditions)
     {
-      foreach (Condition condition in conditions)
+      foreach (var condition in conditions)
       {
         if (!condition.proceed)
-        {
           return false;
-        }
       }
 
       return true;

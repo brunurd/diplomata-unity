@@ -80,7 +80,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
           // Set quest name.
           GUILayout.Label("Name: ");
           GUI.SetNextControlName("name");
-          quest.Name = EditorGUILayout.TextField(quest.Name);
+          DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage).value =
+            EditorGUILayout.TextField(DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage).value);
           GUIHelper.Focus("name");
           EditorGUILayout.Space();
 
@@ -105,11 +106,15 @@ namespace LavaLeak.Diplomata.Editor.Windows
             EditorGUILayout.SelectableLabel(string.Format("Unique ID: {0}", questState.GetId()));
 
             EditorGUILayout.LabelField("Short description:");
-            questState.ShortDescription = EditorGUILayout.TextArea(questState.ShortDescription);
+            DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage).value =
+              EditorGUILayout.TextArea(DictionariesHelper
+                .ContainsKey(questState.ShortDescription, options.currentLanguage).value);
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Long description:");
-            questState.LongDescription = EditorGUILayout.TextArea(questState.LongDescription);
+            DictionariesHelper.ContainsKey(questState.LongDescription, options.currentLanguage).value =
+              EditorGUILayout.TextArea(DictionariesHelper
+                .ContainsKey(questState.LongDescription, options.currentLanguage).value);
             EditorGUILayout.Space();
 
             EditorGUILayout.BeginHorizontal();
@@ -121,7 +126,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 QuestsController.Save(quests, options.jsonPrettyPrint);
               }
             }
-            
+
             if (GUILayout.Button("Down", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
             {
               if (index < quest.questStates.Length - 1)
@@ -130,15 +135,17 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 QuestsController.Save(quests, options.jsonPrettyPrint);
               }
             }
-            
+
             if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
             {
-              if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
+              if (EditorUtility.DisplayDialog("Are you sure?",
+                "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
               {
                 quest.questStates = ArrayHelper.Remove(quest.questStates, questState);
                 QuestsController.Save(quests, options.jsonPrettyPrint);
               }
             }
+
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
@@ -148,11 +155,13 @@ namespace LavaLeak.Diplomata.Editor.Windows
           // Buttons.
           EditorGUILayout.Space();
           GUILayout.BeginHorizontal();
-          if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+          if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2),
+            GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
           {
             quest.AddState("Short description.", "Long description.");
             Save();
           }
+
           GUILayout.EndHorizontal();
           EditorGUILayout.Separator();
           GUILayout.BeginHorizontal();
@@ -161,6 +170,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
             Save();
             Close();
           }
+
           GUILayout.EndHorizontal();
 
           // Save and close on press Enter.
@@ -175,6 +185,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
               }
             }
           }
+
           break;
       }
 
@@ -189,6 +200,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         if (quests[i].GetId() == quest.GetId())
           quests[i] = quest;
       }
+
       QuestsController.Save(quests, options.jsonPrettyPrint);
     }
   }
