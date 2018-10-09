@@ -1,5 +1,3 @@
-using LavaLeak.Diplomata;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -17,7 +15,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     private GlobalFlags globalFlags;
     private Options options;
 
-    [MenuItem("Diplomata/Global Flags")]
+    [MenuItem("Diplomata/Global Flags", false, 0)]
     static public void Init()
     {
       GlobalFlagsListMenu window = (GlobalFlagsListMenu) GetWindow(typeof(GlobalFlagsListMenu), false, "Custom Flags");

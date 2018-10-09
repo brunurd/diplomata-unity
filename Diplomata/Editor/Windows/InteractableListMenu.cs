@@ -16,7 +16,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     public Options options;
     public List<Interactable> interactables;
 
-    [MenuItem("Diplomata/Interactables")]
+    [MenuItem("Diplomata/Interactables", false, 0)]
     static public void Init()
     {
       InteractableListMenu window = (InteractableListMenu) GetWindow(typeof(InteractableListMenu), false, "Interactable List");

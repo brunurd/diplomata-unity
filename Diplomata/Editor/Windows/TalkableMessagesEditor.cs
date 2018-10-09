@@ -351,26 +351,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
           EditorGUILayout.Separator();
         }
 
-        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Add Context", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_BIG)))
         {
           CreateContext();
         }
-
-        if (GUILayout.Button("Save as Screenplay", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_BIG)))
-        {
-          if (EditorUtility.DisplayDialog("This character only?", "This character only or all characters?",
-            "Only this character", "All characters"))
-          {
-            Screenplay.Save(talkable);
-          }
-          else
-          {
-            Screenplay.SaveAll();
-          }
-        }
-
-        GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();

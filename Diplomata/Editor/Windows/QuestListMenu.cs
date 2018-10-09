@@ -15,7 +15,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     private Options options;
     private Quest[] quests;
 
-    [MenuItem("Diplomata/Quests")]
+    [MenuItem("Diplomata/Quests", false, 0)]
     static public void Init()
     {
       QuestListMenu window = (QuestListMenu) GetWindow(typeof(QuestListMenu), false, "Quests");

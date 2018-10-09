@@ -17,7 +17,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     public Options options;
     public Inventory inventory;
 
-    [MenuItem("Diplomata/Inventory")]
+    [MenuItem("Diplomata/Inventory", false, 0)]
     static public void Init()
     {
       ItemListMenu window = (ItemListMenu) GetWindow(typeof(ItemListMenu), false, "Inventory");

@@ -17,7 +17,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     public Options options;
     public List<Character> characters;
 
-    [MenuItem("Diplomata/Characters")]
+    [MenuItem("Diplomata/Characters", false, 0)]
     static public void Init()
     {
       CharacterListMenu window = (CharacterListMenu) GetWindow(typeof(CharacterListMenu), false, "Character List");

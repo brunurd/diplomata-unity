@@ -23,6 +23,7 @@ namespace LavaLeak.Diplomata.Editor.Extensions
       AssetDatabase.Refresh();
     }
 
+    [MenuItem("Diplomata/Export To.../.rtf (Screenplay)", false, 2)]
     public static void SaveAll()
     {
       var options = OptionsController.GetOptions();
