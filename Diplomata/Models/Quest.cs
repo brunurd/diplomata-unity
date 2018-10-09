@@ -31,6 +31,7 @@ namespace LavaLeak.Diplomata.Models
     public Quest()
     {
       uniqueId = Guid.NewGuid().ToString();
+      Name = new LanguageDictionary[0];
       questStates = new [] { new QuestState("Short description.", "Long description.") };
     }
 

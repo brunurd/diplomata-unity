@@ -33,7 +33,7 @@ namespace LavaLeak.Diplomata.Models.Submodels
       foreach (var language in DiplomataManager.Data.options.languagesList)
       {
         ShortDescription = ArrayHelper.Add(ShortDescription, new LanguageDictionary(language, shortDescription));
-        LongDescription = ArrayHelper.Add(ShortDescription, new LanguageDictionary(language, longDescription));
+        LongDescription = ArrayHelper.Add(LongDescription, new LanguageDictionary(language, longDescription));
       }
     }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
@@ -79,6 +80,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
         case State.CreateEdit:
           // Set quest name.
           GUILayout.Label("Name: ");
+          
+          var questName = DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage);
+          if (questName == null)
+            quest.Name = ArrayHelper.Add(quest.Name, new LanguageDictionary(options.currentLanguage, ""));
+
           GUI.SetNextControlName("name");
           DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage).value =
             EditorGUILayout.TextField(DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage).value);
