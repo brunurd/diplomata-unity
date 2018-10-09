@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models.Submodels;
 using LavaLeak.Diplomata.Persistence;
 using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace LavaLeak.Diplomata.Models
 {
@@ -27,8 +26,7 @@ namespace LavaLeak.Diplomata.Models
   [Serializable]
   public class Context : Data
   {
-    [SerializeField]
-    private string uniqueId = Guid.NewGuid().ToString();
+    [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
 
     public int id;
     public string talkableName;
@@ -43,10 +41,10 @@ namespace LavaLeak.Diplomata.Models
     public ushort fontSize = 11;
     public Column[] columns;
     public LanguageDictionary[] name;
-    public Label[] labels = new Label[] { new Label() };
+    public Label[] labels = new Label[] {new Label()};
+    public LocalVariable[] LocalVariables;
 
-    [NonSerialized]
-    public Action OnEnd;
+    [NonSerialized] public Action OnEnd;
     private bool happened;
 
     /// <summary>
@@ -55,10 +53,7 @@ namespace LavaLeak.Diplomata.Models
     /// <value>The bool happened field.</value>
     public bool Finished
     {
-      get
-      {
-        return happened;
-      }
+      get { return happened; }
       set
       {
         if (OnEnd != null)
@@ -101,7 +96,9 @@ namespace LavaLeak.Diplomata.Models
     /// <summary>
     /// Basic constructor.
     /// </summary>
-    public Context() {}
+    public Context()
+    {
+    }
 
     /// <summary>
     /// Context constructor with id and the talkable name.
@@ -115,12 +112,94 @@ namespace LavaLeak.Diplomata.Models
       this.talkableName = talkableName;
       name = new LanguageDictionary[0];
       columns = new Column[0];
-      labels = new Label[] { new Label() };
+      labels = new Label[] {new Label()};
+      LocalVariables = new LocalVariable[0];
 
       foreach (Language lang in DiplomataManager.Data.options.languages)
       {
         name = ArrayHelper.Add(name, new LanguageDictionary(lang.name, "Name [Change clicking on Edit]"));
       }
+    }
+
+    /// <summary>
+    /// Add local variable to local variables of the context.
+    /// </summary>
+    /// <param name="variableName">The name of the variable.</param>
+    /// <param name="type">The type of the variable.</param>
+    /// <param name="value">The value of the variable.</param>
+    public void AddLocalVariable(string variableName, VariableType type, object value)
+    {
+      LocalVariables = ArrayHelper.Add(LocalVariables, new LocalVariable(variableName, type, value));
+    }
+
+    /// <summary>
+    /// Get a local variable from the context.
+    /// </summary>
+    /// <param name="variableName">The local variable name.</param>
+    /// <returns>The local variable if exists or null.</returns>
+    public LocalVariable GetLocalVariable(string variableName)
+    {
+      foreach (var localVariable in LocalVariables)
+      {
+        if (localVariable.Name.Equals(variableName))
+          return localVariable;
+      }
+
+      return null;
+    }
+
+    /// <summary>
+    /// Get only the names of all local variables.
+    /// </summary>
+    /// <returns>A array of strings with all the names.</returns>
+    public string[] GetLocalVariablesNames()
+    {
+      var names = new string[0];
+      foreach (var localVariable in LocalVariables)
+        names = ArrayHelper.Add(names, localVariable.Name);
+      return names;
+    }
+
+    /// <summary>
+    /// Return a text with local variables replaced.
+    /// </summary>
+    /// <param name="text">The text to replace.</param>
+    /// <returns>The text with all the local variables replaced.</returns>
+    public string ReplaceVariables(string text)
+    {
+      var replacedText = string.Copy(text);
+      var matches = Regex.Matches(replacedText, "{{(.*?)}}");
+
+      foreach (var match in matches)
+      {
+        var varName = match.ToString().Replace("{{", "");
+        varName = varName.Replace("}}", "");
+
+        var localVariable = GetLocalVariable(varName);
+        if (localVariable != null && !string.IsNullOrEmpty(varName))
+        {
+          switch (localVariable.Type)
+          {
+            case VariableType.String:
+              replacedText = replacedText.Replace(match.ToString(),
+                DictionariesHelper.ContainsKey(localVariable.StringValue, DiplomataManager.Data.options.currentLanguage)
+                  .value);
+              break;
+            case VariableType.Int:
+              replacedText = replacedText.Replace(match.ToString(), localVariable.IntValue.ToString());
+              break;
+            case VariableType.Float:
+              replacedText = replacedText.Replace(match.ToString(), localVariable.FloatValue.ToString());
+              break;
+          }
+        }
+        else
+        {
+          replacedText = replacedText.Replace(match.ToString(), "");
+        }
+      }
+
+      return replacedText;
     }
 
     /// <summary>
@@ -153,6 +232,7 @@ namespace LavaLeak.Diplomata.Models
           }
         }
       }
+
       return null;
     }
 
@@ -203,6 +283,7 @@ namespace LavaLeak.Diplomata.Models
           if (name.key == language) names = ArrayHelper.Add(names, name.value);
         }
       }
+
       return names;
     }
 
@@ -217,6 +298,7 @@ namespace LavaLeak.Diplomata.Models
       {
         if (langName.key == language) return langName.value;
       }
+
       return string.Empty;
     }
 

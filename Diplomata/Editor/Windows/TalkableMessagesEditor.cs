@@ -1,7 +1,6 @@
+using System;
 using System.Collections.Generic;
-using LavaLeak.Diplomata;
 using LavaLeak.Diplomata.Dictionaries;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Extensions;
 using LavaLeak.Diplomata.Editor.Helpers;
@@ -563,7 +562,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 ColorHelper.ColorSub(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
               GUIHelper.textContent.text = text;
               height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
-              GUILayout.Label(GUIHelper.textContent, GUIHelper.labelStyle, GUILayout.Width(context.columnWidth),
+              EditorGUILayout.LabelField(GUIHelper.textContent, GUIHelper.labelStyle,
+                GUILayout.Width(context.columnWidth),
                 GUILayout.Height(height));
               GUIHelper.labelStyle.normal.textColor =
                 ColorHelper.ColorAdd(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
@@ -700,6 +700,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
               EditorGUILayout.Separator();
 
               #region Attached Content
+
               if (!currentMessage.isAChoice)
               {
                 if (currentMessage.attachedContent == null)
@@ -724,6 +725,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   EditorGUILayout.BeginHorizontal(GUILayout.Height(height));
                   currentAttachedContent.value = EditorGUILayout.TextArea(currentAttachedContent.value, textAreaStyle,
                     GUILayout.Width(context.columnWidth - 30), GUILayout.Height(height));
+
                   if (GUILayout.Button("X", GUILayout.Width(20), GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
                   {
                     if (EditorUtility.DisplayDialog("Are you sure?",
@@ -747,6 +749,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                     ArrayHelper.Add(currentMessage.attachedContent, new AttachedContent());
                 }
               }
+
               #endregion
             }
 
@@ -1069,6 +1072,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
             EditorGUILayout.Separator();
 
             var column = Column.Find(context, message.columnId);
+
+            if (column == null)
+            {
+              message = null;
+              return;
+            }
 
             var disposable = message.disposable;
             var isAChoice = message.isAChoice;
@@ -2274,9 +2283,65 @@ namespace LavaLeak.Diplomata.Editor.Windows
         }
       }
 
+      #region Local Variables
+
+      GUIHelper.Separator();
+
+      EditorGUILayout.LabelField("Context local variables:");
       GUILayout.Space(GUIHelper.MARGIN);
 
-      if (GUILayout.Button("Remove Empty Columns", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+      if (context.LocalVariables == null)
+        context.LocalVariables = new LocalVariable[0];
+
+      foreach (var localVariable in context.LocalVariables)
+      {
+        EditorGUILayout.BeginHorizontal();
+
+        localVariable.Type = (VariableType) EditorGUILayout.EnumPopup(localVariable.Type);
+        localVariable.Name =
+          EditorGUILayout.TextField(localVariable.Name, GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL));
+
+        switch (localVariable.Type)
+        {
+          case VariableType.String:
+            DictionariesHelper.ContainsKey(localVariable.StringValue, options.currentLanguage).value =
+              EditorGUILayout.TextField(
+                DictionariesHelper.ContainsKey(localVariable.StringValue, options.currentLanguage).value,
+                GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL));
+            break;
+          case VariableType.Int:
+            localVariable.IntValue =
+              EditorGUILayout.IntField(localVariable.IntValue, GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL));
+            break;
+          case VariableType.Float:
+            localVariable.FloatValue = EditorGUILayout.FloatField(localVariable.FloatValue,
+              GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL));
+            break;
+        }
+
+        if (GUILayout.Button("X", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL),
+          GUILayout.Width(GUIHelper.BUTTON_HEIGHT_SMALL)))
+        {
+          context.LocalVariables = ArrayHelper.Remove(context.LocalVariables, localVariable);
+          Save();
+        }
+
+        EditorGUILayout.EndHorizontal();
+        GUILayout.Space(GUIHelper.MARGIN);
+      }
+
+      if (GUILayout.Button("Add local variable", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+      {
+        context.AddLocalVariable(string.Format("variable{0}", context.LocalVariables.Length), VariableType.String,
+          string.Empty);
+        Save();
+      }
+
+      #endregion
+
+      GUIHelper.Separator();
+
+      if (GUILayout.Button("Remove empty columns", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
       {
         context.columns = Column.RemoveEmptyColumns(context.columns);
         context.messageEditorState = MessageEditorState.None;
