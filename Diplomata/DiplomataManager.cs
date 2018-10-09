@@ -100,7 +100,7 @@ namespace LavaLeak.Diplomata
     /// Get a character by his name.
     /// </summary>
     /// <param name="name">The character name.</param>
-    /// <returns>The <seealso cref="Diplomata.Models.Character"> object or null.</returns>
+    /// <returns>The <seealso cref="Diplomata.Models.Character" /> object or null.</returns>
     public static Character GetCharacter(string name)
     {
       return Character.Find(Data.characters, name);
@@ -110,7 +110,7 @@ namespace LavaLeak.Diplomata
     /// Get a interactable by it's name.
     /// </summary>
     /// <param name="name">The interactable name.</param>
-    /// <returns>The <seealso cref="Diplomata.Models.Interactable"> object or null.</returns>
+    /// <returns>The <seealso cref="Diplomata.Models.Interactable" /> object or null.</returns>
     public static Interactable GetInteractable(string name)
     {
       return Interactable.Find(Data.interactables, name);
@@ -121,7 +121,7 @@ namespace LavaLeak.Diplomata
     /// </summary>
     /// <param name="talkable">The talkable parent of the context.</param>
     /// <param name="contextIndex">The index of the context.</param>
-    /// <returns>The <seealso cref="Diplomata.Models.Context"> object or null.</returns>
+    /// <returns>The <seealso cref="Diplomata.Models.Context" /> object or null.</returns>
     public static Context GetContext(Talkable talkable, int contextIndex)
     {
       return Context.Find(talkable, contextIndex);

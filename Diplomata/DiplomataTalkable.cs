@@ -16,14 +16,14 @@ namespace LavaLeak.Diplomata
   [DisallowMultipleComponent]
   public class DiplomataTalkable : MonoBehaviour
   {
-    public List<Message> choices;
     public Talkable talkable;
     public Column currentColumn;
     public Message currentMessage;
     public bool choiceMenu;
     public bool IsTalking;
+    public List<Message> choices;
 
-    private Context currentContext;
+    protected Context currentContext;
     protected Dictionary<string, int> controlIndexes;
     private string lastUniqueId;
 
@@ -141,7 +141,7 @@ namespace LavaLeak.Diplomata
     /// Internal method to go the next message.
     /// </summary>
     /// <param name="hasFate">is true if use GoTo effect.</param>
-    private void Next(bool hasFate)
+    protected void Next(bool hasFate)
     {
       if (talkable != null && currentContext != null)
       {
@@ -510,7 +510,7 @@ namespace LavaLeak.Diplomata
 
           // Return the text.
           var content = new LanguageDictionary();
-          
+
           // First of all return the normal content.
           if (controlIndexes["content"] < 0)
             content = DictionariesHelper.ContainsKey(currentMessage.content,
@@ -518,7 +518,7 @@ namespace LavaLeak.Diplomata
 
           // If have any attached content return that.
           else if (currentMessage.attachedContent.Length > 0 &&
-              controlIndexes["content"] < currentMessage.attachedContent.Length)
+                   controlIndexes["content"] < currentMessage.attachedContent.Length)
           {
             var attachedContent = currentMessage.attachedContent[controlIndexes["content"]];
             if (attachedContent != null)
@@ -536,7 +536,7 @@ namespace LavaLeak.Diplomata
             return errorText;
           }
 
-          return content.value;
+          return currentContext.ReplaceVariables(content.value);
         }
         else
         {
@@ -784,6 +784,7 @@ namespace LavaLeak.Diplomata
         controlIndexes["content"]++;
         return;
       }
+      controlIndexes["content"] = -1;
 
       var hasFate = false;
 
@@ -1035,53 +1036,6 @@ namespace LavaLeak.Diplomata
     }
 
     /// <summary>
-    /// Get all the choices in a list.
-    /// </summary>
-    /// <returns>A list with all the choices of the current column.</returns>
-    public List<string> MessageChoices()
-    {
-      List<string> choicesText = new List<string>();
-
-      if (choices.Count > 0)
-      {
-        foreach (Message choice in choices)
-        {
-          var content = DictionariesHelper.ContainsKey(choice.content, DiplomataManager.Data.options.currentLanguage)
-            .value;
-          var choiceText = content; //(shortContent != "") ? shortContent : content;
-
-          if (!choice.alreadySpoked && choice.disposable)
-          {
-            choicesText.Add(choiceText);
-          }
-          else if (!choice.disposable)
-          {
-            choicesText.Add(choiceText);
-          }
-        }
-      }
-
-      else
-      {
-        Debug.Log("There's no choice this time.");
-
-        if (IsLastMessage())
-        {
-          EndTalk();
-        }
-
-        else
-        {
-          controlIndexes["column"] += 1;
-          controlIndexes["message"] = 0;
-          Next(false);
-        }
-      }
-
-      return choicesText;
-    }
-
-    /// <summary>
     /// Execute the onStart events of the effect.
     /// </summary>
     public void OnStartCallbacks()
@@ -1163,7 +1117,14 @@ namespace LavaLeak.Diplomata
         return "";
       }
 
-      return DictionariesHelper.ContainsKey(GetLastMessage().content,
+      var lastMessage = GetLastMessage();
+      var content = DictionariesHelper.ContainsKey(lastMessage.content,
+        DiplomataManager.Data.options.currentLanguage).value;
+
+      if (lastMessage.attachedContent.Length == 0)
+        return content;
+
+      return DictionariesHelper.ContainsKey(lastMessage.attachedContent[lastMessage.attachedContent.Length - 1].content,
         DiplomataManager.Data.options.currentLanguage).value;
     }
   }

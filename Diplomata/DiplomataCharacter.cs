@@ -12,14 +12,17 @@ namespace LavaLeak.Diplomata
   /// </summary>
   public class DiplomataCharacter : DiplomataTalkable
   {
-    public Action<Message> OnMessageChosen;
+    public event Action<Message> OnMessageChosen;
+    
 
     /// <summary>
     /// Set the main talkable fields.
     /// </summary>
     private void Start()
     {
-      choices = new List<Message>();
+      if (choices == null)
+        choices = new List<Message>();
+
       controlIndexes = new Dictionary<string, int>();
 
       controlIndexes.Add("context", 0);
@@ -33,20 +36,65 @@ namespace LavaLeak.Diplomata
     }
 
     /// <summary>
+    /// Get all the choices in a list.
+    /// </summary>
+    /// <returns>A list with all the choices of the current column.</returns>
+    public List<string> MessageChoices()
+    {
+      var choicesText = new List<string>();
+
+      if (choices.Count > 0)
+      {
+        foreach (var choice in choices)
+        {
+          var content = DictionariesHelper.ContainsKey(choice.content, DiplomataManager.Data.options.currentLanguage).value;
+
+          if (!choice.alreadySpoked && choice.disposable)
+          {
+            choicesText.Add(currentContext.ReplaceVariables(content));
+          }
+          else if (!choice.disposable)
+          {
+            choicesText.Add(currentContext.ReplaceVariables(content));
+          }
+        }
+      }
+
+      else
+      {
+        Debug.Log("There's no choice this time.");
+
+        if (IsLastMessage())
+        {
+          EndTalk();
+        }
+
+        else
+        {
+          controlIndexes["column"] += 1;
+          controlIndexes["message"] = 0;
+          Next(false);
+        }
+      }
+
+      return choicesText;
+    }
+
+    /// <summary>
     /// To set a choice by the player.
     /// </summary>
     /// <param name="content">The choice text.</param>
     public void ChooseMessage(string content)
     {
-      Character character = (Character) talkable;
+      var character = (Character) talkable;
 
       if (currentColumn != null)
       {
-        foreach (Message msg in choices)
+        foreach (var msg in choices)
         {
           var localContent = DictionariesHelper.ContainsKey(msg.content, DiplomataManager.Data.options.currentLanguage).value;
 
-          if (localContent == content)
+          if (currentContext.ReplaceVariables(localContent) == content)
           {
             currentMessage = msg;
             OnStartCallbacks();
@@ -83,16 +131,16 @@ namespace LavaLeak.Diplomata
     /// <returns>The influence value.</returns>
     public byte SetInfluence()
     {
-      Character character = (Character) talkable;
+      var character = (Character) talkable;
 
       if (currentMessage != null)
       {
         byte max = 0;
-        List<byte> min = new List<byte>();
+        var min = new List<byte>();
 
-        foreach (AttributeDictionary attrMsg in currentMessage.attributes)
+        foreach (var attrMsg in currentMessage.attributes)
         {
-          foreach (AttributeDictionary attrChar in character.attributes)
+          foreach (var attrChar in character.attributes)
           {
             if (attrMsg.key == attrChar.key)
             {
