@@ -1805,9 +1805,9 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   // Get the quest state name.
                   quest = Quest.Find(quests, condition.questAndState.questId);
-                  var questState = quest.GetState(condition.questAndState.questStateId);
-                  var questStateNameDict =
-                    DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage);
+                  var questState =  quest != null ? quest.GetState(condition.questAndState.questStateId) : null;
+                  var questStateNameDict = questState != null ?
+                    DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage) : null;
                   var questStateName = questStateNameDict != null ? questStateNameDict.value : string.Empty;
 
                   // Quest state Popup with a change checker.
@@ -2198,14 +2198,16 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   // Get the quest state name.
                   quest = Quest.Find(quests, effect.questAndState.questId);
-                  var questState = quest.GetState(effect.questAndState.questStateId);
-                  var questStateNameDict =
-                    DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage);
-                  var questStateName = questStateNameDict != null ? questStateNameDict.value : string.Empty;
 
                   // Quest state Popup with a change checker.
                   if (quest != null)
                   {
+                    var questState = quest.GetState(effect.questAndState.questStateId);
+                    var questStateNameDict = questState != null
+                      ? DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage)
+                      : null;
+                    var questStateName = questStateNameDict != null ? questStateNameDict.value : string.Empty;
+
                     EditorGUI.BeginChangeCheck();
                     var questStateNames = QuestState.GetShortDescriptions(quest.questStates);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
