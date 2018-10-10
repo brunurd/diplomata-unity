@@ -13,10 +13,13 @@ namespace LavaLeak.Diplomata.Models
   [Serializable]
   public class Message : Data
   {
+    // TODO: Replace with System.Guid.
     [SerializeField]
     private string uniqueId;
 
+    // TODO: Use only unique id.
     public int id;
+
     public bool isAChoice;
     public bool disposable;
     public int columnId;

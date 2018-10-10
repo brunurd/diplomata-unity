@@ -1,5 +1,3 @@
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace LavaLeak.Diplomata.Helpers
@@ -133,23 +131,6 @@ namespace LavaLeak.Diplomata.Helpers
     }
 
     /// <summary>
-    /// Make a real copy of a element, not a reference.
-    /// </summary>
-    /// <param name="other">The element to copy.</param>
-    /// <typeparam name="T">The type of the array, auto setted by the parameters.</typeparam>
-    /// <returns>The copy.</returns>
-    private static T DeepCopy<T>(T other)
-    {
-      using(MemoryStream ms = new MemoryStream())
-      {
-        BinaryFormatter formatter = new BinaryFormatter();
-        formatter.Serialize(ms, other);
-        ms.Position = 0;
-        return (T) formatter.Deserialize(ms);
-      }
-    }
-
-    /// <summary>
     /// Make a real copy of a array, not a reference.
     /// </summary>
     /// <param name="copyOf">The array to copy.</param>
@@ -163,7 +144,7 @@ namespace LavaLeak.Diplomata.Helpers
       // Do a loop to deep copy every element
       for (int i = 0; i < copyOf.Length; i++)
       {
-        array[i] = DeepCopy(copyOf[i]);
+        array[i] = CopyHelper.DeepCopy(copyOf[i]);
       }
 
       return array;

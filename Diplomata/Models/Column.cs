@@ -12,7 +12,9 @@ namespace LavaLeak.Diplomata.Models
     [SerializeField]
     public string uniqueId = Guid.NewGuid().ToString();
 
+    // TODO: Use only unique id.
     public int id;
+
     public string emitter;
     public Message[] messages;
 

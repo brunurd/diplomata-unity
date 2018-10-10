@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models.Submodels;
@@ -17,7 +19,9 @@ namespace LavaLeak.Diplomata.Models
     [SerializeField]
     private string uniqueId = Guid.NewGuid().ToString();
 
+    // TODO: Use only unique id.
     public int id;
+
     public LanguageDictionary[] name;
     public LanguageDictionary[] description;
     public string imagePath = string.Empty;
@@ -245,6 +249,11 @@ namespace LavaLeak.Diplomata.Models
     }
 
     /// <summary>
+    /// Clean constructor.
+    /// </summary>
+    public Item() {}
+
+    /// <summary>
     /// Instantiate a item with a id.
     /// </summary>
     /// <param name="id">The item id.</param>
@@ -363,6 +372,25 @@ namespace LavaLeak.Diplomata.Models
       var nameResult = DictionariesHelper.ContainsKey(description, language);
       if (nameResult == null) return string.Empty;
       return nameResult.value;
+    }
+
+    /// <summary>
+    /// Copy a item with all fields values.
+    /// </summary>
+    /// <param name="newId">the new id for the copied item.</param>
+    /// <param name="options">The options with languages infos.</param>
+    /// <returns>The new item.</returns>
+    public Item Copy(int newId, Options options)
+    {
+      var item = new Item(newId, options);
+      item.name = this.name;
+      item.description = this.description;
+      item.imagePath = this.imagePath;
+      item.highlightImagePath = this.highlightImagePath;
+      item.pressedImagePath = this.pressedImagePath;
+      item.disabledImagePath = this.disabledImagePath;
+      item.category = this.category;
+      return item;
     }
   }
 }

@@ -28,7 +28,9 @@ namespace LavaLeak.Diplomata.Models
   {
     [SerializeField] private string uniqueId = Guid.NewGuid().ToString();
 
+    // TODO: Use only unique id.
     public int id;
+
     public string talkableName;
     public bool idFilter = false;
     public bool conditionsFilter = true;

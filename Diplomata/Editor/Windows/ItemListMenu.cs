@@ -1,6 +1,3 @@
-using LavaLeak.Diplomata;
-using LavaLeak.Diplomata.Dictionaries;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -96,6 +93,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
           }
         }
 
+        if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+        {
+          inventory.items = ArrayHelper.Add(inventory.items, item.Copy(inventory.GenerateId(), options));
+          InventoryController.Save(inventory, options.jsonPrettyPrint);
+        }
+
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();
       }
@@ -104,7 +107,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
-        inventory.items = ArrayHelper.Add(inventory.items, new Item(inventory.items.Length, options));
+        inventory.items = ArrayHelper.Add(inventory.items, new Item(inventory.GenerateId(), options));
         InventoryController.Save(inventory, options.jsonPrettyPrint);
       }
 

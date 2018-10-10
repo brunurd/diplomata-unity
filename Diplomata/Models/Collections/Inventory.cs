@@ -1,4 +1,5 @@
 using System;
+using System.Net.Sockets;
 using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Persistence;
@@ -172,6 +173,25 @@ namespace LavaLeak.Diplomata.Models.Collections
       {
         item.SetImageAndSprite();
       }
+    }
+
+    /// <summary>
+    /// Generate a id for a new item without repeat the used ids.
+    /// </summary>
+    /// <returns>the new int id.</returns>
+    public int GenerateId()
+    {
+      var usedIds = new int[0];
+
+      foreach (var item in items)
+        usedIds = ArrayHelper.Add(usedIds, item.id);
+
+      var id = items.Length;
+
+      while (ArrayHelper.Contains(usedIds, id))
+        id++;
+
+      return id;
     }
 
     /// <summary>
