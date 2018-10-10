@@ -112,12 +112,22 @@ namespace LavaLeak.Diplomata.Editor.Windows
             EditorGUILayout.SelectableLabel(string.Format("Unique ID: {0}", questState.GetId()));
 
             EditorGUILayout.LabelField("Short description:");
+            
+            var questStateShortDescription = DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage);
+            if (questStateShortDescription == null)
+              questState.ShortDescription = ArrayHelper.Add(questState.ShortDescription, new LanguageDictionary(options.currentLanguage, ""));
+            
             DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage).value =
               EditorGUILayout.TextArea(DictionariesHelper
                 .ContainsKey(questState.ShortDescription, options.currentLanguage).value);
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Long description:");
+            
+            var questStateLongDescription = DictionariesHelper.ContainsKey(questState.LongDescription, options.currentLanguage);
+            if (questStateLongDescription == null)
+              questState.LongDescription = ArrayHelper.Add(questState.LongDescription, new LanguageDictionary(options.currentLanguage, ""));
+            
             DictionariesHelper.ContainsKey(questState.LongDescription, options.currentLanguage).value =
               EditorGUILayout.TextArea(DictionariesHelper
                 .ContainsKey(questState.LongDescription, options.currentLanguage).value);

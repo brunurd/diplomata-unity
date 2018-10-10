@@ -32,7 +32,7 @@ namespace LavaLeak.Diplomata.Models
     {
       uniqueId = Guid.NewGuid().ToString();
       Name = new LanguageDictionary[0];
-      questStates = new [] { new QuestState("Short description.", "Long description.") };
+      questStates = new QuestState[0];
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ namespace LavaLeak.Diplomata.Models
     /// <param name="questState">The state name.</param>
     public void AddState(string questState, string longDescription)
     {
-      if (!finished) questStates = ArrayHelper.Add(questStates, new QuestState(questState, longDescription));
+      if (!finished) questStates = ArrayHelper.Add(questStates, new QuestState());
     }
 
     /// <summary>

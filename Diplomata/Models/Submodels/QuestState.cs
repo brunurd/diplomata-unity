@@ -22,19 +22,11 @@ namespace LavaLeak.Diplomata.Models.Submodels
     /// <summary>
     /// The state constructor.
     /// </summary>
-    /// <param name="shortDescription">The short description of the state.</param>
-    /// <param name="longDescription">The long description of the state.</param>
-    public QuestState(string shortDescription, string longDescription)
+    public QuestState()
     {
       uniqueId = Guid.NewGuid().ToString();
       ShortDescription = new LanguageDictionary[0];
       LongDescription = new LanguageDictionary[0];
-
-      foreach (var language in DiplomataManager.Data.options.languagesList)
-      {
-        ShortDescription = ArrayHelper.Add(ShortDescription, new LanguageDictionary(language, shortDescription));
-        LongDescription = ArrayHelper.Add(LongDescription, new LanguageDictionary(language, longDescription));
-      }
     }
 
     /// <summary>
