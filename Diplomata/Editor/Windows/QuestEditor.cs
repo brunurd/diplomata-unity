@@ -90,6 +90,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
             EditorGUILayout.TextField(DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage).value);
           GUIHelper.Focus("name");
           EditorGUILayout.Space();
+          
+          EditorGUILayout.SelectableLabel(string.Format("Quest Unique ID: {0}", quest.GetId()));
 
           // Set label properties for quest states header.
           GUILayout.BeginHorizontal();
@@ -109,7 +111,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
             // Descriptions.
             EditorGUILayout.BeginVertical();
 
-            EditorGUILayout.SelectableLabel(string.Format("Unique ID: {0}", questState.GetId()));
+            
 
             EditorGUILayout.LabelField("Short description:");
             
@@ -132,6 +134,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
               EditorGUILayout.TextArea(DictionariesHelper
                 .ContainsKey(questState.LongDescription, options.currentLanguage).value);
             EditorGUILayout.Space();
+            
+            EditorGUILayout.SelectableLabel(string.Format("Quest State Unique ID: {0}", questState.GetId()));
 
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Up", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))

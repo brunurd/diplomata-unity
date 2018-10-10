@@ -188,9 +188,9 @@ namespace LavaLeak.Diplomata.Models
     }
 
     /// <summary>
-    /// Return a dictionary with all the quest states and if it is complete or don't.
+    /// Return a dictionary with all the quest states names and if it is complete or don't.
     /// </summary>
-    /// <returns>A dictionary with all the quest states.</returns>
+    /// <returns>A dictionary with all the quest states names.</returns>
     public Dictionary<string, bool> GetQuestLog(string language = "")
     {
       var questLog = new Dictionary<string, bool>();
@@ -210,6 +210,44 @@ namespace LavaLeak.Diplomata.Models
           questLog.Add(questStateName, completed);
       }
       return questLog;
+    }
+    
+    /// <summary>
+    /// Return a dictionary with all the quest states and if it is complete or don't.
+    /// </summary>
+    /// <returns>A dictionary with all the quest states.</returns>
+    public Dictionary<QuestState, bool> GetQuestStates()
+    {
+      var questLog = new Dictionary<QuestState, bool>();
+      var currentStateIndex = GetStateIndex();
+
+      for (var i = 0; i < questStates.Length; i++)
+      {
+        var completed = true;
+
+        if (!Initialized)
+          completed = false;
+        else if (!finished)
+          completed = currentStateIndex > i && currentStateIndex > -1;
+
+          questLog.Add(questStates[i], completed);
+      }
+      return questLog;
+    }
+
+    public QuestState GetFirstIncomplete()
+    {
+      var currentQuestStateId = GetStateIndex();
+
+      // If don't have quest states.
+      if (questStates.Length < 0)
+        return null;
+
+      // If can't return current quest state.
+      if (currentQuestStateId < 0)
+        return questStates[0];
+
+      return questStates[currentQuestStateId];
     }
 
     public string GetName(string language = "")
