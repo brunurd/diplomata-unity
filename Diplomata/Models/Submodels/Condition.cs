@@ -90,17 +90,13 @@ namespace LavaLeak.Diplomata.Models.Submodels
 
     public string DisplayQuestStateIs(Quest[] quests, string language = "")
     {
-      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
       var quest = Quest.Find(quests, questAndState.questId);
       var questState = quest.GetState(questAndState.questStateId);
 
-      var questName = DictionariesHelper.ContainsKey(quest.Name, language);
-      var questStateName = DictionariesHelper.ContainsKey(questState.ShortDescription, language);
-
-      var questNameContent = questName == null ? string.Empty : questName.value;
-      var questStateNameContent = questStateName == null ? string.Empty : questStateName.value;
+      var questName = quest != null ? quest.GetName(language) : string.Empty;
+      var questStateName = questState != null ? questState.GetShortDescription() : string.Empty;
       
-      return string.Format("Quest \"{0}\" state is: {1}", questNameContent, questStateNameContent);
+      return string.Format("Quest \"{0}\" state is: {1}", questName, questStateName);
     }
 
     public static bool CanProceed(Condition[] conditions)

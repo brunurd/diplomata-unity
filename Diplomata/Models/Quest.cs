@@ -250,6 +250,11 @@ namespace LavaLeak.Diplomata.Models
       return questStates[currentQuestStateId];
     }
 
+    /// <summary>
+    /// Get the quest name in the setted language.
+    /// </summary>
+    /// <param name="language">The language or the current if don't exists.</param>
+    /// <returns>The name as string.</returns>
     public string GetName(string language = "")
     {
       language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;

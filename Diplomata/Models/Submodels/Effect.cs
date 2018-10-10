@@ -116,35 +116,27 @@ namespace LavaLeak.Diplomata.Models.Submodels
 
     public string DisplaySetQuestState(Quest[] quests, string language = "")
     {
-      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
       var quest = Quest.Find(quests, questAndState.questId);
       var questState = quest.GetState(questAndState.questStateId);
 
-      var questName = DictionariesHelper.ContainsKey(quest.Name, language);
-      var questStateName = DictionariesHelper.ContainsKey(questState.ShortDescription, language);
+      var questName = quest != null ? quest.GetName(language) : string.Empty;
+      var questStateName = questState != null ? questState.GetShortDescription() : string.Empty;
 
-      var questNameContent = questName == null ? string.Empty : questName.value;
-      var questStateNameContent = questStateName == null ? string.Empty : questStateName.value;
-
-      return string.Format("Set quest \"{0}\" to: {1}", questNameContent, questStateNameContent);
+      return string.Format("Set quest \"{0}\" to: {1}", questName, questStateName);
     }
 
     public string DiplayStartQuest(Quest[] quests, string language = "")
     {
-      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
       var quest = Quest.Find(quests, questAndState.questId);
-      var questName = DictionariesHelper.ContainsKey(quest.Name, language);
-      var questNameContent = questName == null ? string.Empty : questName.value;
-      return string.Format("Start the quest \"{0}\"", questNameContent);
+      var questName = quest != null ? quest.GetName(language) : string.Empty;
+      return string.Format("Start the quest \"{0}\"", questName);
     }
 
     public string DisplayFinishQuest(Quest[] quests, string language = "")
     {
-      language = string.IsNullOrEmpty(language) ? DiplomataManager.Data.options.currentLanguage : language;
       var quest = Quest.Find(quests, questAndState.questId);
-      var questName = DictionariesHelper.ContainsKey(quest.Name, language);
-      var questNameContent = questName == null ? string.Empty : questName.value;
-      return string.Format("Finish the quest \"{0}\"", questNameContent);
+      var questName = quest != null ? quest.GetName(language) : string.Empty;
+      return string.Format("Finish the quest \"{0}\"", questName);
     }
   }
 }
