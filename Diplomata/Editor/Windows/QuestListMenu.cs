@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
+using LavaLeak.Diplomata.Models.Submodels;
 using UnityEditor;
 using UnityEngine;
 
@@ -81,6 +83,16 @@ namespace LavaLeak.Diplomata.Editor.Windows
       {
         var quest = new Quest();
         quests = ArrayHelper.Add(quests, quest);
+        quest.questStates = ArrayHelper.Add(quest.questStates, new QuestState());
+
+        foreach (var language in options.languagesList)
+        {
+          quest.questStates[0].ShortDescription =
+            ArrayHelper.Add(quest.questStates[0].ShortDescription, new LanguageDictionary(language, "in progress."));
+          quest.questStates[0].LongDescription =
+            ArrayHelper.Add(quest.questStates[0].LongDescription, new LanguageDictionary(language, ""));
+        }
+
         QuestsController.Save(quests, options.jsonPrettyPrint);
         QuestEditor.Open(quest);
       }
