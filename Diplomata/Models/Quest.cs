@@ -86,6 +86,7 @@ namespace LavaLeak.Diplomata.Models
         index = i;
         break;
       }
+
       return index;
     }
 
@@ -127,7 +128,7 @@ namespace LavaLeak.Diplomata.Models
       var index = GetStateIndex();
       return index != -1 ? questStates[index].GetId() : null;
     }
-    
+
     /// <summary>
     /// Get a state from id.
     /// </summary>
@@ -140,6 +141,7 @@ namespace LavaLeak.Diplomata.Models
         if (state.GetId() == id)
           return state;
       }
+
       return null;
     }
 
@@ -164,6 +166,7 @@ namespace LavaLeak.Diplomata.Models
           }
         }
       }
+
       return GetQuestLog();
     }
 
@@ -184,6 +187,7 @@ namespace LavaLeak.Diplomata.Models
       {
         Debug.Log(string.Format("Quest {0} already finished.", Name));
       }
+
       return GetQuestLog();
     }
 
@@ -209,9 +213,10 @@ namespace LavaLeak.Diplomata.Models
         if (questStateName != null)
           questLog.Add(questStateName, completed);
       }
+
       return questLog;
     }
-    
+
     /// <summary>
     /// Return a dictionary with all the quest states and if it is complete or don't.
     /// </summary>
@@ -230,8 +235,9 @@ namespace LavaLeak.Diplomata.Models
         else if (!finished)
           completed = currentStateIndex > i && currentStateIndex > -1;
 
-          questLog.Add(questStates[i], completed);
+        questLog.Add(questStates[i], completed);
       }
+
       return questLog;
     }
 
@@ -277,6 +283,7 @@ namespace LavaLeak.Diplomata.Models
           questsReturn[i] = quests[i].GetName(language);
         }
       }
+
       return questsReturn;
     }
 
@@ -295,6 +302,7 @@ namespace LavaLeak.Diplomata.Models
           questsReturn[i] = quests[i].GetId();
         }
       }
+
       return questsReturn;
     }
 
@@ -335,6 +343,7 @@ namespace LavaLeak.Diplomata.Models
       {
         questString.Append(string.Format("{0}:{1}; ", state.Key, state.Value));
       }
+
       return questString.ToString();
     }
 
@@ -346,7 +355,7 @@ namespace LavaLeak.Diplomata.Models
     {
       var quest = new QuestPersistent();
       quest.id = uniqueId;
-      quest.currentStateId = currentStateId;
+      quest.currentStateId = string.IsNullOrEmpty(currentStateId) ? " " : currentStateId;
       quest.initialized = Initialized;
       quest.finished = finished;
       return quest;
@@ -360,7 +369,7 @@ namespace LavaLeak.Diplomata.Models
     {
       var questPersistentData = (QuestPersistent) persistentData;
       uniqueId = questPersistentData.id;
-      currentStateId = questPersistentData.currentStateId;
+      currentStateId = questPersistentData.currentStateId == " " ? string.Empty : questPersistentData.currentStateId;
       Initialized = questPersistentData.initialized;
       finished = questPersistentData.finished;
     }
