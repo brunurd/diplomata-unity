@@ -40,7 +40,7 @@ namespace LavaLeak.Diplomata.Editor.Controllers
 
     public static void AddCharacter(string name, Options options, List<Character> characters)
     {
-      Character character = new Character(name);
+      var character = new Character(name, options);
       CheckRepeatedCharacter(character, options, characters);
     }
 

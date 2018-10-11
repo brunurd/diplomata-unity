@@ -371,7 +371,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void CreateContext()
     {
-      talkable.contexts = ArrayHelper.Add(talkable.contexts, new Context(talkable.contexts.Length, talkable.name));
+      talkable.contexts = ArrayHelper.Add(talkable.contexts, new Context(talkable.contexts.Length, talkable.name, options.languages));
       Save();
     }
 
@@ -636,7 +636,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       text += condition.DisplayGlobalFlagEqualTo();
                       break;
                     case Condition.Type.QuestStateIs:
-                      text += condition.DisplayQuestStateIs(quests);
+                      text += condition.DisplayQuestStateIs(quests, options.currentLanguage);
                       break;
                   }
 
@@ -821,13 +821,13 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       text += effect.DisplayEndOfDialogue();
                       break;
                     case Effect.Type.SetQuestState:
-                      text += effect.DisplaySetQuestState(quests);
+                      text += effect.DisplaySetQuestState(quests, options.currentLanguage);
                       break;
                     case Effect.Type.FinishQuest:
-                      text += effect.DisplayFinishQuest(quests);
+                      text += effect.DisplayFinishQuest(quests, options.currentLanguage);
                       break;
                     case Effect.Type.StartQuest:
-                      text += effect.DiplayStartQuest(quests);
+                      text += effect.DiplayStartQuest(quests, options.currentLanguage);
                       break;
                   }
 
@@ -875,13 +875,13 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   // If don't have a next column create one.
                   if (nextColumn == null)
                   {
-                    context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
+                    context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, options));
                     nextColumn = context.columns[context.columns.Length];
                   }
 
                   // Create a new message.
                   var newMessage = new Message(nextColumn.messages.Length, options.playerCharacterName, nextColumn.id,
-                    currentMessage.labelId);
+                    currentMessage.labelId, options);
 
                   // Create a new condition with a after of.
                   var newCondition = new Condition();
@@ -921,7 +921,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         if (GUILayout.Button("Add Message", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
           column.messages = ArrayHelper.Add(column.messages,
-            new Message(column.messages.Length, column.emitter, column.id, context.labels[0].uniqueId));
+            new Message(column.messages.Length, column.emitter, column.id, context.labels[0].uniqueId, options));
           SetMessage(null);
           Save();
         }
@@ -935,7 +935,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
       if (GUILayout.Button("Add Column", GUILayout.Height(GUIHelper.BUTTON_HEIGHT),
         GUILayout.Width(context.columnWidth)))
       {
-        context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
+        context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, options));
         Save();
       }
 
@@ -1521,7 +1521,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
             if (GUILayout.Button("New column at left", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
+              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, options));
 
               MoveColumnsToRight(context, column.id);
 
@@ -1531,7 +1531,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
             if (GUILayout.Button("New column at right", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length));
+              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, options));
 
               MoveColumnsToRight(context, column.id + 1);
 
@@ -1794,12 +1794,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   // Quest name Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
-                  var questNames = Quest.GetNames(quests);
+                  var questNames = Quest.GetNames(quests, options);
                   questNames = ArrayHelper.Add(questNames, string.Empty);
                   questName = GUIHelper.Popup("Quest: ", questName, questNames);
                   if (EditorGUI.EndChangeCheck())
                   {
-                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests), questName);
+                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests, options), questName);
                     if (questIndex > -1) condition.questAndState.questId = Quest.GetIDs(quests)[questIndex];
                   }
 
@@ -1814,12 +1814,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   if (quest != null)
                   {
                     EditorGUI.BeginChangeCheck();
-                    var questStateNames = QuestState.GetShortDescriptions(quest.questStates);
+                    var questStateNames = QuestState.GetShortDescriptions(quest.questStates, options);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
                     questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
-                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetShortDescriptions(quest.questStates),
+                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetShortDescriptions(quest.questStates, options),
                         questStateName);
                       if (questStateIndex > -1)
                         condition.questAndState.questStateId = QuestState.GetIDs(quest.questStates)[questStateIndex];
@@ -2187,12 +2187,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   // Quest Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
-                  var questNames = Quest.GetNames(quests);
+                  var questNames = Quest.GetNames(quests, options);
                   questNames = ArrayHelper.Add(questNames, string.Empty);
                   questName = GUIHelper.Popup("Quest: ", questName, questNames);
                   if (EditorGUI.EndChangeCheck())
                   {
-                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests), questName);
+                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests, options), questName);
                     if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(quests)[questIndex];
                   }
 
@@ -2209,12 +2209,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
                     var questStateName = questStateNameDict != null ? questStateNameDict.value : string.Empty;
 
                     EditorGUI.BeginChangeCheck();
-                    var questStateNames = QuestState.GetShortDescriptions(quest.questStates);
+                    var questStateNames = QuestState.GetShortDescriptions(quest.questStates, options);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
                     questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
-                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetShortDescriptions(quest.questStates),
+                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetShortDescriptions(quest.questStates, options),
                         questStateName);
                       if (questStateIndex > -1)
                         effect.questAndState.questStateId = QuestState.GetIDs(quest.questStates)[questStateIndex];
@@ -2233,12 +2233,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   // Quest Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
-                  var questToFinishNames = Quest.GetNames(quests);
+                  var questToFinishNames = Quest.GetNames(quests, options);
                   questToFinishNames = ArrayHelper.Add(questToFinishNames, string.Empty);
                   questToFinishName = GUIHelper.Popup("Quest: ", questToFinishName, questToFinishNames);
                   if (EditorGUI.EndChangeCheck())
                   {
-                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests), questToFinishName);
+                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests, options), questToFinishName);
                     if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(quests)[questIndex];
                   }
 
@@ -2254,12 +2254,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   // Quest Popup with a change checker.
                   EditorGUI.BeginChangeCheck();
-                  var questToStartNames = Quest.GetNames(quests);
+                  var questToStartNames = Quest.GetNames(quests, options);
                   questToStartNames = ArrayHelper.Add(questToStartNames, string.Empty);
                   questToStartName = GUIHelper.Popup("Quest: ", questToStartName, questToStartNames);
                   if (EditorGUI.EndChangeCheck())
                   {
-                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests), questToStartName);
+                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(quests, options), questToStartName);
                     if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(quests)[questIndex];
                   }
 
@@ -2335,7 +2335,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
       if (GUILayout.Button("Add local variable", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
       {
         context.AddLocalVariable(string.Format("variable{0}", context.LocalVariables.Length), VariableType.String,
-          string.Empty);
+          string.Empty, options.currentLanguage);
         Save();
       }
 

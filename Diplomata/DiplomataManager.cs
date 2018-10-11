@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
-using LavaLeak.Diplomata.Persistence;
 using LavaLeak.Diplomata.Persistence.Models;
 using UnityEngine;
 
@@ -11,52 +10,67 @@ namespace LavaLeak.Diplomata
   /// <summary>
   /// The class to manage all Diplomata project data.
   /// </summary>
-  [ExecuteInEditMode]
   public static class DiplomataManager
   {
     private static DiplomataData data;
-    public static DiplomataEventController EventController = new DiplomataEventController();
-    public static bool OnATalk;
+
+    public static DiplomataEventController EventController
+    {
+      get { return Data.EventController; }
+      set { Data.EventController = value; }
+    }
+
+    public static bool OnATalk
+    {
+      get { return Data.OnATalk; }
+      set { Data.OnATalk = value; }
+    }
    
     /// <summary>
     /// The Diplomata main data, all data come from here.
     /// </summary>
-    /// <value>A static <seealso cref="Diplomata.DiplomataData">.</value>
+    /// <value>A static <seealso cref="Diplomata.DiplomataData" />.</value>
     public static DiplomataData Data
     {
       get
       {
+        if (!Application.isPlaying)
+        {
+          Debug.LogError("The data get can only be used in play mode.");
+          return null;
+        }
+
+        if (data != null) return data;
+        
+        data = Object.FindObjectOfType<DiplomataData>();
+        
         if (data == null)
         {
-          data = new DiplomataData();
-          data.ReadJSONs();
+          var dataGameObject = new GameObject("[Diplomata]");
+          data = dataGameObject.AddComponent<DiplomataData>();
         }
+
         return data;
-      }
-      set
-      {
-        data = value;
       }
     }
 
     /// <summary>
     /// Pre-load all the static data.
     /// </summary>
-    public static void PreLoadData()
+    public static DiplomataData PreLoadData()
     {
-      data = new DiplomataData();
-      data.ReadJSONs();
+      return Data;
     }
 
     /// <summary>
     /// Method to dispose the game data for new game.
     /// </summary>
-    /// <param name="load">Load static data after dispose?</param>
+    /// <param name="reload">Load static data after dispose?</param>
     public static void DisposeData(bool reload = true)
     {
-      data = new DiplomataData();
+      Object.DestroyImmediate(Data.gameObject);
       if (reload)
-        data.ReadJSONs();
+        Data.Reset();
     }
 
     /// <summary>

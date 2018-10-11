@@ -5,7 +5,7 @@ namespace LavaLeak.Diplomata
 { 
   /// <summary>
   /// Single source of Truth for all events that are occuring
-  /// on diplomatas entities.
+  /// on Diplomata entities.
   /// Each entity still have local events for local subscriptions,
   /// but then will also trigger this global events to make easier
   /// to get information about what is happening on the state of

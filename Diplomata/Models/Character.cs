@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Helpers;
-using LavaLeak.Diplomata.Persistence;
 using UnityEngine;
 
 namespace LavaLeak.Diplomata.Models
@@ -21,65 +20,21 @@ namespace LavaLeak.Diplomata.Models
     /// </summary>
     /// <param name="name">The character name.</param>
     /// <returns>The new Character.</returns>
-    public Character(string name) : base(name)
+    public Character(string name, Options options) : base(name, options)
     {
-      SetAttributes();
+      SetAttributes(options);
     }
 
     /// <summary>
     /// Set the global attributes to the character local attributes.
     /// </summary>
-    public void SetAttributes()
+    public void SetAttributes(Options options)
     {
       attributes = new AttributeDictionary[0];
 
-      foreach (string attrName in DiplomataManager.Data.options.attributes)
+      foreach (var attrName in options.attributes)
       {
         attributes = ArrayHelper.Add(attributes, new AttributeDictionary(attrName));
-      }
-    }
-
-    /// <summary>
-    /// Update the list of interactables in the DiplomataManager.Data.
-    /// </summary>
-    public static void UpdateList()
-    {
-      var charactersFiles = Resources.LoadAll("Diplomata/Characters/");
-
-      DiplomataManager.Data.characters = new List<Character>();
-      DiplomataManager.Data.options.characterList = new string[0];
-
-      foreach (UnityEngine.Object obj in charactersFiles)
-      {
-        var json = (TextAsset) obj;
-        var character = JsonUtility.FromJson<Character>(json.text);
-
-        DiplomataManager.Data.characters.Add(character);
-        DiplomataManager.Data.options.characterList = ArrayHelper.Add(DiplomataManager.Data.options.characterList, obj.name);
-      }
-
-      SetOnScene();
-    }
-
-    /// <summary>
-    /// Set if the character is on the current scene.
-    /// </summary>
-    public static void SetOnScene()
-    {
-      var charactersOnScene = UnityEngine.Object.FindObjectsOfType<DiplomataCharacter>();
-
-      foreach (Character character in DiplomataManager.Data.characters)
-      {
-        foreach (DiplomataCharacter diplomataCharacter in charactersOnScene)
-        {
-          if (diplomataCharacter.talkable != null)
-          {
-            if (character.name == diplomataCharacter.talkable.name)
-            {
-              character.onScene = true;
-            }
-          }
-        }
       }
     }
 

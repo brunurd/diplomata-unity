@@ -69,7 +69,7 @@ namespace LavaLeak.Diplomata.Models
       uniqueId = SetUniqueId();
     }
 
-    public Message(int id, string emitter, int columnId, string labelId)
+    public Message(int id, string emitter, int columnId, string labelId, Options options)
     {
       conditions = new Condition[0];
       content = new LanguageDictionary[0];
@@ -81,12 +81,12 @@ namespace LavaLeak.Diplomata.Models
       animatorAttributesSetters = new AnimatorAttributeSetter[0];
       this.labelId = labelId;
 
-      foreach (string str in DiplomataManager.Data.options.attributes)
+      foreach (string str in options.attributes)
       {
         attributes = ArrayHelper.Add(attributes, new AttributeDictionary(str));
       }
 
-      foreach (Language lang in DiplomataManager.Data.options.languages)
+      foreach (Language lang in options.languages)
       {
         content = ArrayHelper.Add(content, new LanguageDictionary(lang.name, "[ Message content here ]"));
         screenplayNotes = ArrayHelper.Add(screenplayNotes, new LanguageDictionary(lang.name, ""));

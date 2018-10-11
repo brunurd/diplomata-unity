@@ -107,7 +107,7 @@ namespace LavaLeak.Diplomata.Models
     /// </summary>
     /// <param name="id">A int id.</param>
     /// <param name="talkableName">The talkable parent name.</param>
-    public Context(int id, string talkableName)
+    public Context(int id, string talkableName, Language[] languages)
     {
       uniqueId = Guid.NewGuid().ToString();
       this.id = id;
@@ -117,7 +117,7 @@ namespace LavaLeak.Diplomata.Models
       labels = new Label[] {new Label()};
       LocalVariables = new LocalVariable[0];
 
-      foreach (Language lang in DiplomataManager.Data.options.languages)
+      foreach (Language lang in languages)
       {
         name = ArrayHelper.Add(name, new LanguageDictionary(lang.name, "Name [Change clicking on Edit]"));
       }
@@ -129,9 +129,10 @@ namespace LavaLeak.Diplomata.Models
     /// <param name="variableName">The name of the variable.</param>
     /// <param name="type">The type of the variable.</param>
     /// <param name="value">The value of the variable.</param>
-    public void AddLocalVariable(string variableName, VariableType type, object value)
+    /// <param name="language">The language of the string value.</param>
+    public void AddLocalVariable(string variableName, VariableType type, object value, string language)
     {
-      LocalVariables = ArrayHelper.Add(LocalVariables, new LocalVariable(variableName, type, value));
+      LocalVariables = ArrayHelper.Add(LocalVariables, new LocalVariable(variableName, type, value, language));
     }
 
     /// <summary>
@@ -169,6 +170,9 @@ namespace LavaLeak.Diplomata.Models
     /// <returns>The text with all the local variables replaced.</returns>
     public string ReplaceVariables(string text)
     {
+      if (!Application.isPlaying)
+        return text;
+
       var replacedText = string.Copy(text);
       var matches = Regex.Matches(replacedText, "{{(.*?)}}");
 

@@ -4,7 +4,6 @@ using System.IO;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
 using LavaLeak.Diplomata.Models.Collections;
-using LavaLeak.Diplomata.Persistence;
 using UnityEngine;
 
 namespace LavaLeak.Diplomata
@@ -13,15 +12,40 @@ namespace LavaLeak.Diplomata
   /// The Data storage class, here are all the Diplomata Data fields.
   /// </summary>
   [Serializable]
-  public class DiplomataData
+  public class DiplomataData : MonoBehaviour
   {
-    public Options options = new Options();
-    public List<Character> characters = new List<Character>();
-    public List<Interactable> interactables = new List<Interactable>();
-    public Inventory inventory = new Inventory();
-    public GlobalFlags globalFlags = new GlobalFlags();
-    public Quest[] quests = new Quest[0];
-    public TalkLog[] talkLogs = new TalkLog[0];
+    public Options options;
+    public List<Character> characters;
+    public List<Interactable> interactables;
+    public Inventory inventory;
+    public GlobalFlags globalFlags;
+    public Quest[] quests;
+    public TalkLog[] talkLogs;
+    public DiplomataEventController EventController;
+    public bool OnATalk;
+
+    private void Awake()
+    {
+      Reset();
+      DontDestroyOnLoad(gameObject);
+    }
+
+    /// <summary>
+    /// Reset all fields.
+    /// </summary>
+    public void Reset()
+    {
+      options = new Options();
+      characters = new List<Character>();
+      interactables = new List<Interactable>();
+      inventory = new Inventory();
+      globalFlags = new GlobalFlags();
+      quests = new Quest[0];
+      talkLogs = new TalkLog[0];
+      EventController = new DiplomataEventController();
+      OnATalk = false;
+      ReadJSONs();
+    }
 
     /// <summary>
     /// Get the JSON's data.

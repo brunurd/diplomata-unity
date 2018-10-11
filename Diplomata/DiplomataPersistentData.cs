@@ -24,7 +24,7 @@ namespace LavaLeak.Diplomata
     /// <summary>
     /// It get all the persistent data from DiplomataData.
     /// </summary>
-    public void GetDiplomataData()
+    public void Save()
     {
       options = (OptionsPersistent) DiplomataManager.Data.options.GetData();
       characters = Data.GetArrayData<CharacterPersistent>(DiplomataManager.Data.characters.ToArray());
@@ -38,21 +38,16 @@ namespace LavaLeak.Diplomata
     /// <summary>
     /// Set the DiplomataData from persistent data.
     /// </summary>
-    /// <param name="data">A <seealso cref="LavaLeak.Diplomata.DiplomataData"> reference.</param>
-    public DiplomataData SetDiplomataData()
+    public void Load()
     {
-      var data = new DiplomataData();
-      data.ReadJSONs();
-
-      data.options.SetData(options);
-      data.characters = Data.SetArrayData<Character>(data.characters.ToArray(), characters).OfType<Character>().ToList();
-      data.globalFlags.SetData(globalFlags);
-      data.interactables = Data.SetArrayData<Interactable>(data.interactables.ToArray(), interactables).OfType<Interactable>().ToList();
-      data.inventory.SetData(inventory);
-      data.quests = Data.SetArrayData<Quest>(data.quests, quests);
-      data.talkLogs = Data.SetArrayData<TalkLog>(data.talkLogs, talkLogs);
-
-      return data;
+      DiplomataManager.Data.Reset();
+      DiplomataManager.Data.options.SetData(options);
+      DiplomataManager.Data.characters = Data.SetArrayData<Character>(DiplomataManager.Data.characters.ToArray(), characters).OfType<Character>().ToList();
+      DiplomataManager.Data.globalFlags.SetData(globalFlags);
+      DiplomataManager.Data.interactables = Data.SetArrayData<Interactable>(DiplomataManager.Data.interactables.ToArray(), interactables).OfType<Interactable>().ToList();
+      DiplomataManager.Data.inventory.SetData(inventory);
+      DiplomataManager.Data.quests = Data.SetArrayData<Quest>(DiplomataManager.Data.quests, quests);
+      DiplomataManager.Data.talkLogs = Data.SetArrayData<TalkLog>(DiplomataManager.Data.talkLogs, talkLogs);
     }
   }
 }
