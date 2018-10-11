@@ -20,11 +20,11 @@ namespace LavaLeak.Diplomata.Models
 
     public Column() {}
 
-    public Column(int id)
+    public Column(int id, Options options)
     {
       uniqueId = Guid.NewGuid().ToString();
       this.id = id;
-      emitter = DiplomataManager.Data.options.playerCharacterName;
+      emitter = options.playerCharacterName;
 
       messages = new Message[0];
     }

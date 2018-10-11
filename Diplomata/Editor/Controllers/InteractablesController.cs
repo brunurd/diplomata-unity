@@ -40,7 +40,7 @@ namespace LavaLeak.Diplomata.Editor.Controllers
 
     public static void AddInteractable(string name, Options options, List<Interactable> interactables)
     {
-      Interactable interactable = new Interactable(name);
+      var interactable = new Interactable(name, options);
       CheckRepeatedInteractable(interactable, options, interactables);
     }
 

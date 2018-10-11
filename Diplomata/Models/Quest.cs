@@ -267,11 +267,22 @@ namespace LavaLeak.Diplomata.Models
       var name = DictionariesHelper.ContainsKey(Name, language);
       return name != null ? name.value : string.Empty;
     }
+    
+    /// <summary>
+    /// Get the quest name in the current language.
+    /// </summary>
+    /// <param name="options">The options to get current language.</param>
+    /// <returns>The name as string.</returns>
+    public string GetName(Options options)
+    {
+      return GetName(options.currentLanguage);
+    }
 
     /// <summary>
     /// Get a list of the names of the quests of a array.
     /// </summary>
     /// <param name="quests">The quests array.</param>
+    /// <param name="language">The language to get names.</param>
     /// <returns>A array of names as strings.</returns>
     public static string[] GetNames(Quest[] quests, string language = "")
     {
@@ -285,6 +296,17 @@ namespace LavaLeak.Diplomata.Models
       }
 
       return questsReturn;
+    }
+
+    /// <summary>
+    /// Get a list of the names of the quests of a array.
+    /// </summary>
+    /// <param name="quests">The quests array.</param>
+    /// <param name="options">The options to get current language.</param>
+    /// <returns></returns>
+    public static string[] GetNames(Quest[] quests, Options options)
+    {
+      return GetNames(quests, options.currentLanguage);
     }
 
     /// <summary>

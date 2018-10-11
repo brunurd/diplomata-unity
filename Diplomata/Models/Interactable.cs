@@ -16,51 +16,7 @@ namespace LavaLeak.Diplomata.Models
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public Interactable(string name) : base(name) {}
-
-    /// <summary>
-    /// Update the list of interactables in the DiplomataManager.Data.
-    /// </summary>
-    public static void UpdateList()
-    {
-      var interactablesFiles = Resources.LoadAll("Diplomata/Interactables/");
-
-      DiplomataManager.Data.interactables = new List<Interactable>();
-      DiplomataManager.Data.options.interactableList = new string[0];
-
-      foreach (UnityEngine.Object obj in interactablesFiles)
-      {
-        var json = (TextAsset) obj;
-        var interactable = JsonUtility.FromJson<Interactable>(json.text);
-
-        DiplomataManager.Data.interactables.Add(interactable);
-        DiplomataManager.Data.options.interactableList = ArrayHelper.Add(DiplomataManager.Data.options.interactableList, obj.name);
-      }
-
-      SetOnScene();
-    }
-
-    /// <summary>
-    /// Set if the interactable is on the current scene.
-    /// </summary>
-    public static void SetOnScene()
-    {
-      var interactablesOnScene = UnityEngine.Object.FindObjectsOfType<DiplomataInteractable>();
-
-      foreach (Interactable interactable in DiplomataManager.Data.interactables)
-      {
-        foreach (DiplomataInteractable diplomataInteractable in interactablesOnScene)
-        {
-          if (diplomataInteractable.talkable != null)
-          {
-            if (interactable.name == diplomataInteractable.talkable.name)
-            {
-              interactable.onScene = true;
-            }
-          }
-        }
-      }
-    }
+    public Interactable(string name, Options options) : base(name, options) {}
 
     /// <summary>
     /// Find a interactable by name.

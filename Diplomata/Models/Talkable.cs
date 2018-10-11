@@ -35,17 +35,16 @@ namespace LavaLeak.Diplomata.Models
     /// A talkable base constructor with name.
     /// </summary>
     /// <param name="name">The talkable name.</param>
-    public Talkable(string name)
+    /// <param name="languages">All languages to set.</param>
+    public Talkable(string name, Options options)
     {
       uniqueId = Guid.NewGuid().ToString();
       this.name = name;
       contexts = new Context[0];
       description = new LanguageDictionary[0];
 
-      foreach (Language lang in DiplomataManager.Data.options.languages)
-      {
+      foreach (var lang in options.languages)
         description = ArrayHelper.Add(description, new LanguageDictionary(lang.name, ""));
-      }
     }
 
     /// <summary>
@@ -57,6 +56,51 @@ namespace LavaLeak.Diplomata.Models
       if (!string.IsNullOrEmpty(uniqueId)) return false;
       uniqueId = Guid.NewGuid().ToString();
       return true;
+    }
+    
+    /// <summary>
+    /// Update the list of talkables in the DiplomataManager.Data.
+    /// </summary>
+    public static void UpdateList<TModel, TMono>(string path, ref List<TModel> talkables, ref Options options) where TModel : Talkable where TMono : DiplomataTalkable
+    {
+      var files = Resources.LoadAll(path);
+
+      talkables = new List<TModel>();
+
+      if (typeof(TModel) == typeof(Character))
+        options.characterList = new string[0];
+      if (typeof(TModel) == typeof(Interactable))
+        options.interactableList = new string[0];
+
+      foreach (var file in files)
+      {
+        var json = (TextAsset) file;
+        var talkable = JsonUtility.FromJson<TModel>(json.text);
+
+        talkables.Add(talkable);
+        
+        if (typeof(TModel) == typeof(Character))
+          options.characterList = ArrayHelper.Add(options.characterList, file.name);
+
+        if (typeof(TModel) == typeof(Interactable))
+          options.interactableList = ArrayHelper.Add(options.interactableList, file.name);
+      }
+
+      var charactersOnScene = UnityEngine.Object.FindObjectsOfType<TMono>();
+
+      foreach (var talkable in talkables)
+      {
+        foreach (var mono in charactersOnScene)
+        {
+          if (mono.talkable != null)
+          {
+            if (talkable.name == mono.talkable.name)
+            {
+              talkable.onScene = true;
+            }
+          }
+        }
+      }
     }
 
     /// <summary>

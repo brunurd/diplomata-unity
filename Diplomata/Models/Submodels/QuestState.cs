@@ -99,6 +99,26 @@ namespace LavaLeak.Diplomata.Models.Submodels
 
       return questsReturn;
     }
+
+    public string GetShortDescription(Options options)
+    {
+      return GetShortDescription(options.currentLanguage);
+    }
+
+    public static string[] GetShortDescriptions(QuestState[] questsStates, Options options)
+    {
+      return GetShortDescriptions(questsStates, options.currentLanguage);
+    }
+
+    public string GetLongDescription(Options options)
+    {
+      return GetLongDescription(options.currentLanguage);
+    }
+
+    public static string[] GetLongDescriptions(QuestState[] questsStates, Options options)
+    {
+      return GetLongDescriptions(questsStates, options.currentLanguage);
+    }
     
     /// <summary>
     /// Get a list of the ids of the quests states of a array.
