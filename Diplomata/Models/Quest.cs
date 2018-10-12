@@ -18,8 +18,10 @@ namespace LavaLeak.Diplomata.Models
   {
     [SerializeField]
     private string uniqueId;
-    private string currentStateId;
     private bool finished;
+
+    // This state is necessary for database serialization.
+    private string currentStateId = "none";
 
     public LanguageDictionary[] Name;
     public QuestState[] questStates;
@@ -78,7 +80,7 @@ namespace LavaLeak.Diplomata.Models
     private int GetStateIndex()
     {
       var index = -1;
-      if (string.IsNullOrEmpty(currentStateId) || !Initialized || finished)
+      if (currentStateId == "none" || !Initialized || finished)
         return index;
       for (var i = 0; i < questStates.Length; i++)
       {
@@ -336,7 +338,7 @@ namespace LavaLeak.Diplomata.Models
       if (Initialized)
       {
         finished = true;
-        currentStateId = string.Empty;
+        currentStateId = "none";
       }
     }
 
@@ -377,7 +379,7 @@ namespace LavaLeak.Diplomata.Models
     {
       var quest = new QuestPersistent();
       quest.id = uniqueId;
-      quest.currentStateId = string.IsNullOrEmpty(currentStateId) ? " " : currentStateId;
+      quest.currentStateId = currentStateId;
       quest.initialized = Initialized;
       quest.finished = finished;
       return quest;
@@ -391,7 +393,7 @@ namespace LavaLeak.Diplomata.Models
     {
       var questPersistentData = (QuestPersistent) persistentData;
       uniqueId = questPersistentData.id;
-      currentStateId = questPersistentData.currentStateId == " " ? string.Empty : questPersistentData.currentStateId;
+      currentStateId = questPersistentData.currentStateId;
       Initialized = questPersistentData.initialized;
       finished = questPersistentData.finished;
     }
