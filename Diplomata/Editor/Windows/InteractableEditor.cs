@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using LavaLeak.Diplomata.Dictionaries;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -11,12 +8,10 @@ using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class InteractableEditor : UnityEditor.EditorWindow
+  public class InteractableEditor : EditorWindow
   {
     private Vector2 scrollPos = new Vector2(0, 0);
     private string interactableName = "";
-    public Options options;
-    public List<Interactable> interactables;
     public static Interactable interactable;
 
     public enum State
@@ -55,12 +50,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       {
         window.Show();
       }
-    }
-
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      interactables = InteractablesController.GetInteractables(options);
     }
 
     public void OnDisable()
@@ -162,7 +151,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       if (interactableName != "")
       {
-        InteractablesController.AddInteractable(interactableName, options, interactables);
+        InteractablesController.AddInteractable(interactableName, Controller.Instance.Options, Controller.Instance.Interactables);
       }
       else
       {
@@ -177,12 +166,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       GUIHelper.Separator();
 
-      var description = DictionariesHelper.ContainsKey(interactable.description, options.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(interactable.description, Controller.Instance.Options.currentLanguage);
 
       if (description == null)
       {
-        interactable.description = ArrayHelper.Add(interactable.description, new LanguageDictionary(options.currentLanguage, ""));
-        description = DictionariesHelper.ContainsKey(interactable.description, options.currentLanguage);
+        interactable.description = ArrayHelper.Add(interactable.description, new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
+        description = DictionariesHelper.ContainsKey(interactable.description, Controller.Instance.Options.currentLanguage);
       }
 
       GUIHelper.textContent.text = description.value;
@@ -212,8 +201,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void Save()
     {
-      InteractablesController.Save(interactable, options.jsonPrettyPrint);
-      OptionsController.Save(options, options.jsonPrettyPrint);
+      InteractablesController.Save(interactable, Controller.Instance.Options.jsonPrettyPrint);
+      OptionsController.Save(Controller.Instance.Options, Controller.Instance.Options.jsonPrettyPrint);
     }
   }
 }

@@ -2,18 +2,15 @@ using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
-using LavaLeak.Diplomata.Models.Collections;
 using UnityEditor;
 using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class GlobalFlagsListMenu : UnityEditor.EditorWindow
+  public class GlobalFlagsListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
     private string[] booleanArray = new string[] { "True", "False" };
-    private GlobalFlags globalFlags;
-    private Options options;
 
     [MenuItem("Diplomata/Global Flags", false, 0)]
     static public void Init()
@@ -23,12 +20,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       window.Show();
     }
 
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      globalFlags = GlobalFlagsController.GetGlobalFlags(options.jsonPrettyPrint);
-    }
-
     public void OnGUI()
     {
       GUIHelper.Init();
@@ -36,16 +27,16 @@ namespace LavaLeak.Diplomata.Editor.Windows
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (globalFlags.flags.Length <= 0)
+      if (Controller.Instance.GlobalFlags.flags.Length <= 0)
       {
         EditorGUILayout.HelpBox("No flags yet.", MessageType.Info);
       }
 
       var width = Screen.width - (2 * GUIHelper.MARGIN);
 
-      for (var i = 0; i < globalFlags.flags.Length; i++)
+      for (var i = 0; i < Controller.Instance.GlobalFlags.flags.Length; i++)
       {
-        var flag = globalFlags.flags[i];
+        var flag = Controller.Instance.GlobalFlags.flags[i];
 
         GUILayout.BeginHorizontal();
         GUILayout.BeginVertical();
@@ -94,7 +85,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
             flag.value = false;
           }
 
-          GlobalFlagsController.Save(globalFlags, options.jsonPrettyPrint);
+          GlobalFlagsController.Save(Controller.Instance.GlobalFlags, Controller.Instance.Options.jsonPrettyPrint);
         }
 
         if (EditorGUIUtility.isProSkin)
@@ -110,17 +101,17 @@ namespace LavaLeak.Diplomata.Editor.Windows
         {
           if (i > 0)
           {
-            globalFlags.flags = ArrayHelper.Swap(globalFlags.flags, i, i - 1);
-            GlobalFlagsController.Save(globalFlags, options.jsonPrettyPrint);
+            Controller.Instance.GlobalFlags.flags = ArrayHelper.Swap(Controller.Instance.GlobalFlags.flags, i, i - 1);
+            GlobalFlagsController.Save(Controller.Instance.GlobalFlags, Controller.Instance.Options.jsonPrettyPrint);
           }
         }
 
         if (GUILayout.Button("Down", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          if (i < globalFlags.flags.Length - 1)
+          if (i < Controller.Instance.GlobalFlags.flags.Length - 1)
           {
-            globalFlags.flags = ArrayHelper.Swap(globalFlags.flags, i, i + 1);
-            GlobalFlagsController.Save(globalFlags, options.jsonPrettyPrint);
+            Controller.Instance.GlobalFlags.flags = ArrayHelper.Swap(Controller.Instance.GlobalFlags.flags, i, i + 1);
+            GlobalFlagsController.Save(Controller.Instance.GlobalFlags, Controller.Instance.Options.jsonPrettyPrint);
           }
         }
 
@@ -128,22 +119,22 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
         if (GUILayout.Button("Add Next", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          globalFlags.flags = ArrayHelper.Add(globalFlags.flags, new Flag("", false));
+          Controller.Instance.GlobalFlags.flags = ArrayHelper.Add(Controller.Instance.GlobalFlags.flags, new Flag("", false));
 
-          for (int j = 1; j < (globalFlags.flags.Length - 1) - i; j++)
+          for (int j = 1; j < (Controller.Instance.GlobalFlags.flags.Length - 1) - i; j++)
           {
-            globalFlags.flags = ArrayHelper.Swap(globalFlags.flags, globalFlags.flags.Length - 1, i + j);
+            Controller.Instance.GlobalFlags.flags = ArrayHelper.Swap(Controller.Instance.GlobalFlags.flags, Controller.Instance.GlobalFlags.flags.Length - 1, i + j);
           }
 
-          GlobalFlagsController.Save(globalFlags, options.jsonPrettyPrint);
+          GlobalFlagsController.Save(Controller.Instance.GlobalFlags, Controller.Instance.Options.jsonPrettyPrint);
         }
 
         if (GUILayout.Button("Delete", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
-            globalFlags.flags = ArrayHelper.Remove(globalFlags.flags, flag);
-            GlobalFlagsController.Save(globalFlags, options.jsonPrettyPrint);
+            Controller.Instance.GlobalFlags.flags = ArrayHelper.Remove(Controller.Instance.GlobalFlags.flags, flag);
+            GlobalFlagsController.Save(Controller.Instance.GlobalFlags, Controller.Instance.Options.jsonPrettyPrint);
           }
         }
 
@@ -151,7 +142,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
 
-        if (i < globalFlags.flags.Length - 1)
+        if (i < Controller.Instance.GlobalFlags.flags.Length - 1)
         {
           GUIHelper.Separator();
         }
@@ -161,8 +152,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
-        globalFlags.flags = ArrayHelper.Add(globalFlags.flags, new Flag("", false));
-        GlobalFlagsController.Save(globalFlags, options.jsonPrettyPrint);
+        Controller.Instance.GlobalFlags.flags = ArrayHelper.Add(Controller.Instance.GlobalFlags.flags, new Flag("", false));
+        GlobalFlagsController.Save(Controller.Instance.GlobalFlags, Controller.Instance.Options.jsonPrettyPrint);
       }
 
       GUILayout.EndVertical();
@@ -173,7 +164,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void OnDisable()
     {
-      GlobalFlagsController.Save(globalFlags, options.jsonPrettyPrint);
+      GlobalFlagsController.Save(Controller.Instance.GlobalFlags, Controller.Instance.Options.jsonPrettyPrint);
     }
   }
 

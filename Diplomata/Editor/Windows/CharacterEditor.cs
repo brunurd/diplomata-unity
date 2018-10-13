@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using LavaLeak.Diplomata.Dictionaries;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -11,12 +8,10 @@ using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class CharacterEditor : UnityEditor.EditorWindow
+  public class CharacterEditor : EditorWindow
   {
     private Vector2 scrollPos = new Vector2(0, 0);
     private string characterName = "";
-    public Options options;
-    public List<Character> characters;
     public static Character character;
 
     public enum State
@@ -55,12 +50,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       {
         window.Show();
       }
-    }
-
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      characters = CharactersController.GetCharacters(options);
     }
 
     public void OnDisable()
@@ -162,7 +151,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       if (characterName != "")
       {
-        CharactersController.AddCharacter(characterName, options, characters);
+        CharactersController.AddCharacter(characterName, Controller.Instance.Options, Controller.Instance.Characters);
       }
       else
       {
@@ -177,12 +166,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       GUIHelper.Separator();
 
-      var description = DictionariesHelper.ContainsKey(character.description, options.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(character.description, Controller.Instance.Options.currentLanguage);
 
       if (description == null)
       {
-        character.description = ArrayHelper.Add(character.description, new LanguageDictionary(options.currentLanguage, ""));
-        description = DictionariesHelper.ContainsKey(character.description, options.currentLanguage);
+        character.description = ArrayHelper.Add(character.description, new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
+        description = DictionariesHelper.ContainsKey(character.description, Controller.Instance.Options.currentLanguage);
       }
 
       GUIHelper.textContent.text = description.value;
@@ -197,7 +186,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       var player = false;
 
-      if (options.playerCharacterName == character.name)
+      if (Controller.Instance.Options.playerCharacterName == character.name)
       {
         player = true;
       }
@@ -206,18 +195,18 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       if (player)
       {
-        options.playerCharacterName = character.name;
+        Controller.Instance.Options.playerCharacterName = character.name;
       }
 
       EditorGUILayout.EndHorizontal();
 
-      if (character.name != options.playerCharacterName)
+      if (character.name != Controller.Instance.Options.playerCharacterName)
       {
         GUIHelper.Separator();
 
         GUILayout.Label("Character attributes (influenceable by): ");
 
-        foreach (string attrName in options.attributes)
+        foreach (string attrName in Controller.Instance.Options.attributes)
         {
           if (character.attributes.Length == 0)
           {
@@ -241,7 +230,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
         for (int i = 0; i < character.attributes.Length; i++)
         {
-          if (ArrayHelper.Contains(options.attributes, character.attributes[i].key))
+          if (ArrayHelper.Contains(Controller.Instance.Options.attributes, character.attributes[i].key))
           {
             character.attributes[i].value = (byte) EditorGUILayout.Slider(character.attributes[i].key, character.attributes[i].value, 0, 100);
           }
@@ -274,8 +263,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void Save()
     {
-      CharactersController.Save(character, options.jsonPrettyPrint);
-      OptionsController.Save(options, options.jsonPrettyPrint);
+      CharactersController.Save(character, Controller.Instance.Options.jsonPrettyPrint);
+      OptionsController.Save(Controller.Instance.Options, Controller.Instance.Options.jsonPrettyPrint);
     }
   }
 }

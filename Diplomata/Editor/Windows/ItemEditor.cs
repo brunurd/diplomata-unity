@@ -1,22 +1,18 @@
 using LavaLeak.Diplomata.Dictionaries;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
-using LavaLeak.Diplomata.Models.Collections;
 using UnityEditor;
 using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class ItemEditor : UnityEditor.EditorWindow
+  public class ItemEditor : EditorWindow
   {
     public static Item item;
     private Vector2 scrollPos = new Vector2(0, 0);
     private static State state;
-    private Options options;
-    private Inventory inventory;
 
     public enum State
     {
@@ -43,11 +39,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       }
     }
 
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      inventory = InventoryController.GetInventory(options.jsonPrettyPrint);
-    }
     public static void OpenEdit(Item item)
     {
       ItemEditor.item = item;
@@ -78,7 +69,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void DrawEditWindow()
     {
-      var name = DictionariesHelper.ContainsKey(item.name, options.currentLanguage);
+      var name = DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage);
 
       GUILayout.BeginHorizontal();
       GUILayout.BeginVertical();
@@ -100,11 +91,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
       GUILayout.EndVertical();
       GUILayout.EndHorizontal();
 
-      var description = DictionariesHelper.ContainsKey(item.description, options.currentLanguage);
+      var description = DictionariesHelper.ContainsKey(item.description, Controller.Instance.Options.currentLanguage);
       if (description == null)
       {
-        item.description = ArrayHelper.Add(item.description, new LanguageDictionary(options.currentLanguage, ""));
-        description = DictionariesHelper.ContainsKey(item.description, options.currentLanguage);
+        item.description = ArrayHelper.Add(item.description, new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
+        description = DictionariesHelper.ContainsKey(item.description, Controller.Instance.Options.currentLanguage);
       }
       GUIHelper.textContent.text = description.value;
       var descriptionHeight = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
@@ -210,14 +201,14 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       if (item != null)
       {
-        inventory.AddCategory(item.Category);
+        Controller.Instance.Inventory.AddCategory(item.Category);
       }
-      for (var i = 0; i < inventory.items.Length; i++)
+      for (var i = 0; i < Controller.Instance.Inventory.items.Length; i++)
       {
-        if (inventory.items[i].GetId() == item.GetId())
-          inventory.items[i] = item;
+        if (Controller.Instance.Inventory.items[i].GetId() == item.GetId())
+          Controller.Instance.Inventory.items[i] = item;
       }
-      InventoryController.Save(inventory, options.jsonPrettyPrint);
+      InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
     }
 
     public void OnDisable()

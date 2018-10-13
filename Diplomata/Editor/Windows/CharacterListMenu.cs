@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using LavaLeak.Diplomata;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -11,11 +7,9 @@ using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class CharacterListMenu : UnityEditor.EditorWindow
+  public class CharacterListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    public Options options;
-    public List<Character> characters;
 
     [MenuItem("Diplomata/Characters", false, 0)]
     static public void Init()
@@ -25,12 +19,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       window.Show();
     }
 
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      characters = CharactersController.GetCharacters(options);
-    }
-
     public void OnGUI()
     {
       GUIHelper.Init();
@@ -38,19 +26,19 @@ namespace LavaLeak.Diplomata.Editor.Windows
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (options.characterList.Length <= 0)
+      if (Controller.Instance.Options.characterList.Length <= 0)
       {
         EditorGUILayout.HelpBox("No characters yet.", MessageType.Info);
       }
 
-      for (int i = 0; i < options.characterList.Length; i++)
+      for (int i = 0; i < Controller.Instance.Options.characterList.Length; i++)
       {
-        var name = options.characterList[i];
-        var character = Character.Find(characters, name);
+        var name = Controller.Instance.Options.characterList[i];
+        var character = Character.Find(Controller.Instance.Characters, name);
 
         if (character.SetId())
         {
-          CharactersController.Save(character, options.jsonPrettyPrint);
+          CharactersController.Save(character, Controller.Instance.Options.jsonPrettyPrint);
         }
 
         GUILayout.BeginHorizontal();
@@ -65,7 +53,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUILayout.Label(name, GUIHelper.labelStyle);
 
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleRight;
-        if (options.playerCharacterName == name)
+        if (Controller.Instance.Options.playerCharacterName == name)
         {
           GUILayout.Label("<b>[Player]</b>", GUIHelper.labelStyle);
         }
@@ -94,23 +82,21 @@ namespace LavaLeak.Diplomata.Editor.Windows
           {
             var isPlayer = false;
 
-            if (name == options.playerCharacterName)
-            {
+            if (name == Controller.Instance.Options.playerCharacterName)
               isPlayer = true;
-            }
 
-            characters.Remove(character);
-            options.characterList = ArrayHelper.Remove(options.characterList, name);
+            Controller.Instance.Characters.Remove(character);
+            Controller.Instance.Options.characterList = ArrayHelper.Remove(Controller.Instance.Options.characterList, name);
 
             JSONHelper.Delete(name, "Diplomata/Characters/");
 
-            if (isPlayer && options.characterList.Length > 0)
+            if (isPlayer && Controller.Instance.Options.characterList.Length > 0)
             {
-              options.playerCharacterName = options.characterList[0];
+              Controller.Instance.Options.playerCharacterName = Controller.Instance.Options.characterList[0];
             }
 
-            OptionsController.Save(options, options.jsonPrettyPrint);
-            characters = CharactersController.GetCharacters(options);
+            OptionsController.Save(Controller.Instance.Options, Controller.Instance.Options.jsonPrettyPrint);
+            Controller.Instance.Characters = CharactersController.GetCharacters(Controller.Instance.Options);
 
             CharacterEditor.Reset(name);
             TalkableMessagesEditor.Reset(name);
@@ -121,7 +107,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();
 
-        if (i < options.characterList.Length - 1)
+        if (i < Controller.Instance.Options.characterList.Length - 1)
         {
           GUIHelper.Separator();
         }

@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using LavaLeak.Diplomata;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -10,11 +7,9 @@ using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class InteractableListMenu : UnityEditor.EditorWindow
+  public class InteractableListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    public Options options;
-    public List<Interactable> interactables;
 
     [MenuItem("Diplomata/Interactables", false, 0)]
     static public void Init()
@@ -24,12 +19,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       window.Show();
     }
 
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      interactables = InteractablesController.GetInteractables(options);
-    }
-
     public void OnGUI()
     {
       GUIHelper.Init();
@@ -37,19 +26,19 @@ namespace LavaLeak.Diplomata.Editor.Windows
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (options.interactableList.Length <= 0)
+      if (Controller.Instance.Options.interactableList.Length <= 0)
       {
         EditorGUILayout.HelpBox("No interactables yet.", MessageType.Info);
       }
 
-      for (int i = 0; i < options.interactableList.Length; i++)
+      for (int i = 0; i < Controller.Instance.Options.interactableList.Length; i++)
       {
-        var name = options.interactableList[i];
-        var interactable = Interactable.Find(interactables, name);
+        var name = Controller.Instance.Options.interactableList[i];
+        var interactable = Interactable.Find(Controller.Instance.Interactables, name);
 
         if (interactable.SetId())
         {
-          InteractablesController.Save(interactable, options.jsonPrettyPrint);
+          InteractablesController.Save(interactable, Controller.Instance.Options.jsonPrettyPrint);
         }
 
         GUILayout.BeginHorizontal();
@@ -71,7 +60,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
         if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          InteractableEditor.Edit(Interactable.Find(interactables, name));
+          InteractableEditor.Edit(Interactable.Find(Controller.Instance.Interactables, name));
           Close();
         }
 
@@ -85,13 +74,13 @@ namespace LavaLeak.Diplomata.Editor.Windows
         {
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
-            interactables.Remove(interactable);
-            options.interactableList = ArrayHelper.Remove(options.interactableList, name);
+            Controller.Instance.Interactables.Remove(interactable);
+            Controller.Instance.Options.interactableList = ArrayHelper.Remove(Controller.Instance.Options.interactableList, name);
 
             JSONHelper.Delete(name, "Diplomata/Interactables/");
 
-            OptionsController.Save(options, options.jsonPrettyPrint);
-            interactables = InteractablesController.GetInteractables(options);
+            OptionsController.Save(Controller.Instance.Options, Controller.Instance.Options.jsonPrettyPrint);
+            Controller.Instance.Interactables = InteractablesController.GetInteractables(Controller.Instance.Options);
 
             InteractableEditor.Reset(name);
             TalkableMessagesEditor.Reset(name);
@@ -102,7 +91,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();
 
-        if (i < options.interactableList.Length - 1)
+        if (i < Controller.Instance.Options.interactableList.Length - 1)
         {
           GUIHelper.Separator();
         }

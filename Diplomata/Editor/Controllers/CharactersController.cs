@@ -3,6 +3,7 @@ using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace LavaLeak.Diplomata.Editor.Controllers
 {

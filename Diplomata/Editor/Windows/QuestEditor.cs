@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using LavaLeak.Diplomata.Dictionaries;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -10,12 +8,10 @@ using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class QuestEditor : UnityEditor.EditorWindow
+  public class QuestEditor : EditorWindow
   {
     private Vector2 scrollPos = new Vector2(0, 0);
     public static Quest quest;
-    private Quest[] quests;
-    private Options options;
 
     public enum State
     {
@@ -43,12 +39,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
         window.minSize = new Vector2(GUIHelper.WINDOW_MIN_WIDTH + 240, 340);
         window.Show();
       }
-    }
-
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      quests = QuestsController.GetQuests(options.jsonPrettyPrint);
     }
 
     public void OnDisable()
@@ -81,13 +71,13 @@ namespace LavaLeak.Diplomata.Editor.Windows
           // Set quest name.
           GUILayout.Label("Name: ");
           
-          var questName = DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage);
+          var questName = DictionariesHelper.ContainsKey(quest.Name, Controller.Instance.Options.currentLanguage);
           if (questName == null)
-            quest.Name = ArrayHelper.Add(quest.Name, new LanguageDictionary(options.currentLanguage, ""));
+            quest.Name = ArrayHelper.Add(quest.Name, new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
 
           GUI.SetNextControlName("name");
-          DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage).value =
-            EditorGUILayout.TextField(DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage).value);
+          DictionariesHelper.ContainsKey(quest.Name, Controller.Instance.Options.currentLanguage).value =
+            EditorGUILayout.TextField(DictionariesHelper.ContainsKey(quest.Name, Controller.Instance.Options.currentLanguage).value);
           GUIHelper.Focus("name");
           EditorGUILayout.Space();
           
@@ -115,24 +105,24 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
             EditorGUILayout.LabelField("Short description:");
             
-            var questStateShortDescription = DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage);
+            var questStateShortDescription = DictionariesHelper.ContainsKey(questState.ShortDescription, Controller.Instance.Options.currentLanguage);
             if (questStateShortDescription == null)
-              questState.ShortDescription = ArrayHelper.Add(questState.ShortDescription, new LanguageDictionary(options.currentLanguage, ""));
+              questState.ShortDescription = ArrayHelper.Add(questState.ShortDescription, new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
             
-            DictionariesHelper.ContainsKey(questState.ShortDescription, options.currentLanguage).value =
+            DictionariesHelper.ContainsKey(questState.ShortDescription, Controller.Instance.Options.currentLanguage).value =
               EditorGUILayout.TextArea(DictionariesHelper
-                .ContainsKey(questState.ShortDescription, options.currentLanguage).value);
+                .ContainsKey(questState.ShortDescription, Controller.Instance.Options.currentLanguage).value);
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Long description:");
             
-            var questStateLongDescription = DictionariesHelper.ContainsKey(questState.LongDescription, options.currentLanguage);
+            var questStateLongDescription = DictionariesHelper.ContainsKey(questState.LongDescription, Controller.Instance.Options.currentLanguage);
             if (questStateLongDescription == null)
-              questState.LongDescription = ArrayHelper.Add(questState.LongDescription, new LanguageDictionary(options.currentLanguage, ""));
+              questState.LongDescription = ArrayHelper.Add(questState.LongDescription, new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
             
-            DictionariesHelper.ContainsKey(questState.LongDescription, options.currentLanguage).value =
+            DictionariesHelper.ContainsKey(questState.LongDescription, Controller.Instance.Options.currentLanguage).value =
               EditorGUILayout.TextArea(DictionariesHelper
-                .ContainsKey(questState.LongDescription, options.currentLanguage).value);
+                .ContainsKey(questState.LongDescription, Controller.Instance.Options.currentLanguage).value);
             EditorGUILayout.Space();
             
             EditorGUILayout.SelectableLabel(string.Format("Quest State Unique ID: {0}", questState.GetId()));
@@ -143,7 +133,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
               if (index > 0)
               {
                 quest.questStates = ArrayHelper.Swap(quest.questStates, index, index - 1);
-                QuestsController.Save(quests, options.jsonPrettyPrint);
+                QuestsController.Save(Controller.Instance.Quests, Controller.Instance.Options.jsonPrettyPrint);
               }
             }
 
@@ -152,7 +142,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
               if (index < quest.questStates.Length - 1)
               {
                 quest.questStates = ArrayHelper.Swap(quest.questStates, index, index + 1);
-                QuestsController.Save(quests, options.jsonPrettyPrint);
+                QuestsController.Save(Controller.Instance.Quests, Controller.Instance.Options.jsonPrettyPrint);
               }
             }
 
@@ -162,7 +152,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
               {
                 quest.questStates = ArrayHelper.Remove(quest.questStates, questState);
-                QuestsController.Save(quests, options.jsonPrettyPrint);
+                QuestsController.Save(Controller.Instance.Quests, Controller.Instance.Options.jsonPrettyPrint);
               }
             }
 
@@ -215,13 +205,13 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void Save()
     {
-      for (var i = 0; i < quests.Length; i++)
+      for (var i = 0; i < Controller.Instance.Quests.Length; i++)
       {
-        if (quests[i].GetId() == quest.GetId())
-          quests[i] = quest;
+        if (Controller.Instance.Quests[i].GetId() == quest.GetId())
+          Controller.Instance.Quests[i] = quest;
       }
 
-      QuestsController.Save(quests, options.jsonPrettyPrint);
+      QuestsController.Save(Controller.Instance.Quests, Controller.Instance.Options.jsonPrettyPrint);
     }
   }
 }

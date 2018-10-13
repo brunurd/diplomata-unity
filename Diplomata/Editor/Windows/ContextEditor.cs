@@ -1,4 +1,3 @@
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -8,12 +7,11 @@ using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class ContextEditor : UnityEditor.EditorWindow
+  public class ContextEditor : EditorWindow
   {
     public static Talkable talkable;
     public static Context context;
     private Vector2 scrollPos = new Vector2(0, 0);
-    private Options options;
 
     public enum State
     {
@@ -41,11 +39,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       {
         window.Show();
       }
-    }
-
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
     }
 
     public static void Edit(Talkable currentTalkable, Context currentContext)
@@ -92,7 +85,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void DrawEditWindow()
     {
-      var name = DictionariesHelper.ContainsKey(context.name, options.currentLanguage);
+      var name = DictionariesHelper.ContainsKey(context.name, Controller.Instance.Options.currentLanguage);
 
       if (name != null)
       {
@@ -137,11 +130,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       if (talkable.GetType() == typeof(Character))
       {
-        CharactersController.Save((Character) talkable, options.jsonPrettyPrint);
+        CharactersController.Save((Character) talkable, Controller.Instance.Options.jsonPrettyPrint);
       }
       else if (talkable.GetType() == typeof(Interactable))
       {
-        InteractablesController.Save((Interactable) talkable, options.jsonPrettyPrint);
+        InteractablesController.Save((Interactable) talkable, Controller.Instance.Options.jsonPrettyPrint);
       }
     }
   }

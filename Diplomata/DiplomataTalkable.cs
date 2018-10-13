@@ -777,6 +777,9 @@ namespace LavaLeak.Diplomata
     /// </summary>
     public void NextMessage()
     {
+      if (currentMessage.attachedContent == null)
+        currentMessage.attachedContent = new AttachedContent[0];
+
       // If has any attached content go to that.
       if (currentMessage.attachedContent.Length > 0 &&
           controlIndexes["content"] < currentMessage.attachedContent.Length - 1)

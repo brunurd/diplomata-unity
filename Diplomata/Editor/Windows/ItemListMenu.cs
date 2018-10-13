@@ -8,11 +8,9 @@ using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class ItemListMenu : UnityEditor.EditorWindow
+  public class ItemListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    public Options options;
-    public Inventory inventory;
 
     [MenuItem("Diplomata/Inventory", false, 0)]
     static public void Init()
@@ -22,12 +20,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       window.Show();
     }
 
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      inventory = InventoryController.GetInventory(options.jsonPrettyPrint);
-    }
-
     public void OnGUI()
     {
       GUIHelper.Init();
@@ -35,22 +27,22 @@ namespace LavaLeak.Diplomata.Editor.Windows
       scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (inventory.items.Length <= 0)
+      if (Controller.Instance.Inventory.items.Length <= 0)
       {
         EditorGUILayout.HelpBox("No items yet.", MessageType.Info);
       }
 
-      foreach (var item in inventory.items)
+      foreach (var item in Controller.Instance.Inventory.items)
       {
         if (item.SetId())
         {
-          InventoryController.Save(inventory, options.jsonPrettyPrint);
+          InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
         }
 
         GUILayout.BeginHorizontal();
         GUILayout.BeginHorizontal();
 
-        var name = DictionariesHelper.ContainsKey(item.name, options.currentLanguage);
+        var name = DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage);
 
         if (EditorGUIUtility.isProSkin)
         {
@@ -87,16 +79,16 @@ namespace LavaLeak.Diplomata.Editor.Windows
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
             ItemEditor.Init(ItemEditor.State.Close);
-            inventory.items = ArrayHelper.Remove(inventory.items, item);
-            inventory.RemoveNotUsedCategory();
-            InventoryController.Save(inventory, options.jsonPrettyPrint);
+            Controller.Instance.Inventory.items = ArrayHelper.Remove(Controller.Instance.Inventory.items, item);
+            Controller.Instance.Inventory.RemoveNotUsedCategory();
+            InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
           }
         }
 
         if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {
-          inventory.items = ArrayHelper.Add(inventory.items, item.Copy(inventory.GenerateId(), options));
-          InventoryController.Save(inventory, options.jsonPrettyPrint);
+          Controller.Instance.Inventory.items = ArrayHelper.Add(Controller.Instance.Inventory.items, item.Copy(Controller.Instance.Inventory.GenerateId(), Controller.Instance.Options));
+          InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
         }
 
         GUILayout.EndHorizontal();
@@ -107,8 +99,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       if (GUILayout.Button("Create", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
-        inventory.items = ArrayHelper.Add(inventory.items, new Item(inventory.GenerateId(), options));
-        InventoryController.Save(inventory, options.jsonPrettyPrint);
+        Controller.Instance.Inventory.items = ArrayHelper.Add(Controller.Instance.Inventory.items, new Item(Controller.Instance.Inventory.GenerateId(), Controller.Instance.Options));
+        InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
       }
 
       GUILayout.EndVertical();

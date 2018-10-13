@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using LavaLeak.Diplomata.Dictionaries;
-using LavaLeak.Diplomata.Editor;
 using LavaLeak.Diplomata.Editor.Controllers;
 using LavaLeak.Diplomata.Editor.Helpers;
 using LavaLeak.Diplomata.Helpers;
@@ -11,11 +9,9 @@ using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Windows
 {
-  public class QuestListMenu : UnityEditor.EditorWindow
+  public class QuestListMenu : EditorWindow
   {
     public Vector2 scrollPos = new Vector2(0, 0);
-    private Options options;
-    private Quest[] quests;
 
     [MenuItem("Diplomata/Quests", false, 0)]
     static public void Init()
@@ -25,12 +21,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
       window.Show();
     }
 
-    public void OnEnable()
-    {
-      options = OptionsController.GetOptions();
-      quests = QuestsController.GetQuests(options.jsonPrettyPrint);
-    }
-
     public void OnGUI()
     {
       GUIHelper.Init();
@@ -38,13 +28,13 @@ namespace LavaLeak.Diplomata.Editor.Windows
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
       // If empty show this message.
-      if (quests.Length <= 0)
+      if (Controller.Instance.Quests.Length <= 0)
       {
         EditorGUILayout.HelpBox("No quests yet.", MessageType.Info);
       }
 
       // Quests loop to list.
-      foreach (Quest quest in quests)
+      foreach (Quest quest in Controller.Instance.Quests)
       {
         GUILayout.BeginHorizontal();
 
@@ -52,7 +42,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUILayout.BeginHorizontal();
         if (EditorGUIUtility.isProSkin) GUIHelper.labelStyle.normal.textColor = Color.white;
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
-        var questName = DictionariesHelper.ContainsKey(quest.Name, options.currentLanguage);
+        var questName = DictionariesHelper.ContainsKey(quest.Name, Controller.Instance.Options.currentLanguage);
         if (questName != null)
           GUILayout.Label(questName.value, GUIHelper.labelStyle);
         GUILayout.EndHorizontal();
@@ -70,8 +60,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
           if (EditorUtility.DisplayDialog("Are you sure?", "Do you really want to delete?\nThis data will be lost forever.", "Yes", "No"))
           {
             QuestEditor.Init(QuestEditor.State.Close);
-            quests = ArrayHelper.Remove(quests, quest);
-            QuestsController.Save(quests, options.jsonPrettyPrint);
+            Controller.Instance.Quests = ArrayHelper.Remove(Controller.Instance.Quests, quest);
+            QuestsController.Save(Controller.Instance.Quests, Controller.Instance.Options.jsonPrettyPrint);
           }
         }
         GUILayout.EndHorizontal();
@@ -82,10 +72,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
       if (GUILayout.Button("Add Quest", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
       {
         var quest = new Quest();
-        quests = ArrayHelper.Add(quests, quest);
+        Controller.Instance.Quests = ArrayHelper.Add(Controller.Instance.Quests, quest);
         quest.questStates = ArrayHelper.Add(quest.questStates, new QuestState());
 
-        foreach (var language in options.languagesList)
+        foreach (var language in Controller.Instance.Options.languagesList)
         {
           quest.questStates[0].ShortDescription =
             ArrayHelper.Add(quest.questStates[0].ShortDescription, new LanguageDictionary(language, "in progress."));
@@ -93,7 +83,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
             ArrayHelper.Add(quest.questStates[0].LongDescription, new LanguageDictionary(language, ""));
         }
 
-        QuestsController.Save(quests, options.jsonPrettyPrint);
+        QuestsController.Save(Controller.Instance.Quests, Controller.Instance.Options.jsonPrettyPrint);
         QuestEditor.Open(quest);
       }
 
@@ -103,7 +93,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void OnDisable()
     {
-      QuestsController.Save(quests, options.jsonPrettyPrint);
+      QuestsController.Save(Controller.Instance.Quests, Controller.Instance.Options.jsonPrettyPrint);
     }
 
     public void OnInspectorUpdate()
