@@ -12,7 +12,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     public Vector2 scrollPos = new Vector2(0, 0);
     private string[] booleanArray = new string[] { "True", "False" };
 
-    [MenuItem("Diplomata/Global Flags", false, 0)]
+    [MenuItem("Tools/Diplomata/Edit/Global Flags", false, 0)]
     static public void Init()
     {
       GlobalFlagsListMenu window = (GlobalFlagsListMenu) GetWindow(typeof(GlobalFlagsListMenu), false, "Custom Flags");

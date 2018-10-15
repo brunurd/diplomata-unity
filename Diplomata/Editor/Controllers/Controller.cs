@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using LavaLeak.Diplomata.Models;
 using LavaLeak.Diplomata.Models.Collections;
 using UnityEditor;
+using UnityEngine;
 
 namespace LavaLeak.Diplomata.Editor.Controllers
 {
@@ -11,6 +12,13 @@ namespace LavaLeak.Diplomata.Editor.Controllers
     static Controller()
     {
       _instance = null;
+      _instance = new Controller();
+      _instance._options = null;
+      _instance._characters = null;
+      _instance._interactables = null;
+      _instance._globalFlags = null;
+      _instance._inventory = null;
+      _instance._quests = null;
     }
 
     private static Controller _instance = null;
@@ -97,6 +105,20 @@ namespace LavaLeak.Diplomata.Editor.Controllers
         return _quests;
       }
       set { _quests = value; }
+    }
+
+    [MenuItem("Tools/Diplomata/Preferences/Force Reload (Editor only)", false, 1)]
+    public static void ForceEditorReload()
+    {
+      _instance = null;
+      _instance = new Controller();
+      _instance._options = null;
+      _instance._characters = null;
+      _instance._interactables = null;
+      _instance._globalFlags = null;
+      _instance._inventory = null;
+      _instance._quests = null;
+      Debug.Log("Editor data reloaded.");
     }
   }
 }

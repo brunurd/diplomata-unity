@@ -15,7 +15,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     public static string currentLanguageTemp;
     private Vector2 scrollPos = new Vector2(0, 0);
 
-    [MenuItem("Diplomata/Preferences", false, 1)]
+    [MenuItem("Tools/Diplomata/Preferences/Options", false, 1)]
     static public void Init()
     {
       var window = (PreferencesEditor) GetWindow(typeof(PreferencesEditor), false, "Preferences");

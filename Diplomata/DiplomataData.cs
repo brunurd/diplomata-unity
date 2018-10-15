@@ -35,12 +35,6 @@ namespace LavaLeak.Diplomata
     /// </summary>
     public void Reset()
     {
-      options = new Options();
-      characters = new List<Character>();
-      interactables = new List<Interactable>();
-      inventory = new Inventory();
-      globalFlags = new GlobalFlags();
-      quests = new Quest[0];
       talkLogs = new TalkLog[0];
       EventController = new DiplomataEventController();
       OnATalk = false;

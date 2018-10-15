@@ -89,12 +89,14 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
         if (GUILayout.Button("Edit Interactable", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          InteractableEditor.Edit((Interactable) diplomataInteractable.talkable);
+          InteractableEditor.Edit(Interactable.Find(Controller.Instance.Interactables,
+            diplomataInteractable.talkable.name));
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          TalkableMessagesEditor.OpenContextMenu((Interactable) diplomataInteractable.talkable);
+          TalkableMessagesEditor.OpenContextMenu(Interactable.Find(Controller.Instance.Interactables,
+            diplomataInteractable.talkable.name));
         }
 
         GUIHelper.Separator();

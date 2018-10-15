@@ -11,7 +11,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
   {
     public Vector2 scrollPos = new Vector2(0, 0);
 
-    [MenuItem("Diplomata/Interactables", false, 0)]
+    [MenuItem("Tools/Diplomata/Edit/Interactables", false, 0)]
     static public void Init()
     {
       InteractableListMenu window = (InteractableListMenu) GetWindow(typeof(InteractableListMenu), false, "Interactable List");

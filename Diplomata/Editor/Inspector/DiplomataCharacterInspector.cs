@@ -100,18 +100,21 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
         if (diplomataCharacter.talkable.name == options.playerCharacterName)
         {
-          EditorGUILayout.HelpBox("\nThis character is the player, he doesn't influence himself, use his messages only in the case he speaks with himself.\n", MessageType.Info);
+          EditorGUILayout.HelpBox(
+            "\nThis character is the player, he doesn't influence himself, use his messages only in the case he speaks with himself.\n",
+            MessageType.Info);
           showInfluence = false;
         }
 
         if (GUILayout.Button("Edit Character", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          CharacterEditor.Edit((Character) diplomataCharacter.talkable);
+          CharacterEditor.Edit(Character.Find(Controller.Instance.Characters, diplomataCharacter.talkable.name));
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          TalkableMessagesEditor.OpenContextMenu((Character) diplomataCharacter.talkable);
+          TalkableMessagesEditor.OpenContextMenu(Character.Find(Controller.Instance.Characters,
+            diplomataCharacter.talkable.name));
         }
 
         if (showInfluence)
@@ -131,8 +134,8 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
           if (diplomataCharacter.talkable.GetType() == typeof(Character))
           {
-            Character character = (Character) diplomataCharacter.talkable;
-            GUILayout.Label("Influence: <b>" + character.influence.ToString() + "</b>", GUIHelper.labelStyle);
+            var character = (Character) diplomataCharacter.talkable;
+            GUILayout.Label("Influence: <b>" + character.influence + "</b>", GUIHelper.labelStyle);
           }
         }
 
@@ -144,7 +147,7 @@ namespace LavaLeak.Diplomata.Editor.Inspector
           CharacterEditor.OpenCreate();
         }
 
-        EditorGUILayout.HelpBox("Create does not interfe in this character.", MessageType.Info);
+        EditorGUILayout.HelpBox("Create does not interfere in this character.", MessageType.Info);
         GUILayout.EndHorizontal();
       }
 

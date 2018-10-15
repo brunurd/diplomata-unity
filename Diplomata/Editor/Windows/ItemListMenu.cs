@@ -12,7 +12,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
   {
     public Vector2 scrollPos = new Vector2(0, 0);
 
-    [MenuItem("Diplomata/Inventory", false, 0)]
+    [MenuItem("Tools/Diplomata/Edit/Inventory", false, 0)]
     static public void Init()
     {
       ItemListMenu window = (ItemListMenu) GetWindow(typeof(ItemListMenu), false, "Inventory");
