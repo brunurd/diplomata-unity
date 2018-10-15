@@ -20,8 +20,8 @@ namespace LavaLeak.Diplomata.Models
     private string uniqueId;
     private bool finished;
 
-    // This state is necessary for database serialization.
-    private string currentStateId = "none";
+    // The null value is necessary for database serialization.
+    private string currentStateId = null;
 
     public LanguageDictionary[] Name;
     public QuestState[] questStates;
@@ -80,7 +80,7 @@ namespace LavaLeak.Diplomata.Models
     private int GetStateIndex()
     {
       var index = -1;
-      if (currentStateId == "none" || !Initialized || finished)
+      if (string.IsNullOrEmpty(currentStateId) || !Initialized || finished)
         return index;
       for (var i = 0; i < questStates.Length; i++)
       {
@@ -338,7 +338,7 @@ namespace LavaLeak.Diplomata.Models
       if (Initialized)
       {
         finished = true;
-        currentStateId = "none";
+        currentStateId = null;
       }
     }
 
