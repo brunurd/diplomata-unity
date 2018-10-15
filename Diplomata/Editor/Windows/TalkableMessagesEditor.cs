@@ -1359,7 +1359,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
             EditorGUILayout.Separator();
 
             // TODO: Resolve move between column bug.
-            /*
+            
             if (column.messages.Length > 1 || context.columns.Length > 1)
             {
               GUIHelper.Separator();
@@ -1376,6 +1376,9 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   message.columnId -= 1;
 
                   var leftCol = Column.Find(context, message.columnId);
+                  
+                  if (leftCol == null)
+                    leftCol = new Column(message.columnId, Controller.Instance.Options);
 
                   message.id = leftCol.messages.Length;
 
@@ -1441,6 +1444,9 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   message.columnId += 1;
 
                   var rightCol = Column.Find(context, message.columnId);
+                  
+                  if (rightCol == null)
+                    rightCol = new Column(message.columnId, Controller.Instance.Options);
 
                   message.id = rightCol.messages.Length;
 
@@ -1463,7 +1469,6 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
               GUILayout.EndHorizontal();
             }
-            */
 
             GUIHelper.Separator();
             GUILayout.Label("Other options: ");
