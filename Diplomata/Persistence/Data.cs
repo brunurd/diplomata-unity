@@ -43,14 +43,24 @@ namespace LavaLeak.Diplomata.Persistence
     /// </summary>
     /// <param name="dataArray">A array of data objects.</param>
     /// <param name="array">The array of persistent data objects.</param>
-    public static T[] SetArrayData<T>(Data[] dataArray, Persistent[] array)
+    public static T[] SetArrayData<T>(Data[] dataArray, Persistent[] array) where T : Data
     {
       var data = new T[array.Length];
       for (var i = 0; i < data.Length; i++)
       {
-        dataArray[i].SetData(array[i]);
-        data[i] = (T) Convert.ChangeType(dataArray[i], typeof(T));
+        if (dataArray != null)
+        {
+          if (i < dataArray.Length)
+          {
+            dataArray[i].SetData(array[i]);
+            data[i] = (T) Convert.ChangeType(dataArray[i], typeof(T));
+            continue;
+          }
+        }
+        data[i] = Activator.CreateInstance<T>();
+        data[i].SetData(array[i]);
       }
+
       return data;
     }
   }
