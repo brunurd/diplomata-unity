@@ -33,7 +33,7 @@ namespace LavaLeak.Diplomata.Models
     {
       var newArray = new Column[0];
 
-      for (int i = 0; i < columns.Length; i++)
+      for (var i = 0; i < columns.Length; i++)
       {
         if (columns[i].messages.Length > 0)
         {
@@ -41,13 +41,13 @@ namespace LavaLeak.Diplomata.Models
         }
       }
 
-      for (int i = 0; i < newArray.Length; i++)
+      for (var i = 0; i < newArray.Length; i++)
       {
         if (newArray[i].id == i + 1)
         {
           newArray[i].id = i;
 
-          foreach (Message msg in newArray[i].messages)
+          foreach (var msg in newArray[i].messages)
           {
             msg.columnId = i;
           }

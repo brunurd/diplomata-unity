@@ -1358,13 +1358,15 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
             EditorGUILayout.Separator();
 
+            // TODO: Resolve move between column bug.
+            /*
             if (column.messages.Length > 1 || context.columns.Length > 1)
             {
               GUIHelper.Separator();
               GUILayout.Label("Move: ");
 
               fakeButtonStyle.richText = true;
-              string color = "#989898";
+              var color = "#989898";
               GUILayout.BeginHorizontal();
 
               if (column.id > 0)
@@ -1461,6 +1463,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
               GUILayout.EndHorizontal();
             }
+            */
 
             GUIHelper.Separator();
             GUILayout.Label("Other options: ");
@@ -2336,12 +2339,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     private void MoveColumnsToRight(Context context, int toIndex)
     {
-      for (int i = context.columns.Length - 1; i >= toIndex; i--)
+      for (var i = context.columns.Length - 1; i >= toIndex; i--)
       {
         var col = Column.Find(context, i);
         var rightCol = Column.Find(context, i + 1);
 
-        foreach (Message msg in col.messages)
+        foreach (var msg in col.messages)
         {
           msg.columnId += 1;
 
@@ -2362,7 +2365,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       characterList = new string[0];
 
-      foreach (string str in Controller.Instance.Options.characterList)
+      foreach (var str in Controller.Instance.Options.characterList)
       {
         if (str != Controller.Instance.Options.playerCharacterName)
         {
@@ -2375,7 +2378,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       itemList = new string[0];
 
-      foreach (Item item in Controller.Instance.Inventory.items)
+      foreach (var item in Controller.Instance.Inventory.items)
       {
         itemList = ArrayHelper.Add(itemList, DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value);
       }
@@ -2385,11 +2388,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       messageList = new string[0];
 
-      foreach (Column col in context.columns)
+      foreach (var col in context.columns)
       {
-        foreach (Message msg in col.messages)
+        foreach (var msg in col.messages)
         {
-          LanguageDictionary content = DictionariesHelper.ContainsKey(msg.content, Controller.Instance.Options.currentLanguage);
+          var content = DictionariesHelper.ContainsKey(msg.content, Controller.Instance.Options.currentLanguage);
 
           if (content == null)
           {
@@ -2406,11 +2409,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       contextList = new string[0];
 
-      foreach (Character character in Controller.Instance.Characters)
+      foreach (var character in Controller.Instance.Characters)
       {
-        foreach (Context context in character.contexts)
+        foreach (var context in character.contexts)
         {
-          LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, Controller.Instance.Options.currentLanguage);
+          var contextName = DictionariesHelper.ContainsKey(context.name, Controller.Instance.Options.currentLanguage);
 
           if (contextName == null)
           {
@@ -2423,11 +2426,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
         }
       }
 
-      foreach (Interactable interactable in Controller.Instance.Interactables)
+      foreach (var interactable in Controller.Instance.Interactables)
       {
-        foreach (Context context in interactable.contexts)
+        foreach (var context in interactable.contexts)
         {
-          LanguageDictionary contextName = DictionariesHelper.ContainsKey(context.name, Controller.Instance.Options.currentLanguage);
+          var contextName = DictionariesHelper.ContainsKey(context.name, Controller.Instance.Options.currentLanguage);
 
           if (contextName == null)
           {
@@ -2445,7 +2448,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       globalFlagsList = new string[0];
 
-      foreach (Flag flag in Controller.Instance.GlobalFlags.flags)
+      foreach (var flag in Controller.Instance.GlobalFlags.flags)
       {
         globalFlagsList = ArrayHelper.Add(globalFlagsList, flag.name);
       }
@@ -2455,7 +2458,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     {
       labelsList = new string[0];
 
-      foreach (Label label in context.labels)
+      foreach (var label in context.labels)
       {
         labelsList = ArrayHelper.Add(labelsList, label.name);
       }
