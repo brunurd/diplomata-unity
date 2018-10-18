@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using LavaLeak.Diplomata.Dictionaries;
 using LavaLeak.Diplomata.Helpers;
@@ -243,6 +244,10 @@ namespace LavaLeak.Diplomata.Models
       return questLog;
     }
 
+    /// <summary>
+    /// Return the first QuestState that is incomplete.
+    /// </summary>
+    /// <returns>QuestState</returns>
     public QuestState GetFirstIncomplete()
     {
       var currentQuestStateId = GetStateIndex();
@@ -256,6 +261,28 @@ namespace LavaLeak.Diplomata.Models
         return questStates[0];
 
       return questStates[currentQuestStateId];
+    }
+    
+    /// <summary>
+    /// Checks if the QuestState with the required ID is complete.
+    /// </summary>
+    /// <param name="id">Unique ID of the QuestState.</param>
+    /// <returns>A bool that indicates if the quest state is complete or not.</returns>
+    public bool IsQuestStateCompleteById(string id)
+    {
+      var allQuestStates = GetQuestStates();
+
+      for (int i = 0; i < allQuestStates.Count; i++)
+      {
+        //TODO: Change this LINQ
+        if (allQuestStates.Keys.ElementAt(i).GetId() == id)
+        {
+          if (allQuestStates.Values.ElementAt(i))
+            return true;
+        }
+      }
+
+      return false;
     }
 
     /// <summary>
