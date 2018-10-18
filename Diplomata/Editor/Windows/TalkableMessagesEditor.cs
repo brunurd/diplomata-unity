@@ -856,7 +856,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   if (nextColumn == null)
                   {
                     context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, Controller.Instance.Options));
-                    nextColumn = context.columns[context.columns.Length];
+                    nextColumn = context.columns[context.columns.Length - 1];
                   }
 
                   // Create a new message.
@@ -1061,22 +1061,20 @@ namespace LavaLeak.Diplomata.Editor.Windows
               EditorGUILayout.Separator();
               GUILayout.Label("Message attributes (most influence in): ");
 
-              foreach (string attrName in Controller.Instance.Options.attributes)
+              foreach (var attrName in Controller.Instance.Options.attributes)
               {
-                for (int i = 0; i < message.attributes.Length; i++)
+                for (var i = 0; i < message.attributes.Length; i++)
                 {
                   if (message.attributes[i].key == attrName)
-                  {
                     break;
-                  }
-                  else if (i == message.attributes.Length - 1)
-                  {
+                  if (i == message.attributes.Length - 1)
                     message.attributes = ArrayHelper.Add(message.attributes, new AttributeDictionary(attrName));
-                  }
                 }
+                if (message.attributes.Length == 0)
+                  message.attributes = ArrayHelper.Add(message.attributes, new AttributeDictionary(attrName));
               }
 
-              for (int i = 0; i < message.attributes.Length; i++)
+              for (var i = 0; i < message.attributes.Length; i++)
               {
                 message.attributes[i].value =
                   (byte) EditorGUILayout.Slider(message.attributes[i].key, message.attributes[i].value, 0, 100);
