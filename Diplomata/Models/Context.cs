@@ -142,6 +142,9 @@ namespace LavaLeak.Diplomata.Models
     /// <returns>The local variable if exists or null.</returns>
     public LocalVariable GetLocalVariable(string variableName)
     {
+      if (LocalVariables == null)
+        LocalVariables = new LocalVariable[0];
+
       foreach (var localVariable in LocalVariables)
       {
         if (localVariable.Name.Equals(variableName))
