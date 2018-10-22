@@ -95,7 +95,7 @@ namespace LavaLeak.Diplomata
     /// <summary>
     /// Get all data from the characters.
     /// </summary>
-    /// <returns>A array of <seealso cref="Diplomata.Models.Character">.</returns>
+    /// <returns>A array of <seealso cref="Diplomata.Models.Character" />.</returns>
     public static Character[] GetCharacters()
     {
       return Data.characters.ToArray();
