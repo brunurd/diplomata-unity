@@ -810,7 +810,7 @@ namespace LavaLeak.Diplomata
               {
                 effect.endOfContext.GetContext(DiplomataManager.Data.characters, DiplomataManager.Data.interactables)
                   .Finished = true;
-                if (OnContextEnd != null)
+                if (OnContextEnd != null && currentContext != null)
                   OnContextEnd(currentContext);
               }
 
@@ -818,7 +818,7 @@ namespace LavaLeak.Diplomata
                   currentContext.id == effect.endOfContext.contextId)
               {
                 currentContext.Finished = true;
-                if (OnContextEnd != null)
+                if (OnContextEnd != null && currentContext != null)
                   OnContextEnd(currentContext);
               }
 
