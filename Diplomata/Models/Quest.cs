@@ -78,7 +78,7 @@ namespace LavaLeak.Diplomata.Models
     /// Get the index of the current state of the quest in questStates array.
     /// </summary>
     /// <returns>Return the index or -1 if don't have a current state.</returns>
-    private int GetStateIndex()
+    public int GetStateIndex()
     {
       var index = -1;
       if (string.IsNullOrEmpty(currentStateId) || !Initialized || finished)
