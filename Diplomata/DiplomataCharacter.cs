@@ -28,11 +28,6 @@ namespace LavaLeak.Diplomata
       controlIndexes.Add("context", 0);
       controlIndexes.Add("column", 0);
       controlIndexes.Add("message", 0);
-
-      if (talkable != null && Application.isPlaying)
-      {
-        talkable = Character.Find(DiplomataManager.Data.characters, talkable.name);
-      }
     }
 
     /// <summary>

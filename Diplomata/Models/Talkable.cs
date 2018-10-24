@@ -18,6 +18,11 @@ namespace LavaLeak.Diplomata.Models
     [SerializeField]
     private string uniqueId = Guid.NewGuid().ToString();
 
+    public string Id
+    {
+      get { return uniqueId; }
+    }
+
     public string name;
     public LanguageDictionary[] description;
     public Context[] contexts;

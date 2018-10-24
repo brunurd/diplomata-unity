@@ -380,7 +380,14 @@ namespace LavaLeak.Diplomata.Models
     public static Quest Find(Quest[] quests, string value)
     {
       var quest = (Quest) Helpers.Find.In(quests).Where("uniqueId", value).Result;
-      if (quest == null) quest = (Quest) Helpers.Find.In(quests).Where("Name", value).Result;
+      if (quest != null) return quest;
+      foreach (var _quest in quests)
+      {
+        if (_quest.Name.Any(lang => lang.value.Equals(value)))
+        {
+          quest = _quest;
+        }
+      }
       return quest;
     }
 

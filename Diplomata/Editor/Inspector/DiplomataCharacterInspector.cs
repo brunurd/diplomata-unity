@@ -40,6 +40,11 @@ namespace LavaLeak.Diplomata.Editor.Inspector
       diplomataCharacter = target as DiplomataCharacter;
     }
 
+    private Character GetTalkable()
+    {
+      return Character.Find(characters, diplomataCharacter.talkableName);
+    }
+
     /// <summary>
     /// The inspector graphic loop
     /// </summary>
@@ -49,7 +54,7 @@ namespace LavaLeak.Diplomata.Editor.Inspector
       serializedObject.Update();
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataCharacter.talkable != null && characters.Count > 0)
+      if (characters.Count > 0)
       {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Character: ");
@@ -60,7 +65,7 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
           for (var i = 0; i < characters.Count; i++)
           {
-            if (characters[i].name == diplomataCharacter.talkable.name)
+            if (characters[i].name == diplomataCharacter.talkableName)
             {
               selected = i;
               break;
@@ -74,9 +79,9 @@ namespace LavaLeak.Diplomata.Editor.Inspector
           {
             if (selected == i)
             {
-              diplomataCharacter.talkable = characters[i];
+              diplomataCharacter.talkableName = characters[i].name;
               characters[selectedBefore].onScene = false;
-              diplomataCharacter.talkable.onScene = true;
+              GetTalkable().onScene = true;
               break;
             }
           }
@@ -84,7 +89,7 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
         else
         {
-          GUILayout.Label(diplomataCharacter.talkable.name);
+          GUILayout.Label(diplomataCharacter.talkableName);
         }
 
         GUILayout.EndHorizontal();
@@ -98,7 +103,7 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
         var showInfluence = true;
 
-        if (diplomataCharacter.talkable.name == options.playerCharacterName)
+        if (diplomataCharacter.talkableName == options.playerCharacterName)
         {
           EditorGUILayout.HelpBox(
             "\nThis character is the player, he doesn't influence himself, use his messages only in the case he speaks with himself.\n",
@@ -108,13 +113,13 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
         if (GUILayout.Button("Edit Character", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
-          CharacterEditor.Edit(Character.Find(Controller.Instance.Characters, diplomataCharacter.talkable.name));
+          CharacterEditor.Edit(Character.Find(Controller.Instance.Characters, diplomataCharacter.talkableName));
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
           TalkableMessagesEditor.OpenContextMenu(Character.Find(Controller.Instance.Characters,
-            diplomataCharacter.talkable.name));
+            diplomataCharacter.talkableName));
         }
 
         if (showInfluence)
@@ -132,9 +137,9 @@ namespace LavaLeak.Diplomata.Editor.Inspector
             GUIHelper.labelStyle.normal.textColor = GUIHelper.freeTextColor;
           }
 
-          if (diplomataCharacter.talkable.GetType() == typeof(Character))
+          if (GetTalkable().GetType() == typeof(Character))
           {
-            var character = (Character) diplomataCharacter.talkable;
+            var character = GetTalkable();
             GUILayout.Label("Influence: <b>" + character.influence + "</b>", GUIHelper.labelStyle);
           }
         }

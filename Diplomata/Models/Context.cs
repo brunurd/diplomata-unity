@@ -46,7 +46,8 @@ namespace LavaLeak.Diplomata.Models
     public Label[] labels = new Label[] {new Label()};
     public LocalVariable[] LocalVariables;
 
-    [NonSerialized] public Action OnEnd;
+    [NonSerialized]
+    public Action OnEnd;
     private bool happened;
 
     /// <summary>

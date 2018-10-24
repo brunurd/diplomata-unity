@@ -12,7 +12,7 @@ namespace LavaLeak.Diplomata
   /// </summary>
   public static class DiplomataManager
   {
-    private static DiplomataData data;
+    private static DiplomataData _data = null;
 
     public static DiplomataEventController EventController
     {
@@ -40,17 +40,20 @@ namespace LavaLeak.Diplomata
           return null;
         }
 
-        if (data != null) return data;
+        if (_data != null)
+          return _data;
         
-        data = Object.FindObjectOfType<DiplomataData>();
+        _data = Object.FindObjectOfType<DiplomataData>();
         
-        if (data == null)
+        if (_data == null)
         {
           var dataGameObject = new GameObject("[Diplomata]");
-          data = dataGameObject.AddComponent<DiplomataData>();
+          Object.DontDestroyOnLoad(dataGameObject);
+          _data = dataGameObject.AddComponent<DiplomataData>();
+          _data.Reset();
         }
 
-        return data;
+        return _data;
       }
     }
 

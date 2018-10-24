@@ -34,13 +34,18 @@ namespace LavaLeak.Diplomata.Editor.Inspector
       diplomataInteractable = target as DiplomataInteractable;
     }
 
+    private Interactable GetTalkable()
+    {
+      return Interactable.Find(interactables, diplomataInteractable.talkableName);
+    }
+
     public override void OnInspectorGUI()
     {
       GUIHelper.Init();
       serializedObject.Update();
       GUILayout.BeginVertical(GUIHelper.windowStyle);
 
-      if (diplomataInteractable.talkable != null && interactables.Count > 0)
+      if (interactables.Count > 0)
       {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Interactable: ");
@@ -51,7 +56,7 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
           for (var i = 0; i < interactables.Count; i++)
           {
-            if (interactables[i].name == diplomataInteractable.talkable.name)
+            if (interactables[i].name == diplomataInteractable.talkableName)
             {
               selected = i;
               break;
@@ -65,9 +70,9 @@ namespace LavaLeak.Diplomata.Editor.Inspector
           {
             if (selected == i)
             {
-              diplomataInteractable.talkable = interactables[i];
+              diplomataInteractable.talkableName = interactables[i].name;
               interactables[selectedBefore].onScene = false;
-              diplomataInteractable.talkable.onScene = true;
+              GetTalkable().onScene = true;
               break;
             }
           }
@@ -75,7 +80,7 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
         else
         {
-          GUILayout.Label(diplomataInteractable.talkable.name);
+          GUILayout.Label(diplomataInteractable.talkableName);
         }
 
         GUILayout.EndHorizontal();
@@ -90,13 +95,13 @@ namespace LavaLeak.Diplomata.Editor.Inspector
         if (GUILayout.Button("Edit Interactable", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
           InteractableEditor.Edit(Interactable.Find(Controller.Instance.Interactables,
-            diplomataInteractable.talkable.name));
+            diplomataInteractable.talkableName));
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
           TalkableMessagesEditor.OpenContextMenu(Interactable.Find(Controller.Instance.Interactables,
-            diplomataInteractable.talkable.name));
+            diplomataInteractable.talkableName));
         }
 
         GUIHelper.Separator();

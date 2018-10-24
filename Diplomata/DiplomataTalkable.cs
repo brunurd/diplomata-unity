@@ -16,7 +16,28 @@ namespace LavaLeak.Diplomata
   [DisallowMultipleComponent]
   public class DiplomataTalkable : MonoBehaviour
   {
-    public Talkable talkable;
+    public string talkableName;
+    protected Talkable _talkable;
+
+    public Talkable talkable
+    {
+      get
+      {
+        if (_talkable == null)
+        {
+          _talkable =
+            (Talkable) Find.In(DiplomataManager.Data.characters.ToArray()).Where("name", talkableName).Result ??
+            (Talkable) Find.In(DiplomataManager.Data.interactables.ToArray()).Where("name", talkableName).Result;
+        }
+        return _talkable;
+      }
+      protected set
+      {
+        _talkable = value;
+        talkableName = _talkable.name;
+      }
+    }
+
     public Column currentColumn;
     public Message currentMessage;
     public bool choiceMenu;
@@ -787,6 +808,7 @@ namespace LavaLeak.Diplomata
         controlIndexes["content"]++;
         return;
       }
+
       controlIndexes["content"] = -1;
 
       var hasFate = false;

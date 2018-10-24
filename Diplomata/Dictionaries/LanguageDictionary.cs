@@ -14,5 +14,10 @@ namespace LavaLeak.Diplomata.Dictionaries
       this.key = key;
       this.value = value;
     }
+
+    public override string ToString()
+    {
+      return value;
+    }
   }
 }
