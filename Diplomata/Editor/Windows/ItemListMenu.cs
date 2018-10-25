@@ -52,7 +52,14 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
         if (name != null)
         {
-          GUILayout.Label(name.value, GUIHelper.labelStyle);
+          var nameLabel = name.value;
+
+          if (!string.IsNullOrEmpty(item.Category))
+          {
+            nameLabel += string.Format("   [{0}]", item.Category);
+          }
+
+          GUILayout.Label(nameLabel, GUIHelper.labelStyle);
         }
         else
         {
