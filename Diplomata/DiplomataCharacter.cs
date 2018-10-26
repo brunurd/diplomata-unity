@@ -13,7 +13,6 @@ namespace LavaLeak.Diplomata
   public class DiplomataCharacter : DiplomataTalkable
   {
     public event Action<Message> OnMessageChosen;
-    
 
     /// <summary>
     /// Set the main talkable fields.
