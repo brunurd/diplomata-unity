@@ -526,7 +526,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 ColorHelper.ColorSub(GUIHelper.labelStyle.normal.textColor, 0, 0.4f);
               GUIHelper.textContent.text = text;
               height = GUIHelper.labelStyle.CalcHeight(GUIHelper.textContent, context.columnWidth);
-              EditorGUILayout.LabelField(GUIHelper.textContent, GUIHelper.labelStyle,
+              EditorGUILayout.SelectableLabel(GUIHelper.textContent.text, GUIHelper.labelStyle,
                 GUILayout.Width(context.columnWidth),
                 GUILayout.Height(height));
               GUIHelper.labelStyle.normal.textColor =
