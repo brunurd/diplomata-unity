@@ -1152,5 +1152,19 @@ namespace LavaLeak.Diplomata
       return DictionariesHelper.ContainsKey(lastMessage.attachedContent[lastMessage.attachedContent.Length - 1].content,
         DiplomataManager.Data.options.currentLanguage).value;
     }
+
+    /// <summary>
+    /// Return the current context of the talkable.
+    /// </summary>
+    /// <returns>The current context.</returns>
+    public Context GetCurrentContext()
+    {
+      foreach (var context in talkable.contexts)
+      {
+        if (!context.Finished)
+          return context;
+      }
+      return null;
+    }
   }
 }
