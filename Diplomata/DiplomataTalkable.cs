@@ -18,6 +18,7 @@ namespace LavaLeak.Diplomata
   {
     public string talkableName;
     protected Talkable _talkable;
+    public bool CanTalk = true;
 
     public Talkable talkable
     {
@@ -99,6 +100,9 @@ namespace LavaLeak.Diplomata
         Debug.LogWarning("This talk cannot start, because the player is already in one.");
         return;
       }
+
+      if (!CanTalk)
+        return;
 
       if (talkable != null)
       {
