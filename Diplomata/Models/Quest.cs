@@ -113,6 +113,8 @@ namespace LavaLeak.Diplomata.Models
       {
         Initialized = true;
         currentStateId = questStates[0].GetId();
+
+        DiplomataManager.EventController.SendQuestStart(this);
       }
     }
 
