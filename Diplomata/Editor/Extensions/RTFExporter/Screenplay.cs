@@ -12,17 +12,6 @@ namespace LavaLeak.Diplomata.Editor.Extensions
 {
   public class Screenplay
   {
-    public static void Save(Talkable talkable)
-    {
-      var options = OptionsController.GetOptions();
-      RTFDocument doc = CreateDocument();
-
-      doc = AddTalkable(doc, talkable, options);
-
-      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + talkable.name + " - " + options.currentLanguage + ".rtf", doc);
-      AssetDatabase.Refresh();
-    }
-
     [MenuItem("Tools/Diplomata/Export To.../.rtf (Screenplay)", false, 2)]
     public static void SaveAll()
     {
@@ -36,6 +25,17 @@ namespace LavaLeak.Diplomata.Editor.Extensions
       }
 
       RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + options.currentLanguage + ".rtf", doc);
+      AssetDatabase.Refresh();
+    }
+
+    public static void Save(Talkable talkable)
+    {
+      var options = OptionsController.GetOptions();
+      RTFDocument doc = CreateDocument();
+
+      doc = AddTalkable(doc, talkable, options);
+
+      RTFParser.ToFile("Assets/" + PlayerSettings.productName + " Screenplay - " + talkable.name + " - " + options.currentLanguage + ".rtf", doc);
       AssetDatabase.Refresh();
     }
 

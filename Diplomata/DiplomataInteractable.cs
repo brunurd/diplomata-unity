@@ -1,13 +1,13 @@
+using System;
 using System.Collections.Generic;
-using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
-using UnityEngine;
 
 namespace LavaLeak.Diplomata
 {
   /// <summary>
   /// Interactable game objects component class.
   /// </summary>
+  [Serializable]
   public class DiplomataInteractable : DiplomataTalkable
   {
     /// <summary>
@@ -21,11 +21,6 @@ namespace LavaLeak.Diplomata
       controlIndexes.Add("context", 0);
       controlIndexes.Add("column", 0);
       controlIndexes.Add("message", 0);
-
-      if (talkable != null && Application.isPlaying)
-      {
-        talkable = Interactable.Find(DiplomataManager.Data.interactables, talkable.name);
-      }
     }
   }
 }

@@ -16,16 +16,57 @@ namespace LavaLeak.Diplomata
   [DisallowMultipleComponent]
   public class DiplomataTalkable : MonoBehaviour
   {
-    public Talkable talkable;
+    public string talkableId;
+    protected Talkable _talkable = null;
+    
+    [NonSerialized]
+    public bool CanTalk = true;
+    
+    [NonSerialized]
     public Column currentColumn;
+    
+    [NonSerialized]
     public Message currentMessage;
+    
+    [NonSerialized]
     public bool choiceMenu;
+    
+    [NonSerialized]
     public bool IsTalking;
+    
+    [NonSerialized]
     public List<Message> choices;
 
     protected Context currentContext;
     protected Dictionary<string, int> controlIndexes;
     private string lastUniqueId;
+
+    public Talkable talkable
+    {
+      get
+      {
+        if (_talkable == null)
+        {
+          _talkable = Character.Find(DiplomataManager.Data.characters, talkableId);
+          
+          if (_talkable == null)
+            _talkable = Interactable.Find(DiplomataManager.Data.interactables, talkableId);
+        }
+
+//        if (_talkable == null)
+//        {
+//          _talkable = (Talkable) Find.In(DiplomataManager.Data.characters.ToArray()).Where("Id", talkableId).Result ??
+//                      (Talkable) Find.In(DiplomataManager.Data.interactables.ToArray()).Where("Id", talkableId).Result;
+//        }
+
+        return _talkable;
+      }
+      protected set
+      {
+        _talkable = value;
+        talkableId = _talkable.Id;
+      }
+    }
 
     // Events.
     public event Action<Context> OnContextEnd;
@@ -78,6 +119,9 @@ namespace LavaLeak.Diplomata
         Debug.LogWarning("This talk cannot start, because the player is already in one.");
         return;
       }
+
+      if (!CanTalk)
+        return;
 
       if (talkable != null)
       {
@@ -787,6 +831,7 @@ namespace LavaLeak.Diplomata
         controlIndexes["content"]++;
         return;
       }
+
       controlIndexes["content"] = -1;
 
       var hasFate = false;
@@ -810,7 +855,7 @@ namespace LavaLeak.Diplomata
               {
                 effect.endOfContext.GetContext(DiplomataManager.Data.characters, DiplomataManager.Data.interactables)
                   .Finished = true;
-                if (OnContextEnd != null)
+                if (OnContextEnd != null && currentContext != null)
                   OnContextEnd(currentContext);
               }
 
@@ -818,7 +863,7 @@ namespace LavaLeak.Diplomata
                   currentContext.id == effect.endOfContext.contextId)
               {
                 currentContext.Finished = true;
-                if (OnContextEnd != null)
+                if (OnContextEnd != null && currentContext != null)
                   OnContextEnd(currentContext);
               }
 
@@ -998,8 +1043,6 @@ namespace LavaLeak.Diplomata
 
                 questToStart.Initialize();
 
-                DiplomataManager.EventController.SendQuestStart(questToStart);
-
                 if (OnQuestStartLocal != null)
                   OnQuestStartLocal(questToStart);
               }
@@ -1129,6 +1172,20 @@ namespace LavaLeak.Diplomata
 
       return DictionariesHelper.ContainsKey(lastMessage.attachedContent[lastMessage.attachedContent.Length - 1].content,
         DiplomataManager.Data.options.currentLanguage).value;
+    }
+
+    /// <summary>
+    /// Return the current context of the talkable.
+    /// </summary>
+    /// <returns>The current context.</returns>
+    public Context GetCurrentContext()
+    {
+      foreach (var context in talkable.contexts)
+      {
+        if (!context.Finished)
+          return context;
+      }
+      return null;
     }
   }
 }

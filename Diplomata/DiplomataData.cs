@@ -21,14 +21,8 @@ namespace LavaLeak.Diplomata
     public GlobalFlags globalFlags;
     public Quest[] quests;
     public TalkLog[] talkLogs;
-    public DiplomataEventController EventController;
+    public DiplomataEventController EventController = new DiplomataEventController();
     public bool OnATalk;
-
-    private void Awake()
-    {
-      Reset();
-      DontDestroyOnLoad(gameObject);
-    }
 
     /// <summary>
     /// Reset all fields.
@@ -36,9 +30,13 @@ namespace LavaLeak.Diplomata
     public void Reset()
     {
       talkLogs = new TalkLog[0];
-      EventController = new DiplomataEventController();
       OnATalk = false;
       ReadJSONs();
+    }
+
+    public void RemoveEvents()
+    {
+      EventController = new DiplomataEventController();
     }
 
     /// <summary>

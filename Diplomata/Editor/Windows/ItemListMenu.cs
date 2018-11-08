@@ -52,7 +52,14 @@ namespace LavaLeak.Diplomata.Editor.Windows
         GUIHelper.labelStyle.alignment = TextAnchor.MiddleLeft;
         if (name != null)
         {
-          GUILayout.Label(name.value, GUIHelper.labelStyle);
+          var nameLabel = name.value;
+
+          if (!string.IsNullOrEmpty(item.Category))
+          {
+            nameLabel += string.Format("   [{0}]", item.Category);
+          }
+
+          GUILayout.Label(nameLabel, GUIHelper.labelStyle);
         }
         else
         {
@@ -85,11 +92,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
           }
         }
 
-        if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-        {
-          Controller.Instance.Inventory.items = ArrayHelper.Add(Controller.Instance.Inventory.items, item.Copy(Controller.Instance.Inventory.GenerateId(), Controller.Instance.Options));
-          InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
-        }
+//        if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+//        {
+//          Controller.Instance.Inventory.items = ArrayHelper.Add(Controller.Instance.Inventory.items, item.Copy(Controller.Instance.Inventory.GenerateId(), Controller.Instance.Options));
+//          InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
+//        }
 
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();

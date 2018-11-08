@@ -86,12 +86,15 @@ namespace LavaLeak.Diplomata.Helpers
     /// <returns>A subject with preset results.</returns>
     public Subject Where(string fieldName, object value)
     {
-      if (_type == null) return this;
+      if (_type == null)
+        return this;
       var fields = _type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
 
       foreach (var field in fields)
       {
-        if (field.Name != fieldName) continue;
+        if (field.Name != fieldName)
+          continue;
+        
         foreach (var instance in _collection)
         {
           if (field.GetValue(instance).Equals(value))

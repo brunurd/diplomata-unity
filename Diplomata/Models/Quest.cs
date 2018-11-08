@@ -78,7 +78,7 @@ namespace LavaLeak.Diplomata.Models
     /// Get the index of the current state of the quest in questStates array.
     /// </summary>
     /// <returns>Return the index or -1 if don't have a current state.</returns>
-    private int GetStateIndex()
+    public int GetStateIndex()
     {
       var index = -1;
       if (string.IsNullOrEmpty(currentStateId) || !Initialized || finished)
@@ -113,6 +113,8 @@ namespace LavaLeak.Diplomata.Models
       {
         Initialized = true;
         currentStateId = questStates[0].GetId();
+
+        DiplomataManager.EventController.SendQuestStart(this);
       }
     }
 
@@ -162,10 +164,12 @@ namespace LavaLeak.Diplomata.Models
           if (index == questStates.Length - 1)
           {
             Finish();
+            DiplomataManager.EventController.SendQuestEnd(this);
           }
           else
           {
             currentStateId = questStates[index + 1].GetId();
+            DiplomataManager.EventController.SendQuestStateChange(this);
           }
         }
       }
@@ -184,7 +188,10 @@ namespace LavaLeak.Diplomata.Models
       {
         Initialized = true;
         if (ArrayHelper.Contains(QuestState.GetIDs(questStates), stateId))
+        {
           currentStateId = stateId;
+          DiplomataManager.EventController.SendQuestStateChange(this);
+        }
       }
       else
       {
@@ -378,7 +385,14 @@ namespace LavaLeak.Diplomata.Models
     public static Quest Find(Quest[] quests, string value)
     {
       var quest = (Quest) Helpers.Find.In(quests).Where("uniqueId", value).Result;
-      if (quest == null) quest = (Quest) Helpers.Find.In(quests).Where("Name", value).Result;
+      if (quest != null) return quest;
+      foreach (var _quest in quests)
+      {
+        if (_quest.Name.Any(lang => lang.value.Equals(value)))
+        {
+          quest = _quest;
+        }
+      }
       return quest;
     }
 

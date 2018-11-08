@@ -16,7 +16,12 @@ namespace LavaLeak.Diplomata.Models
   public class Talkable : Data
   {
     [SerializeField]
-    private string uniqueId = Guid.NewGuid().ToString();
+    protected string uniqueId = Guid.NewGuid().ToString();
+
+    public string Id
+    {
+      get { return uniqueId; }
+    }
 
     public string name;
     public LanguageDictionary[] description;
