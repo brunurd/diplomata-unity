@@ -16,9 +16,30 @@ namespace LavaLeak.Diplomata
   [DisallowMultipleComponent]
   public class DiplomataTalkable : MonoBehaviour
   {
-    public string talkableName;
-    protected Talkable _talkable;
+    public string talkableId;
+    protected Talkable _talkable = null;
+    
+    [NonSerialized]
     public bool CanTalk = true;
+    
+    [NonSerialized]
+    public Column currentColumn;
+    
+    [NonSerialized]
+    public Message currentMessage;
+    
+    [NonSerialized]
+    public bool choiceMenu;
+    
+    [NonSerialized]
+    public bool IsTalking;
+    
+    [NonSerialized]
+    public List<Message> choices;
+
+    protected Context currentContext;
+    protected Dictionary<string, int> controlIndexes;
+    private string lastUniqueId;
 
     public Talkable talkable
     {
@@ -26,28 +47,26 @@ namespace LavaLeak.Diplomata
       {
         if (_talkable == null)
         {
-          _talkable =
-            (Talkable) Find.In(DiplomataManager.Data.characters.ToArray()).Where("name", talkableName).Result ??
-            (Talkable) Find.In(DiplomataManager.Data.interactables.ToArray()).Where("name", talkableName).Result;
+          _talkable = Character.Find(DiplomataManager.Data.characters, talkableId);
+          
+          if (_talkable == null)
+            _talkable = Interactable.Find(DiplomataManager.Data.interactables, talkableId);
         }
+
+//        if (_talkable == null)
+//        {
+//          _talkable = (Talkable) Find.In(DiplomataManager.Data.characters.ToArray()).Where("Id", talkableId).Result ??
+//                      (Talkable) Find.In(DiplomataManager.Data.interactables.ToArray()).Where("Id", talkableId).Result;
+//        }
+
         return _talkable;
       }
       protected set
       {
         _talkable = value;
-        talkableName = _talkable.name;
+        talkableId = _talkable.Id;
       }
     }
-
-    public Column currentColumn;
-    public Message currentMessage;
-    public bool choiceMenu;
-    public bool IsTalking;
-    public List<Message> choices;
-
-    protected Context currentContext;
-    protected Dictionary<string, int> controlIndexes;
-    private string lastUniqueId;
 
     // Events.
     public event Action<Context> OnContextEnd;
@@ -1023,8 +1042,6 @@ namespace LavaLeak.Diplomata
                   break;
 
                 questToStart.Initialize();
-
-                DiplomataManager.EventController.SendQuestStart(questToStart);
 
                 if (OnQuestStartLocal != null)
                   OnQuestStartLocal(questToStart);

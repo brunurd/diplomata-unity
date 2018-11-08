@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LavaLeak.Diplomata;
 using LavaLeak.Diplomata.Editor;
@@ -18,7 +19,8 @@ namespace LavaLeak.Diplomata.Editor.Inspector
   [CanEditMultipleObjects]
   public class DiplomataInteractableInspector : UnityEditor.Editor
   {
-    public DiplomataInteractable diplomataInteractable;
+    public SerializedProperty TalkableId;
+
     private Options options;
     private List<Interactable> interactables;
 
@@ -31,12 +33,18 @@ namespace LavaLeak.Diplomata.Editor.Inspector
     {
       options = OptionsController.GetOptions();
       interactables = InteractablesController.GetInteractables(options);
-      diplomataInteractable = target as DiplomataInteractable;
+      try {
+        TalkableId = serializedObject.FindProperty("talkableId");
+      }
+      catch (Exception)
+      {
+        // ignored
+      }
     }
 
     private Interactable GetTalkable()
     {
-      return Interactable.Find(interactables, diplomataInteractable.talkableName);
+      return Interactable.Find(interactables, TalkableId.stringValue);
     }
 
     public override void OnInspectorGUI()
@@ -47,6 +55,14 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
       if (interactables.Count > 0)
       {
+        if (TalkableId.stringValue != null)
+        {
+          GUILayout.BeginHorizontal();
+          GUILayout.Label("Id: ");
+          EditorGUILayout.SelectableLabel(string.Format("{0}", TalkableId.stringValue));
+          GUILayout.EndHorizontal();
+        }
+
         GUILayout.BeginHorizontal();
         GUILayout.Label("Interactable: ");
 
@@ -56,7 +72,7 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
           for (var i = 0; i < interactables.Count; i++)
           {
-            if (interactables[i].name == diplomataInteractable.talkableName)
+            if (interactables[i].Id == TalkableId.stringValue)
             {
               selected = i;
               break;
@@ -70,9 +86,10 @@ namespace LavaLeak.Diplomata.Editor.Inspector
           {
             if (selected == i)
             {
-              diplomataInteractable.talkableName = interactables[i].name;
+              TalkableId.stringValue = interactables[i].Id;
               interactables[selectedBefore].onScene = false;
-              GetTalkable().onScene = true;
+              if (GetTalkable() != null)
+                GetTalkable().onScene = true;
               break;
             }
           }
@@ -80,7 +97,8 @@ namespace LavaLeak.Diplomata.Editor.Inspector
 
         else
         {
-          GUILayout.Label(diplomataInteractable.talkableName);
+          if ( GetTalkable() != null)
+            GUILayout.Label( GetTalkable().name);
         }
 
         GUILayout.EndHorizontal();
@@ -95,13 +113,13 @@ namespace LavaLeak.Diplomata.Editor.Inspector
         if (GUILayout.Button("Edit Interactable", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
           InteractableEditor.Edit(Interactable.Find(Controller.Instance.Interactables,
-            diplomataInteractable.talkableName));
+            TalkableId.stringValue));
         }
 
         if (GUILayout.Button("Edit Messages", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
           TalkableMessagesEditor.OpenContextMenu(Interactable.Find(Controller.Instance.Interactables,
-            diplomataInteractable.talkableName));
+            TalkableId.stringValue));
         }
 
         GUIHelper.Separator();

@@ -10,6 +10,7 @@ namespace LavaLeak.Diplomata
   /// <summary>
   /// The Diplomata Character component.
   /// </summary>
+  [Serializable]
   public class DiplomataCharacter : DiplomataTalkable
   {
     public event Action<Message> OnMessageChosen;

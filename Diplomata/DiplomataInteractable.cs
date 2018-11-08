@@ -1,13 +1,13 @@
+using System;
 using System.Collections.Generic;
-using LavaLeak.Diplomata.Helpers;
 using LavaLeak.Diplomata.Models;
-using UnityEngine;
 
 namespace LavaLeak.Diplomata
 {
   /// <summary>
   /// Interactable game objects component class.
   /// </summary>
+  [Serializable]
   public class DiplomataInteractable : DiplomataTalkable
   {
     /// <summary>
