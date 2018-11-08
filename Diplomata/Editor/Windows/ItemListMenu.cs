@@ -92,11 +92,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
           }
         }
 
-        if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
-        {
-          Controller.Instance.Inventory.items = ArrayHelper.Add(Controller.Instance.Inventory.items, item.Copy(Controller.Instance.Inventory.GenerateId(), Controller.Instance.Options));
-          InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
-        }
+//        if (GUILayout.Button("Duplicate", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
+//        {
+//          Controller.Instance.Inventory.items = ArrayHelper.Add(Controller.Instance.Inventory.items, item.Copy(Controller.Instance.Inventory.GenerateId(), Controller.Instance.Options));
+//          InventoryController.Save(Controller.Instance.Inventory, Controller.Instance.Options.jsonPrettyPrint);
+//        }
 
         GUILayout.EndHorizontal();
         GUILayout.EndHorizontal();
