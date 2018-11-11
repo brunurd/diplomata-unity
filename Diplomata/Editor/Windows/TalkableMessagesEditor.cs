@@ -16,6 +16,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
     // Models.
     public static Talkable talkable;
     public static Context context;
+    private Options options;
 
     // Layout elements.
     public static Texture2D headerBG;
@@ -351,7 +352,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void CreateContext()
     {
-      talkable.contexts = ArrayHelper.Add(talkable.contexts, new Context(talkable.contexts.Length, talkable.name, Controller.Instance.Options.languages));
+      talkable.contexts = ArrayHelper.Add(talkable.contexts,
+        new Context(talkable.contexts.Length, talkable.name, Controller.Instance.Options.languages));
       Save();
     }
 
@@ -574,7 +576,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       var itemName = "";
                       if (Item.Find(Controller.Instance.Inventory.items, condition.itemId) != null)
                       {
-                        itemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
+                        itemName = DictionariesHelper.ContainsKey(
+                          Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
                           Controller.Instance.Options.currentLanguage).value;
                       }
 
@@ -584,7 +587,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       var itemNameDont = "";
                       if (Item.Find(Controller.Instance.Inventory.items, condition.itemId) != null)
                       {
-                        itemNameDont = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
+                        itemNameDont = DictionariesHelper.ContainsKey(
+                          Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
                           Controller.Instance.Options.currentLanguage).value;
                       }
 
@@ -616,7 +620,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       text += condition.DisplayGlobalFlagEqualTo();
                       break;
                     case Condition.Type.QuestStateIs:
-                      text += condition.DisplayQuestStateIs(Controller.Instance.Quests, Controller.Instance.Options.currentLanguage);
+                      text += condition.DisplayQuestStateIs(Controller.Instance.Quests,
+                        Controller.Instance.Options.currentLanguage);
                       break;
                   }
 
@@ -646,13 +651,15 @@ namespace LavaLeak.Diplomata.Editor.Windows
               GUILayout.Label(GUIHelper.textContent, GUIHelper.labelStyle, GUILayout.Width(context.columnWidth),
                 GUILayout.Height(height));
 
-              var content = DictionariesHelper.ContainsKey(currentMessage.content, Controller.Instance.Options.currentLanguage);
+              var content =
+                DictionariesHelper.ContainsKey(currentMessage.content, Controller.Instance.Options.currentLanguage);
 
               if (content == null)
               {
                 currentMessage.content = ArrayHelper.Add(currentMessage.content,
                   new LanguageDictionary(Controller.Instance.Options.currentLanguage, "[ Message content here ]"));
-                content = DictionariesHelper.ContainsKey(currentMessage.content, Controller.Instance.Options.currentLanguage);
+                content = DictionariesHelper.ContainsKey(currentMessage.content,
+                  Controller.Instance.Options.currentLanguage);
               }
 
               GUIHelper.textContent.text = content.value;
@@ -673,14 +680,16 @@ namespace LavaLeak.Diplomata.Editor.Windows
                 foreach (var attachedContent in currentMessage.attachedContent)
                 {
                   var currentAttachedContent =
-                    DictionariesHelper.ContainsKey(attachedContent.content, Controller.Instance.Options.currentLanguage);
+                    DictionariesHelper.ContainsKey(attachedContent.content,
+                      Controller.Instance.Options.currentLanguage);
 
                   if (currentAttachedContent == null)
                   {
                     attachedContent.content = ArrayHelper.Add(attachedContent.content,
                       new LanguageDictionary(Controller.Instance.Options.currentLanguage, "[ Message content here ]"));
                     currentAttachedContent =
-                      DictionariesHelper.ContainsKey(attachedContent.content, Controller.Instance.Options.currentLanguage);
+                      DictionariesHelper.ContainsKey(attachedContent.content,
+                        Controller.Instance.Options.currentLanguage);
                   }
 
                   GUIHelper.textContent.text = currentAttachedContent.value;
@@ -737,9 +746,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       if (effect.endOfContext.talkableName != null && effect.endOfContext.talkableName != string.Empty)
                       {
                         var tempContext =
-                          effect.endOfContext.GetContext(Controller.Instance.Characters, Controller.Instance.Interactables);
+                          effect.endOfContext.GetContext(Controller.Instance.Characters,
+                            Controller.Instance.Interactables);
                         if (tempContext == null) break;
-                        var tempName = DictionariesHelper.ContainsKey(tempContext.name, Controller.Instance.Options.currentLanguage);
+                        var tempName = DictionariesHelper.ContainsKey(tempContext.name,
+                          Controller.Instance.Options.currentLanguage);
                         if (tempName == null) break;
                         text += effect.DisplayEndOfContext(tempName.value);
                       }
@@ -757,7 +768,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       if (effect.goTo.GetMessage(context) != null)
                       {
                         text += effect.DisplayGoTo(DictionariesHelper
-                          .ContainsKey(effect.goTo.GetMessage(context).content, Controller.Instance.Options.currentLanguage).value);
+                          .ContainsKey(effect.goTo.GetMessage(context).content,
+                            Controller.Instance.Options.currentLanguage).value);
                       }
 
                       break;
@@ -768,7 +780,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       var itemName = "";
                       if (Item.Find(Controller.Instance.Inventory.items, effect.itemId) != null)
                       {
-                        itemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
+                        itemName = DictionariesHelper.ContainsKey(
+                          Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
                           Controller.Instance.Options.currentLanguage).value;
                       }
 
@@ -778,7 +791,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       var discardItemName = "";
                       if (Item.Find(Controller.Instance.Inventory.items, effect.itemId) != null)
                       {
-                        discardItemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
+                        discardItemName = DictionariesHelper.ContainsKey(
+                          Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
                           Controller.Instance.Options.currentLanguage).value;
                       }
 
@@ -788,7 +802,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       var equipItemName = "";
                       if (Item.Find(Controller.Instance.Inventory.items, effect.itemId) != null)
                       {
-                        equipItemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
+                        equipItemName = DictionariesHelper.ContainsKey(
+                          Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
                           Controller.Instance.Options.currentLanguage).value;
                       }
 
@@ -801,13 +816,16 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       text += effect.DisplayEndOfDialogue();
                       break;
                     case Effect.Type.SetQuestState:
-                      text += effect.DisplaySetQuestState(Controller.Instance.Quests, Controller.Instance.Options.currentLanguage);
+                      text += effect.DisplaySetQuestState(Controller.Instance.Quests,
+                        Controller.Instance.Options.currentLanguage);
                       break;
                     case Effect.Type.FinishQuest:
-                      text += effect.DisplayFinishQuest(Controller.Instance.Quests, Controller.Instance.Options.currentLanguage);
+                      text += effect.DisplayFinishQuest(Controller.Instance.Quests,
+                        Controller.Instance.Options.currentLanguage);
                       break;
                     case Effect.Type.StartQuest:
-                      text += effect.DiplayStartQuest(Controller.Instance.Quests, Controller.Instance.Options.currentLanguage);
+                      text += effect.DiplayStartQuest(Controller.Instance.Quests,
+                        Controller.Instance.Options.currentLanguage);
                       break;
                   }
 
@@ -855,12 +873,14 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   // If don't have a next column create one.
                   if (nextColumn == null)
                   {
-                    context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, Controller.Instance.Options));
+                    context.columns = ArrayHelper.Add(context.columns,
+                      new Column(context.columns.Length, Controller.Instance.Options));
                     nextColumn = context.columns[context.columns.Length - 1];
                   }
 
                   // Create a new message.
-                  var newMessage = new Message(nextColumn.messages.Length, Controller.Instance.Options.playerCharacterName, nextColumn.id,
+                  var newMessage = new Message(nextColumn.messages.Length,
+                    Controller.Instance.Options.playerCharacterName, nextColumn.id,
                     currentMessage.labelId, Controller.Instance.Options);
 
                   // Create a new condition with a after of.
@@ -901,7 +921,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
         if (GUILayout.Button("Add Message", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
         {
           column.messages = ArrayHelper.Add(column.messages,
-            new Message(column.messages.Length, column.emitter, column.id, context.labels[0].uniqueId, Controller.Instance.Options));
+            new Message(column.messages.Length, column.emitter, column.id, context.labels[0].uniqueId,
+              Controller.Instance.Options));
           SetMessage(null);
           Save();
         }
@@ -915,7 +936,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
       if (GUILayout.Button("Add Column", GUILayout.Height(GUIHelper.BUTTON_HEIGHT),
         GUILayout.Width(context.columnWidth)))
       {
-        context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, Controller.Instance.Options));
+        context.columns =
+          ArrayHelper.Add(context.columns, new Column(context.columns.Length, Controller.Instance.Options));
         Save();
       }
 
@@ -927,11 +949,17 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void LabelManager()
     {
-      var height = ((180 + (context.labels.Length * 240)) >= Screen.width) ? LABEL_HEIGHT : HEADER_HEIGHT;
+      var height = 488 + 180 + (context.labels.Length * 240) >= Screen.width ? LABEL_HEIGHT : HEADER_HEIGHT;
 
       scrollPosLabelManager = EditorGUILayout.BeginScrollView(scrollPosLabelManager,
         messagesWindowHeaderStyle, GUILayout.Width(Screen.width), GUILayout.Height(height));
       GUILayout.BeginHorizontal();
+
+      if (options == null)
+        options = OptionsController.GetOptions();
+
+      if (context != null)
+        GUILayout.Label(string.Format("Context: {0}", context.GetName(options.currentLanguage)), GUILayout.Width(488));
 
       GUILayout.Label("Labels: ", GUILayout.Width(60));
 
@@ -1070,6 +1098,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   if (i == message.attributes.Length - 1)
                     message.attributes = ArrayHelper.Add(message.attributes, new AttributeDictionary(attrName));
                 }
+
                 if (message.attributes.Length == 0)
                   message.attributes = ArrayHelper.Add(message.attributes, new AttributeDictionary(attrName));
               }
@@ -1115,13 +1144,15 @@ namespace LavaLeak.Diplomata.Editor.Windows
             GUILayout.EndHorizontal();
             GUIHelper.Separator();
 
-            var screenplayNotes = DictionariesHelper.ContainsKey(message.screenplayNotes, Controller.Instance.Options.currentLanguage);
+            var screenplayNotes =
+              DictionariesHelper.ContainsKey(message.screenplayNotes, Controller.Instance.Options.currentLanguage);
 
             if (screenplayNotes == null)
             {
               message.screenplayNotes = ArrayHelper.Add(message.screenplayNotes,
                 new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
-              screenplayNotes = DictionariesHelper.ContainsKey(message.screenplayNotes, Controller.Instance.Options.currentLanguage);
+              screenplayNotes =
+                DictionariesHelper.ContainsKey(message.screenplayNotes, Controller.Instance.Options.currentLanguage);
             }
 
             GUIHelper.labelStyle.alignment = TextAnchor.UpperLeft;
@@ -1133,13 +1164,15 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
             EditorGUILayout.Separator();
 
-            var audioClipPath = DictionariesHelper.ContainsKey(message.audioClipPath, Controller.Instance.Options.currentLanguage);
+            var audioClipPath =
+              DictionariesHelper.ContainsKey(message.audioClipPath, Controller.Instance.Options.currentLanguage);
 
             if (audioClipPath == null)
             {
               message.audioClipPath = ArrayHelper.Add(message.audioClipPath,
                 new LanguageDictionary(Controller.Instance.Options.currentLanguage, string.Empty));
-              audioClipPath = DictionariesHelper.ContainsKey(message.audioClipPath, Controller.Instance.Options.currentLanguage);
+              audioClipPath =
+                DictionariesHelper.ContainsKey(message.audioClipPath, Controller.Instance.Options.currentLanguage);
             }
 
             message.audioClip = (AudioClip) Resources.Load(audioClipPath.value);
@@ -1357,7 +1390,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
             EditorGUILayout.Separator();
 
             // TODO: Resolve move between column bug.
-            
+
             if (column.messages.Length > 1 || context.columns.Length > 1)
             {
               GUIHelper.Separator();
@@ -1374,7 +1407,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   message.columnId -= 1;
 
                   var leftCol = Column.Find(context, message.columnId);
-                  
+
                   if (leftCol == null)
                     leftCol = new Column(message.columnId, Controller.Instance.Options);
 
@@ -1442,7 +1475,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   message.columnId += 1;
 
                   var rightCol = Column.Find(context, message.columnId);
-                  
+
                   if (rightCol == null)
                     rightCol = new Column(message.columnId, Controller.Instance.Options);
 
@@ -1507,7 +1540,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
             if (GUILayout.Button("New column at left", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, Controller.Instance.Options));
+              context.columns = ArrayHelper.Add(context.columns,
+                new Column(context.columns.Length, Controller.Instance.Options));
 
               MoveColumnsToRight(context, column.id);
 
@@ -1517,7 +1551,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
             if (GUILayout.Button("New column at right", GUILayout.Height(GUIHelper.BUTTON_HEIGHT)))
             {
-              context.columns = ArrayHelper.Add(context.columns, new Column(context.columns.Length, Controller.Instance.Options));
+              context.columns = ArrayHelper.Add(context.columns,
+                new Column(context.columns.Length, Controller.Instance.Options));
 
               MoveColumnsToRight(context, column.id + 1);
 
@@ -1565,7 +1600,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   if (condition.afterOf.GetMessage(context) != null)
                   {
                     messageName = DictionariesHelper
-                      .ContainsKey(condition.afterOf.GetMessage(context).content, Controller.Instance.Options.currentLanguage).value;
+                      .ContainsKey(condition.afterOf.GetMessage(context).content,
+                        Controller.Instance.Options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1578,7 +1614,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                     {
                       foreach (Message msg in col.messages)
                       {
-                        if (DictionariesHelper.ContainsKey(msg.content, Controller.Instance.Options.currentLanguage).value == messageName)
+                        if (DictionariesHelper.ContainsKey(msg.content, Controller.Instance.Options.currentLanguage)
+                              .value == messageName)
                         {
                           condition.afterOf.uniqueId = msg.GetUniqueId();
                           break;
@@ -1629,7 +1666,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   if (itemList.Length > 0)
                   {
-                    itemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
+                    itemName = DictionariesHelper.ContainsKey(
+                      Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
                       Controller.Instance.Options.currentLanguage).value;
                   }
 
@@ -1641,7 +1679,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   {
                     foreach (Item item in Controller.Instance.Inventory.items)
                     {
-                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value == itemName)
+                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage)
+                            .value == itemName)
                       {
                         condition.itemId = item.id;
                         break;
@@ -1660,7 +1699,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   if (itemList.Length > 0)
                   {
-                    itemNameDont = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
+                    itemNameDont = DictionariesHelper.ContainsKey(
+                      Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
                       Controller.Instance.Options.currentLanguage).value;
                   }
 
@@ -1672,7 +1712,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   {
                     foreach (Item item in Controller.Instance.Inventory.items)
                     {
-                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value == itemNameDont)
+                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage)
+                            .value == itemNameDont)
                       {
                         condition.itemId = item.id;
                         break;
@@ -1691,7 +1732,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   if (itemList.Length > 0)
                   {
-                    equippedItemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
+                    equippedItemName = DictionariesHelper.ContainsKey(
+                      Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
                       Controller.Instance.Options.currentLanguage).value;
                   }
 
@@ -1703,7 +1745,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   {
                     foreach (Item item in Controller.Instance.Inventory.items)
                     {
-                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value == equippedItemName)
+                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage)
+                            .value == equippedItemName)
                       {
                         condition.itemId = item.id;
                         break;
@@ -1723,7 +1766,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   if (itemList.Length > 0)
                   {
                     discardedItemName = DictionariesHelper
-                      .ContainsKey(Item.Find(Controller.Instance.Inventory.items, condition.itemId).name, Controller.Instance.Options.currentLanguage).value;
+                      .ContainsKey(Item.Find(Controller.Instance.Inventory.items, condition.itemId).name,
+                        Controller.Instance.Options.currentLanguage).value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1734,7 +1778,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   {
                     foreach (Item item in Controller.Instance.Inventory.items)
                     {
-                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value == discardedItemName)
+                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage)
+                            .value == discardedItemName)
                       {
                         condition.itemId = item.id;
                         break;
@@ -1785,27 +1830,34 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   questName = GUIHelper.Popup("Quest: ", questName, questNames);
                   if (EditorGUI.EndChangeCheck())
                   {
-                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options), questName);
-                    if (questIndex > -1) condition.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
+                    var questIndex =
+                      ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options),
+                        questName);
+                    if (questIndex > -1)
+                      condition.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
                   }
 
                   // Get the quest state name.
                   quest = Quest.Find(Controller.Instance.Quests, condition.questAndState.questId);
-                  var questState =  quest != null ? quest.GetState(condition.questAndState.questStateId) : null;
-                  var questStateNameDict = questState != null ?
-                    DictionariesHelper.ContainsKey(questState.ShortDescription, Controller.Instance.Options.currentLanguage) : null;
+                  var questState = quest != null ? quest.GetState(condition.questAndState.questStateId) : null;
+                  var questStateNameDict = questState != null
+                    ? DictionariesHelper.ContainsKey(questState.ShortDescription,
+                      Controller.Instance.Options.currentLanguage)
+                    : null;
                   var questStateName = questStateNameDict != null ? questStateNameDict.value : string.Empty;
 
                   // Quest state Popup with a change checker.
                   if (quest != null)
                   {
                     EditorGUI.BeginChangeCheck();
-                    var questStateNames = QuestState.GetShortDescriptions(quest.questStates, Controller.Instance.Options);
+                    var questStateNames =
+                      QuestState.GetShortDescriptions(quest.questStates, Controller.Instance.Options);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
                     questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
-                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetShortDescriptions(quest.questStates, Controller.Instance.Options),
+                      var questStateIndex = ArrayHelper.GetIndex(
+                        QuestState.GetShortDescriptions(quest.questStates, Controller.Instance.Options),
                         questStateName);
                       if (questStateIndex > -1)
                         condition.questAndState.questStateId = QuestState.GetIDs(quest.questStates)[questStateIndex];
@@ -1867,10 +1919,12 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   if (effect.endOfContext.talkableName != null)
                   {
-                    Context contextToEnd = effect.endOfContext.GetContext(Controller.Instance.Characters, Controller.Instance.Interactables);
+                    Context contextToEnd = effect.endOfContext.GetContext(Controller.Instance.Characters,
+                      Controller.Instance.Interactables);
                     if (contextToEnd != null)
                     {
-                      contextName = DictionariesHelper.ContainsKey(contextToEnd.name, Controller.Instance.Options.currentLanguage).value;
+                      contextName = DictionariesHelper
+                        .ContainsKey(contextToEnd.name, Controller.Instance.Options.currentLanguage).value;
                     }
                   }
 
@@ -1884,7 +1938,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                     {
                       foreach (Context ctx in tempCharacter.contexts)
                       {
-                        if (DictionariesHelper.ContainsKey(ctx.name, Controller.Instance.Options.currentLanguage).value == contextName)
+                        if (DictionariesHelper.ContainsKey(ctx.name, Controller.Instance.Options.currentLanguage)
+                              .value == contextName)
                         {
                           effect.endOfContext.Set(tempCharacter.name, ctx.id);
                           break;
@@ -1896,7 +1951,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                     {
                       foreach (Context ctx in tempInteractable.contexts)
                       {
-                        if (DictionariesHelper.ContainsKey(ctx.name, Controller.Instance.Options.currentLanguage).value == contextName)
+                        if (DictionariesHelper.ContainsKey(ctx.name, Controller.Instance.Options.currentLanguage)
+                              .value == contextName)
                         {
                           effect.endOfContext.Set(tempInteractable.name, ctx.id);
                           break;
@@ -1914,7 +1970,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   if (effect.goTo.GetMessage(context) != null)
                   {
                     messageContent = DictionariesHelper
-                      .ContainsKey(effect.goTo.GetMessage(context).content, Controller.Instance.Options.currentLanguage).value;
+                      .ContainsKey(effect.goTo.GetMessage(context).content, Controller.Instance.Options.currentLanguage)
+                      .value;
                   }
 
                   EditorGUI.BeginChangeCheck();
@@ -1927,7 +1984,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                     {
                       foreach (Message msg in col.messages)
                       {
-                        if (DictionariesHelper.ContainsKey(msg.content, Controller.Instance.Options.currentLanguage).value ==
+                        if (DictionariesHelper.ContainsKey(msg.content, Controller.Instance.Options.currentLanguage)
+                              .value ==
                             messageContent)
                         {
                           effect.goTo.uniqueId = msg.GetUniqueId();
@@ -2049,7 +2107,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   if (itemList.Length > 0)
                   {
-                    itemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
+                    itemName = DictionariesHelper.ContainsKey(
+                      Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
                       Controller.Instance.Options.currentLanguage).value;
                   }
 
@@ -2061,7 +2120,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   {
                     foreach (Item item in Controller.Instance.Inventory.items)
                     {
-                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value == itemName)
+                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage)
+                            .value == itemName)
                       {
                         effect.itemId = item.id;
                         break;
@@ -2080,7 +2140,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   if (itemList.Length > 0)
                   {
-                    discardItemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
+                    discardItemName = DictionariesHelper.ContainsKey(
+                      Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
                       Controller.Instance.Options.currentLanguage).value;
                   }
 
@@ -2092,7 +2153,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   {
                     foreach (Item item in Controller.Instance.Inventory.items)
                     {
-                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value == discardItemName)
+                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage)
+                            .value == discardItemName)
                       {
                         effect.itemId = item.id;
                         break;
@@ -2111,7 +2173,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
                   if (itemList.Length > 0)
                   {
-                    equipItemName = DictionariesHelper.ContainsKey(Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
+                    equipItemName = DictionariesHelper.ContainsKey(
+                      Item.Find(Controller.Instance.Inventory.items, effect.itemId).name,
                       Controller.Instance.Options.currentLanguage).value;
                   }
 
@@ -2123,7 +2186,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   {
                     foreach (Item item in Controller.Instance.Inventory.items)
                     {
-                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value == equipItemName)
+                      if (DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage)
+                            .value == equipItemName)
                       {
                         effect.itemId = item.id;
                         break;
@@ -2178,8 +2242,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   questName = GUIHelper.Popup("Quest: ", questName, questNames);
                   if (EditorGUI.EndChangeCheck())
                   {
-                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options), questName);
-                    if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
+                    var questIndex =
+                      ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options),
+                        questName);
+                    if (questIndex > -1)
+                      effect.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
                   }
 
                   // Get the quest state name.
@@ -2190,17 +2257,20 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   {
                     var questState = quest.GetState(effect.questAndState.questStateId);
                     var questStateNameDict = questState != null
-                      ? DictionariesHelper.ContainsKey(questState.ShortDescription, Controller.Instance.Options.currentLanguage)
+                      ? DictionariesHelper.ContainsKey(questState.ShortDescription,
+                        Controller.Instance.Options.currentLanguage)
                       : null;
                     var questStateName = questStateNameDict != null ? questStateNameDict.value : string.Empty;
 
                     EditorGUI.BeginChangeCheck();
-                    var questStateNames = QuestState.GetShortDescriptions(quest.questStates, Controller.Instance.Options);
+                    var questStateNames =
+                      QuestState.GetShortDescriptions(quest.questStates, Controller.Instance.Options);
                     questStateNames = ArrayHelper.Add(questStateNames, string.Empty);
                     questStateName = GUIHelper.Popup("Quest state: ", questStateName, questStateNames);
                     if (EditorGUI.EndChangeCheck())
                     {
-                      var questStateIndex = ArrayHelper.GetIndex(QuestState.GetShortDescriptions(quest.questStates, Controller.Instance.Options),
+                      var questStateIndex = ArrayHelper.GetIndex(
+                        QuestState.GetShortDescriptions(quest.questStates, Controller.Instance.Options),
                         questStateName);
                       if (questStateIndex > -1)
                         effect.questAndState.questStateId = QuestState.GetIDs(quest.questStates)[questStateIndex];
@@ -2224,8 +2294,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   questToFinishName = GUIHelper.Popup("Quest: ", questToFinishName, questToFinishNames);
                   if (EditorGUI.EndChangeCheck())
                   {
-                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options), questToFinishName);
-                    if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
+                    var questIndex =
+                      ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options),
+                        questToFinishName);
+                    if (questIndex > -1)
+                      effect.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
                   }
 
                   break;
@@ -2245,8 +2318,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
                   questToStartName = GUIHelper.Popup("Quest: ", questToStartName, questToStartNames);
                   if (EditorGUI.EndChangeCheck())
                   {
-                    var questIndex = ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options), questToStartName);
-                    if (questIndex > -1) effect.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
+                    var questIndex =
+                      ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options),
+                        questToStartName);
+                    if (questIndex > -1)
+                      effect.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
                   }
 
                   break;
@@ -2292,9 +2368,11 @@ namespace LavaLeak.Diplomata.Editor.Windows
         switch (localVariable.Type)
         {
           case VariableType.String:
-            DictionariesHelper.ContainsKey(localVariable.StringValue, Controller.Instance.Options.currentLanguage).value =
+            DictionariesHelper.ContainsKey(localVariable.StringValue, Controller.Instance.Options.currentLanguage)
+                .value =
               EditorGUILayout.TextField(
-                DictionariesHelper.ContainsKey(localVariable.StringValue, Controller.Instance.Options.currentLanguage).value,
+                DictionariesHelper.ContainsKey(localVariable.StringValue, Controller.Instance.Options.currentLanguage)
+                  .value,
                 GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL));
             break;
           case VariableType.Int:
@@ -2383,7 +2461,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
       foreach (var item in Controller.Instance.Inventory.items)
       {
-        itemList = ArrayHelper.Add(itemList, DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value);
+        itemList = ArrayHelper.Add(itemList,
+          DictionariesHelper.ContainsKey(item.name, Controller.Instance.Options.currentLanguage).value);
       }
     }
 
@@ -2399,7 +2478,8 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
           if (content == null)
           {
-            msg.content = ArrayHelper.Add(msg.content, new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
+            msg.content = ArrayHelper.Add(msg.content,
+              new LanguageDictionary(Controller.Instance.Options.currentLanguage, ""));
             content = DictionariesHelper.ContainsKey(msg.content, Controller.Instance.Options.currentLanguage);
           }
 
