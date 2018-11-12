@@ -949,17 +949,20 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void LabelManager()
     {
-      var height = 488 + 180 + (context.labels.Length * 240) >= Screen.width ? LABEL_HEIGHT : HEADER_HEIGHT;
+      if (options == null)
+        options = OptionsController.GetOptions();
+
+      var content = new GUIContent(string.Format("Context: {0}\t", context.GetName(options.currentLanguage)));
+      var style = new GUIStyle();
+      var size = style.CalcSize(content);
+      var height = size.x + 100 + 180 + (context.labels.Length * 240) >= Screen.width ? LABEL_HEIGHT : HEADER_HEIGHT;
 
       scrollPosLabelManager = EditorGUILayout.BeginScrollView(scrollPosLabelManager,
         messagesWindowHeaderStyle, GUILayout.Width(Screen.width), GUILayout.Height(height));
       GUILayout.BeginHorizontal();
 
-      if (options == null)
-        options = OptionsController.GetOptions();
-
       if (context != null)
-        GUILayout.Label(string.Format("Context: {0}", context.GetName(options.currentLanguage)), GUILayout.Width(488));
+        EditorGUILayout.LabelField(content, style, GUILayout.Width(size.x));
 
       GUILayout.Label("Labels: ", GUILayout.Width(60));
 
