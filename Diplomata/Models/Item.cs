@@ -259,7 +259,8 @@ namespace LavaLeak.Diplomata.Models
     /// <param name="id">The item id.</param>
     public Item(int id, Options options)
     {
-      uniqueId = Guid.NewGuid().ToString();
+      SetId();
+//      uniqueId = Guid.NewGuid().ToString();
       this.id = id;
 
       foreach (Language language in options.languages)
