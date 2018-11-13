@@ -301,7 +301,7 @@ namespace LavaLeak.Diplomata
     /// </summary>
     /// <param name="name">The item name.</param>
     /// <param name="language">The language of this name, if empty uses the options first language.</param>
-    /// <returns>The <seealso cref="Diplomata.Models.Item"> object or null.</returns>
+    /// <returns>The <seealso cref="Diplomata.Models.Item" /> object or null.</returns>
     public static Item GiveItem(string name, string language = "")
     {
       if (language == "") language = Data.options.languages[0].name;

@@ -1101,13 +1101,16 @@ namespace LavaLeak.Diplomata
     /// <returns>The response flag.</returns>
     public bool EmitterIsPlayer()
     {
-      if (currentMessage != null)
+      if (currentMessage != null && currentColumn != null)
       {
         if (currentColumn.emitter == DiplomataManager.Data.options.playerCharacterName)
         {
           return true;
         }
       }
+
+      else
+        Debug.LogWarning("Don't have a current message or a current column.");
 
       return false;
     }
