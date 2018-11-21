@@ -9,7 +9,7 @@ namespace LavaLeak.Diplomata
   /// Each entity still have local events for local subscriptions,
   /// but then will also trigger this global events to make easier
   /// to get information about what is happening on the state of
-  /// quests and items. 
+  /// quests and items.
   /// </summary>
   public class DiplomataEventController
   {
@@ -19,20 +19,25 @@ namespace LavaLeak.Diplomata
     public event Action<Item> OnItemWasCaught;
     
     /// <summary>
-    /// Happens every time a Quest is Initialized 
+    /// Happens every time a Quest is Initialized.
     /// </summary>
     public event Action<Quest> OnQuestStart;
     
     /// <summary>
-    /// Happens every time a Quest state changes
+    /// Happens every time a Quest state changes.
     /// </summary>
     public event Action<Quest> OnQuestStateChange;
     
     /// <summary>
-    /// Happens every time a quest ends
+    /// Happens every time a quest ends.
     /// </summary>
     public event Action<Quest> OnQuestEnd;
 
+    /// <summary>
+    /// Happens every time a context ends.
+    /// </summary>
+    public event Action<Context> OnContextEnd;
+    
     /// <summary>
     /// Trigger the event OnQuestStart with the quest data that have started.
     /// </summary>
@@ -71,6 +76,16 @@ namespace LavaLeak.Diplomata
     {
       if (OnItemWasCaught != null)
         OnItemWasCaught(itemWasCaught);
+    }
+
+    /// <summary>
+    /// Trigger the event OnContextEnd whit the ended context data.
+    /// </summary>
+    /// <param name="context"></param>
+    public void SendContextEnd(Context context)
+    {
+      if (OnContextEnd != null)
+        OnContextEnd(context);
     }
   }
 }

@@ -50,6 +50,11 @@ namespace LavaLeak.Diplomata.Models
     public Action OnEnd;
     private bool happened;
 
+    public string Id
+    {
+      get { return uniqueId; }
+    }
+
     /// <summary>
     /// Get and set if the context finished.
     /// </summary>
@@ -59,6 +64,7 @@ namespace LavaLeak.Diplomata.Models
       get { return happened; }
       set
       {
+        DiplomataManager.EventController.SendContextEnd(this);
         if (OnEnd != null)
           OnEnd();
         happened = value;

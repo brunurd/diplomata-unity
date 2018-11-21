@@ -52,13 +52,6 @@ namespace LavaLeak.Diplomata
           if (_talkable == null)
             _talkable = Interactable.Find(DiplomataManager.Data.interactables, talkableId);
         }
-
-//        if (_talkable == null)
-//        {
-//          _talkable = (Talkable) Find.In(DiplomataManager.Data.characters.ToArray()).Where("Id", talkableId).Result ??
-//                      (Talkable) Find.In(DiplomataManager.Data.interactables.ToArray()).Where("Id", talkableId).Result;
-//        }
-
         return _talkable;
       }
       protected set
