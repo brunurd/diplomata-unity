@@ -1056,21 +1056,24 @@ namespace LavaLeak.Diplomata
         }
       }
 
-      if (hasFate)
+      if (DiplomataManager.OnATalk && IsTalking)
       {
-        Next(true);
-      }
+        if (hasFate)
+        {
+          Next(true);
+        }
 
-      else if (IsLastMessage())
-      {
-        EndTalk();
-      }
+        else if (IsLastMessage())
+        {
+          EndTalk();
+        }
 
-      else
-      {
-        controlIndexes["column"] += 1;
-        controlIndexes["message"] = 0;
-        Next(false);
+        else
+        {
+          controlIndexes["column"] += 1;
+          controlIndexes["message"] = 0;
+          Next(false);
+        }
       }
     }
 
