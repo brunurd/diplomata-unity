@@ -623,6 +623,14 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       text += condition.DisplayQuestStateIs(Controller.Instance.Quests,
                         Controller.Instance.Options.currentLanguage);
                       break;
+                    case Condition.Type.QuestInitialized:
+                      text += condition.DisplayQuestInitialized(Controller.Instance.Quests,
+                        Controller.Instance.Options.currentLanguage);
+                      break;
+                    case Condition.Type.QuestFinished:
+                      text += condition.DisplayQuestFinished(Controller.Instance.Quests,
+                        Controller.Instance.Options.currentLanguage);
+                      break;
                   }
 
                   if (k < currentMessage.conditions.Length - 1)
@@ -1865,6 +1873,54 @@ namespace LavaLeak.Diplomata.Editor.Windows
                       if (questStateIndex > -1)
                         condition.questAndState.questStateId = QuestState.GetIDs(quest.questStates)[questStateIndex];
                     }
+                  }
+
+                  break;
+
+                case Condition.Type.QuestInitialized:
+                  // Get the quest name.
+                  var questInialized = Quest.Find(Controller.Instance.Quests, condition.questAndState.questId);
+                  var questInializedNameDict = questInialized != null
+                    ? DictionariesHelper.ContainsKey(questInialized.Name, Controller.Instance.Options.currentLanguage)
+                    : null;
+                  var questInializedName = questInializedNameDict != null ? questInializedNameDict.value : string.Empty;
+
+                  // Quest name Popup with a change checker.
+                  EditorGUI.BeginChangeCheck();
+                  var questInializedNames = Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options);
+                  questInializedNames = ArrayHelper.Add(questInializedNames, string.Empty);
+                  questInializedName = GUIHelper.Popup("Quest: ", questInializedName, questInializedNames);
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    var questIndex =
+                      ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options),
+                        questInializedName);
+                    if (questIndex > -1)
+                      condition.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
+                  }
+
+                  break;
+                
+                case Condition.Type.QuestFinished:
+                  // Get the quest name.
+                  var questFinished = Quest.Find(Controller.Instance.Quests, condition.questAndState.questId);
+                  var questFinishedNameDict = questFinished != null
+                    ? DictionariesHelper.ContainsKey(questFinished.Name, Controller.Instance.Options.currentLanguage)
+                    : null;
+                  var questFinishedName = questFinishedNameDict != null ? questFinishedNameDict.value : string.Empty;
+
+                  // Quest name Popup with a change checker.
+                  EditorGUI.BeginChangeCheck();
+                  var questFinishedNames = Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options);
+                  questFinishedNames = ArrayHelper.Add(questFinishedNames, string.Empty);
+                  questFinishedName = GUIHelper.Popup("Quest: ", questFinishedName, questFinishedNames);
+                  if (EditorGUI.EndChangeCheck())
+                  {
+                    var questIndex =
+                      ArrayHelper.GetIndex(Quest.GetNames(Controller.Instance.Quests, Controller.Instance.Options),
+                        questFinishedName);
+                    if (questIndex > -1)
+                      condition.questAndState.questId = Quest.GetIDs(Controller.Instance.Quests)[questIndex];
                   }
 
                   break;

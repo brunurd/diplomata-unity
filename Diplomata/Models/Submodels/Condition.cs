@@ -33,7 +33,9 @@ namespace LavaLeak.Diplomata.Models.Submodels
       GlobalFlagEqualTo = 7,
       ItemIsEquipped = 8,
       DoesNotHaveTheItem = 9,
-      QuestStateIs = 10
+      QuestStateIs = 10,
+      QuestInitialized = 11,
+      QuestFinished = 12
     }
 
     public Condition() {}
@@ -97,6 +99,20 @@ namespace LavaLeak.Diplomata.Models.Submodels
       var questStateName = questState != null ? questState.GetShortDescription(language) : string.Empty;
       
       return string.Format("Quest \"{0}\" state is: {1}", questName, questStateName);
+    }
+    
+    public string DisplayQuestInitialized(Quest[] quests, string language = "")
+    {
+      var quest = Quest.Find(quests, questAndState.questId);
+      var questName = quest != null ? quest.GetName(language) : string.Empty;
+      return string.Format("Quest \"{0}\" initialized.", questName);
+    }
+    
+    public string DisplayQuestFinished(Quest[] quests, string language = "")
+    {
+      var quest = Quest.Find(quests, questAndState.questId);
+      var questName = quest != null ? quest.GetName(language) : string.Empty;
+      return string.Format("Quest \"{0}\" finished.", questName);
     }
 
     public static bool CanProceed(Condition[] conditions)

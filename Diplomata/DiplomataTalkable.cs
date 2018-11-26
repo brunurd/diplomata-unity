@@ -18,24 +18,18 @@ namespace LavaLeak.Diplomata
   {
     public string talkableId;
     protected Talkable _talkable = null;
-    
-    [NonSerialized]
-    public bool CanTalk = true;
-    
-    [NonSerialized]
-    public Column currentColumn;
-    
-    [NonSerialized]
-    public Message currentMessage;
-    
-    [NonSerialized]
-    public bool choiceMenu;
-    
-    [NonSerialized]
-    public bool IsTalking;
-    
-    [NonSerialized]
-    public List<Message> choices;
+
+    [NonSerialized] public bool CanTalk = true;
+
+    [NonSerialized] public Column currentColumn;
+
+    [NonSerialized] public Message currentMessage;
+
+    [NonSerialized] public bool choiceMenu;
+
+    [NonSerialized] public bool IsTalking;
+
+    [NonSerialized] public List<Message> choices;
 
     protected Context currentContext;
     protected Dictionary<string, int> controlIndexes;
@@ -48,10 +42,11 @@ namespace LavaLeak.Diplomata
         if (_talkable == null)
         {
           _talkable = Character.Find(DiplomataManager.Data.characters, talkableId);
-          
+
           if (_talkable == null)
             _talkable = Interactable.Find(DiplomataManager.Data.interactables, talkableId);
         }
+
         return _talkable;
       }
       protected set
@@ -416,6 +411,51 @@ namespace LavaLeak.Diplomata
                               condition.proceed = false;
                             }
                             else if (currentState == targetState.GetShortDescription())
+                            {
+                              condition.proceed = true;
+                            }
+                            else
+                            {
+                              condition.proceed = false;
+                            }
+                          }
+                          else
+                          {
+                            Debug.LogWarning("Cannot find the quest " + condition.questAndState.questId);
+                            condition.proceed = false;
+                          }
+
+                          break;
+
+                        case Condition.Type.QuestInitialized:
+                          var questInitialized =
+                            Quest.Find(DiplomataManager.Data.quests, condition.questAndState.questId);
+
+                          if (questInitialized != null)
+                          {
+                            if (questInitialized.Initialized)
+                            {
+                              condition.proceed = true;
+                            }
+                            else
+                            {
+                              condition.proceed = false;
+                            }
+                          }
+                          else
+                          {
+                            Debug.LogWarning("Cannot find the quest " + condition.questAndState.questId);
+                            condition.proceed = false;
+                          }
+
+                          break;
+
+                        case Condition.Type.QuestFinished:
+                          var questFinished = Quest.Find(DiplomataManager.Data.quests, condition.questAndState.questId);
+
+                          if (questFinished != null)
+                          {
+                            if (questFinished.IsComplete())
                             {
                               condition.proceed = true;
                             }
@@ -1184,6 +1224,7 @@ namespace LavaLeak.Diplomata
         if (!context.Finished)
           return context;
       }
+
       return null;
     }
   }
