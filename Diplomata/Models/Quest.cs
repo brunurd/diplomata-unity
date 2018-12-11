@@ -413,6 +413,17 @@ namespace LavaLeak.Diplomata.Models
     }
 
     /// <summary>
+    /// Find a state by it index order.
+    /// </summary>
+    /// <param name="index">The index of the state in the quest.</param>
+    /// <param name="language">The language to return the content.</param>
+    /// <returns>The quest state short description as string.</returns>
+    public string GetStateByIndex(int index, string language = "")
+    {
+      return index < questStates.Length ? questStates[index].GetShortDescription(language) : string.Empty;
+    }
+
+    /// <summary>
     /// Return the data of the object to save in a persistent object.
     /// </summary>
     /// <returns>A persistent object.</returns>
