@@ -1055,7 +1055,6 @@ namespace LavaLeak.Diplomata
               if (questToFinish != null)
               {
                 questToFinish.Finish();
-                DiplomataManager.EventController.SendQuestEnd(questToFinish);
 
                 if (OnQuestEndLocal != null)
                   OnQuestEndLocal(questToFinish);

@@ -164,7 +164,6 @@ namespace LavaLeak.Diplomata.Models
           if (index == questStates.Length - 1)
           {
             Finish();
-            DiplomataManager.EventController.SendQuestEnd(this);
           }
           else
           {
@@ -373,6 +372,7 @@ namespace LavaLeak.Diplomata.Models
       {
         finished = true;
         currentStateId = null;
+        DiplomataManager.EventController.SendQuestEnd(this);
       }
     }
 
