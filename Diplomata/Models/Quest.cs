@@ -113,7 +113,6 @@ namespace LavaLeak.Diplomata.Models
       {
         Initialized = true;
         currentStateId = questStates[0].GetId();
-
         DiplomataManager.EventController.SendQuestStart(this);
       }
     }
@@ -421,6 +420,25 @@ namespace LavaLeak.Diplomata.Models
     public string GetStateByIndex(int index, string language = "")
     {
       return index < questStates.Length ? questStates[index].GetShortDescription(language) : string.Empty;
+    }
+    
+    /// <summary>
+    /// Return the index of the quest state by it short description.
+    /// </summary>
+    /// <param name="shortDescription">The short description text.</param>
+    /// <param name="language">A specific language or use the currentLanguage.</param>
+    /// <returns></returns>
+    public int GetIndexByStateName(string shortDescription, string language = "")
+    {
+      for (var i = 0; i < questStates.Length; i++)
+      {
+        if (questStates[i].GetShortDescription(language) == shortDescription)
+        {
+          return i;
+        }
+      }
+
+      return -1;
     }
 
     /// <summary>
