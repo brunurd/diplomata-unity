@@ -66,7 +66,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void DrawAttributes()
     {
-      GUILayout.BeginVertical(GUILayout.Width(Screen.width / 2));
+      GUILayout.BeginVertical(GUILayout.Width(position.width / 2));
       GUILayout.Label("Attributes:");
 
       for (int i = 0; i < attributesTemp.Length; i++)

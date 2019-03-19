@@ -63,7 +63,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
         GUILayout.Space(10.0f);
 
-        GUILayout.BeginHorizontal(GUILayout.MaxWidth(Screen.width / 2));
+        GUILayout.BeginHorizontal(GUILayout.MaxWidth(position.width / 2));
 
         if (GUILayout.Button("Edit", GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
         {

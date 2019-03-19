@@ -165,7 +165,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
           // Buttons.
           EditorGUILayout.Space();
           GUILayout.BeginHorizontal();
-          if (GUILayout.Button("Add quest state", GUILayout.Width(Screen.width / 2),
+          if (GUILayout.Button("Add quest state", GUILayout.Width(position.width / 2),
             GUILayout.Height(GUIHelper.BUTTON_HEIGHT_SMALL)))
           {
             quest.AddState("Short description.", "Long description.");

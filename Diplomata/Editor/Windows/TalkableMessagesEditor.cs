@@ -226,7 +226,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void DrawContextList()
     {
-      var listWidth = Screen.width / 3;
+      var listWidth = position.width / 3;
 
       if (talkable != null)
       {
@@ -435,7 +435,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
 
     public void Main()
     {
-      var width = Screen.width - SIDEBAR_WIDTH;
+      var width = position.width - SIDEBAR_WIDTH;
 
       ResetStyle();
 
@@ -963,10 +963,10 @@ namespace LavaLeak.Diplomata.Editor.Windows
       var content = new GUIContent(string.Format("Context: {0}\t", context.GetName(options.currentLanguage)));
       var style = new GUIStyle();
       var size = style.CalcSize(content);
-      var height = size.x + 100 + 180 + (context.labels.Length * 240) >= Screen.width ? LABEL_HEIGHT : HEADER_HEIGHT;
+      var height = size.x + 100 + 180 + (context.labels.Length * 240) >= position.width ? LABEL_HEIGHT : HEADER_HEIGHT;
 
       scrollPosLabelManager = EditorGUILayout.BeginScrollView(scrollPosLabelManager,
-        messagesWindowHeaderStyle, GUILayout.Width(Screen.width), GUILayout.Height(height));
+        messagesWindowHeaderStyle, GUILayout.Width(position.width), GUILayout.Height(height));
       GUILayout.BeginHorizontal();
 
       if (context != null)

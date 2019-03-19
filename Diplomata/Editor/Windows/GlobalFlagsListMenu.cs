@@ -32,7 +32,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
         EditorGUILayout.HelpBox("No flags yet.", MessageType.Info);
       }
 
-      var width = Screen.width - (2 * GUIHelper.MARGIN);
+      var width = position.width - (2 * GUIHelper.MARGIN);
 
       for (var i = 0; i < Controller.Instance.GlobalFlags.flags.Length; i++)
       {

@@ -175,7 +175,7 @@ namespace LavaLeak.Diplomata.Editor.Windows
       }
 
       GUIHelper.textContent.text = description.value;
-      var height = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, Screen.width - (2 * GUIHelper.MARGIN));
+      var height = GUIHelper.textAreaStyle.CalcHeight(GUIHelper.textContent, position.width - (2 * GUIHelper.MARGIN));
 
       GUILayout.Label("Description: ");
       description.value = EditorGUILayout.TextArea(description.value, GUIHelper.textAreaStyle, GUILayout.Height(height));
