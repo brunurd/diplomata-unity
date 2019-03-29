@@ -37,7 +37,12 @@ namespace LavaLeak.Diplomata
     /// Happens every time a context ends.
     /// </summary>
     public event Action<Context> OnContextEnd;
-    
+
+    /// <summary>
+    /// Happens every time a flag is set.
+    /// </summary>
+    public event Action<Flag> OnSetFlag;
+
     /// <summary>
     /// Trigger the event OnQuestStart with the quest data that have started.
     /// </summary>
@@ -79,13 +84,23 @@ namespace LavaLeak.Diplomata
     }
 
     /// <summary>
-    /// Trigger the event OnContextEnd whit the ended context data.
+    /// Trigger the event OnContextEnd with the ended context data.
     /// </summary>
     /// <param name="context"></param>
     public void SendContextEnd(Context context)
     {
       if (OnContextEnd != null)
         OnContextEnd(context);
+    }
+    
+    /// <summary>
+    /// Trigger the event OnSetFlag when a flag is set.
+    /// </summary>
+    /// <param name="flag">The flag.</param>
+    public void SendOnSetFlag(Flag flag)
+    {
+      if (OnSetFlag != null)
+        OnSetFlag(flag);
     }
   }
 }

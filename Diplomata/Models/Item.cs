@@ -322,7 +322,7 @@ namespace LavaLeak.Diplomata.Models
           return item;
         }
       }
-      Debug.LogError("This item doesn't exist.");
+      Debug.LogError($"This item \"{name}\" doesn't exist.");
       return null;
     }
 

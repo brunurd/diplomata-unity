@@ -1013,6 +1013,7 @@ namespace LavaLeak.Diplomata
               if (flag != null)
               {
                 flag.value = effect.globalFlag.value;
+                DiplomataManager.EventController.SendOnSetFlag(flag);
               }
               else
               {
@@ -1042,7 +1043,6 @@ namespace LavaLeak.Diplomata
                 else
                 {
                   quest.SetState(effect.questAndState.questStateId);
-                  DiplomataManager.EventController.SendQuestStateChange(quest);
 
                   if (OnQuestStateChangeLocal != null)
                     OnQuestStateChangeLocal(quest);
