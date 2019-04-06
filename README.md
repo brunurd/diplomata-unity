@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/lavaleak/diplomata/master/Textures/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." width="115" height="115" /><br/>
+<img src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." width="115" height="115" /><br/>
 
 # Diplomata
 
@@ -9,7 +9,7 @@ Diplomata manage optionally other contents of a game like characters, inventory,
 Idealized for screenwriters, game designers, programmers and hobbyist writers, to configure and apply dialogues in any type of game.
 
 
-![Screenshot](https://raw.githubusercontent.com/lavaleak/diplomata/master/Textures/Screenshot.jpg)
+![Screenshot](https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/Screenshot.jpg)
 
 
 **Features:**
