@@ -1,4 +1,4 @@
-:rotating_light: This repository will marked as read-only and as legacy soon to be replaced by a new **diplomata-unity** :rotating_light:
+:rotating_light: This repository will be marked as read-only and as legacy soon to be replaced by a new **diplomata-unity** repo :rotating_light:
 
 ---
 
