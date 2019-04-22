@@ -2,7 +2,7 @@
 
 ---
 
-<img src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." width="115" height="115" /><br/>
+<img src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/DIPLOMATA-Logo-Banner_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." /><br/>
 
 # Diplomata
 
