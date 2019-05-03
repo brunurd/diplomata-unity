@@ -1,16 +1,16 @@
-:rotating_light: This repository will be marked as read-only and as legacy soon to be replaced by a new **diplomata-unity** repo :rotating_light:
-
----
-
-<img src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/DIPLOMATA-Logo-Banner_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." /><br/>
-
 # Diplomata
+
+<img align="right" src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." /><br/>
 
 Diplomata is a Unity multi language dialogues content management system and editor extension inspired by [Twine](http://twinery.org/), like [Fungus](http://fungusgames.com/) and [Yarn](https://github.com/InfiniteAmmoInc/Yarn), but **is not node based**.  
 
 Diplomata manage optionally other contents of a game like characters, inventory, quests, animations and sprites.
 
 Idealized for screenwriters, game designers, programmers and hobbyist writers, to configure and apply dialogues in any type of game.
+
+
+
+---
 
 
 ![Screenshot](https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/Screenshot.jpg)
