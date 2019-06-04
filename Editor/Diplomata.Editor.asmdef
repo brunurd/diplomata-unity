@@ -1,0 +1,14 @@
+{
+    "name": "Diplomata.Editor",
+    "references": [
+        "Diplomata"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

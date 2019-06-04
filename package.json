@@ -1,0 +1,15 @@
+{
+    "name": "com.lavaleakgames.diplomata",
+    "displayName": "Diplomata",
+    "version": "1.3.0",
+    "unity": "2018.3",
+    "description": "Diplomata is a Unity multi language dialogues content management system and editor extension inspired by Twine, like Fungus and Yarn Spinner, but is not node based.\n\nDiplomata manage optionally other contents of a game like characters, inventory, quests, animations and sprites.\n\nIdealized for screenwriters, game designers, programmers and hobbyist writers, to configure and apply dialogues in any type of game.",
+    "keywords": ["diplomata", "narrative", "dialogue", "tree", "rpg", "adventure", "multilanguage", "language", "novel", "interactive", "choices", "editor", "extension", "system"],
+    "category": "EditorExtension",
+    "author": {
+        "name": "Bruno Araujo",
+        "email": "bruno@lavaleakgames.com"
+    },
+    "license": "MIT",
+    "dependencies": {}
+}
