@@ -2,7 +2,7 @@
 
 <img align="right" src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." /><br/>
 
-Diplomata is a Unity multi language dialogues content management system and editor extension inspired by [Twine](http://twinery.org/), like [Fungus](http://fungusgames.com/) and [Yarn](https://github.com/InfiniteAmmoInc/Yarn), but **is not node based**.  
+Diplomata is a Unity multi language dialogues content management system and editor extension inspired by [Twine](http://twinery.org/), like [Fungus](http://fungusgames.com/) and [Yarn / Yarn Spinner](https://github.com/InfiniteAmmoInc/Yarn), but **is not node based**.  
 
 Diplomata manage optionally other contents of a game like characters, inventory, quests, animations and sprites.
 
