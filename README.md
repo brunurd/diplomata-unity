@@ -1,8 +1,8 @@
 # Diplomata
 
-<img align="right" src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." /><br/>
+<img align="right" src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Logo/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." /><br/>
 
-Diplomata is a Unity multi language dialogues content management system and editor extension inspired by [Twine](http://twinery.org/), like [Fungus](http://fungusgames.com/) and [Yarn](https://github.com/InfiniteAmmoInc/Yarn), but **is not node based**.  
+Diplomata is a Unity multi language dialogues content management system and editor extension inspired by [Twine](http://twinery.org/), like [Fungus](http://fungusgames.com/) and [Yarn / Yarn Spinner](https://github.com/InfiniteAmmoInc/Yarn), but **is not node based**.  
 
 Diplomata manage optionally other contents of a game like characters, inventory, quests, animations and sprites.
 
@@ -13,7 +13,7 @@ Idealized for screenwriters, game designers, programmers and hobbyist writers, t
 ---
 
 
-![Screenshot](https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Textures/Screenshot.jpg)
+![Screenshot](Screenshot.jpg)
 
 
 **Features:**
@@ -40,15 +40,3 @@ Idealized for screenwriters, game designers, programmers and hobbyist writers, t
 
 
 All files in this repository is licensed under a [MIT License](https://github.com/lavaleak/diplomata/blob/master/LICENSE.md).
-
-
-**Except by:**
-
-
-
-<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nd/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/StillImage" property="dct:title" rel="dct:type">Diplomata Logo</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Bruno Araujo</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0 International License</a>.
-
-
-
-
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Licença Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />The file "Textures/DIPLOMATA-UI_CC-BY_by-Bruno-Araujo" is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
