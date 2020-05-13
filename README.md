@@ -1,5 +1,7 @@
 # Diplomata
 
+[![openupm](https://img.shields.io/npm/v/com.lavaleakgames.diplomata?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.lavaleakgames.diplomata/)
+
 <img align="right" src="https://raw.githubusercontent.com/lavaleak/diplomata-unity/master/Logo/DIPLOMATA-Logo_CC-BY-ND_by-Bruno-Araujo.png" alt="Diplomata Logo" title="Diplomata Logo by Bruno Araujo is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License." /><br/>
 
 Diplomata is a Unity multi language dialogues content management system and editor extension inspired by [Twine](http://twinery.org/), like [Fungus](http://fungusgames.com/) and [Yarn / Yarn Spinner](https://github.com/InfiniteAmmoInc/Yarn), but **is not node based**.  
@@ -32,6 +34,22 @@ Idealized for screenwriters, game designers, programmers and hobbyist writers, t
 - Inventory integration with title and description in multiple languages.
 - Create custom flags to authoring your game progress.
 
+**Installation:**
+
+- Install via OpenUPM
+
+  The package is available on the [openupm registry](https://openupm.com). It's recommended to install it via [openupm-cli](https://github.com/openupm/openupm-cli).
+
+  ```
+  openupm add com.lavaleakgames.diplomata
+  ```
+- Install via Git URL
+
+  Open *Packages/manifest.json* with your favorite text editor. Add the following line to the dependencies block.
+
+      "dependencies": {
+        "com.lavaleakgames.diplomata": "https://github.com/brunurd/diplomata-unity.git"
+      }
 
 ---
 
