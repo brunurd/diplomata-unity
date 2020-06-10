@@ -1,3 +1,8 @@
+### :warning::warning::warning: **This project is no more maintained and is archived.** :warning::warning::warning:
+#### **_I strongly recommend as substitute the [Ink][ink-link] scripting language with the Inky editor._**
+
+---
+
 # Diplomata
 
 [![openupm](https://img.shields.io/npm/v/com.lavaleakgames.diplomata?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.lavaleakgames.diplomata/)
@@ -58,3 +63,5 @@ Idealized for screenwriters, game designers, programmers and hobbyist writers, t
 
 
 All files in this repository is licensed under a [MIT License](https://github.com/lavaleak/diplomata/blob/master/LICENSE.md).
+
+[ink-link]: https://www.inklestudios.com/ink/
