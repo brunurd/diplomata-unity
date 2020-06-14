@@ -1,5 +1,5 @@
 ### :warning::warning::warning: **This project is no more maintained and is archived.** :warning::warning::warning:
-#### **_I strongly recommend as substitute the [Ink][ink-link] scripting language with the Inky editor._**
+#### **_I strongly recommend as substitute the [Fungus][fungus-link] (now with lua as script language can be very extensible)._**
 
 ---
 
@@ -64,4 +64,4 @@ Idealized for screenwriters, game designers, programmers and hobbyist writers, t
 
 All files in this repository is licensed under a [MIT License](https://github.com/lavaleak/diplomata/blob/master/LICENSE.md).
 
-[ink-link]: https://www.inklestudios.com/ink/
+[fungus-link]: https://fungusgames.com/
