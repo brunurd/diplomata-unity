@@ -1,8 +1,3 @@
-### :warning::warning::warning: **This project is no more maintained and is archived.** :warning::warning::warning:
-#### **_I strongly recommend as substitute the [Fungus][fungus-link] (now with lua as script language can be very extensible)._**
-
----
-
 # Diplomata
 
 [![openupm](https://img.shields.io/npm/v/com.lavaleakgames.diplomata?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.lavaleakgames.diplomata/)
